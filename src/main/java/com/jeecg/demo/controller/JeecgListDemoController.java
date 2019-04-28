@@ -39,14 +39,14 @@ import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.Highchart;
 import org.jeecgframework.core.constant.Globals;
-import org.jeecgframework.core.utils.DBTypeUtil;
-import org.jeecgframework.core.utils.DateUtils;
-import org.jeecgframework.core.utils.ExceptionUtil;
-import org.jeecgframework.core.utils.JeecgDataAutorUtils;
-import org.jeecgframework.core.utils.MyBeanUtils;
-import org.jeecgframework.core.utils.ResourceUtil;
-import org.jeecgframework.core.utils.StringUtil;
-import org.jeecgframework.core.utils.oConvertUtils;
+import org.jeecgframework.core.util.DBTypeUtil;
+import org.jeecgframework.core.util.DateUtils;
+import org.jeecgframework.core.util.ExceptionUtil;
+import org.jeecgframework.core.util.JeecgDataAutorUtils;
+import org.jeecgframework.core.util.MyBeanUtils;
+import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.StringUtil;
+import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.jwt.util.GsonUtil;
 import org.jeecgframework.jwt.util.ResponseMessage;
 import org.jeecgframework.jwt.util.Result;
@@ -57,11 +57,12 @@ import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.datatable.SortDirection;
+import org.jeecgframework.web.system.controller.core.LoginController;
 import org.jeecgframework.web.system.enums.InterfaceEnum;
 import org.jeecgframework.web.system.pojo.base.InterfaceRuleDto;
 import org.jeecgframework.web.system.pojo.base.TSDepart;
 import org.jeecgframework.web.system.pojo.base.TSLog;
-import org.jeecgframework.web.system.service.MutiLangService;
+import org.jeecgframework.web.system.service.MutiLangServiceI;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.util.InterfaceUtil;
 import org.slf4j.Logger;
@@ -116,7 +117,7 @@ public class JeecgListDemoController extends BaseController {
 	private JeecgMinidaoDao jeecgMinidaoDao;
 
     @Autowired
-    private MutiLangService mutiLangService;
+    private MutiLangServiceI mutiLangService;
 	
 	/**
 	 * 采用minidao查询数据
@@ -1028,12 +1029,12 @@ public class JeecgListDemoController extends BaseController {
 	//jeecgListDemoController.do?logDatagrid
 	@RequestMapping(params = "logDatagrid")
 	public void logDatagrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(LogEntity.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(TSLog.class, dataGrid);
 		
 		//日志级别查询条件
 		String loglevel = request.getParameter("loglevel");
 		if (loglevel != null && !"0".equals(loglevel)) {
-			cq.eq("loglevel", oConvertUtils.getShort(loglevel));
+			cq.eq("loglevel", org.jeecgframework.core.util.oConvertUtils.getShort(loglevel));
 			cq.add();
 		}
 		//时间范围查询条件

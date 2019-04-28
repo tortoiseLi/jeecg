@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.jeecgframework.AbstractUnitTest;
-import org.jeecgframework.core.utils.PasswordUtil;
+import org.jeecgframework.core.util.PasswordUtil;
 import org.jeecgframework.web.system.pojo.base.TSUser;
 import org.jeecgframework.web.system.service.UserService;
 import org.junit.Test;

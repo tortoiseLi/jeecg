@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
-import org.jeecgframework.core.utils.MyBeanUtils;
-import org.jeecgframework.core.utils.StringUtil;
-import org.jeecgframework.core.utils.oConvertUtils;
+import org.jeecgframework.core.util.MyBeanUtils;
+import org.jeecgframework.core.util.StringUtil;
+import org.jeecgframework.core.util.oConvertUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

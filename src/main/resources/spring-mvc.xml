@@ -18,7 +18,7 @@
 	</context:component-scan>
 
 	<!-- ApplicationContext-->
-	<bean class="org.jeecgframework.core.utils.ApplicationContextUtils"></bean>
+	<bean class="org.jeecgframework.core.util.ApplicationContextUtil"></bean>
 	<!-- 配置缓存工具类（支持redis\ehcache切换）  
 	<bean class="org.jeecgframework.web.system.service.impl.RedisCacheService"/>
 	-->

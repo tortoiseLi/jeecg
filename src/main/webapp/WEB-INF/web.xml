@@ -33,11 +33,6 @@
 		<filter-name>openSessionInViewFilter</filter-name>
 		<url-pattern>/rest/*</url-pattern>
 	</filter-mapping>
-	<!-- Rest风格url对应的controller支持延迟加载-->
-	<filter-mapping>
-		<filter-name>openSessionInViewFilter</filter-name>
-		<url-pattern>/</url-pattern>
-	</filter-mapping>
 
 	<filter>
 		<description>字符集过滤器</description>

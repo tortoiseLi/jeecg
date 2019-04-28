@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.io.Serializable;
-import org.jeecgframework.core.utils.ApplicationContextUtils;
-import org.jeecgframework.core.utils.MyClassLoader;
-import org.jeecgframework.core.utils.StringUtil;
+import org.jeecgframework.core.util.ApplicationContextUtil;
+import org.jeecgframework.core.util.MyClassLoader;
+import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.web.cgform.enhance.CgformEnhanceJavaInter;
 
 @Service("multiUploadService")
@@ -113,7 +113,7 @@ public class MultiUploadServiceImpl extends CommonServiceImpl implements MultiUp
 					//因新增时已经校验了实例化是否可以成功，所以这块就不需要再做一次判断
 					obj = MyClassLoader.getClassByScn(cgJavaValue).newInstance();
 				}else if("spring".equals(cgJavaType)){
-					obj = ApplicationContextUtils.getContext().getBean(cgJavaValue);
+					obj = ApplicationContextUtil.getContext().getBean(cgJavaValue);
 				}
 				if(obj instanceof CgformEnhanceJavaInter){
 					CgformEnhanceJavaInter javaInter = (CgformEnhanceJavaInter) obj;

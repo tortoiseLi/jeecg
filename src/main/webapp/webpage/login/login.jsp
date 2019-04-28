@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="org.jeecgframework.core.utils.SysThemesUtil,org.jeecgframework.core.enums.SysThemesEnum"%>
+<%@page import="org.jeecgframework.core.util.SysThemesUtil,org.jeecgframework.core.enums.SysThemesEnum"%>
 <%@include file="/context/mytags.jsp"%>
 <%
   session.setAttribute("lang","zh-cn");

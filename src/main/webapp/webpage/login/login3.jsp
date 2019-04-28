@@ -1,10 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="org.jeecgframework.core.utils.SysThemesUtil,org.jeecgframework.core.enums.SysThemesEnum"%>
-<%@ page import="org.jeecgframework.core.utils.BrowserUtils" %>
+<%@page import="org.jeecgframework.core.util.SysThemesUtil,org.jeecgframework.core.enums.SysThemesEnum"%> 
 <%@include file="/context/mytags.jsp"%>
 <!DOCTYPE html>
 <%
-String lang = BrowserUtils.getBrowserLanguage(request);
+String lang = org.jeecgframework.core.util.BrowserUtils.getBrowserLanguage(request);
 String langurl = "plug-in/mutiLang/" + lang +".js";
 SysThemesEnum sysTheme = SysThemesUtil.getSysTheme(request);
 String lhgdialogTheme = SysThemesUtil.getLhgdialogTheme(sysTheme);
