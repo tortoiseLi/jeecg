@@ -3,8 +3,9 @@ package com.jeecg.demo.entity;
 
 import javax.persistence.*;
 
-import org.jeecgframework.web.system.pojo.base.TSAttachment;
-import org.jeecgframework.web.system.pojo.base.TSType;
+import org.jeecgframework.web.system.pojo.base.AttachmentEntity;
+import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.pojo.base.TypeEntity;
 
 /**
  * 文档下载,新闻,法规表
@@ -13,19 +14,19 @@ import org.jeecgframework.web.system.pojo.base.TSType;
 @Entity
 @Table(name = "t_s_document")
 @PrimaryKeyJoinColumn(name = "id")
-public class TSDocument extends TSAttachment implements java.io.Serializable {
+public class TSDocument extends AttachmentEntity implements java.io.Serializable {
 	private String documentTitle;//文档标题
 	private byte[] pictureIndex;//焦点图导航
 	private Short documentState;//状态：0未发布，1已发布
 	private Short showHome;//是否首页显示
-	private TSType TSType;//文档分类
+	private TypeEntity TSType;//文档分类
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "typeid")
-	public TSType getTSType() {
+	public TypeEntity getTSType() {
 		return TSType;
 	}
-	public void setTSType(TSType tSType) {
+	public void setTSType(TypeEntity tSType) {
 		TSType = tSType;
 	}
 	@Column(name = "documenttitle", length = 100)

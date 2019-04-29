@@ -47,13 +47,13 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * 检查用户是否存在
 	 * */
-	public TSUser getUserByUserIdAndUserNameExits(TSUser user) {
+	public UserEntity getUserByUserIdAndUserNameExits(UserEntity user) {
 		String password = PasswordUtil.encrypt(user.getUserName(), user.getPassword(), PasswordUtil.getStaticSalt());
 		String query = "from TSUser u where u.userName = :username and u.password=:passowrd";
 		Query queryObject = getSession().createQuery(query);
 		queryObject.setParameter("username", user.getUserName());
 		queryObject.setParameter("passowrd", password);
-		List<TSUser> users = queryObject.list();
+		List<UserEntity> users = queryObject.list();
 
 		if (users != null && users.size() > 0) {
 			return users.get(0);
@@ -73,14 +73,14 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * 检查用户是否存在
 	 * */
-	public TSUser findUserByAccountAndPassword(String username,String inpassword) {
+	public UserEntity findUserByAccountAndPassword(String username,String inpassword) {
 		String password = PasswordUtil.encrypt(username, inpassword, PasswordUtil.getStaticSalt());
 		String query = "from TSUser u where u.userName = :username and u.password=:passowrd";
 		Query queryObject = getSession().createQuery(query);
 		queryObject.setParameter("username", username);
 		queryObject.setParameter("passowrd", password);
 		@SuppressWarnings("unchecked")
-		List<TSUser> users = queryObject.list();
+		List<UserEntity> users = queryObject.list();
 		if (users != null && users.size() > 0) {
 			return users.get(0);
 		}
@@ -90,11 +90,11 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * admin账户初始化
 	 */
-	public void pwdInit(TSUser user,String newPwd){
+	public void pwdInit(UserEntity user,String newPwd){
 		String query ="from TSUser u where u.userName = :username ";
 		Query queryObject = getSession().createQuery(query);
 		queryObject.setParameter("username", user.getUserName());
-		List<TSUser> users =  queryObject.list();
+		List<UserEntity> users =  queryObject.list();
 		if(null != users && users.size() > 0){
 			user = users.get(0);
 			String pwd = PasswordUtil.encrypt(user.getUserName(), newPwd, PasswordUtil.getStaticSalt());
@@ -105,10 +105,10 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	}
 	
 
-	public String getUserRole(TSUser user) {
+	public String getUserRole(UserEntity user) {
 		String userRole = "";
-		List<TSRoleUser> sRoleUser = findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
-		for (TSRoleUser tsRoleUser : sRoleUser) {
+		List<RoleUserEntity> sRoleUser = findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
+		for (RoleUserEntity tsRoleUser : sRoleUser) {
 			userRole += tsRoleUser.getTSRole().getRoleCode() + ",";
 		}
 		return userRole;
@@ -166,7 +166,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 			if (entityName.equals("TSTemplate")) {
 				realPath = uploadFile.getMultipartRequest().getSession().getServletContext().getRealPath("/") + ResourceUtil.getConfigByName("templatepath") + "/";
 				path = ResourceUtil.getConfigByName("templatepath") + "/";
-			} else if (entityName.equals("TSIcon")) {
+			} else if (entityName.equals("IconEntity")) {
 				realPath = uploadFile.getMultipartRequest().getSession().getServletContext().getRealPath("/") + uploadFile.getCusPath() + "/";
 				path = uploadFile.getCusPath() + "/";
 			}
@@ -482,9 +482,9 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	 *            模型
 	 * @return
 	 */
-	public List<ComboTree> comTree(List<TSDepart> all, ComboTree comboTree) {
+	public List<ComboTree> comTree(List<DepartEntity> all, ComboTree comboTree) {
 		List<ComboTree> trees = new ArrayList<ComboTree>();
-		for (TSDepart depart : all) {
+		for (DepartEntity depart : all) {
 			trees.add(tree(depart, true));
 		}
 		return trees;
@@ -492,19 +492,19 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	}
 
 	@SuppressWarnings("unchecked")
-	public ComboTree tree(TSDepart depart, boolean recursive) {
+	public ComboTree tree(DepartEntity depart, boolean recursive) {
 		ComboTree tree = new ComboTree();
 		tree.setId(oConvertUtils.getString(depart.getId()));
 		tree.setText(depart.getDepartname());
-		List<TSDepart> departsList = findByProperty(TSDepart.class, "TSPDepart.id", depart.getId());
+		List<DepartEntity> departsList = findByProperty(DepartEntity.class, "TSPDepart.id", depart.getId());
 		if (departsList != null && departsList.size() > 0) {
 			tree.setState("closed");
 			tree.setChecked(false);
 			if (recursive) {// 递归查询子节点
-				List<TSDepart> departList = new ArrayList<TSDepart>(departsList);
+				List<DepartEntity> departList = new ArrayList<DepartEntity>(departsList);
 				//Collections.sort(departList, new SetListSort());// 排序
 				List<ComboTree> children = new ArrayList<ComboTree>();
-				for (TSDepart d : departList) {
+				for (DepartEntity d : departList) {
 					ComboTree t = tree(d, true);
 					children.add(t);
 				}
@@ -630,11 +630,11 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 			}
 			if (treeGridModel.getRoleid() != null) {
 				String[] opStrings = {};
-				List<TSRoleFunction> roleFunctions = findByProperty(TSRoleFunction.class, "TSFunction.id", id);
+				List<RoleFunctionEntity> roleFunctions = findByProperty(RoleFunctionEntity.class, "TSFunction.id", id);
 
 				if (roleFunctions.size() > 0) {
-					for (TSRoleFunction tRoleFunction : roleFunctions) {
-						TSRoleFunction roleFunction = tRoleFunction;
+					for (RoleFunctionEntity tRoleFunction : roleFunctions) {
+						RoleFunctionEntity roleFunction = tRoleFunction;
 						if (roleFunction.getTSRole().getId().toString().equals(treeGridModel.getRoleid())) {
 							String bbString = roleFunction.getOperation();
 							if (bbString != null) {
@@ -644,10 +644,10 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 						}
 					}
 				}
-				List<TSOperation> operateions = findByProperty(TSOperation.class, "TSFunction.id", id);
+				List<OperationEntity> operateions = findByProperty(OperationEntity.class, "TSFunction.id", id);
 				StringBuffer attributes = new StringBuffer();
 				if (operateions.size() > 0) {
-					for (TSOperation tOperation : operateions) {
+					for (OperationEntity tOperation : operateions) {
 						if (opStrings.length < 1) {
 							attributes.append("<input type=checkbox name=operatons value=" + tOperation.getId() + "_" + id + ">" + tOperation.getOperationname());
 						} else {

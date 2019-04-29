@@ -8,20 +8,20 @@ import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.YouBianCodeUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.pojo.base.TSCategoryEntity;
-import org.jeecgframework.web.system.service.CategoryServiceI;
+import org.jeecgframework.web.system.pojo.base.CategoryEntity;
+import org.jeecgframework.web.system.service.CategoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("tSCategoryService")
 @Transactional
 public class CategoryServiceImpl extends CommonServiceImpl implements
-		CategoryServiceI {
+        CategoryService {
 
 //	private static final String MAX_SQL = "SELECT MAX(code) FROM t_s_category WHERE parent_code";
 
 	@Override
-	public void saveCategory(TSCategoryEntity category) {
+	public void saveCategory(CategoryEntity category) {
 
 		String parentCode = null;
 		if(category.getParent()!=null&&oConvertUtils.isNotEmpty(category.getParent().getCode())){
@@ -72,7 +72,7 @@ public class CategoryServiceImpl extends CommonServiceImpl implements
 //	 * @param category
 //	 * @return
 //	 */
-//	private synchronized String getCategoryCoade(TSCategoryEntity category) {
+//	private synchronized String getCategoryCoade(CategoryEntity category) {
 //		Long maxCode = null;
 //		//step 1 顶级code只按照序列增长
 //		if (category.getParent() == null
@@ -87,7 +87,7 @@ public class CategoryServiceImpl extends CommonServiceImpl implements
 //							+ "d", maxCode);
 //		}
 //		//step 2按照下级序列向上排序
-//		TSCategoryEntity parent = this.findUniqueByProperty(TSCategoryEntity.class,"code", category
+//		CategoryEntity parent = this.findUniqueByProperty(CategoryEntity.class,"code", category
 //				.getParent().getCode());
 //		//防止hibernate缓存持久化异常
 //		category.setParent(parent);

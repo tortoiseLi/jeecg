@@ -10,7 +10,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.web.system.pojo.base.TSCategoryEntity;
+import org.jeecgframework.web.system.pojo.base.CategoryEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.openxmlformats.schemas.drawingml.x2006.chart.impl.STScatterStyleImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -348,9 +348,9 @@ public class TreeSelectTag extends TagSupport {
 				String[] defaultValArray = defaultVal.split(",");
 				for (int i = 0; i < defaultValArray.length; i++) {
 					if(StringUtil.isNotEmpty(defaultValArray[i])){
-						List<TSCategoryEntity> categoryList = systemService.findByProperty(TSCategoryEntity.class, "code", defaultValArray[i]);
+						List<CategoryEntity> categoryList = systemService.findByProperty(CategoryEntity.class, "code", defaultValArray[i]);
 						if(categoryList != null && !categoryList.isEmpty()){
-							TSCategoryEntity categoryEntity = categoryList.get(0);
+							CategoryEntity categoryEntity = categoryList.get(0);
 							if(StringUtil.isEmpty(result)){
 								result = categoryEntity.getName();
 							}else{
@@ -360,9 +360,9 @@ public class TreeSelectTag extends TagSupport {
 					}
 				}
 			}else{
-				List<TSCategoryEntity> categoryList = systemService.findByProperty(TSCategoryEntity.class, "code", defaultVal);
+				List<CategoryEntity> categoryList = systemService.findByProperty(CategoryEntity.class, "code", defaultVal);
 				if(categoryList != null && !categoryList.isEmpty()){
-					TSCategoryEntity categoryEntity = categoryList.get(0);
+					CategoryEntity categoryEntity = categoryList.get(0);
 					result = categoryEntity.getName();
 				}
 			}

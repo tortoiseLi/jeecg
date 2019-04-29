@@ -14,8 +14,8 @@ import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.web.system.pojo.base.MutiLangEntity;
-import org.jeecgframework.web.system.service.CacheServiceI;
-import org.jeecgframework.web.system.service.MutiLangServiceI;
+import org.jeecgframework.web.system.service.CacheService;
+import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,11 +38,11 @@ public class MutiLangController extends BaseController {
 	private static final Logger logger = Logger.getLogger(MutiLangController.class);
 
 	@Autowired
-	private MutiLangServiceI mutiLangService;
+	private MutiLangService mutiLangService;
 	@Autowired
 	private SystemService systemService;
 	@Autowired
-	private CacheServiceI cacheService;
+	private CacheService cacheService;
 
 	/**
 	 * 多语言列表 页面跳转

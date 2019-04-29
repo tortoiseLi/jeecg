@@ -24,9 +24,9 @@ import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
-import org.jeecgframework.web.system.pojo.base.TSCategoryEntity;
-import org.jeecgframework.web.system.pojo.base.TSIcon;
-import org.jeecgframework.web.system.service.CategoryServiceI;
+import org.jeecgframework.web.system.pojo.base.CategoryEntity;
+import org.jeecgframework.web.system.pojo.base.IconEntity;
+import org.jeecgframework.web.system.service.CategoryService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.core.util.MyBeanUtils;
 
@@ -51,7 +51,7 @@ public class CategoryController extends BaseController {
 	private static final String CATEGORY_ADD_OR_UPDATE = "system/category/category";
 
 	@Autowired
-	private CategoryServiceI categoryService;
+	private CategoryService categoryService;
 
 	@Autowired
 	private SystemService systemService;
@@ -78,10 +78,10 @@ public class CategoryController extends BaseController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(params = "datagrid")
 	@ResponseBody
-	public List<TreeGrid> datagrid(TSCategoryEntity category,
+	public List<TreeGrid> datagrid(CategoryEntity category,
 			HttpServletRequest request, HttpServletResponse response,
 			DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSCategoryEntity.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(CategoryEntity.class, dataGrid);
 		if (category.getId() == null || StringUtils.isEmpty(category.getId())) {
 			cq.isNull("parent");
 		} else {
@@ -91,7 +91,7 @@ public class CategoryController extends BaseController {
 		// 查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq,
 				category, request.getParameterMap());
-		List<TSCategoryEntity> list = this.categoryService
+		List<CategoryEntity> list = this.categoryService
 				.getListByCriteriaQuery(cq, false);
 		List<TreeGrid> treeGrids = new ArrayList<TreeGrid>();
 		TreeGridModel treeGridModel = new TreeGridModel();
@@ -113,9 +113,9 @@ public class CategoryController extends BaseController {
 	 */
 	@RequestMapping(params = "del")
 	@ResponseBody
-	public AjaxJson del(TSCategoryEntity tSCategory, HttpServletRequest request) {
+	public AjaxJson del(CategoryEntity tSCategory, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		tSCategory = systemService.getEntity(TSCategoryEntity.class,
+		tSCategory = systemService.getEntity(CategoryEntity.class,
 				tSCategory.getId());
 		j.setMsg("分类管理删除成功");
 		categoryService.delete(tSCategory);
@@ -132,11 +132,11 @@ public class CategoryController extends BaseController {
 	 */
 	@RequestMapping(params = "save")
 	@ResponseBody
-	public AjaxJson save(TSCategoryEntity category, HttpServletRequest request) {
+	public AjaxJson save(CategoryEntity category, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(category.getId())) {
 			j.setMsg("分类管理更新成功");
-			TSCategoryEntity t = categoryService.get(TSCategoryEntity.class,
+			CategoryEntity t = categoryService.get(CategoryEntity.class,
 					category.getId());
 
 			category.getParent().setCode(t.getParent()==null||"".equals(t.getParent().getCode())? null :t.getParent().getCode());
@@ -165,17 +165,17 @@ public class CategoryController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdate")
-	public String addorupdate(ModelMap map, TSCategoryEntity category) {
+	public String addorupdate(ModelMap map, CategoryEntity category) {
 		if (StringUtil.isNotEmpty(category.getCode())) {
-			category = categoryService.findUniqueByProperty(TSCategoryEntity.class,
+			category = categoryService.findUniqueByProperty(CategoryEntity.class,
 					"code",category.getCode());
 			map.put("categoryPage", category);
 		}
-		map.put("iconlist", systemService.findByProperty(TSIcon.class,
+		map.put("iconlist", systemService.findByProperty(IconEntity.class,
 				"iconType", (short) 1));
 		if (category.getParent() != null
 				&& StringUtil.isNotEmpty(category.getParent().getCode())) {
-			TSCategoryEntity parent = categoryService.findUniqueByProperty(TSCategoryEntity.class, "code", category.getParent().getCode());
+			CategoryEntity parent = categoryService.findUniqueByProperty(CategoryEntity.class, "code", category.getParent().getCode());
 			category.setParent(parent);
 			map.put("categoryPage", category);
 		}
@@ -185,7 +185,7 @@ public class CategoryController extends BaseController {
 	@RequestMapping(params = "combotree")
 	@ResponseBody
 	public List<ComboTree> combotree(String selfCode, ComboTree comboTree) {
-		CriteriaQuery cq = new CriteriaQuery(TSCategoryEntity.class);
+		CriteriaQuery cq = new CriteriaQuery(CategoryEntity.class);
 		if (StringUtils.isNotEmpty(comboTree.getId())) {
 			cq.createAlias("parent", "parent");
 			cq.eq("parent.code", comboTree.getId());
@@ -195,7 +195,7 @@ public class CategoryController extends BaseController {
 			cq.isNull("parent");
 		}
 		cq.add();
-		List<TSCategoryEntity> categoryList = systemService
+		List<CategoryEntity> categoryList = systemService
 				.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("code", "name", "list");
@@ -214,7 +214,7 @@ public class CategoryController extends BaseController {
 	@RequestMapping(params = "tree")
 	@ResponseBody
 	public List<ComboTree> tree(String selfCode,ComboTree comboTree, boolean isNew) {
-		CriteriaQuery cq = new CriteriaQuery(TSCategoryEntity.class);
+		CriteriaQuery cq = new CriteriaQuery(CategoryEntity.class);
 		if (StringUtils.isNotEmpty(comboTree.getId())) {
 			cq.createAlias("parent", "parent");
 			cq.eq("parent.code", comboTree.getId());
@@ -224,7 +224,7 @@ public class CategoryController extends BaseController {
 			cq.isNull("parent");
 		}
 		cq.add();
-		List<TSCategoryEntity> categoryList = systemService
+		List<CategoryEntity> categoryList = systemService
 				.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		for (int i = 0; i < categoryList.size(); i++) {
@@ -233,7 +233,7 @@ public class CategoryController extends BaseController {
 		return comboTrees;
 	}
 
-	private ComboTree categoryConvertToTree(TSCategoryEntity entity) {
+	private ComboTree categoryConvertToTree(CategoryEntity entity) {
 		ComboTree tree = new ComboTree();
 		tree.setId(entity.getCode());
 		tree.setText(entity.getName());

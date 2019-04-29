@@ -34,12 +34,12 @@ import org.jeecgframework.core.util.SysThemesUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.manager.ClientManager;
 import org.jeecgframework.web.system.pojo.base.Client;
-import org.jeecgframework.web.system.pojo.base.TSFunction;
-import org.jeecgframework.web.system.pojo.base.TSPasswordResetkey;
-import org.jeecgframework.web.system.pojo.base.TSRole;
-import org.jeecgframework.web.system.pojo.base.TSRoleUser;
-import org.jeecgframework.web.system.pojo.base.TSUser;
-import org.jeecgframework.web.system.service.MutiLangServiceI;
+import org.jeecgframework.web.system.pojo.base.FunctionEntity;
+import org.jeecgframework.web.system.pojo.base.PasswordResetKeyEntity;
+import org.jeecgframework.web.system.pojo.base.RoleEntity;
+import org.jeecgframework.web.system.pojo.base.RoleUserEntity;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.service.UserService;
 import org.jeecgframework.web.system.sms.util.MailUtil;
@@ -76,7 +76,7 @@ public class LoginController extends BaseController{
 	private ClientManager clientManager;
 
 	@Autowired
-	private MutiLangServiceI mutiLangService;
+	private MutiLangService mutiLangService;
 	
 	@Autowired
 	public void setSystemService(SystemService systemService) {
@@ -99,7 +99,7 @@ public class LoginController extends BaseController{
 	 */
 	@RequestMapping(params = "checkuser")
 	@ResponseBody
-	public AjaxJson checkuser(TSUser user, HttpServletRequest req) {
+	public AjaxJson checkuser(UserEntity user, HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		AjaxJson j = new AjaxJson();
 		//语言选择
@@ -129,9 +129,9 @@ public class LoginController extends BaseController{
 		}
 		else {
 			//用户登录验证逻辑
-			TSUser u = userService.checkUserExits(user);
+			UserEntity u = userService.checkUserExits(user);
 			if (u == null) {
-				u = userService.findUniqueByProperty(TSUser.class, "email", user.getUserName());
+				u = userService.findUniqueByProperty(UserEntity.class, "email", user.getUserName());
 
 				if(u == null || !u.getPassword().equals(PasswordUtil.encrypt(u.getUserName(),user.getPassword(), PasswordUtil.getStaticSalt()))){
 
@@ -192,13 +192,13 @@ public class LoginController extends BaseController{
 	 */
 	@RequestMapping(params = "changeDefaultOrg")
 	@ResponseBody
-	public AjaxJson changeDefaultOrg(TSUser user, HttpServletRequest req) {
+	public AjaxJson changeDefaultOrg(UserEntity user, HttpServletRequest req) {
 		AjaxJson j = new AjaxJson();
 		Map<String, Object> attrMap = new HashMap<String, Object>();
 		String orgId = req.getParameter("orgId");
-		TSUser u = userService.checkUserExits(user);
+		UserEntity u = userService.checkUserExits(user);
 		if(u == null){
-			u = userService.findUniqueByProperty(TSUser.class, "email", user.getUserName());
+			u = userService.findUniqueByProperty(UserEntity.class, "email", user.getUserName());
 		}
 		if (oConvertUtils.isNotEmpty(orgId)) {
 			attrMap.put("orgNum", 1);
@@ -217,13 +217,13 @@ public class LoginController extends BaseController{
 	 */
 	@RequestMapping(params = "login")
 	public String login(ModelMap modelMap,HttpServletRequest request,HttpServletResponse response) {
-		TSUser user = ResourceUtil.getSessionUser();
+		UserEntity user = ResourceUtil.getSessionUser();
 		String roles = "";
 		if (user != null) {
 			log.info(" >>>>>>>>>>>>>>>>>>>>>>>>>>  Login 用户登录成功，初始化Main首页用户信息  （Main 首页加载逻辑）  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
-			List<TSRoleUser> rUsers = systemService.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
-			for (TSRoleUser ru : rUsers) {
-				TSRole role = ru.getTSRole();
+			List<RoleUserEntity> rUsers = systemService.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
+			for (RoleUserEntity ru : rUsers) {
+				RoleEntity role = ru.getTSRole();
 				roles += role.getRoleName() + ",";
 			}
 			if (roles.length() > 0) {
@@ -303,7 +303,7 @@ public class LoginController extends BaseController{
 	@RequestMapping(params = "logout")
 	public ModelAndView logout(HttpServletRequest request) {
 		HttpSession session = ContextHolderUtils.getSession();
-		TSUser user = ResourceUtil.getSessionUser();
+		UserEntity user = ResourceUtil.getSessionUser();
 		try {
 			systemService.addLog("用户" + user!=null?user.getUserName():"" + "已退出",Globals.Log_Type_EXIT, Globals.Log_Leavel_INFO);
 		} catch (Exception e) {
@@ -322,7 +322,7 @@ public class LoginController extends BaseController{
 	 */
 	@RequestMapping(params = "left")
 	public ModelAndView left(HttpServletRequest request) {
-		TSUser user = ResourceUtil.getSessionUser();
+		UserEntity user = ResourceUtil.getSessionUser();
 		HttpSession session = ContextHolderUtils.getSession();
         ModelAndView modelAndView = new ModelAndView();
 		// 登陆者的权限
@@ -346,19 +346,19 @@ public class LoginController extends BaseController{
 		HttpSession session = ContextHolderUtils.getSession();
 		Client client = clientManager.getClient(session.getId());
 		//获取到的是一个map集合
-		Map<Integer, List<TSFunction>> map=client.getFunctionMap();
+		Map<Integer, List<FunctionEntity>> map=client.getFunctionMap();
 		//声明list用来存储菜单
-		List<TSFunction>autoList = new ArrayList<TSFunction>();
+		List<FunctionEntity>autoList = new ArrayList<FunctionEntity>();
 		//循环map集合取到菜单
 		for(int t=0;t<map.size();t++){
 			//根据map键取到菜单的TSFuction 用List接收
-			List<TSFunction> list = map.get(t);
+			List<FunctionEntity> list = map.get(t);
 			//循环List取到TSFuction中的functionname
 			for(int i =0;i<list.size();i++){
 				//由于functionname中的一些参数没有被国际化，所以还是字母，需要MutiLangUtil中的getLang()方法来
 				String name=MutiLangUtil.getLang(list.get(i).getFunctionName());
 				if(name.indexOf(searchVal)!= -1 ){
-					TSFunction  ts =new TSFunction();
+					FunctionEntity  ts =new FunctionEntity();
 					ts.setFunctionName(MutiLangUtil.getLang(list.get(i).getFunctionName()));
 					autoList.add(ts);
 				}
@@ -391,14 +391,14 @@ public class LoginController extends BaseController{
 		String urlname = request.getParameter("urlname");
 		HttpSession session = ContextHolderUtils.getSession();
 		Client client = clientManager.getClient(session.getId());
-		Map<Integer, List<TSFunction>> map=client.getFunctionMap();
-		List<TSFunction>autoList = new ArrayList<TSFunction>();
+		Map<Integer, List<FunctionEntity>> map=client.getFunctionMap();
+		List<FunctionEntity>autoList = new ArrayList<FunctionEntity>();
 		for(int t=0;t<map.size();t++){
-			List<TSFunction> list = map.get(t);
+			List<FunctionEntity> list = map.get(t);
 			for(int i =0;i<list.size();i++){
 				String funname=MutiLangUtil.getLang(list.get(i).getFunctionName());
 				if(urlname.equals(funname)){
-					TSFunction ts =new TSFunction();
+					FunctionEntity ts =new FunctionEntity();
 					ts.setFunctionUrl(list.get(i).getFunctionUrl());
 					autoList.add(ts);
 				}
@@ -434,10 +434,10 @@ public class LoginController extends BaseController{
 	@ResponseBody
 	public AjaxJson resetPwd(String key,String password){
 		AjaxJson ajaxJson = new AjaxJson();
-		TSPasswordResetkey passwordResetkey = systemService.get(TSPasswordResetkey.class, key);
+		PasswordResetKeyEntity passwordResetkey = systemService.get(PasswordResetKeyEntity.class, key);
 		Date now = new Date();
 		if(passwordResetkey != null && passwordResetkey.getIsReset() != 1 && (now.getTime() - passwordResetkey.getCreateDate().getTime()) < 1000*60*60*3){
-			TSUser user = systemService.findUniqueByProperty(TSUser.class, "userName", passwordResetkey.getUsername());
+			UserEntity user = systemService.findUniqueByProperty(UserEntity.class, "userName", passwordResetkey.getUsername());
 			user.setPassword(PasswordUtil.encrypt(user.getUserName(), password, PasswordUtil.getStaticSalt()));
 			systemService.updateEntitie(user);
 			passwordResetkey.setIsReset(1);
@@ -474,16 +474,16 @@ public class LoginController extends BaseController{
 				ajaxJson.setMsg("邮件地址不能为空");
 				return ajaxJson;
 			}
-			TSUser user = systemService.findUniqueByProperty(TSUser.class, "email", email);
+			UserEntity user = systemService.findUniqueByProperty(UserEntity.class, "email", email);
 			if(user == null){
 				ajaxJson.setSuccess(false);
 				ajaxJson.setMsg("用户名对应的用户信息不存在");
 				return ajaxJson;
 			}
-			String hql = "from TSPasswordResetkey bean where bean.username = ? and bean.isReset = 0 order by bean.createDate desc limit 1";
-			List<TSPasswordResetkey> resetKeyList = systemService.findHql(hql,user.getUserName());
+			String hql = "from PasswordResetKeyEntity bean where bean.username = ? and bean.isReset = 0 order by bean.createDate desc limit 1";
+			List<PasswordResetKeyEntity> resetKeyList = systemService.findHql(hql,user.getUserName());
 			if(resetKeyList != null && !resetKeyList.isEmpty()){
-				TSPasswordResetkey resetKey = resetKeyList.get(0);
+				PasswordResetKeyEntity resetKey = resetKeyList.get(0);
 				Date now = new Date();
 				if(resetKey.getEmail().equals(email) && (now.getTime() - resetKey.getCreateDate().getTime()) < (1000*60*60*3 - 1000*60*5)){
 					ajaxJson.setSuccess(false);
@@ -492,7 +492,7 @@ public class LoginController extends BaseController{
 					
 				}
 			}
-			TSPasswordResetkey passwordResetKey = new TSPasswordResetkey();
+			PasswordResetKeyEntity passwordResetKey = new PasswordResetKeyEntity();
 			passwordResetKey.setEmail(email);
 			passwordResetKey.setUsername(user.getUserName());
 			passwordResetKey.setCreateDate(new Date());
@@ -612,7 +612,7 @@ public class LoginController extends BaseController{
 	 */
 	@RequestMapping(params = "top")
 	public ModelAndView top(HttpServletRequest request) {
-		TSUser user = ResourceUtil.getSessionUser();
+		UserEntity user = ResourceUtil.getSessionUser();
 		HttpSession session = ContextHolderUtils.getSession();
 		// 登陆者的权限
 		if (user.getId() == null) {
@@ -634,7 +634,7 @@ public class LoginController extends BaseController{
 	 */
 	@RequestMapping(params = "shortcut_top")
 	public ModelAndView shortcut_top(HttpServletRequest request) {
-		TSUser user = ResourceUtil.getSessionUser();
+		UserEntity user = ResourceUtil.getSessionUser();
 		HttpSession session = ContextHolderUtils.getSession();
 		// 登陆者的权限
 		if (user.getId() == null) {
@@ -654,7 +654,7 @@ public class LoginController extends BaseController{
     @RequestMapping(params = "primaryMenu")
     @ResponseBody
 	public String getPrimaryMenu() {
-		List<TSFunction> primaryMenu = userService.getFunctionMap(ResourceUtil.getSessionUser().getId()).get(0);
+		List<FunctionEntity> primaryMenu = userService.getFunctionMap(ResourceUtil.getSessionUser().getId()).get(0);
 		//Shortcut一级菜单图标个性化设置（TODO 暂时写死）
         String floor = userService.getShortcutPrimaryMenu(primaryMenu);
 		return floor;
@@ -669,7 +669,7 @@ public class LoginController extends BaseController{
 	@ResponseBody
 	public String getPrimaryMenuDiy() {
 		//取二级菜单
-		List<TSFunction> primaryMenu = userService.getFunctionMap(ResourceUtil.getSessionUser().getId()).get(1);
+		List<FunctionEntity> primaryMenu = userService.getFunctionMap(ResourceUtil.getSessionUser().getId()).get(1);
 		//Shortcut二级菜单图标个性化设置（TODO 暂时写死）
 		String floor = userService.getShortcutPrimaryMenuDiy(primaryMenu);
 		return floor;
@@ -713,11 +713,11 @@ public class LoginController extends BaseController{
 
 			//List<TSFunction> functions = this.systemService.findByProperty(TSFunction.class, "TSFunction.id", functionId);
 			String userid = ResourceUtil.getSessionUser().getId();
-			List<TSFunction> functions = userService.getSubFunctionList(userid, functionId);
+			List<FunctionEntity> functions = userService.getSubFunctionList(userid, functionId);
 
 			JSONArray jsonArray = new JSONArray();
 			if(functions != null && functions.size() > 0) {
-				for (TSFunction function : functions) {
+				for (FunctionEntity function : functions) {
 					JSONObject jsonObjectInfo = new JSONObject();
 					jsonObjectInfo.put("id", function.getId());
 
@@ -737,11 +737,11 @@ public class LoginController extends BaseController{
 		return j;
 	}
 	
-	public JSONArray getChildOfAdminLteTree(TSFunction function) {
+	public JSONArray getChildOfAdminLteTree(FunctionEntity function) {
 		JSONArray jsonArray = new JSONArray();
-		List<TSFunction> functions = this.systemService.findByProperty(TSFunction.class, "TSFunction.id", function.getId());
+		List<FunctionEntity> functions = this.systemService.findByProperty(FunctionEntity.class, "TSFunction.id", function.getId());
 		if(functions != null && functions.size() > 0) {
-			for (TSFunction tsFunction : functions) {
+			for (FunctionEntity tsFunction : functions) {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("id", tsFunction.getId());
 				jsonObject.put("text", MutiLangUtil.getLang(tsFunction.getFunctionName()));

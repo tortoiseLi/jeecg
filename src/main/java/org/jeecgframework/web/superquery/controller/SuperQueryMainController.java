@@ -44,7 +44,7 @@ import org.jeecgframework.web.superquery.entity.SuperQueryTableEntity;
 import org.jeecgframework.web.superquery.page.SuperQueryMainPage;
 import org.jeecgframework.web.superquery.service.SuperQueryMainServiceI;
 import org.jeecgframework.web.superquery.util.SuperQueryUtil;
-import org.jeecgframework.web.system.service.MutiLangServiceI;
+import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.service.UserService;
 import org.slf4j.Logger;
@@ -868,7 +868,7 @@ public class SuperQueryMainController extends BaseController {
 			List<Map<String, Object>> selectType = systemService.findForJdbc(sql,typegroup);
 			//step.2 根据查询的结果判断是否是国际化语言，是的话转换
 			List<Map<String, Object>> listMap = new ArrayList<Map<String,Object>>();
-			MutiLangServiceI mutiLangService = ApplicationContextUtil.getContext().getBean(MutiLangServiceI.class);	
+			MutiLangService mutiLangService = ApplicationContextUtil.getContext().getBean(MutiLangService.class);
 			if(selectType.size()>0) {
 				for (Map<String, Object> map : selectType) {
 					Map<String, Object> mutiMap = new HashMap<String, Object>();

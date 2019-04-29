@@ -8,7 +8,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 import org.jeecgframework.core.beanvalidator.BeanValidators;
-import org.jeecgframework.web.system.pojo.base.TSUser;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
 import org.jeecgframework.web.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -56,8 +56,8 @@ public class UserRestController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	@ApiOperation(value="用户列表信息",produces="application/json",httpMethod="GET")
-	public List<TSUser> list() {
-		List<TSUser> listUsers=userService.getList(TSUser.class);
+	public List<UserEntity> list() {
+		List<UserEntity> listUsers=userService.getList(UserEntity.class);
 		return listUsers;
 	}
 
@@ -70,7 +70,7 @@ public class UserRestController {
 	@ResponseBody
 	@ApiOperation(value="根据ID获取用户信息",notes="根据ID获取用户信息",httpMethod="GET",produces="application/json")
 	public ResponseEntity<?> get(@ApiParam(required=true,name="id",value="用户ID") @PathVariable("id") String id) {
-		TSUser task = userService.get(TSUser.class, id);
+		UserEntity task = userService.get(UserEntity.class, id);
 		if (task == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
@@ -80,9 +80,9 @@ public class UserRestController {
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	@ApiOperation(value="创建用户信息")
-	public ResponseEntity<?> create(@ApiParam(name="用户对象")@RequestBody TSUser user, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<?> create(@ApiParam(name="用户对象")@RequestBody UserEntity user, UriComponentsBuilder uriBuilder) {
 		//调用JSR303 Bean Validator进行校验，如果出错返回含400错误码及json格式的错误信息.
-		Set<ConstraintViolation<TSUser>> failures = validator.validate(user);
+		Set<ConstraintViolation<UserEntity>> failures = validator.validate(user);
 		if (!failures.isEmpty()) {
 			return new ResponseEntity(BeanValidators.extractPropertyAndMessage(failures), HttpStatus.BAD_REQUEST);
 		}
@@ -102,9 +102,9 @@ public class UserRestController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	@ApiOperation(value="更新用户信息",notes="更新用户数据信息")
-	public ResponseEntity<?> update(@ApiParam(name="用户",value="传入对应的JSON")@RequestBody TSUser user) {
+	public ResponseEntity<?> update(@ApiParam(name="用户",value="传入对应的JSON")@RequestBody UserEntity user) {
 		//调用JSR303 Bean Validator进行校验，如果出错返回含400错误码及json格式的错误信息.
-		Set<ConstraintViolation<TSUser>> failures = validator.validate(user);
+		Set<ConstraintViolation<UserEntity>> failures = validator.validate(user);
 		if (!failures.isEmpty()) {
 			return new ResponseEntity(BeanValidators.extractPropertyAndMessage(failures), HttpStatus.BAD_REQUEST);
 		}
@@ -120,6 +120,6 @@ public class UserRestController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ApiOperation(value="删除用户信息")
 	public void delete(@ApiParam(name="id",value="用户ID",required=true)@PathVariable("id") String id) {
-		userService.deleteEntityById(TSUser.class, id);
+		userService.deleteEntityById(UserEntity.class, id);
 	}
 }

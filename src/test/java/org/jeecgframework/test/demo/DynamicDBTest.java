@@ -10,7 +10,7 @@ import org.jeecgframework.core.util.DynamicDBUtil;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.test.demo.entity.GwyuTest;
 import org.jeecgframework.web.system.pojo.base.DynamicDataSourceEntity;
-import org.jeecgframework.web.system.service.CacheServiceI;
+import org.jeecgframework.web.system.service.CacheService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class DynamicDBTest extends AbstractUnitTest {
 	static String dbKey = "JEECG_LOCAL";
 	@Autowired
-	private CacheServiceI cacheService;
+	private CacheService cacheService;
 
 	/**
 	 * 定义多数据源配置
@@ -40,7 +40,7 @@ public class DynamicDBTest extends AbstractUnitTest {
 		Map<String, DynamicDataSourceEntity> dynamicDataSourceMap = new HashMap<String, DynamicDataSourceEntity>();
 		dynamicDataSourceMap.put(dbKey, dynamicSourceEntity);
 		//缓存数据
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY,dynamicDataSourceMap);
+		cacheService.put(CacheService.FOREVER_CACHE,ResourceUtil.DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY,dynamicDataSourceMap);
 	}
 
 	@Test

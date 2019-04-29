@@ -6,7 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jeecgframework.core.constant.Globals;
-import org.jeecgframework.web.system.pojo.base.TSDataRule;
+import org.jeecgframework.web.system.pojo.base.DataRuleEntity;
 import org.springframework.util.StringUtils;
 
 /**
@@ -25,13 +25,13 @@ public class JeecgDataAutorUtils {
 	 * @param MENU_DATA_AUTHOR_RULES
 	 */
 	public static synchronized void installDataSearchConditon(
-			HttpServletRequest request, List<TSDataRule> MENU_DATA_AUTHOR_RULES) {
+			HttpServletRequest request, List<DataRuleEntity> MENU_DATA_AUTHOR_RULES) {
 		@SuppressWarnings("unchecked")
-		List<TSDataRule> list = (List<TSDataRule>)loadDataSearchConditonSQL();// 1.先从request获取MENU_DATA_AUTHOR_RULES，如果存则获取到LIST
+		List<DataRuleEntity> list = (List<DataRuleEntity>)loadDataSearchConditonSQL();// 1.先从request获取MENU_DATA_AUTHOR_RULES，如果存则获取到LIST
 		if (list==null) { // 2.如果不存在，则new一个list
-			list = new ArrayList<TSDataRule>();
+			list = new ArrayList<DataRuleEntity>();
 		}
-		for (TSDataRule tsDataRule : MENU_DATA_AUTHOR_RULES) {
+		for (DataRuleEntity tsDataRule : MENU_DATA_AUTHOR_RULES) {
 			list.add(tsDataRule);
 		}
 		request.setAttribute(Globals.MENU_DATA_AUTHOR_RULES, list); // 3.往list里面增量存指
@@ -44,8 +44,8 @@ public class JeecgDataAutorUtils {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static synchronized List<TSDataRule> loadDataSearchConditonSQL() {
-		return (List<TSDataRule>) ContextHolderUtils.getRequest().getAttribute(
+	public static synchronized List<DataRuleEntity> loadDataSearchConditonSQL() {
+		return (List<DataRuleEntity>) ContextHolderUtils.getRequest().getAttribute(
 				Globals.MENU_DATA_AUTHOR_RULES);
 	}
 

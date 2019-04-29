@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.enums.SysACEIconEnum;
-import org.jeecgframework.web.system.pojo.base.TSFunction;
+import org.jeecgframework.web.system.pojo.base.FunctionEntity;
 
 
 /**
@@ -24,10 +24,10 @@ public class ListtoMenu {
 	 * @param set1
 	 * @return
 	 */
-	public static String getMenu(List<TSFunction> set, List<TSFunction> set1) {
+	public static String getMenu(List<FunctionEntity> set, List<FunctionEntity> set1) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("{\"menus\":[");
-		for (TSFunction node : set) {
+		for (FunctionEntity node : set) {
 			String iconClas = "default";// 权限图标样式
 			if (node.getTSIcon() != null) {
 				iconClas = ResourceUtil.allTSIcons.get(node.getTSIcon().getId()).getIconClas();
@@ -56,9 +56,9 @@ public class ListtoMenu {
 	 * @param args
 	 */
 
-	static void iterGet(List<TSFunction> set1, String pid, StringBuffer buffer) {
+	static void iterGet(List<FunctionEntity> set1, String pid, StringBuffer buffer) {
 
-		for (TSFunction node : set1) {
+		for (FunctionEntity node : set1) {
 
 			// 查找所有父节点为pid的所有对象，然后拼接为json格式的数据
 			count++;
@@ -86,11 +86,11 @@ public class ListtoMenu {
 	 * @param functions
 	 * @return
 	 */
-	public static String getBootMenu(List<TSFunction> pFunctions,
-			List<TSFunction> functions) {
+	public static String getBootMenu(List<FunctionEntity> pFunctions,
+			List<FunctionEntity> functions) {
 		StringBuffer menuString = new StringBuffer();
 		menuString.append("<ul>");
-		for (TSFunction pFunction : pFunctions) {
+		for (FunctionEntity pFunction : pFunctions) {
 			menuString.append("<li><a href=\"#\"><span class=\"icon16 icomoon-icon-stats-up\"></span><b>"
 			+ getMutiLang(pFunction.getFunctionName()) + "</b></a>");
 		/*
@@ -101,7 +101,7 @@ public class ListtoMenu {
 			if (submenusize > 0) {
 				menuString.append("<ul class=\"sub\">");
 			}
-			for (TSFunction function : functions) {
+			for (FunctionEntity function : functions) {
 
 				if (function.getTSFunction().getId().equals(pFunction.getId())) {
 					menuString
@@ -120,7 +120,7 @@ public class ListtoMenu {
             }else{
             	menuString.append("<ul class=\"sub\">");
             }
-			for (TSFunction function : functions) {
+			for (FunctionEntity function : functions) {
 				if (function.getTSFunction().getId().equals(pFunction.getId())) {
 					menuString.append("<li><a href=\""
 									+ function.getFunctionUrl()
@@ -144,10 +144,10 @@ public class ListtoMenu {
 	 * @param functions
 	 * @return
 	 */
-	public static String getEasyuiMenu(List<TSFunction> pFunctions,
-			List<TSFunction> functions) {
+	public static String getEasyuiMenu(List<FunctionEntity> pFunctions,
+			List<FunctionEntity> functions) {
 		StringBuffer menuString = new StringBuffer();
-		for (TSFunction pFunction : pFunctions) {
+		for (FunctionEntity pFunction : pFunctions) {
 			menuString.append("<div  title=\"" + getMutiLang(pFunction.getFunctionName())
 					+ "\" iconCls=\"" + ResourceUtil.allTSIcons.get(pFunction.getTSIcon().getId()).getIconClas()
 					+ "\">");
@@ -158,7 +158,7 @@ public class ListtoMenu {
 			if (submenusize > 0) {
 				menuString.append("<ul>");
 			}
-			for (TSFunction function : functions) {
+			for (FunctionEntity function : functions) {
 
 				if (function.getTSFunction().getId().equals(pFunction.getId())) {
 					String icon = "folder";
@@ -189,7 +189,7 @@ public class ListtoMenu {
             }else{
             	menuString.append("<ul>");
             }
-			for (TSFunction function : functions) {
+			for (FunctionEntity function : functions) {
 				if (function.getTSFunction().getId().equals(pFunction.getId())) {
 					String icon = "folder";
 					if (function.getTSIcon() != null) {
@@ -230,10 +230,10 @@ public class ListtoMenu {
 	 * @return
 	 */
 	public static String getEasyuiMultistageMenu(
-			Map<Integer, List<TSFunction>> map) {
+			Map<Integer, List<FunctionEntity>> map) {
 		StringBuffer menuString = new StringBuffer();
-		List<TSFunction> list = map.get(0);
-		for (TSFunction function : list) {
+		List<FunctionEntity> list = map.get(0);
+		for (FunctionEntity function : list) {
 			menuString.append("<div   title=\"" + getMutiLang(function.getFunctionName())
 					+ "\" iconCls=\"" + ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas()
 					+ "\">");
@@ -263,17 +263,17 @@ public class ListtoMenu {
 
     /**
      * 拼装EASYUI 多级 菜单  下级菜单为树形
-     * @param map  the map of Map<Integer, List<TSFunction>>
+     * @param map  the map of Map<Integer, List<FunctionEntity>>
      * @param style 样式：easyui-经典风格、shortcut-shortcut风格
      * @return
      */
-	public static String getEasyuiMultistageTree(Map<Integer, List<TSFunction>> map, String style) {
+	public static String getEasyuiMultistageTree(Map<Integer, List<FunctionEntity>> map, String style) {
 		if(map==null||map.size()==0||!map.containsKey(0)){return "不具有任何权限,\n请找管理员分配权限";}
 		StringBuffer menuString = new StringBuffer();
-		List<TSFunction> list = map.get(0);
+		List<FunctionEntity> list = map.get(0);
         int curIndex = 0;
         if ("easyui".equals(style)) {
-            for (TSFunction function : list) {
+            for (FunctionEntity function : list) {
                 if(curIndex == 0) { // 第一个菜单，默认展开
                     menuString.append("<li>");
                 } else {
@@ -291,7 +291,7 @@ public class ListtoMenu {
                 curIndex++;
             }
         } else if("shortcut".equals(style)) {
-            for (TSFunction function : list) {
+            for (FunctionEntity function : list) {
                 menuString.append("<div   title=\"" + getMutiLang(function.getFunctionName())
                         + "\" iconCls=\"" + ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas()
                         + "\">");
@@ -317,10 +317,10 @@ public class ListtoMenu {
 	 * @param map
 	 * @return
 	 */
-	private static String getChild(TSFunction parent,int level,Map<Integer, List<TSFunction>> map){
+	private static String getChild(FunctionEntity parent,int level,Map<Integer, List<FunctionEntity>> map){
 		StringBuffer menuString = new StringBuffer();
-		List<TSFunction> list = map.get(level);
-		for (TSFunction function : list) {
+		List<FunctionEntity> list = map.get(level);
+		for (FunctionEntity function : list) {
 			if (function.getTSFunction().getId().equals(parent.getId())){
 				if(!function.hasSubFunction(map)){
 					menuString.append(getLeaf(function));
@@ -345,10 +345,10 @@ public class ListtoMenu {
 	 * @param map
 	 * @return
 	 */
-	private static String getChildOfTree(TSFunction parent,int level,Map<Integer, List<TSFunction>> map){
+	private static String getChildOfTree(FunctionEntity parent,int level,Map<Integer, List<FunctionEntity>> map){
 		StringBuffer menuString = new StringBuffer();
-		List<TSFunction> list = map.get(level);
-		for (TSFunction function : list) {
+		List<FunctionEntity> list = map.get(level);
+		for (FunctionEntity function : list) {
 			if (function.getTSFunction().getId().equals(parent.getId())){
 				if(!function.hasSubFunction(map)){
 					menuString.append(getLeafOfTree(function));
@@ -367,7 +367,7 @@ public class ListtoMenu {
 	 * @param function
 	 * @return
 	 */
-	private static String getLeaf(TSFunction function){
+	private static String getLeaf(FunctionEntity function){
 		StringBuffer menuString = new StringBuffer();
 		String icon = "folder";
 		if (function.getTSIcon() != null) {
@@ -405,7 +405,7 @@ public class ListtoMenu {
 	 * @param function
 	 * @return
 	 */
-	private static String getLeafOfTree(TSFunction function){
+	private static String getLeafOfTree(FunctionEntity function){
 		StringBuffer menuString = new StringBuffer();
 		String icon = "folder";
 		if (function.getTSIcon() != null) {
@@ -447,14 +447,14 @@ public class ListtoMenu {
 	 * @param functions
 	 * @return
 	 */
-	public static String getBootstrapMenu(Map<Integer, List<TSFunction>> map) {
+	public static String getBootstrapMenu(Map<Integer, List<FunctionEntity>> map) {
 		StringBuffer menuString = new StringBuffer();
 		menuString.append("<ul class=\"nav\">");
-		List<TSFunction> pFunctions = (List<TSFunction>) map.get(0);
+		List<FunctionEntity> pFunctions = (List<FunctionEntity>) map.get(0);
 		if(pFunctions==null || pFunctions.size()==0){
 			return "";
 		}
-		for (TSFunction pFunction : pFunctions) {
+		for (FunctionEntity pFunction : pFunctions) {
 			//是否有子菜单
 			boolean hasSub = pFunction.hasSubFunction(map);
 			
@@ -484,14 +484,14 @@ public class ListtoMenu {
 	* @return String    
 	* @throws
 	 */
-	private static String getBootStrapChild(TSFunction parent,int level,Map<Integer, List<TSFunction>> map){
+	private static String getBootStrapChild(FunctionEntity parent,int level,Map<Integer, List<FunctionEntity>> map){
 		StringBuffer menuString = new StringBuffer();
-		List<TSFunction> list = map.get(level);
+		List<FunctionEntity> list = map.get(level);
 		if(list==null || list.size()==0){
 			return "";
 		}
 		menuString.append("		<ul class=\"dropdown-menu\"> ");
-		for (TSFunction function : list) {
+		for (FunctionEntity function : list) {
 			if (function.getTSFunction().getId().equals(parent.getId())){
 				boolean hasSub = function.hasSubFunction(map);
 				String menu_url = function.getFunctionUrl();
@@ -528,7 +528,7 @@ public class ListtoMenu {
 	 * @param functions
 	 * @return
 	 */
-	public static String getWebosMenu(Map<Integer, List<TSFunction>> map) {
+	public static String getWebosMenu(Map<Integer, List<FunctionEntity>> map) {
 		StringBuffer menuString = new StringBuffer();
 		StringBuffer DeskpanelString = new StringBuffer();
 		StringBuffer dataString = new StringBuffer();
@@ -544,12 +544,12 @@ public class ListtoMenu {
 		//绘制Deskpanel数组，用于替换webos-core.js中的Icon1:['dtbd','sosomap','jinshan'],······
 		DeskpanelString.append("{");
 		
-		List<TSFunction> pFunctions = (List<TSFunction>) map.get(0);
+		List<FunctionEntity> pFunctions = (List<FunctionEntity>) map.get(0);
 		if(pFunctions==null || pFunctions.size()==0){
 			return "";
 		}
 		int n = 1;
-		for (TSFunction pFunction : pFunctions) {
+		for (FunctionEntity pFunction : pFunctions) {
 			//是否有子菜单
 			boolean hasSub = pFunction.hasSubFunction(map);
 			//绘制一级菜单
@@ -599,14 +599,14 @@ public class ListtoMenu {
 	 * @return String    
 	 * @throws
 	 */
-	private static String getWebosChild(TSFunction parent,int level,Map<Integer, List<TSFunction>> map){
+	private static String getWebosChild(FunctionEntity parent,int level,Map<Integer, List<FunctionEntity>> map){
 		StringBuffer menuString = new StringBuffer();
 		String menu = "";
-		List<TSFunction> list = map.get(level);
+		List<FunctionEntity> list = map.get(level);
 		if(list==null || list.size()==0){
 			return "";
 		}
-		for (TSFunction function : list) {
+		for (FunctionEntity function : list) {
 			if (function.getTSFunction().getId().equals(parent.getId())){
 				boolean hasSub = function.hasSubFunction(map);
 				menuString.append("\""+ function.getId() + "\":");
@@ -623,14 +623,14 @@ public class ListtoMenu {
 		menu = menuString.substring(0, menuString.toString().length()-1);
 		return menu;
 	}
-	private static String getWebosDeskpanelChild(TSFunction parent,int level,Map<Integer, List<TSFunction>> map){
+	private static String getWebosDeskpanelChild(FunctionEntity parent,int level,Map<Integer, List<FunctionEntity>> map){
 		StringBuffer DeskpanelString = new StringBuffer();
 		String desk = "";
-		List<TSFunction> list = map.get(level);
+		List<FunctionEntity> list = map.get(level);
 		if(list==null || list.size()==0){
 			return "";
 		}
-		for (TSFunction function : list) {
+		for (FunctionEntity function : list) {
 			if (function.getTSFunction().getId().equals(parent.getId())){
 				DeskpanelString.append("'"+function.getId()+"',");
 			}
@@ -638,14 +638,14 @@ public class ListtoMenu {
 		desk = DeskpanelString.substring(0, DeskpanelString.toString().length()-1);
 		return desk;
 	}
-	private static String getWebosDataChild(TSFunction parent,int level,Map<Integer, List<TSFunction>> map){
+	private static String getWebosDataChild(FunctionEntity parent,int level,Map<Integer, List<FunctionEntity>> map){
 		StringBuffer dataString = new StringBuffer();
 		String data = "";
-		List<TSFunction> list = map.get(level);
+		List<FunctionEntity> list = map.get(level);
 		if(list==null || list.size()==0){
 			return "";
 		}
-		for (TSFunction function : list) {
+		for (FunctionEntity function : list) {
 			if (function.getTSFunction().getId().equals(parent.getId())){
 				dataString.append("'"+function.getId()+"':{ ");
 				dataString.append("appid:'"+function.getId()+"',");
@@ -663,7 +663,7 @@ public class ListtoMenu {
 		return data;
 	}
 
-    private static String getIconAndNameForDesk(TSFunction function) {
+    private static String getIconAndNameForDesk(FunctionEntity function) {
         StringBuffer dataString = new StringBuffer();
 
         String colName = function.getTSIconDesk() == null ? null : function.getTSIconDesk().getIconPath();
@@ -738,12 +738,12 @@ public class ListtoMenu {
 	}
 
 	
-	public static String getDIYMultistageTree(Map<Integer, List<TSFunction>> map) {
+	public static String getDIYMultistageTree(Map<Integer, List<FunctionEntity>> map) {
 		if(map==null||map.size()==0||!map.containsKey(0)){return "不具有任何权限,\n请找管理员分配权限";}
 		StringBuffer menuString = new StringBuffer();
-		List<TSFunction> list = map.get(0);
+		List<FunctionEntity> list = map.get(0);
         int curIndex = 0;
-            for (TSFunction function : list) {
+            for (FunctionEntity function : list) {
                 menuString.append("<li>");
 
                 if(function.getFunctionIconStyle()!=null&&!function.getFunctionIconStyle().trim().equals("")){
@@ -778,10 +778,10 @@ public class ListtoMenu {
 		return menuString.toString();
 	}
 	
-	private static String getDIYSubMenu(TSFunction parent,int level,Map<Integer, List<TSFunction>> map){
+	private static String getDIYSubMenu(FunctionEntity parent,int level,Map<Integer, List<FunctionEntity>> map){
 		StringBuffer menuString = new StringBuffer();
-		List<TSFunction> list = map.get(level);
-		for (TSFunction function : list) {
+		List<FunctionEntity> list = map.get(level);
+		for (FunctionEntity function : list) {
 			if (function.getTSFunction().getId().equals(parent.getId())){
 				if(!function.hasSubFunction(map)){
 					menuString.append(getLeafOfDIYTree(function));
@@ -805,12 +805,12 @@ public class ListtoMenu {
 		return menuString.toString();
 	}
 
-	public static String getAceMultistageTree(Map<Integer, List<TSFunction>> map) {
+	public static String getAceMultistageTree(Map<Integer, List<FunctionEntity>> map) {
 		if(map==null||map.size()==0||!map.containsKey(0)){return "不具有任何权限,\n请找管理员分配权限";}
 		StringBuffer menuString = new StringBuffer();
-		List<TSFunction> list = map.get(0);
+		List<FunctionEntity> list = map.get(0);
         int curIndex = 0;
-            for (TSFunction function : list) {
+            for (FunctionEntity function : list) {
                 menuString.append("<li>");
 
 				if(function.getFunctionIconStyle()!=null&&!function.getFunctionIconStyle().trim().equals("")){
@@ -848,10 +848,10 @@ public class ListtoMenu {
 
 		return menuString.toString();
 	}
-	private static String getACESubMenu(TSFunction parent,int level,Map<Integer, List<TSFunction>> map){
+	private static String getACESubMenu(FunctionEntity parent,int level,Map<Integer, List<FunctionEntity>> map){
 		StringBuffer menuString = new StringBuffer();
-		List<TSFunction> list = map.get(level);
-		for (TSFunction function : list) {
+		List<FunctionEntity> list = map.get(level);
+		for (FunctionEntity function : list) {
 			if (function.getTSFunction().getId().equals(parent.getId())){
 				if(!function.hasSubFunction(map)){
 					menuString.append(getLeafOfACETree(function,map));
@@ -878,7 +878,7 @@ public class ListtoMenu {
 		}
 		return menuString.toString();
 	}
-	private static String getLeafOfACETree(TSFunction function,Map<Integer, List<TSFunction>> map){
+	private static String getLeafOfACETree(FunctionEntity function,Map<Integer, List<FunctionEntity>> map){
 		StringBuffer menuString = new StringBuffer();
 		String icon = "folder";
 		if (function.getTSIcon() != null) {
@@ -912,7 +912,7 @@ public class ListtoMenu {
 		return menuString.toString();
 	}
 
-	private static String getLeafOfDIYTree(TSFunction function){
+	private static String getLeafOfDIYTree(FunctionEntity function){
 		StringBuffer menuString = new StringBuffer();
 		String icon = "folder";
 		if (function.getTSIcon() != null) {
@@ -943,12 +943,12 @@ public class ListtoMenu {
 		return menuString.toString();
 	}
 
-	public static String getHplusMultistageTree(Map<Integer, List<TSFunction>> map) {
+	public static String getHplusMultistageTree(Map<Integer, List<FunctionEntity>> map) {
 		if(map==null||map.size()==0||!map.containsKey(0)){return "不具有任何权限,\n请找管理员分配权限";}
 		StringBuffer menuString = new StringBuffer();
-		List<TSFunction> list = map.get(0);
+		List<FunctionEntity> list = map.get(0);
 		int curIndex = 0;
-		for (TSFunction function : list) {
+		for (FunctionEntity function : list) {
 			menuString.append("<li>");
 
 			if(function.getFunctionIconStyle()!=null&&!function.getFunctionIconStyle().trim().equals("")){
@@ -977,10 +977,10 @@ public class ListtoMenu {
 		return menuString.toString();
 	}
 
-	private static String getHplusSubMenu(TSFunction parent, int level, Map<Integer, List<TSFunction>> map) {
+	private static String getHplusSubMenu(FunctionEntity parent, int level, Map<Integer, List<FunctionEntity>> map) {
 		StringBuffer menuString = new StringBuffer();
-		List<TSFunction> list = map.get(level);
-		for (TSFunction function : list) {
+		List<FunctionEntity> list = map.get(level);
+		for (FunctionEntity function : list) {
 			if (function.getTSFunction().getId().equals(parent.getId())){
 				if(!function.hasSubFunction(map)){
 					menuString.append(getLeafOfHplusTree(function,map));
@@ -993,7 +993,7 @@ public class ListtoMenu {
 		return menuString.toString();
 	}
 
-	private static String getLeafOfHplusTree(TSFunction function,Map<Integer, List<TSFunction>> map) {
+	private static String getLeafOfHplusTree(FunctionEntity function,Map<Integer, List<FunctionEntity>> map) {
 		StringBuffer menuString = new StringBuffer();
 		String icon = "folder";
 		if (function.getTSIcon() != null) {
@@ -1035,12 +1035,12 @@ public class ListtoMenu {
 		 * @param map
 		 * @return
 		 */
-		public static String getFineuiMultistageTree(Map<Integer, List<TSFunction>> map) {
+		public static String getFineuiMultistageTree(Map<Integer, List<FunctionEntity>> map) {
 			if(map==null||map.size()==0||!map.containsKey(0)){return "不具有任何权限,\n请找管理员分配权限";}
 			StringBuffer menuString = new StringBuffer();
-			List<TSFunction> list = map.get(0);
+			List<FunctionEntity> list = map.get(0);
 			int curIndex = 0;
-			for (TSFunction function : list) {
+			for (FunctionEntity function : list) {
 				String order = function.getFunctionOrder();
 				menuString.append("<li class='menu-item'>");
 				if(function.getFunctionIconStyle()!=null&&!function.getFunctionIconStyle().trim().equals("")){
@@ -1068,10 +1068,10 @@ public class ListtoMenu {
 			return menuString.toString();
 		}
 		
-		private static String getFineuiSubMenu(TSFunction parent, int level, Map<Integer, List<TSFunction>> map) {
+		private static String getFineuiSubMenu(FunctionEntity parent, int level, Map<Integer, List<FunctionEntity>> map) {
 			StringBuffer menuString = new StringBuffer();
-			List<TSFunction> list = map.get(level);
-			for (TSFunction function : list) {
+			List<FunctionEntity> list = map.get(level);
+			for (FunctionEntity function : list) {
 				if (function.getTSFunction().getId().equals(parent.getId())){
 					if(!function.hasSubFunction(map)){
 						menuString.append(getLeafOfFineuiTree(function,map));
@@ -1084,7 +1084,7 @@ public class ListtoMenu {
 			return menuString.toString();
 		}
 		
-		private static String getLeafOfFineuiTree(TSFunction function,Map<Integer, List<TSFunction>> map) {
+		private static String getLeafOfFineuiTree(FunctionEntity function,Map<Integer, List<FunctionEntity>> map) {
 			StringBuffer menuString = new StringBuffer();
 			String icon = "folder";
 			if (function.getTSIcon() != null) {
@@ -1126,11 +1126,11 @@ public class ListtoMenu {
 	     * @param style 样式：AdminLTE风格
 	     * @return
 	     */
-		public static String getAdminlteTree(Map<Integer, List<TSFunction>> map) {
+		public static String getAdminlteTree(Map<Integer, List<FunctionEntity>> map) {
 			if(map==null||map.size()==0||!map.containsKey(0)){return "不具有任何权限,\n请找管理员分配权限";}
 			StringBuffer menuString = new StringBuffer();
-			List<TSFunction> list = map.get(0);
-            for (TSFunction function : list) {
+			List<FunctionEntity> list = map.get(0);
+            for (FunctionEntity function : list) {
                 if(!function.hasSubFunction(map)){
                 	menuString.append(getChildOfTree(function,1,map));
                 }else{

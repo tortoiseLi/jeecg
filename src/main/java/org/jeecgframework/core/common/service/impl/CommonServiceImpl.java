@@ -24,7 +24,7 @@ import org.jeecgframework.tag.vo.datatable.DataTableReturn;
 import org.jeecgframework.tag.vo.easyui.Autocomplete;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
+import org.jeecgframework.web.system.pojo.base.DepartEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -352,7 +352,7 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ComboTree> comTree(List<TSDepart> all, ComboTree comboTree) {
+	public List<ComboTree> comTree(List<DepartEntity> all, ComboTree comboTree) {
 		return commonDao.comTree(all, comboTree);
 	}
 

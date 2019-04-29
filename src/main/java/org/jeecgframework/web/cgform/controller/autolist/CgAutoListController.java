@@ -41,11 +41,10 @@ import org.jeecgframework.web.cgform.service.template.CgformTemplateServiceI;
 import org.jeecgframework.web.cgform.util.PublicUtil;
 import org.jeecgframework.web.cgform.util.QueryParamUtil;
 import org.jeecgframework.web.cgform.util.TemplateUtil;
-import org.jeecgframework.web.system.controller.core.LoginController;
 import org.jeecgframework.web.system.pojo.base.DictEntity;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
-import org.jeecgframework.web.system.pojo.base.TSType;
-import org.jeecgframework.web.system.service.MutiLangServiceI;
+import org.jeecgframework.web.system.pojo.base.OperationEntity;
+import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +77,7 @@ public class CgAutoListController extends BaseController{
 	@Autowired
 	private CgformTemplateServiceI cgformTemplateService;
 	@Autowired
-	private MutiLangServiceI mutiLangService;
+	private MutiLangService mutiLangService;
 	/**
 	 * 动态列表展现入口
 	 * @param id 动态配置ID
@@ -461,11 +460,11 @@ public class CgAutoListController extends BaseController{
 		StringBuilder initQuery = new StringBuilder();
 
 		Set<String> operationCodes = (Set<String>) request.getAttribute(Globals.OPERATIONCODES);
-		Map<String,TSOperation> operationCodesMap = new HashMap<String, TSOperation>();
+		Map<String,OperationEntity> operationCodesMap = new HashMap<String, OperationEntity>();
 		if(operationCodes != null){
-			TSOperation tsOperation;
+			OperationEntity tsOperation;
 			for (String id : operationCodes) {
-				tsOperation = systemService.getEntity(TSOperation.class, id);
+				tsOperation = systemService.getEntity(OperationEntity.class, id);
 				if(tsOperation != null && tsOperation.getOperationType() == 0 && tsOperation.getStatus() == 0){
 					operationCodesMap.put(tsOperation.getOperationcode(), tsOperation);
 				}
@@ -591,14 +590,14 @@ public class CgAutoListController extends BaseController{
 	 * @param request
 	 */
 	private void loadAuth(Map<String, Object> paras, HttpServletRequest request) {
-		List<TSOperation>  nolist = (List<TSOperation>) request.getAttribute(Globals.NOAUTO_OPERATIONCODES);
+		List<OperationEntity>  nolist = (List<OperationEntity>) request.getAttribute(Globals.NOAUTO_OPERATIONCODES);
 		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
 			nolist = null;
 		}
 		List<String> list = new ArrayList<String>();
 		String nolistStr = "";
 		if(nolist!=null){
-			for(TSOperation operation:nolist){
+			for(OperationEntity operation:nolist){
 				nolistStr+=operation.getOperationcode();
 				nolistStr+=",";
 				list.add(operation.getOperationcode());
@@ -724,10 +723,10 @@ public class CgAutoListController extends BaseController{
 	private List<DictEntity> queryDic(String dicTable, String dicCode,String dicText) {
 
 		if(dicTable==null || dicTable.length()<=0){
-			List<TSType> listt = ResourceUtil.getCacheTypes(dicCode.toLowerCase());
+			List<TypeEntity> listt = ResourceUtil.getCacheTypes(dicCode.toLowerCase());
 			List<DictEntity> li = new ArrayList<DictEntity>();
 			if(listt!=null){
-				for (TSType tsType : listt) {
+				for (TypeEntity tsType : listt) {
 					DictEntity d = new DictEntity();
 					d.setTypecode(tsType.getTypecode());
 

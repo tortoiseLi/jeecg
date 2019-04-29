@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.jeecgframework.web.cgform.dao.upload.CgFormUploadDao;
 import org.jeecgframework.web.cgform.entity.upload.CgUploadEntity;
 import org.jeecgframework.web.cgform.service.upload.CgUploadServiceI;
-import org.jeecgframework.web.system.pojo.base.TSAttachment;
+import org.jeecgframework.web.system.pojo.base.AttachmentEntity;
 @Service("cgUploadService")
 @Transactional
 public class CgUploadServiceImpl extends CommonServiceImpl implements CgUploadServiceI {
@@ -49,7 +49,7 @@ public class CgUploadServiceImpl extends CommonServiceImpl implements CgUploadSe
 	}
 
 	@Override
-	public void deleteAttachment(TSAttachment attachment) {
+	public void deleteAttachment(AttachmentEntity attachment) {
 		String realpath = attachment.getRealpath();//附件相对路径
 		String pathNosuffix = FileUtils.getFilePrefix2(realpath);
 		//获取部署项目绝对地址
@@ -84,7 +84,7 @@ public class CgUploadServiceImpl extends CommonServiceImpl implements CgUploadSe
 							//删除cgform_uploadfiles
 							commonDao.executeSql(delSql,metaId);
 							//删除附件表同时删除文件
-							TSAttachment attachment = this.getEntity(TSAttachment.class,metaId);
+							AttachmentEntity attachment = this.getEntity(AttachmentEntity.class,metaId);
 							deleteAttachment(attachment);
 						}else if(a.endsWith("_O")){
 							//String metaId = a.substring(0,a.length()-2);//获取原始ID

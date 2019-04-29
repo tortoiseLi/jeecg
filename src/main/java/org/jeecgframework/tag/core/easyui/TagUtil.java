@@ -23,7 +23,7 @@ import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.vo.datatable.DataTableReturn;
 import org.jeecgframework.tag.vo.easyui.Autocomplete;
-import org.jeecgframework.web.system.pojo.base.TSRole;
+import org.jeecgframework.web.system.pojo.base.RoleEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -599,13 +599,13 @@ public class TagUtil {
 	/**
 	 * 手工拼接JSON
 	 */
-	public static String getComboBoxJson(List<TSRole> list, List<TSRole> roles) {
+	public static String getComboBoxJson(List<RoleEntity> list, List<RoleEntity> roles) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("[");
-		for (TSRole node : list) {
+		for (RoleEntity node : list) {
 			if (roles.size() > 0) {
 				buffer.append("{\"id\":" + node.getId() + ",\"text\":\"" + node.getRoleName() + "\"");
-				for (TSRole node1 : roles) {
+				for (RoleEntity node1 : roles) {
 					if (node.getId() == node1.getId()) {
 						buffer.append(",\"selected\":true");
 					}

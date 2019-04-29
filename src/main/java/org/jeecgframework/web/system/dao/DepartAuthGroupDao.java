@@ -8,7 +8,7 @@ import org.jeecgframework.minidao.annotation.Param;
 import org.jeecgframework.minidao.annotation.ResultType;
 import org.jeecgframework.minidao.annotation.Sql;
 import org.jeecgframework.minidao.pojo.MiniDaoPage;
-import org.jeecgframework.web.system.pojo.base.TSUser;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
 
 /**
  * 二级管理员设置
@@ -73,8 +73,8 @@ public interface DepartAuthGroupDao {
 	 * @param rows
 	 * @return
 	 */
-	@ResultType(TSUser.class)
-	public MiniDaoPage<TSUser> getUserByDepartCode(@Param("page") int page, @Param("rows") int rows,@Param("orgCode") String orgCode,@Param("u") TSUser u);
+	@ResultType(UserEntity.class)
+	public MiniDaoPage<UserEntity> getUserByDepartCode(@Param("page") int page, @Param("rows") int rows,@Param("orgCode") String orgCode,@Param("u") UserEntity u);
 	
 	/**
 	 * 查询用户所属的部门名称

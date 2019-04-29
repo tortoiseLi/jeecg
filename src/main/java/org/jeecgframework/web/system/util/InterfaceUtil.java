@@ -13,8 +13,8 @@ import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.jwt.def.JwtConstants;
 import org.jeecgframework.web.system.enums.InterfaceEnum;
 import org.jeecgframework.web.system.pojo.base.InterfaceRuleDto;
-import org.jeecgframework.web.system.pojo.base.TSInterfaceDdataRuleEntity;
-import org.jeecgframework.web.system.service.TSInterfaceServiceI;
+import org.jeecgframework.web.system.pojo.base.InterfaceDdataRuleEntity;
+import org.jeecgframework.web.system.service.InterfaceService;
 
 public class InterfaceUtil {
 	private static final Logger logger = Logger.getLogger(InterfaceUtil.class);
@@ -29,7 +29,7 @@ public class InterfaceUtil {
 		String userName = (String) request.getAttribute(JwtConstants.CURRENT_USER_NAME);//= "interfaceuser";//
 		logger.info(interfaceEnum.toString()+"--------"+userName);
 		//根据用户账号和接口编码查询用户的接口权限
-		TSInterfaceServiceI interfaceService=ApplicationContextUtil.getContext().getBean(TSInterfaceServiceI.class);
+		InterfaceService interfaceService=ApplicationContextUtil.getContext().getBean(InterfaceService.class);
 		InterfaceRuleDto interfaceRuleDto = interfaceService.getInterfaceRuleByUserNameAndCode(userName,interfaceEnum);
 		System.out.println(interfaceRuleDto);
 		logger.info(interfaceEnum.toString()+"--------"+interfaceRuleDto);
@@ -47,9 +47,9 @@ public class InterfaceUtil {
 //		InterfaceRuleDto interfaceRuleDto = getInterfaceRuleDto(request,interfaceEnum);
 		StringBuilder sb = new StringBuilder();
 		if(interfaceRuleDto!=null){
-			List<TSInterfaceDdataRuleEntity> interfaceDataRule = interfaceRuleDto.getInterfaceDataRule();
+			List<InterfaceDdataRuleEntity> interfaceDataRule = interfaceRuleDto.getInterfaceDataRule();
 			if(interfaceDataRule!=null&&interfaceDataRule.size()>0){
-				for(TSInterfaceDdataRuleEntity rule:interfaceDataRule){
+				for(InterfaceDdataRuleEntity rule:interfaceDataRule){
 					addRuleToQL(sb,rule);
 				}
 				logger.info(interfaceEnum.toString()+"----getQL----"+sb.toString());
@@ -70,9 +70,9 @@ public class InterfaceUtil {
 	public static void installCriteriaQuery(CriteriaQuery cq,InterfaceRuleDto interfaceRuleDto,InterfaceEnum interfaceEnum){
 //		InterfaceRuleDto interfaceRuleDto = getInterfaceRuleDto(request,interfaceEnum);
 		if(interfaceRuleDto!=null){
-			List<TSInterfaceDdataRuleEntity> interfaceDataRule = interfaceRuleDto.getInterfaceDataRule();
+			List<InterfaceDdataRuleEntity> interfaceDataRule = interfaceRuleDto.getInterfaceDataRule();
 			if(interfaceDataRule!=null&&interfaceDataRule.size()>0){
-				for(TSInterfaceDdataRuleEntity rule:interfaceDataRule){
+				for(InterfaceDdataRuleEntity rule:interfaceDataRule){
 					addRuleToCriteria(cq,rule);
 					cq.getCriterionList();
 				}
@@ -82,7 +82,7 @@ public class InterfaceUtil {
 	}
 	
 	
-	private static void addRuleToQL(StringBuilder sb,TSInterfaceDdataRuleEntity dataRule) {
+	private static void addRuleToQL(StringBuilder sb,InterfaceDdataRuleEntity dataRule) {
 		if(dataRule == null) 
 		return ;
 		HqlRuleEnum ruleEnum=HqlRuleEnum.getByValue(dataRule.getRuleConditions());
@@ -161,7 +161,7 @@ public class InterfaceUtil {
 //	}
 	
 	
-	private static void addRuleToCriteria(CriteriaQuery cq,TSInterfaceDdataRuleEntity tsDataRule) {
+	private static void addRuleToCriteria(CriteriaQuery cq,InterfaceDdataRuleEntity tsDataRule) {
 		String aliasName = tsDataRule.getRuleColumn();
 		HqlRuleEnum rule = HqlRuleEnum.getByValue(tsDataRule.getRuleConditions());
 		if (rule.equals(HqlRuleEnum.IN)) {

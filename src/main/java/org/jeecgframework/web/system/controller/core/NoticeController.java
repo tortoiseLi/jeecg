@@ -26,14 +26,14 @@ import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.pojo.base.TSNotice;
-import org.jeecgframework.web.system.pojo.base.TSNoticeAuthorityRole;
-import org.jeecgframework.web.system.pojo.base.TSNoticeAuthorityUser;
-import org.jeecgframework.web.system.pojo.base.TSNoticeReadUser;
-import org.jeecgframework.web.system.pojo.base.TSRole;
-import org.jeecgframework.web.system.pojo.base.TSUser;
-import org.jeecgframework.web.system.service.NoticeAuthorityRoleServiceI;
-import org.jeecgframework.web.system.service.NoticeAuthorityUserServiceI;
+import org.jeecgframework.web.system.pojo.base.NoticeEntity;
+import org.jeecgframework.web.system.pojo.base.NoticeAuthorityRoleEntity;
+import org.jeecgframework.web.system.pojo.base.NoticeAuthorityUserEntity;
+import org.jeecgframework.web.system.pojo.base.NoticeReadUserEntity;
+import org.jeecgframework.web.system.pojo.base.RoleEntity;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.service.NoticeAuthorityRoleService;
+import org.jeecgframework.web.system.service.NoticeAuthorityUserService;
 import org.jeecgframework.web.system.service.NoticeService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +57,9 @@ public class NoticeController extends BaseController{
 	@Autowired
 	private NoticeService noticeService;
 	@Autowired
-	private NoticeAuthorityRoleServiceI noticeAuthorityRoleService;
+	private NoticeAuthorityRoleService noticeAuthorityRoleService;
 	@Autowired
-	private NoticeAuthorityUserServiceI noticeAuthorityUserService;
+	private NoticeAuthorityUserService noticeAuthorityUserService;
 
 	@Autowired
 	public void setSystemService(SystemService systemService) {
@@ -78,7 +78,7 @@ public class NoticeController extends BaseController{
 	public AjaxJson getNoticeList(Integer isRead,HttpServletRequest req) {
 		AjaxJson j = new AjaxJson();
 		try {
-			TSUser user = ResourceUtil.getSessionUser();
+			UserEntity user = ResourceUtil.getSessionUser();
 
 			String sql = "SELECT notice.*,noticeRead.is_read as is_read FROM t_s_notice notice "
 					+ "LEFT JOIN t_s_notice_read_user noticeRead ON  notice.id = noticeRead.notice_id "
@@ -142,15 +142,15 @@ public class NoticeController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(params = "goNotice")
-	public ModelAndView noticeInfo(TSNotice notice,HttpServletRequest request) {
+	public ModelAndView noticeInfo(NoticeEntity notice,HttpServletRequest request) {
 		if (StringUtil.isNotEmpty(notice.getId())) {
-			notice = this.systemService.getEntity(TSNotice.class, notice.getId());
+			notice = this.systemService.getEntity(NoticeEntity.class, notice.getId());
 			request.setAttribute("notice", notice);
-			TSUser user = ResourceUtil.getSessionUser();
-			String hql = "from TSNoticeReadUser where noticeId = ? and userId = ?";
-			List<TSNoticeReadUser> noticeReadList = systemService.findHql(hql,notice.getId(),user.getId());
+			UserEntity user = ResourceUtil.getSessionUser();
+			String hql = "from NoticeReadUserEntity where noticeId = ? and userId = ?";
+			List<NoticeReadUserEntity> noticeReadList = systemService.findHql(hql,notice.getId(),user.getId());
 			if (noticeReadList != null && !noticeReadList.isEmpty()) {
-				TSNoticeReadUser readUser = noticeReadList.get(0);
+				NoticeReadUserEntity readUser = noticeReadList.get(0);
 				if(readUser.getIsRead() == 0){
 					readUser.setIsRead(1);
 					systemService.saveOrUpdate(readUser);
@@ -169,13 +169,13 @@ public class NoticeController extends BaseController{
 	 * @param user
 	 */
 	@RequestMapping(params = "datagrid")
-	public void datagrid(TSNotice notice,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-//			CriteriaQuery cq = new CriteriaQuery(TSNotice.class, dataGrid);
+	public void datagrid(NoticeEntity notice,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+//			CriteriaQuery cq = new CriteriaQuery(NoticeEntity.class, dataGrid);
 //			//查询条件组装器
 //			org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, notice, request.getParameterMap());
 //			this.noticeService.getDataGridReturn(cq, true);
 
-			TSUser user = ResourceUtil.getSessionUser();
+		UserEntity user = ResourceUtil.getSessionUser();
 			String sql = "SELECT notice.*,noticeRead.is_read as is_read FROM t_s_notice notice "
 					+ " LEFT JOIN t_s_notice_read_user noticeRead ON  notice.id = noticeRead.notice_id "
 					+ " WHERE noticeRead.del_flag = 0 and noticeRead.user_id = ? "
@@ -220,7 +220,7 @@ public class NoticeController extends BaseController{
 		AjaxJson j = new AjaxJson();
 		try {
 //			TSUser user = ResourceUtil.getSessionUser();
-//			TSNoticeReadUser readUser = new TSNoticeReadUser();
+//			NoticeReadUserEntity readUser = new NoticeReadUserEntity();
 //			readUser.setNoticeId(noticeId);
 //			readUser.setUserId(user.getId());
 //			readUser.setCreateTime(new Date());
@@ -252,8 +252,8 @@ public class NoticeController extends BaseController{
 	 */
 
 	@RequestMapping(params = "datagrid2")
-	public void datagrid2(TSNotice tSNotice,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSNotice.class, dataGrid);
+	public void datagrid2(NoticeEntity tSNotice,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(NoticeEntity.class, dataGrid);
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tSNotice, request.getParameterMap());
 		try{
@@ -273,10 +273,10 @@ public class NoticeController extends BaseController{
 	 */
 	@RequestMapping(params = "doDel")
 	@ResponseBody
-	public AjaxJson doDel(TSNotice tSNotice, HttpServletRequest request) {
+	public AjaxJson doDel(NoticeEntity tSNotice, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tSNotice = systemService.getEntity(TSNotice.class, tSNotice.getId());
+		tSNotice = systemService.getEntity(NoticeEntity.class, tSNotice.getId());
 		message = "通知公告删除成功";
 		try{
 			if("2".equals(tSNotice.getNoticeLevel())){
@@ -312,7 +312,7 @@ public class NoticeController extends BaseController{
 		message = "通知公告删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSNotice tSNotice = systemService.getEntity(TSNotice.class,id);
+				NoticeEntity tSNotice = systemService.getEntity(NoticeEntity.class,id);
 				noticeService.delete(tSNotice);
 				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 			}
@@ -334,7 +334,7 @@ public class NoticeController extends BaseController{
 	 */
 	@RequestMapping(params = "doAdd")
 	@ResponseBody
-	public AjaxJson doAdd(TSNotice tSNotice, HttpServletRequest request) {
+	public AjaxJson doAdd(NoticeEntity tSNotice, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "通知公告添加成功";
@@ -346,18 +346,18 @@ public class NoticeController extends BaseController{
 				executor.execute(new Runnable() {
 					@Override
 					public void run() {
-						List<TSUser> userList = systemService.findHql("from TSUser");
-						for (TSUser user : userList) {
-							String hql = "from TSNoticeReadUser where noticeId = ? and userId = ?";
-							List<TSNoticeReadUser> noticeReadList = systemService.findHql(hql,noticeId,user.getId());
+						List<UserEntity> userList = systemService.findHql("from TSUser");
+						for (UserEntity user : userList) {
+							String hql = "from NoticeReadUserEntity where noticeId = ? and userId = ?";
+							List<NoticeReadUserEntity> noticeReadList = systemService.findHql(hql,noticeId,user.getId());
 							if(noticeReadList == null || noticeReadList.isEmpty()){
-								TSNoticeReadUser readUser = new TSNoticeReadUser();
+								NoticeReadUserEntity readUser = new NoticeReadUserEntity();
 								readUser.setCreateTime(new Date());
 								readUser.setNoticeId(noticeId);
 								readUser.setUserId(user.getId());
 								systemService.save(readUser);
 							}else{
-								for (TSNoticeReadUser readUser : noticeReadList) {
+								for (NoticeReadUserEntity readUser : noticeReadList) {
 									if(readUser.getDelFlag() == 1){
 										readUser.setDelFlag(0);
 										systemService.updateEntitie(readUser);
@@ -373,9 +373,9 @@ public class NoticeController extends BaseController{
 				clearRole(tSNotice.getId(),request);
 				String roleid[]=request.getParameter("roleid").split(",");
 				for (int i = 0;i<roleid.length; i++) {
-					TSNoticeAuthorityRole noticeAuthorityRole =new TSNoticeAuthorityRole();
+					NoticeAuthorityRoleEntity noticeAuthorityRole =new NoticeAuthorityRoleEntity();
 					noticeAuthorityRole.setNoticeId(tSNotice.getId());
-					TSRole role=new TSRole();
+					RoleEntity role=new RoleEntity();
 					role.setId(roleid[i]);
 					noticeAuthorityRole.setRole(role);
 					this.noticeAuthorityRoleService.saveTSNoticeAuthorityRole(noticeAuthorityRole);
@@ -384,9 +384,9 @@ public class NoticeController extends BaseController{
 				clearUser(tSNotice.getId(),request);
 				String userid[]=request.getParameter("userid").split(",");
 				for (int i = 0;i<userid.length; i++) {
-					TSNoticeAuthorityUser noticeAuthorityUser =new TSNoticeAuthorityUser();
+					NoticeAuthorityUserEntity noticeAuthorityUser =new NoticeAuthorityUserEntity();
 					noticeAuthorityUser.setNoticeId(tSNotice.getId());
-					TSUser tsUser=new TSUser();
+					UserEntity tsUser=new UserEntity();
 					tsUser.setId(userid[i]);
 					noticeAuthorityUser.setUser(tsUser);
 					this.noticeAuthorityUserService.saveNoticeAuthorityUser(noticeAuthorityUser);
@@ -410,11 +410,11 @@ public class NoticeController extends BaseController{
 	 */
 	@RequestMapping(params = "doUpdate")
 	@ResponseBody
-	public AjaxJson doUpdate(TSNotice tSNotice, HttpServletRequest request) {
+	public AjaxJson doUpdate(NoticeEntity tSNotice, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "通知公告更新成功";
-		TSNotice t = noticeService.get(TSNotice.class, tSNotice.getId());
+		NoticeEntity t = noticeService.get(NoticeEntity.class, tSNotice.getId());
 		
 		try {
 			if("1".equals(tSNotice.getNoticeLevel()) && !t.getNoticeLevel().equals(tSNotice.getNoticeLevel())){
@@ -426,18 +426,18 @@ public class NoticeController extends BaseController{
 					
 					@Override
 					public void run() {
-						List<TSUser> userList = systemService.findHql("from TSUser");
-						for (TSUser user : userList) {
-							String hql = "from TSNoticeReadUser where noticeId = ? and userId = ?";
-							List<TSNoticeReadUser> noticeReadList = systemService.findHql(hql,noticeId,user.getId());
+						List<UserEntity> userList = systemService.findHql("from UserEntity");
+						for (UserEntity user : userList) {
+							String hql = "from NoticeReadUserEntity where noticeId = ? and userId = ?";
+							List<NoticeReadUserEntity> noticeReadList = systemService.findHql(hql,noticeId,user.getId());
 							if(noticeReadList == null || noticeReadList.isEmpty()){
-								TSNoticeReadUser readUser = new TSNoticeReadUser();
+								NoticeReadUserEntity readUser = new NoticeReadUserEntity();
 								readUser.setCreateTime(new Date());
 								readUser.setNoticeId(noticeId);
 								readUser.setUserId(user.getId());
 								systemService.save(readUser);
 							}else{
-								for (TSNoticeReadUser readUser : noticeReadList) {
+								for (NoticeReadUserEntity readUser : noticeReadList) {
 									if(readUser.getDelFlag() == 1){
 										readUser.setDelFlag(0);
 										systemService.updateEntitie(readUser);
@@ -461,9 +461,9 @@ public class NoticeController extends BaseController{
 				
 				String roleid[]=request.getParameter("roleid").split(",");
 				for (int i = 0;i<roleid.length; i++) {
-					TSNoticeAuthorityRole noticeAuthorityRole =new TSNoticeAuthorityRole();
+					NoticeAuthorityRoleEntity noticeAuthorityRole =new NoticeAuthorityRoleEntity();
 					noticeAuthorityRole.setNoticeId(tSNotice.getId());
-					TSRole role=new TSRole();
+					RoleEntity role=new RoleEntity();
 					role.setId(roleid[i]);
 					noticeAuthorityRole.setRole(role);
 					this.noticeAuthorityRoleService.saveTSNoticeAuthorityRole(noticeAuthorityRole);
@@ -474,9 +474,9 @@ public class NoticeController extends BaseController{
 				
 				String userid[]=request.getParameter("userid").split(",");
 				for (int i = 0;i<userid.length; i++) {
-					TSNoticeAuthorityUser noticeAuthorityUser =new TSNoticeAuthorityUser();
+					NoticeAuthorityUserEntity noticeAuthorityUser =new NoticeAuthorityUserEntity();
 					noticeAuthorityUser.setNoticeId(tSNotice.getId());
-					TSUser tsUser=new TSUser();
+					UserEntity tsUser=new UserEntity();
 					tsUser.setId(userid[i]);
 					noticeAuthorityUser.setUser(tsUser);
 					this.noticeAuthorityUserService.saveNoticeAuthorityUser(noticeAuthorityUser);
@@ -494,18 +494,18 @@ public class NoticeController extends BaseController{
 	}
 	
 	private void clearUser(String id,HttpServletRequest request){
-		TSNoticeAuthorityUser user=new TSNoticeAuthorityUser();
+		NoticeAuthorityUserEntity user=new NoticeAuthorityUserEntity();
 		user.setNoticeId(id);
-		List<TSNoticeAuthorityUser> users =systemService.findByExample(TSNoticeAuthorityUser.class.getName(),user);
+		List<NoticeAuthorityUserEntity> users =systemService.findByExample(NoticeAuthorityUserEntity.class.getName(),user);
 		for (int i = 0; i < users.size(); i++) {
 			this.noticeAuthorityUserService.doDelNoticeAuthorityUser(users.get(i));
 		}
 
 	}
 	private void clearRole(String id,HttpServletRequest request){
-		TSNoticeAuthorityRole role=new TSNoticeAuthorityRole();
+		NoticeAuthorityRoleEntity role=new NoticeAuthorityRoleEntity();
 		role.setNoticeId(id);
-		List<TSNoticeAuthorityRole>roles=systemService.findByExample(TSNoticeAuthorityRole.class.getName(),role);
+		List<NoticeAuthorityRoleEntity>roles=systemService.findByExample(NoticeAuthorityRoleEntity.class.getName(),role);
 		for (int i = 0; i < roles.size(); i++) {
 			this.noticeAuthorityRoleService.doDelTSNoticeAuthorityRole(roles.get(i));
 		}
@@ -518,9 +518,9 @@ public class NoticeController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(params = "goAdd")
-	public ModelAndView goAdd(TSNotice tSNotice, HttpServletRequest req) {
+	public ModelAndView goAdd(NoticeEntity tSNotice, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSNotice.getId())) {
-			tSNotice = noticeService.getEntity(TSNotice.class, tSNotice.getId());
+			tSNotice = noticeService.getEntity(NoticeEntity.class, tSNotice.getId());
 			req.setAttribute("tSNoticePage", tSNotice);
 		}
 		return new ModelAndView("system/notice/tSNotice-add");
@@ -531,18 +531,18 @@ public class NoticeController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(params = "goUpdate")
-	public ModelAndView goUpdate(TSNotice tSNotice, HttpServletRequest req) {
+	public ModelAndView goUpdate(NoticeEntity tSNotice, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSNotice.getId())) {
-			tSNotice = noticeService.getEntity(TSNotice.class, tSNotice.getId());
+			tSNotice = noticeService.getEntity(NoticeEntity.class, tSNotice.getId());
 			if(tSNotice.getNoticeTerm()==null){
 				tSNotice.setNoticeTerm(new Date());
 			}
 			req.setAttribute("tSNoticePage", tSNotice);
 
 			if (tSNotice.getNoticeLevel().equals("2")){
-				TSNoticeAuthorityRole role=new TSNoticeAuthorityRole();
+				NoticeAuthorityRoleEntity role=new NoticeAuthorityRoleEntity();
 				role.setNoticeId(tSNotice.getId());
-				List<TSNoticeAuthorityRole>roles=systemService.findByExample(TSNoticeAuthorityRole.class.getName(),role);
+				List<NoticeAuthorityRoleEntity>roles=systemService.findByExample(NoticeAuthorityRoleEntity.class.getName(),role);
 				StringBuffer rolesid=new StringBuffer();
 				StringBuffer rolesName =new StringBuffer();
 				for (int i = 0; i < roles.size(); i++) {
@@ -552,10 +552,10 @@ public class NoticeController extends BaseController{
 				req.setAttribute("rolesid",rolesid);
 				req.setAttribute("rolesName",rolesName);
 			}else if (tSNotice.getNoticeLevel().equals("3")) {
-				TSNoticeAuthorityUser user=new TSNoticeAuthorityUser();
+				NoticeAuthorityUserEntity user=new NoticeAuthorityUserEntity();
 				user.setNoticeId(tSNotice.getId());
 
-				List<TSNoticeAuthorityUser>users=systemService.findByExample(TSNoticeAuthorityUser.class.getName(),user);
+				List<NoticeAuthorityUserEntity>users=systemService.findByExample(NoticeAuthorityUserEntity.class.getName(),user);
 				StringBuffer usersid=new StringBuffer();
 				StringBuffer usersName =new StringBuffer();
 				for (int i = 0; i < users.size(); i++) {

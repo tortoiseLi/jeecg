@@ -32,7 +32,7 @@ import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.pojo.base.TSDataRule;
+import org.jeecgframework.web.system.pojo.base.DataRuleEntity;
 import org.springframework.util.NumberUtils;
 
 /**
@@ -114,7 +114,7 @@ public class HqlGenerateUtil {
 	 * @param alias
 	 */
 	private static void installHqlJoinAlias(CriteriaQuery cq, Object searchObj,
-			Map<String, TSDataRule> ruleMap,
+			Map<String, DataRuleEntity> ruleMap,
 			Map<String, String[]> parameterMap, String alias) {
 		PropertyDescriptor origDescriptors[] = PropertyUtils.getPropertyDescriptors(searchObj);
 		///直接拿到rulemap判断有没有key为xxx的直接循环组装cq
@@ -316,7 +316,7 @@ public class HqlGenerateUtil {
 	 * @param aliasName
 	 * @return
 	 */
-	private static boolean isHaveRuleData(Map<String, TSDataRule> ruleMap,
+	private static boolean isHaveRuleData(Map<String, DataRuleEntity> ruleMap,
 			String aliasName) {
 		for (String key : ruleMap.keySet()) {
 			if (key.contains(aliasName)) {
@@ -326,7 +326,7 @@ public class HqlGenerateUtil {
 		return false;
 	}
 
-	private static void addRuleToCriteria(TSDataRule tsDataRule,
+	private static void addRuleToCriteria(DataRuleEntity tsDataRule,
 			String aliasName, Class propertyType, CriteriaQuery cq) {
 		HqlRuleEnum rule = HqlRuleEnum.getByValue(tsDataRule.getRuleConditions());
 		if (rule.equals(HqlRuleEnum.IN)) {
@@ -415,15 +415,15 @@ public class HqlGenerateUtil {
 		return isNotEmpty;
 	}
 
-	private static Map<String, TSDataRule> getRuleMap() {
-		Map<String, TSDataRule> ruleMap = new HashMap<String, TSDataRule>();
-		List<TSDataRule> list =JeecgDataAutorUtils.loadDataSearchConditonSQL(); //(List<TSDataRule>) ContextHolderUtils
+	private static Map<String, DataRuleEntity> getRuleMap() {
+		Map<String, DataRuleEntity> ruleMap = new HashMap<String, DataRuleEntity>();
+		List<DataRuleEntity> list =JeecgDataAutorUtils.loadDataSearchConditonSQL(); //(List<DataRuleEntity>) ContextHolderUtils
 			//	.getRequest().getAttribute(Globals.MENU_DATA_AUTHOR_RULES);
 		if(list != null&&list.size()>0){
 			if(list.get(0)==null){
 				return ruleMap;
 			}
-			for (TSDataRule rule : list) {
+			for (DataRuleEntity rule : list) {
 
 				String column = rule.getRuleColumn();
 				if(oConvertUtils.isEmpty(column)){
@@ -533,7 +533,7 @@ public class HqlGenerateUtil {
 	 * @param searchObj
 	 */
 	public static CriteriaQuery getDataAuthorConditionHql(CriteriaQuery cq, Object searchObj) {
-		Map<String, TSDataRule> ruleMap = getRuleMap();
+		Map<String, DataRuleEntity> ruleMap = getRuleMap();
 		PropertyDescriptor origDescriptors[] = PropertyUtils.getPropertyDescriptors(searchObj);
 		String aliasName, name, type;
 		for (int i = 0; i < origDescriptors.length; i++) {

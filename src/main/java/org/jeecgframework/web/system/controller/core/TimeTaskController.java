@@ -16,9 +16,9 @@ import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.pojo.base.TSTimeTaskEntity;
+import org.jeecgframework.web.system.pojo.base.TimeTaskEntity;
 import org.jeecgframework.web.system.service.SystemService;
-import org.jeecgframework.web.system.service.TimeTaskServiceI;
+import org.jeecgframework.web.system.service.TimeTaskService;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,7 +43,7 @@ import com.alibaba.fastjson.JSONObject;
 public class TimeTaskController extends BaseController {
 
 	@Autowired
-	private TimeTaskServiceI timeTaskService;
+	private TimeTaskService timeTaskService;
 	@Autowired(required=false)
 	private DynamicTask dynamicTask;
 	@Autowired
@@ -70,8 +70,8 @@ public class TimeTaskController extends BaseController {
 	 */
 
 	@RequestMapping(params = "datagrid")
-	public void datagrid(TSTimeTaskEntity timeTask,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSTimeTaskEntity.class, dataGrid);
+	public void datagrid(TimeTaskEntity timeTask,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(TimeTaskEntity.class, dataGrid);
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, timeTask, request.getParameterMap());
 		this.timeTaskService.getDataGridReturn(cq, true);
@@ -85,10 +85,10 @@ public class TimeTaskController extends BaseController {
 	 */
 	@RequestMapping(params = "del")
 	@ResponseBody
-	public AjaxJson del(TSTimeTaskEntity timeTask, HttpServletRequest request) {
+	public AjaxJson del(TimeTaskEntity timeTask, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		timeTask = systemService.getEntity(TSTimeTaskEntity.class, timeTask.getId());
+		timeTask = systemService.getEntity(TimeTaskEntity.class, timeTask.getId());
 		if("1".equals(timeTask.getIsStart())){
 			message = "任务运行中不能删除，请先停止任务";
 		}else{
@@ -109,7 +109,7 @@ public class TimeTaskController extends BaseController {
 	 */
 	@RequestMapping(params = "save")
 	@ResponseBody
-	public AjaxJson save(TSTimeTaskEntity timeTask, HttpServletRequest request) {
+	public AjaxJson save(TimeTaskEntity timeTask, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 
@@ -122,7 +122,7 @@ public class TimeTaskController extends BaseController {
 			return j;
 		}
 		if (StringUtil.isNotEmpty(timeTask.getId())) {
-			TSTimeTaskEntity t = timeTaskService.get(TSTimeTaskEntity.class, timeTask.getId());
+			TimeTaskEntity t = timeTaskService.get(TimeTaskEntity.class, timeTask.getId());
 			if ("1".equals(t.getIsStart())) {
 				message = "任务运行中不可编辑，请先停止任务";
 			}else{
@@ -155,9 +155,9 @@ public class TimeTaskController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdate")
-	public ModelAndView addorupdate(TSTimeTaskEntity timeTask, HttpServletRequest req) {
+	public ModelAndView addorupdate(TimeTaskEntity timeTask, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(timeTask.getId())) {
-			timeTask = timeTaskService.getEntity(TSTimeTaskEntity.class, timeTask.getId());
+			timeTask = timeTaskService.getEntity(TimeTaskEntity.class, timeTask.getId());
 			req.setAttribute("timeTaskPage", timeTask);
 		}
 		return new ModelAndView("system/timetask/timeTask");
@@ -168,7 +168,7 @@ public class TimeTaskController extends BaseController {
 	 */
 	@RequestMapping(params = "updateTime")
 	@ResponseBody
-	public AjaxJson updateTime(TSTimeTaskEntity timeTask, HttpServletRequest request) {
+	public AjaxJson updateTime(TimeTaskEntity timeTask, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		boolean isUpdate = dynamicTask.updateCronExpression(timeTask);
 		j.setMsg(isUpdate?"定时任务管理更新成功":"定时任务管理更新失败");
@@ -180,11 +180,11 @@ public class TimeTaskController extends BaseController {
 	 */
 	@RequestMapping(params = "startOrStopTask")
 	@ResponseBody
-	public AjaxJson startOrStopTask(TSTimeTaskEntity timeTask, HttpServletRequest request) {
+	public AjaxJson startOrStopTask(TimeTaskEntity timeTask, HttpServletRequest request) {
 		
 		AjaxJson j = new AjaxJson();
 		boolean isStart = timeTask.getIsStart().equals("1");
-		timeTask = timeTaskService.get(TSTimeTaskEntity.class, timeTask.getId());		
+		timeTask = timeTaskService.get(TimeTaskEntity.class, timeTask.getId());
 		boolean isSuccess = false;
 		
 		if ("0".equals(timeTask.getIsEffect())) {
@@ -227,11 +227,11 @@ public class TimeTaskController extends BaseController {
 	 */
 	@RequestMapping(params = "remoteTask")
 	@ResponseBody
-	public JSONObject remoteTask(TSTimeTaskEntity timeTask, HttpServletRequest request) {
+	public JSONObject remoteTask(TimeTaskEntity timeTask, HttpServletRequest request) {
 		
 		JSONObject json = new JSONObject();
 		boolean isStart = timeTask.getIsStart().equals("1");
-		timeTask = timeTaskService.get(TSTimeTaskEntity.class, timeTask.getId());		
+		timeTask = timeTaskService.get(TimeTaskEntity.class, timeTask.getId());
 		boolean isSuccess = true;
 		
 		if ("0".equals(timeTask.getIsEffect())) {

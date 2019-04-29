@@ -18,14 +18,14 @@ import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.web.cgform.enhance.CgformEnhanceJavaInter;
 import org.jeecgframework.web.system.pojo.base.InterroleEntity;
 import org.jeecgframework.web.system.pojo.base.InterroleInterfaceEntity;
-import org.jeecgframework.web.system.pojo.base.TSRoleUser;
-import org.jeecgframework.web.system.service.InterroleServiceI;
+import org.jeecgframework.web.system.pojo.base.RoleUserEntity;
+import org.jeecgframework.web.system.service.InterroleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("interroleService")
 @Transactional
-public class InterroleServiceImpl extends CommonServiceImpl implements InterroleServiceI {
+public class InterroleServiceImpl extends CommonServiceImpl implements InterroleService {
 	 
  	public void delete(InterroleEntity entity) throws Exception{
  		super.delete(entity);
@@ -126,7 +126,7 @@ public class InterroleServiceImpl extends CommonServiceImpl implements Interrole
 		}
  	}
  	public int getUsersOfThisRole(String id) {
-		Criteria criteria = getSession().createCriteria(TSRoleUser.class);
+		Criteria criteria = getSession().createCriteria(RoleUserEntity.class);
 		criteria.add(Restrictions.eq("InterroleEntity.id", id));
 		int allCounts = ((Long) criteria.setProjection(
 				Projections.rowCount()).uniqueResult()).intValue();

@@ -15,13 +15,8 @@ import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.constant.DataBaseConstant;
 import org.jeecgframework.web.cgform.common.CgAutoListConstant;
 import org.jeecgframework.web.system.manager.ClientManager;
-import org.jeecgframework.web.system.pojo.base.Client;
-import org.jeecgframework.web.system.pojo.base.DynamicDataSourceEntity;
-import org.jeecgframework.web.system.pojo.base.TSIcon;
-import org.jeecgframework.web.system.pojo.base.TSType;
-import org.jeecgframework.web.system.pojo.base.TSTypegroup;
-import org.jeecgframework.web.system.pojo.base.TSUser;
-import org.jeecgframework.web.system.service.CacheServiceI;
+import org.jeecgframework.web.system.pojo.base.*;
+import org.jeecgframework.web.system.service.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,9 +28,9 @@ import org.slf4j.LoggerFactory;
 public class ResourceUtil {
 	private static final Logger log = LoggerFactory.getLogger(ResourceUtil.class);
 	
-	private static CacheServiceI cacheService;
+	private static CacheService cacheService;
 	static {
-		cacheService = ApplicationContextUtil.getContext().getBean(CacheServiceI.class);
+		cacheService = ApplicationContextUtil.getContext().getBean(CacheService.class);
 	}
 	public static final String LOCAL_CLINET_USER = "LOCAL_CLINET_USER";
 	/**字典组缓存key*/
@@ -51,11 +46,11 @@ public class ResourceUtil {
 	 * 获取字典组缓存
 	 */
 //	private static Map<String, TSTypegroup> allTypeGroups = new HashMap<String,TSTypegroup>();
-	public static TSTypegroup getCacheTypeGroup(String typegroupcode){
-		TSTypegroup result = null;
-		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE, DICT_TYPE_GROUPS_KEY);
+	public static TypeGroupEntity getCacheTypeGroup(String typegroupcode){
+		TypeGroupEntity result = null;
+		Object obj = cacheService.get(CacheService.FOREVER_CACHE, DICT_TYPE_GROUPS_KEY);
 		if(obj!=null){
-			Map<String, TSTypegroup> mp = (Map<String, TSTypegroup>) obj;
+			Map<String, TypeGroupEntity> mp = (Map<String, TypeGroupEntity>) obj;
 			result = mp.get(typegroupcode);
 			log.debug("-----------从缓存获取字典组-----typegroupcode：[{}]",typegroupcode);
 			return result;
@@ -67,11 +62,11 @@ public class ResourceUtil {
 	 * 获取字典缓存
 	 */
 //	public static Map<String, List<TSType>> allTypes = new HashMap<String,List<TSType>>();
-	public static List<TSType> getCacheTypes(String typegroupcode){
-		List<TSType> result = null;
-		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE, DICT_TYPES_KEY);
+	public static List<TypeEntity> getCacheTypes(String typegroupcode){
+		List<TypeEntity> result = null;
+		Object obj = cacheService.get(CacheService.FOREVER_CACHE, DICT_TYPES_KEY);
 		if(obj!=null){
-			Map<String, List<TSType>> mp = (Map<String, List<TSType>>) obj;
+			Map<String, List<TypeEntity>> mp = (Map<String, List<TypeEntity>>) obj;
 			result = mp.get(typegroupcode);
 			log.debug("-----------从缓存获取字典-----typegroupcode：[{}]",typegroupcode);
 			return  result;
@@ -85,7 +80,7 @@ public class ResourceUtil {
 //	public static Map<String, String> mutiLangMap = new HashMap<String, String>(); 
 	public static String getMutiLan(String key){
 		String result = null;
-		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE, MUTI_LANG_FOREVER_CACHE_KEY);
+		Object obj = cacheService.get(CacheService.FOREVER_CACHE, MUTI_LANG_FOREVER_CACHE_KEY);
 		if(obj!=null){
 			Map<String, String> ls = (Map<String, String>) obj;
 			result = ls.get(key);
@@ -100,7 +95,7 @@ public class ResourceUtil {
 	 */
 //	public static Map<String, DynamicDataSourceEntity> dynamicDataSourceMap = new HashMap<String, DynamicDataSourceEntity>();
 	public static Map<String, DynamicDataSourceEntity> getCacheAllDynamicDataSourceEntity(){
-		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE, DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY);
+		Object obj = cacheService.get(CacheService.FOREVER_CACHE, DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY);
 		if(obj!=null){
 			Map<String, DynamicDataSourceEntity> ls = (Map<String, DynamicDataSourceEntity>) obj;
 			log.debug("-----------从缓存获取动态数据源配置-------getCacheAllDynamicDataSourceEntity--------size：[{}] ",ls.size());
@@ -110,7 +105,7 @@ public class ResourceUtil {
 	}
 	public static DynamicDataSourceEntity getCacheDynamicDataSourceEntity(String dbKey){
 		DynamicDataSourceEntity result = null;
-		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE, DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY);
+		Object obj = cacheService.get(CacheService.FOREVER_CACHE, DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY);
 		if(obj!=null){
 			Map<String, DynamicDataSourceEntity> ls = (Map<String, DynamicDataSourceEntity>) obj;
 			result = ls.get(dbKey);
@@ -137,7 +132,7 @@ public class ResourceUtil {
 	/**
 	 * 缓存系统图标【缓存】
 	 */
-	public static Map<String, TSIcon> allTSIcons = new HashMap<String,TSIcon>();
+	public static Map<String, IconEntity> allTSIcons = new HashMap<String,IconEntity>();
 	private static final ResourceBundle bundle = java.util.ResourceBundle.getBundle("sysConfig");
 	
 	
@@ -159,14 +154,14 @@ public class ResourceUtil {
 	public static final String getSessionattachmenttitle(String sessionName) {
 		return bundle.getString(sessionName);
 	}
-	public static final TSUser getSessionUser() {
+	public static final UserEntity getSessionUser() {
 		ClientManager clientManager = ClientManager.getInstance();
 		HttpSession session = ContextHolderUtils.getSession();
 		if(clientManager.getClient(session.getId())!=null){
 			return clientManager.getClient(session.getId()).getUser();
 
 		}else{
-			TSUser u = (TSUser) session.getAttribute(ResourceUtil.LOCAL_CLINET_USER);
+			UserEntity u = (UserEntity) session.getAttribute(ResourceUtil.LOCAL_CLINET_USER);
 			Client client = new Client();
 	        client.setIp("");
 	        client.setLogindatetime(new Date());

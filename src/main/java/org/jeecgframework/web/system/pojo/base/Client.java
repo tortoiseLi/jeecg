@@ -1,69 +1,74 @@
 package org.jeecgframework.web.system.pojo.base;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * 在线用户对象
- * 
- * @author JueYue
- * @date 2013-9-28
- * @version 1.0
+ * @author DELL
+ * @date 2019-04-29
+ * @version V1.0
  */
-public class Client implements java.io.Serializable {
+public class Client implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 用户
+	 */
+	private UserEntity user;
 
-	private TSUser user;
-	private Map<String, TSFunction> functions;
-	private Map<Integer, List<TSFunction>> functionMap;
+	private Map<String, FunctionEntity> functions;
+
+	private Map<Integer, List<FunctionEntity>> functionMap;
 
 	/**
 	 * 用户IP
 	 */
-	private java.lang.String ip;
+	private String ip;
 	/**
 	 * 登录时间
 	 */
-	private java.util.Date logindatetime;
+	private Date logindatetime;
 
-	public TSUser getUser() {
+	public UserEntity getUser() {
 		return user;
 	}
 
-	public void setUser(TSUser user) {
+	public void setUser(UserEntity user) {
 		this.user = user;
 	}
 
-	public Map<Integer, List<TSFunction>> getFunctionMap() {
+	public Map<Integer, List<FunctionEntity>> getFunctionMap() {
 		return functionMap;
 	}
 
-	public void setFunctionMap(Map<Integer, List<TSFunction>> functionMap) {
+	public void setFunctionMap(Map<Integer, List<FunctionEntity>> functionMap) {
 		this.functionMap = functionMap;
 	}
 
-	public Map<String, TSFunction> getFunctions() {
+	public Map<String, FunctionEntity> getFunctions() {
 		return functions;
 	}
 
-	public void setFunctions(Map<String, TSFunction> functions) {
+	public void setFunctions(Map<String, FunctionEntity> functions) {
 		this.functions = functions;
 	}
 
-	public java.lang.String getIp() {
+	public String getIp() {
 		return ip;
 	}
 
-	public void setIp(java.lang.String ip) {
+	public void setIp(String ip) {
 		this.ip = ip;
 	}
 
-	public java.util.Date getLogindatetime() {
+	public Date getLogindatetime() {
 		return logindatetime;
 	}
 
-	public void setLogindatetime(java.util.Date logindatetime) {
+	public void setLogindatetime(Date logindatetime) {
 		this.logindatetime = logindatetime;
 	}
 

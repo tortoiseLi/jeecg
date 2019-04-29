@@ -40,10 +40,10 @@ import org.jeecgframework.tag.vo.datatable.SortDirection;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
 import org.jeecgframework.web.system.dao.DepartAuthGroupDao;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.pojo.base.TSDepartExcelView;
-import org.jeecgframework.web.system.pojo.base.TSUser;
-import org.jeecgframework.web.system.pojo.base.TSUserOrg;
+import org.jeecgframework.web.system.pojo.base.DepartEntity;
+import org.jeecgframework.web.system.pojo.base.DepartExcelView;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.pojo.base.UserOrgEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +114,7 @@ public class DepartController extends BaseController {
 
 	@RequestMapping(params = "datagrid")
 	public void datagrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSDepart.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(DepartEntity.class, dataGrid);
 		this.systemService.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
 	}
@@ -124,7 +124,7 @@ public class DepartController extends BaseController {
 		public AjaxJson delUserOrg(@RequestParam(required=true)String userid,@RequestParam(required=true)String departid) {
 			AjaxJson ajaxJson = new AjaxJson();
 			try {
-				List<TSUserOrg> userOrgList = this.systemService.findByProperty(TSUserOrg.class, "tsUser.id", userid);
+				List<UserOrgEntity> userOrgList = this.systemService.findByProperty(UserOrgEntity.class, "tsUser.id", userid);
 				if(userOrgList.size() == 1){
 					ajaxJson.setSuccess(false);
 					ajaxJson.setMsg("当前用户只包含有当前组织机构关系，不可删除，请切换用户的组织机构关系");
@@ -162,10 +162,10 @@ public class DepartController extends BaseController {
 	 */
 	@RequestMapping(params = "del")
 	@ResponseBody
-	public AjaxJson del(TSDepart depart, HttpServletRequest request) {
+	public AjaxJson del(DepartEntity depart, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		depart = systemService.getEntity(TSDepart.class, depart.getId());
+		depart = systemService.getEntity(DepartEntity.class, depart.getId());
         message = MutiLangUtil.paramDelSuccess("common.department");
         if (depart.getTSDeparts().size() == 0) {
 
@@ -192,10 +192,10 @@ public class DepartController extends BaseController {
 	}
 
 
-	public void upEntity(TSDepart depart) {
-		List<TSUser> users = systemService.findByProperty(TSUser.class, "TSDepart.id", depart.getId());
+	public void upEntity(DepartEntity depart) {
+		List<UserEntity> users = systemService.findByProperty(UserEntity.class, "TSDepart.id", depart.getId());
 		if (users.size() > 0) {
-			for (TSUser tsUser : users) {
+			for (UserEntity tsUser : users) {
 				//tsUser.setTSDepart(null);
 				//systemService.saveOrUpdate(tsUser);
 				systemService.delete(tsUser);
@@ -211,7 +211,7 @@ public class DepartController extends BaseController {
 	 */
 	@RequestMapping(params = "save")
 	@ResponseBody
-	public AjaxJson save(TSDepart depart, HttpServletRequest request) {
+	public AjaxJson save(DepartEntity depart, HttpServletRequest request) {
 		String message = null;
 		// 设置上级部门
 		String pid = request.getParameter("TSPDepart.id");
@@ -233,8 +233,8 @@ public class DepartController extends BaseController {
 		return j;
 	}
 	@RequestMapping(params = "add")
-	public ModelAndView add(TSDepart depart, HttpServletRequest req) {
-		List<TSDepart> departList = systemService.getList(TSDepart.class);
+	public ModelAndView add(DepartEntity depart, HttpServletRequest req) {
+		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
 		req.setAttribute("departList", departList);
 //        这个if代码段没有用吧，注释之
 //		if (StringUtil.isNotEmpty(depart.getId())) {
@@ -255,11 +255,11 @@ public class DepartController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "update")
-	public ModelAndView update(TSDepart depart, HttpServletRequest req) {
-		List<TSDepart> departList = systemService.getList(TSDepart.class);
+	public ModelAndView update(DepartEntity depart, HttpServletRequest req) {
+		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
 		req.setAttribute("departList", departList);
 		if (StringUtil.isNotEmpty(depart.getId())) {
-			depart = systemService.getEntity(TSDepart.class, depart.getId());
+			depart = systemService.getEntity(DepartEntity.class, depart.getId());
 			req.setAttribute("depart", depart);
 		}
 		return new ModelAndView("system/depart/depart");
@@ -275,7 +275,7 @@ public class DepartController extends BaseController {
 	@RequestMapping(params = "setPFunction")
 	@ResponseBody
 	public List<ComboTree> setPFunction(HttpServletRequest request, ComboTree comboTree) {
-		CriteriaQuery cq = new CriteriaQuery(TSDepart.class);
+		CriteriaQuery cq = new CriteriaQuery(DepartEntity.class);
 		if(null != request.getParameter("selfId")){
 			cq.notEq("id", request.getParameter("selfId"));
 		}
@@ -289,11 +289,11 @@ public class DepartController extends BaseController {
 		cq.addOrder("orgCode", SortDirection.asc);
 
 		cq.add();
-		List<TSDepart> departsList = systemService.getListByCriteriaQuery(cq, false);
+		List<DepartEntity> departsList = systemService.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id", "departname", "TSDeparts");
 
-		TSDepart defaultDepart = new TSDepart();
+		DepartEntity defaultDepart = new DepartEntity();
 		defaultDepart.setId("");
 		defaultDepart.setDepartname("请选择组织机构");
 		departsList.add(0, defaultDepart);
@@ -311,8 +311,8 @@ public class DepartController extends BaseController {
 	 */
 	@RequestMapping(params = "departgrid")
 	@ResponseBody
-	public Object departgrid(TSDepart tSDepart,HttpServletRequest request, HttpServletResponse response, TreeGrid treegrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSDepart.class);
+	public Object departgrid(DepartEntity tSDepart,HttpServletRequest request, HttpServletResponse response, TreeGrid treegrid) {
+		CriteriaQuery cq = new CriteriaQuery(DepartEntity.class);
 		if("yes".equals(request.getParameter("isSearch"))){
 			treegrid.setId(null);
 			tSDepart.setId(null);
@@ -333,8 +333,8 @@ public class DepartController extends BaseController {
 		List<TreeGrid> departList =null;
 		departList=systemService.getListByCriteriaQuery(cq, false);
 		if(departList.size()==0&&tSDepart.getDepartname()!=null){ 
-			cq = new CriteriaQuery(TSDepart.class);
-			TSDepart parDepart = new TSDepart();
+			cq = new CriteriaQuery(DepartEntity.class);
+			DepartEntity parDepart = new DepartEntity();
 			tSDepart.setTSPDepart(parDepart);
 			org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tSDepart);
 		    departList =systemService.getListByCriteriaQuery(cq, false);
@@ -390,11 +390,11 @@ public class DepartController extends BaseController {
 	 * 返回类型： void
 	 */
 	@RequestMapping(params = "userDatagrid")
-	public void userDatagrid(TSUser user,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+	public void userDatagrid(UserEntity user,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		if(user!=null&&user.getDepartid()!=null){
 			user.setDepartid(null);//设置用户的所属部门的查询条件为空；
 		}
-		CriteriaQuery cq = new CriteriaQuery(TSUser.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(UserEntity.class, dataGrid);
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, user);
 		String departid = oConvertUtils.getString(request.getParameter("departid"));
@@ -456,7 +456,7 @@ public class DepartController extends BaseController {
     public List<ComboTree> getOrgTree(HttpServletRequest request) {
 //        findHql不能处理is null条件
 //        List<TSDepart> departsList = systemService.findHql("from TSPDepart where TSPDepart.id is null");
-        List<TSDepart> departsList = systemService.findByQueryString("from TSDepart where TSPDepart.id is null");
+        List<DepartEntity> departsList = systemService.findByQueryString("from TSDepart where TSPDepart.id is null");
         List<ComboTree> comboTrees = new ArrayList<ComboTree>();
         ComboTreeModel comboTreeModel = new ComboTreeModel("id", "departname", "TSDeparts");
         comboTrees = systemService.ComboTree(departsList, comboTreeModel, null, true);
@@ -480,14 +480,14 @@ public class DepartController extends BaseController {
      * @return 处理结果信息
      */
     @RequestMapping(params = "addUserToOrgList")
-    public void addUserToOrgList(TSUser user, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+    public void addUserToOrgList(UserEntity user, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
         String orgId = request.getParameter("orgId");
 
-        CriteriaQuery cq = new CriteriaQuery(TSUser.class, dataGrid);
+        CriteriaQuery cq = new CriteriaQuery(UserEntity.class, dataGrid);
         org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, user);
 
         // 获取 当前组织机构的用户信息
-        CriteriaQuery subCq = new CriteriaQuery(TSUserOrg.class);
+        CriteriaQuery subCq = new CriteriaQuery(UserOrgEntity.class);
         subCq.setProjection(Property.forName("tsUser.id"));
         subCq.eq("tsDepart.id", orgId);
         subCq.add();
@@ -512,7 +512,7 @@ public class DepartController extends BaseController {
     public AjaxJson doAddUserToOrg(HttpServletRequest req) {
     	String message = null;
         AjaxJson j = new AjaxJson();
-        TSDepart depart = systemService.getEntity(TSDepart.class, req.getParameter("orgId"));
+		DepartEntity depart = systemService.getEntity(DepartEntity.class, req.getParameter("orgId"));
         saveOrgUserList(req, depart);
         message =  MutiLangUtil.paramAddSuccess("common.user");
 //      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
@@ -525,16 +525,16 @@ public class DepartController extends BaseController {
      * @param request request
      * @param depart depart
      */
-    private void saveOrgUserList(HttpServletRequest request, TSDepart depart) {
+    private void saveOrgUserList(HttpServletRequest request, DepartEntity depart) {
         String orgIds = oConvertUtils.getString(request.getParameter("userIds"));
 
-        List<TSUserOrg> userOrgList = new ArrayList<TSUserOrg>();
+        List<UserOrgEntity> userOrgList = new ArrayList<UserOrgEntity>();
         List<String> userIdList = extractIdListByComma(orgIds);
         for (String userId : userIdList) {
-            TSUser user = new TSUser();
+			UserEntity user = new UserEntity();
             user.setId(userId);
 
-            TSUserOrg userOrg = new TSUserOrg();
+			UserOrgEntity userOrg = new UserOrgEntity();
             userOrg.setTsUser(user);
             userOrg.setTsDepart(depart);
 
@@ -565,7 +565,7 @@ public class DepartController extends BaseController {
      */
     @RequestMapping(params = "departSelectDataGrid")
     public void datagridRole(HttpServletResponse response, DataGrid dataGrid) {
-        CriteriaQuery cq = new CriteriaQuery(TSDepart.class, dataGrid);
+        CriteriaQuery cq = new CriteriaQuery(DepartEntity.class, dataGrid);
         this.systemService.getDataGridReturn(cq, true);
         TagUtil.datagrid(response, dataGrid);
     }
@@ -613,12 +613,12 @@ public class DepartController extends BaseController {
 	 * @param response
 	 */
 	@RequestMapping(params = "exportXls")
-	public String exportXls(TSDepart tsDepart, HttpServletRequest request, HttpServletResponse response
+	public String exportXls(DepartEntity tsDepart, HttpServletRequest request, HttpServletResponse response
 			, DataGrid dataGrid, ModelMap modelMap) {
-		CriteriaQuery cq = new CriteriaQuery(TSDepart.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(DepartEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tsDepart, request.getParameterMap());
 		cq.addOrder("orgCode", SortDirection.asc);
-		List<TSDepart> tsDeparts = this.systemService.getListByCriteriaQuery(cq,false);
+		List<DepartEntity> tsDeparts = this.systemService.getListByCriteriaQuery(cq,false);
 		/*List<TSDepart> finalTsDeparts = new ArrayList<TSDepart>();
 		List<TSDepart> tsDeparts = systemService.getSession().createSQLQuery("select * from t_s_depart where length(org_code) = 3 order by org_code asc").addEntity(TSDepart.class).list();
 		for(TSDepart tsDepart1:tsDeparts){
@@ -635,7 +635,7 @@ public class DepartController extends BaseController {
 			}
 		}*/
 		modelMap.put(NormalExcelConstants.FILE_NAME,"组织机构表");
-		modelMap.put(NormalExcelConstants.CLASS,TSDepart.class);
+		modelMap.put(NormalExcelConstants.CLASS,DepartEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("组织机构表列表", "导出人:"+ ResourceUtil.getSessionUser().getRealName(),
 				"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,tsDeparts);
@@ -648,10 +648,10 @@ public class DepartController extends BaseController {
 	 * @param response
 	 */
 	@RequestMapping(params = "exportXlsByT")
-	public String exportXlsByT(TSDepart tsDepart,HttpServletRequest request,HttpServletResponse response
+	public String exportXlsByT(DepartEntity tsDepart,HttpServletRequest request,HttpServletResponse response
 			, DataGrid dataGrid,ModelMap modelMap) {
 		modelMap.put(NormalExcelConstants.FILE_NAME,"组织机构表");
-		modelMap.put(NormalExcelConstants.CLASS,TSDepart.class);
+		modelMap.put(NormalExcelConstants.CLASS,DepartEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("组织机构表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
 				"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,new ArrayList());
@@ -696,8 +696,8 @@ public class DepartController extends BaseController {
 			MultipartFile file = entity.getValue();// 获取上传文件对象
 			ImportParams params = new ImportParams();
 			try {
-				List<TSDepartExcelView> list = ExcelImportUtil.importExcel(file.getInputStream(),TSDepartExcelView.class,params);
-				Map<String,TSDepart> departMap=new HashMap<String, TSDepart>();
+				List<DepartExcelView> list = ExcelImportUtil.importExcel(file.getInputStream(),DepartExcelView.class,params);
+				Map<String,DepartEntity> departMap=new HashMap<String, DepartEntity>();
 				saveDepartExcelView(list,departMap);
 				if(departMap.isEmpty()){
 					j.setMsg("必须有一个或一个以上的祖先节点！");
@@ -718,18 +718,18 @@ public class DepartController extends BaseController {
 		return j;
 	}
 	
-	private void saveDepartExcelView(List<TSDepartExcelView> list,Map<String,TSDepart> departMap){
-		Iterator<TSDepartExcelView> iterator = list.iterator();
+	private void saveDepartExcelView(List<DepartExcelView> list,Map<String,DepartEntity> departMap){
+		Iterator<DepartExcelView> iterator = list.iterator();
 		while(iterator.hasNext()){
-			TSDepartExcelView next = iterator.next();
+			DepartExcelView next = iterator.next();
 			String parentId=next.getParentId();
 			if(StringUtil.isEmpty(parentId)){
-				TSDepart depart=generateDepart(next,null);
+				DepartEntity depart=generateDepart(next,null);
 				departMap.put(next.getId(), depart);
 				iterator.remove();
 			}else if(departMap.containsKey(parentId)){
-				TSDepart parentDepart=departMap.get(parentId);
-				TSDepart depart=generateDepart(next,parentDepart);
+				DepartEntity parentDepart=departMap.get(parentId);
+				DepartEntity depart=generateDepart(next,parentDepart);
 				departMap.put(next.getId(), depart);
 				iterator.remove();
 			}
@@ -740,8 +740,8 @@ public class DepartController extends BaseController {
 		if(!list.isEmpty())saveDepartExcelView(list,departMap);
 	}
 	
-	private TSDepart generateDepart(TSDepartExcelView next,TSDepart parentDepart){
-		TSDepart depart=new TSDepart();
+	private DepartEntity generateDepart(DepartExcelView next,DepartEntity parentDepart){
+		DepartEntity depart=new DepartEntity();
 		depart.setDepartname(next.getDepartName());
 		depart.setDescription(next.getDescription());
 		depart.setOrgType(next.getOrgType());
@@ -777,12 +777,12 @@ public class DepartController extends BaseController {
 			params.setHeadRows(1);
 			params.setNeedSave(true);
 			try {
-				List<TSDepart> tsDeparts = ExcelImportUtil.importExcel(file.getInputStream(),TSDepart.class,params);
-				for (TSDepart tsDepart : tsDeparts) {
+				List<DepartEntity> tsDeparts = ExcelImportUtil.importExcel(file.getInputStream(),DepartEntity.class,params);
+				for (DepartEntity tsDepart : tsDeparts) {
 					String orgCode = tsDepart.getOrgCode();
-					List<TSDepart> departs = systemService.findByProperty(TSDepart.class,"orgCode",orgCode);
+					List<DepartEntity> departs = systemService.findByProperty(DepartEntity.class,"orgCode",orgCode);
 					if(departs.size()!=0){
-						TSDepart depart = departs.get(0);
+						DepartEntity depart = departs.get(0);
 						MyBeanUtils.copyBeanNotNull2Bean(tsDepart,depart);
 						systemService.saveOrUpdate(depart);
 					}else {
@@ -810,12 +810,12 @@ public class DepartController extends BaseController {
 						String orgcode = tsDepart.getOrgCode();
 						String parentOrgCode = orgcode.substring(0,orgcode.length()-3);
 
-						List<TSDepart> parentList = systemService.getSession().createSQLQuery("select * from t_s_depart where ORG_CODE = :parentOrgCode")
-								.addEntity(TSDepart.class)
+						List<DepartEntity> parentList = systemService.getSession().createSQLQuery("select * from t_s_depart where ORG_CODE = :parentOrgCode")
+								.addEntity(DepartEntity.class)
 								.setString("parentOrgCode",parentOrgCode)
 								.list();
 						if(parentList.size() > 0){
-							TSDepart parentDept =  parentList.get(0);
+							DepartEntity parentDept =  parentList.get(0);
 							tsDepart.setTSPDepart(parentDept);
 						}
 						tsDepart.setDepartOrder("0");
@@ -854,12 +854,12 @@ public class DepartController extends BaseController {
 		
 		String parentid = request.getParameter("parentid");
 		
-		List<TSDepart> tSDeparts = new ArrayList<TSDepart>();
+		List<DepartEntity> tSDeparts = new ArrayList<DepartEntity>();
 		
 		StringBuffer hql = new StringBuffer(" from TSDepart t where 1=1 ");
 		if(StringUtils.isNotBlank(parentid)){
-			
-			TSDepart dePart = this.systemService.getEntity(TSDepart.class, parentid);
+
+			DepartEntity dePart = this.systemService.getEntity(DepartEntity.class, parentid);
 			
 			hql.append(" and TSPDepart = ?");
 			tSDeparts = this.systemService.findHql(hql.toString(), dePart);
@@ -872,7 +872,7 @@ public class DepartController extends BaseController {
 			Map<String,Object> map = null;
 			String sql = null;
 			 Object[] params = null;
-			for(TSDepart depart:tSDeparts){
+			for(DepartEntity depart:tSDeparts){
 				map = new HashMap<String,Object>();
 				map.put("id", depart.getId());
 				map.put("name", depart.getDepartname());

@@ -1,10 +1,7 @@
 package org.jeecgframework.core.timer;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
-
-import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.constant.Globals;
@@ -12,9 +9,9 @@ import org.jeecgframework.core.util.HttpRequest;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.MyClassLoader;
 import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.web.system.pojo.base.TSTimeTaskEntity;
+import org.jeecgframework.web.system.pojo.base.TimeTaskEntity;
 import org.jeecgframework.web.system.service.SystemService;
-import org.jeecgframework.web.system.service.TimeTaskServiceI;
+import org.jeecgframework.web.system.service.TimeTaskService;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobBuilder;
@@ -45,7 +42,7 @@ public class DynamicTask {
 	private Scheduler schedulerFactory;
 
 	@Autowired(required=false)
-	private TimeTaskServiceI timeTaskService;
+	private TimeTaskService timeTaskService;
 	
 	@Autowired(required=false)
 	private SystemService systemService;
@@ -55,7 +52,7 @@ public class DynamicTask {
 	 * 启动定时任务
 	 * @param task
 	 */
-	private boolean startTask(TSTimeTaskEntity task){
+	private boolean startTask(TimeTaskEntity task){
 		try {
 
 			//quartz 1.6
@@ -81,7 +78,7 @@ public class DynamicTask {
 	 * @param task
 	 * @throws SchedulerException
 	 */
-	private boolean endTask(TSTimeTaskEntity task){
+	private boolean endTask(TimeTaskEntity task){
 		
 		try{
 
@@ -112,7 +109,7 @@ public class DynamicTask {
 	 * @return
 	 * @throws SchedulerException 
 	 */
-	public boolean startOrStop(TSTimeTaskEntity task, boolean start){
+	public boolean startOrStop(TimeTaskEntity task, boolean start){
 		boolean isSuccess = start ? startTask(task) : endTask(task);
 		if(isSuccess){
 			task.setIsStart(start?"1":"0");
@@ -131,10 +128,10 @@ public class DynamicTask {
 	 * @param task
 	 * @return
 	 */
-	public boolean updateCronExpression(TSTimeTaskEntity task) {
+	public boolean updateCronExpression(TimeTaskEntity task) {
 		try {
 			String newExpression = task.getCronExpression();
-			task = timeTaskService.get(TSTimeTaskEntity.class, task.getId());
+			task = timeTaskService.get(TimeTaskEntity.class, task.getId());
 			
 			//任务运行中
 			if("1".equals(task.getIsStart())){
@@ -200,11 +197,11 @@ public class DynamicTask {
 	 * @param task
 	 * @return
 	 */
-	/*public boolean updateCronExpression(TSTimeTaskEntity task) {		
+	/*public boolean updateCronExpression(TimeTaskEntity task) {
 		
 		try {
 			String newExpression = task.getCronExpression();		
-			task = timeTaskService.get(TSTimeTaskEntity.class, task.getId());		
+			task = timeTaskService.get(TimeTaskEntity.class, task.getId());
 
 			//任务运行中
 			if("1".equals(task.getIsStart())){
@@ -245,13 +242,13 @@ public class DynamicTask {
 
 		//String serverIp = InetAddress.getLocalHost().getHostAddress();
 		List<String> ipList = IpUtil.getLocalIPList();
-		TSTimeTaskEntity timTask = new TSTimeTaskEntity();
+		TimeTaskEntity timTask = new TimeTaskEntity();
 		timTask.setIsEffect("1");
 		timTask.setIsStart("1");
-		List<TSTimeTaskEntity> tasks = (List<TSTimeTaskEntity>)timeTaskService.findByExample(TSTimeTaskEntity.class.getName(), timTask);	
+		List<TimeTaskEntity> tasks = (List<TimeTaskEntity>)timeTaskService.findByExample(TimeTaskEntity.class.getName(), timTask);
 		logger.info(" register time task class num is ["+tasks.size()+"] ");
 		if(tasks.size() > 0){
-			for (TSTimeTaskEntity task : tasks) {
+			for (TimeTaskEntity task : tasks) {
 				//startTask(task);
 				try {
 
@@ -283,7 +280,7 @@ public class DynamicTask {
 	 * @param task 定时任务对象
 	 * @throws SchedulerException
 	 */
-	private void scheduleJob(TSTimeTaskEntity task) throws SchedulerException {
+	private void scheduleJob(TimeTaskEntity task) throws SchedulerException {
 		//build 要执行的任务
 		JobDetail jobDetail = JobBuilder.newJob(MyClassLoader.getClassByScn(task.getClassName()))
 				.withIdentity(task.getId())

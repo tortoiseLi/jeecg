@@ -12,8 +12,8 @@ import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.pojo.base.TSNoticeAuthorityUser;
-import org.jeecgframework.web.system.service.NoticeAuthorityUserServiceI;
+import org.jeecgframework.web.system.pojo.base.NoticeAuthorityUserEntity;
+import org.jeecgframework.web.system.service.NoticeAuthorityUserService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,7 +40,7 @@ public class NoticeAuthorityUserController extends BaseController {
 	private static final Logger logger = Logger.getLogger(NoticeAuthorityUserController.class);
 
 	@Autowired
-	private NoticeAuthorityUserServiceI noticeAuthorityUserService;
+	private NoticeAuthorityUserService noticeAuthorityUserService;
 	@Autowired
 	private SystemService systemService;
 
@@ -65,8 +65,8 @@ public class NoticeAuthorityUserController extends BaseController {
 	 */
 
 	@RequestMapping(params = "datagrid")
-	public void datagrid(TSNoticeAuthorityUser noticeAuthorityUser,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSNoticeAuthorityUser.class, dataGrid);
+	public void datagrid(NoticeAuthorityUserEntity noticeAuthorityUser,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(NoticeAuthorityUserEntity.class, dataGrid);
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, noticeAuthorityUser, request.getParameterMap());
 		try{
@@ -86,7 +86,7 @@ public class NoticeAuthorityUserController extends BaseController {
 	 */
 	@RequestMapping(params = "doDel")
 	@ResponseBody
-	public AjaxJson doDel(TSNoticeAuthorityUser noticeAuthorityUser, HttpServletRequest request) {
+	public AjaxJson doDel(NoticeAuthorityUserEntity noticeAuthorityUser, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "通知公告用户授权删除成功";
@@ -115,7 +115,7 @@ public class NoticeAuthorityUserController extends BaseController {
 		message = "通知公告用户授权删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSNoticeAuthorityUser noticeAuthorityUser = systemService.getEntity(TSNoticeAuthorityUser.class, 
+				NoticeAuthorityUserEntity noticeAuthorityUser = systemService.getEntity(NoticeAuthorityUserEntity.class,
 				id
 				);
 				noticeAuthorityUserService.delete(noticeAuthorityUser);
@@ -139,7 +139,7 @@ public class NoticeAuthorityUserController extends BaseController {
 	 */
 	@RequestMapping(params = "doAdd")
 	@ResponseBody
-	public AjaxJson doAdd(TSNoticeAuthorityUser noticeAuthorityUser, HttpServletRequest request) {
+	public AjaxJson doAdd(NoticeAuthorityUserEntity noticeAuthorityUser, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "通知公告用户授权添加成功";
@@ -163,7 +163,7 @@ public class NoticeAuthorityUserController extends BaseController {
 	 */
 	@RequestMapping(params = "doSave")
 	@ResponseBody
-	public AjaxJson doSave(TSNoticeAuthorityUser noticeAuthorityUser, HttpServletRequest request) {
+	public AjaxJson doSave(NoticeAuthorityUserEntity noticeAuthorityUser, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "通知公告用户授权保存成功";
@@ -189,11 +189,11 @@ public class NoticeAuthorityUserController extends BaseController {
 	 */
 	@RequestMapping(params = "doUpdate")
 	@ResponseBody
-	public AjaxJson doUpdate(TSNoticeAuthorityUser noticeAuthorityUser, HttpServletRequest request) {
+	public AjaxJson doUpdate(NoticeAuthorityUserEntity noticeAuthorityUser, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "通知公告用户授权更新成功";
-		TSNoticeAuthorityUser t = noticeAuthorityUserService.get(TSNoticeAuthorityUser.class, noticeAuthorityUser.getId());
+		NoticeAuthorityUserEntity t = noticeAuthorityUserService.get(NoticeAuthorityUserEntity.class, noticeAuthorityUser.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(noticeAuthorityUser, t);
 			noticeAuthorityUserService.saveOrUpdate(t);
@@ -214,9 +214,9 @@ public class NoticeAuthorityUserController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "goAdd")
-	public ModelAndView goAdd(TSNoticeAuthorityUser noticeAuthorityUser, HttpServletRequest req) {
+	public ModelAndView goAdd(NoticeAuthorityUserEntity noticeAuthorityUser, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(noticeAuthorityUser.getId())) {
-			noticeAuthorityUser = noticeAuthorityUserService.getEntity(TSNoticeAuthorityUser.class, noticeAuthorityUser.getId());
+			noticeAuthorityUser = noticeAuthorityUserService.getEntity(NoticeAuthorityUserEntity.class, noticeAuthorityUser.getId());
 			req.setAttribute("noticeAuthorityUserPage", noticeAuthorityUser);
 		}
 		return new ModelAndView("system/user/noticeAuthorityUser-add");
@@ -227,9 +227,9 @@ public class NoticeAuthorityUserController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "goUpdate")
-	public ModelAndView goUpdate(TSNoticeAuthorityUser noticeAuthorityUser, HttpServletRequest req) {
+	public ModelAndView goUpdate(NoticeAuthorityUserEntity noticeAuthorityUser, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(noticeAuthorityUser.getId())) {
-			noticeAuthorityUser = noticeAuthorityUserService.getEntity(TSNoticeAuthorityUser.class, noticeAuthorityUser.getId());
+			noticeAuthorityUser = noticeAuthorityUserService.getEntity(NoticeAuthorityUserEntity.class, noticeAuthorityUser.getId());
 			req.setAttribute("noticeAuthorityUserPage", noticeAuthorityUser);
 		}
 		return new ModelAndView("system/user/noticeAuthorityUser-update");

@@ -57,12 +57,11 @@ import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.datatable.SortDirection;
-import org.jeecgframework.web.system.controller.core.LoginController;
 import org.jeecgframework.web.system.enums.InterfaceEnum;
 import org.jeecgframework.web.system.pojo.base.InterfaceRuleDto;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.pojo.base.TSLog;
-import org.jeecgframework.web.system.service.MutiLangServiceI;
+import org.jeecgframework.web.system.pojo.base.DepartEntity;
+import org.jeecgframework.web.system.pojo.base.LogEntity;
+import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.util.InterfaceUtil;
 import org.slf4j.Logger;
@@ -117,7 +116,7 @@ public class JeecgListDemoController extends BaseController {
 	private JeecgMinidaoDao jeecgMinidaoDao;
 
     @Autowired
-    private MutiLangServiceI mutiLangService;
+    private MutiLangService mutiLangService;
 	
 	/**
 	 * 采用minidao查询数据
@@ -516,7 +515,7 @@ public class JeecgListDemoController extends BaseController {
 		List<Highchart> list = new ArrayList<Highchart>();
 		Highchart hc = new Highchart();
 		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT broswer as className ,count(broswer)  FROM TSLog group by broswer");
+		sb.append("SELECT broswer as className ,count(broswer)  FROM LogEntity group by broswer");
 		List userBroswerList = systemService.findByQueryString(sb.toString());
 		Long count = systemService.getCountForJdbc("SELECT COUNT(1) FROM T_S_Log WHERE 1=1");
 		List lt = new ArrayList();
@@ -747,7 +746,7 @@ public class JeecgListDemoController extends BaseController {
 	@RequestMapping(params = "print")
 	public ModelAndView print(JeecgDemoEntity jeecgDemo, HttpServletRequest req) {
 		// 获取部门信息
-		List<TSDepart> departList = systemService.getList(TSDepart.class);
+		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
 		req.setAttribute("departList", departList);
 
 		if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
@@ -1029,7 +1028,7 @@ public class JeecgListDemoController extends BaseController {
 	//jeecgListDemoController.do?logDatagrid
 	@RequestMapping(params = "logDatagrid")
 	public void logDatagrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSLog.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(LogEntity.class, dataGrid);
 		
 		//日志级别查询条件
 		String loglevel = request.getParameter("loglevel");

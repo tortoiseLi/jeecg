@@ -39,7 +39,8 @@ import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.web.cgform.entity.upload.CgUploadEntity;
 import org.jeecgframework.web.cgform.service.config.CgFormFieldServiceI;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
+import org.jeecgframework.web.system.pojo.base.DepartEntity;
+import org.jeecgframework.web.system.pojo.base.DepartEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -707,10 +708,10 @@ public class JformOrderMainController extends BaseController {
 		
 		AjaxJson j = new AjaxJson();
 		String parentid = request.getParameter("parentid");
-		List<TSDepart> tSDeparts = new ArrayList<TSDepart>();
-		StringBuffer hql = new StringBuffer(" from TSDepart t where 1=1 ");
+		List<DepartEntity> tSDeparts = new ArrayList<DepartEntity>();
+		StringBuffer hql = new StringBuffer(" from DepartEntity t where 1=1 ");
 		if(oConvertUtils.isNotEmpty(parentid)){
-			TSDepart dePart = this.systemService.getEntity(TSDepart.class, parentid);
+			DepartEntity dePart = this.systemService.getEntity(DepartEntity.class, parentid);
 			hql.append(" and TSPDepart = ?");
 			tSDeparts = this.systemService.findHql(hql.toString(), dePart);
 		}
@@ -720,14 +721,14 @@ public class JformOrderMainController extends BaseController {
 			Map<String,Object> map = null;
 			String sql = null;
 			 Object[] params = null;
-			for(TSDepart depart:tSDeparts){
+			for(DepartEntity depart:tSDeparts){
 				map = new HashMap<String,Object>();
 				map.put("id", depart.getId());
 				map.put("name", depart.getDepartname());
 
 				map.put("code",depart.getOrgCode());
 
-				TSDepart pdepart = depart.getTSPDepart();
+				DepartEntity pdepart = depart.getTSPDepart();
 				if(pdepart!=null){
 					map.put("pId", pdepart.getId());
 				} else{

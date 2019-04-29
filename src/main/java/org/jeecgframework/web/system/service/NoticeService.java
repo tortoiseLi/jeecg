@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.jeecgframework.core.common.service.CommonService;
-import org.jeecgframework.web.system.pojo.base.TSNotice;
+import org.jeecgframework.web.system.pojo.base.NoticeEntity;
 
 
 /**
@@ -37,28 +37,31 @@ public interface NoticeService extends CommonService{
 	 */
 	public void addNoticeAuthorityUser(String noticeId, String userid);
 	
+@Override
 public <T> void delete(T entity);
  	
- 	public <T> Serializable save(T entity);
+ 	@Override
+	public <T> Serializable save(T entity);
  	
- 	public <T> void saveOrUpdate(T entity);
+ 	@Override
+	public <T> void saveOrUpdate(T entity);
  	
  	/**
 	 * 默认按钮-sql增强-新增操作
 	 * @param id
 	 * @return
 	 */
- 	public boolean doAddSql(TSNotice t);
+ 	public boolean doAddSql(NoticeEntity t);
  	/**
 	 * 默认按钮-sql增强-更新操作
 	 * @param id
 	 * @return
 	 */
- 	public boolean doUpdateSql(TSNotice t);
+ 	public boolean doUpdateSql(NoticeEntity t);
  	/**
 	 * 默认按钮-sql增强-删除操作
 	 * @param id
 	 * @return
 	 */
- 	public boolean doDelSql(TSNotice t);
+ 	public boolean doDelSql(NoticeEntity t);
 }

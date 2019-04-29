@@ -26,14 +26,14 @@ import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.datatable.SortDirection;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
-import org.jeecgframework.web.system.pojo.base.TSFunction;
-import org.jeecgframework.web.system.pojo.base.TSIcon;
-import org.jeecgframework.web.system.pojo.base.TSInterfaceDdataRuleEntity;
-import org.jeecgframework.web.system.pojo.base.TSInterfaceEntity;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
-import org.jeecgframework.web.system.pojo.base.TSRoleFunction;
+import org.jeecgframework.web.system.pojo.base.FunctionEntity;
+import org.jeecgframework.web.system.pojo.base.IconEntity;
+import org.jeecgframework.web.system.pojo.base.InterfaceDdataRuleEntity;
+import org.jeecgframework.web.system.pojo.base.InterfaceEntity;
+import org.jeecgframework.web.system.pojo.base.OperationEntity;
+import org.jeecgframework.web.system.pojo.base.RoleFunctionEntity;
 import org.jeecgframework.web.system.service.SystemService;
-import org.jeecgframework.web.system.service.TSInterfaceServiceI;
+import org.jeecgframework.web.system.service.InterfaceService;
 import org.jeecgframework.web.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -73,7 +73,7 @@ public class TSInterfaceController extends BaseController {
 		this.userService = userService;
 	}
 	@Autowired
-	TSInterfaceServiceI tsService;
+	InterfaceService tsService;
 	
 
 	/**
@@ -118,7 +118,7 @@ public class TSInterfaceController extends BaseController {
 
 	@RequestMapping(params = "datagrid")
 	public void datagrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSFunction.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(FunctionEntity.class, dataGrid);
 		this.systemService.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
 	}
@@ -132,7 +132,7 @@ public class TSInterfaceController extends BaseController {
 	 */
 	@RequestMapping(params = "opdategrid")
 	public void opdategrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSOperation.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(OperationEntity.class, dataGrid);
 		String functionId = oConvertUtils.getString(request.getParameter("functionId"));
 		cq.eq("TSFunction.id", functionId);
 		cq.add();
@@ -149,16 +149,16 @@ public class TSInterfaceController extends BaseController {
  
 	@RequestMapping(params = "del")
 	@ResponseBody
-	public AjaxJson del(TSInterfaceEntity tsInterface, HttpServletRequest request) {
+	public AjaxJson del(InterfaceEntity tsInterface, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 
-		tsInterface = systemService.getEntity(TSInterfaceEntity.class, tsInterface.getId());
-		List<TSInterfaceEntity> ts = tsInterface.getTSInterfaces();
+		tsInterface = systemService.getEntity(InterfaceEntity.class, tsInterface.getId());
+		List<InterfaceEntity> ts = tsInterface.getTSInterfaces();
 		if(ts!=null&&ts.size()>0){
 			 message = MutiLangUtil.getLang("common.menu.del.fail");
 		}else{
-			String hql =" from TSInterfaceDdataRuleEntity where TSInterface.id = ?";
+			String hql =" from InterfaceDdataRuleEntity where TSInterface.id = ?";
 			List<Object> findByQueryString = systemService.findHql(hql,tsInterface.getId());
 			if(findByQueryString!=null&&findByQueryString.size()>0){
 				 message = MutiLangUtil.getLang("common.menu.del.fail");
@@ -186,16 +186,16 @@ public class TSInterfaceController extends BaseController {
 	 */
 	@RequestMapping(params = "delop")
 	@ResponseBody
-	public AjaxJson delop(TSOperation operation, HttpServletRequest request) {
+	public AjaxJson delop(OperationEntity operation, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		operation = systemService.getEntity(TSOperation.class, operation.getId());
+		operation = systemService.getEntity(OperationEntity.class, operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
 		String operationId = operation.getId();
-		String hql = "from TSRoleFunction rolefun where rolefun.operation like '%" + operationId + "%'";
-		List<TSRoleFunction> roleFunctions = userService.findByQueryString(hql);
-		for (TSRoleFunction roleFunction : roleFunctions) {
+		String hql = "from RoleFunctionEntity rolefun where rolefun.operation like '%" + operationId + "%'";
+		List<RoleFunctionEntity> roleFunctions = userService.findByQueryString(hql);
+		for (RoleFunctionEntity roleFunction : roleFunctions) {
 			String newOper = roleFunction.getOperation().replace(operationId + ",", "");
 			if (roleFunction.getOperation().length() == newOper.length()) {
 				newOper = roleFunction.getOperation().replace(operationId, "");
@@ -211,17 +211,17 @@ public class TSInterfaceController extends BaseController {
 	/**
 	 * 递归更新子权限的InterfaceLevel
 	 * 
-	 * @param subFunction
+	 * @param FunctionEntity
 	 * @param parent
 	 */
-	private void updateSubFunction(List<TSInterfaceEntity> subInterface, TSInterfaceEntity parent) {
+	private void updateSubFunction(List<InterfaceEntity> subInterface, InterfaceEntity parent) {
 		if (subInterface.size() == 0) {// 没有子权限是结束
 			return;
 		} else {
-			for (TSInterfaceEntity tsInterface : subInterface) {
+			for (InterfaceEntity tsInterface : subInterface) {
 				tsInterface.setInterfaceLevel(Short.valueOf(parent.getInterfaceLevel() + 1 + ""));
 				systemService.saveOrUpdate(tsInterface);
-				List<TSInterfaceEntity> subInterface1 = systemService.findByProperty(TSInterfaceEntity.class, "tSInterface.id",
+				List<InterfaceEntity> subInterface1 = systemService.findByProperty(InterfaceEntity.class, "tSInterface.id",
 						tsInterface.getId());
 				updateSubFunction(subInterface1, tsInterface);
 			}
@@ -236,7 +236,7 @@ public class TSInterfaceController extends BaseController {
 	 */
 	@RequestMapping(params = "saveInterface")
 	@ResponseBody
-	public AjaxJson saveInterface(TSInterfaceEntity tsInterface, HttpServletRequest request) {
+	public AjaxJson saveInterface(InterfaceEntity tsInterface, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		tsInterface.setInterfaceUrl(tsInterface.getInterfaceUrl().trim());
@@ -247,12 +247,12 @@ public class TSInterfaceController extends BaseController {
 		if (tsInterface.gettSInterface().getId().equals("")) {
 			tsInterface.settSInterface(null);
 		} else {
-			TSInterfaceEntity parent = systemService.getEntity(TSInterfaceEntity.class, tsInterface.gettSInterface().getId());
+			InterfaceEntity parent = systemService.getEntity(InterfaceEntity.class, tsInterface.gettSInterface().getId());
 			tsInterface.setInterfaceLevel(Short.valueOf(parent.getInterfaceLevel() + 1 + ""));
 		}
 		if (StringUtil.isNotEmpty(tsInterface.getId())) {
 			message = MutiLangUtil.paramUpdSuccess("common.menu");
-			TSInterfaceEntity t = systemService.getEntity(TSInterfaceEntity.class, tsInterface.getId());
+			InterfaceEntity t = systemService.getEntity(InterfaceEntity.class, tsInterface.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(tsInterface, t);
 				userService.saveOrUpdate(t);
@@ -260,18 +260,18 @@ public class TSInterfaceController extends BaseController {
 				e.printStackTrace();
 			}
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
-			List<TSInterfaceEntity> subinterface = systemService.findByProperty(TSInterfaceEntity.class, "tSInterface.id",
+			List<InterfaceEntity> subinterface = systemService.findByProperty(InterfaceEntity.class, "tSInterface.id",
 					tsInterface.getId());
 			updateSubFunction(subinterface, tsInterface);
 		} else {
 			if (tsInterface.getInterfaceLevel().equals(Globals.Function_Leave_ONE)) {
 				@SuppressWarnings("unused")
-				List<TSInterfaceEntity> interfaceList = systemService.findByProperty(TSInterfaceEntity.class, "interfaceLevel",
+				List<InterfaceEntity> interfaceList = systemService.findByProperty(InterfaceEntity.class, "interfaceLevel",
 						Globals.Function_Leave_ONE);
 				tsInterface.setInterfaceOrder(tsInterface.getInterfaceOrder());
 			} else {
 				@SuppressWarnings("unused")
-				List<TSInterfaceEntity> interfaceList = systemService.findByProperty(TSInterfaceEntity.class, "interfaceLevel",
+				List<InterfaceEntity> interfaceList = systemService.findByProperty(InterfaceEntity.class, "interfaceLevel",
 						Globals.Function_Leave_TWO);
 				tsInterface.setInterfaceOrder(tsInterface.getInterfaceOrder());
 			}
@@ -291,7 +291,7 @@ public class TSInterfaceController extends BaseController {
 	 */
 	@RequestMapping(params = "saveop")
 	@ResponseBody
-	public AjaxJson saveop(TSOperation operation, HttpServletRequest request) {
+	public AjaxJson saveop(OperationEntity operation, HttpServletRequest request) {
 		String message = null;
 		String pid = request.getParameter("TSFunction.id");
 		if (pid.equals("")) {
@@ -318,18 +318,18 @@ public class TSInterfaceController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdate")
-	public ModelAndView addorupdate(TSInterfaceEntity tsInterface, HttpServletRequest req) {
+	public ModelAndView addorupdate(InterfaceEntity tsInterface, HttpServletRequest req) {
 		String interfaceid = req.getParameter("id");
-		List<TSInterfaceEntity> interfacelist = systemService.getList(TSInterfaceEntity.class);
+		List<InterfaceEntity> interfacelist = systemService.getList(InterfaceEntity.class);
 		req.setAttribute("flist", interfacelist);
 		if (interfaceid != null) {
-			tsInterface = systemService.getEntity(TSInterfaceEntity.class, interfaceid);
+			tsInterface = systemService.getEntity(InterfaceEntity.class, interfaceid);
 			req.setAttribute("tsInterface", tsInterface);
 		}
 		if (tsInterface.gettSInterface() != null && tsInterface.gettSInterface().getId() != null) {
 			tsInterface.setInterfaceLevel((short) 1);
 			tsInterface.settSInterface(
-					(TSInterfaceEntity) systemService.getEntity(TSInterfaceEntity.class, tsInterface.gettSInterface().getId()));
+					(InterfaceEntity) systemService.getEntity(InterfaceEntity.class, tsInterface.gettSInterface().getId()));
 			req.setAttribute("tsInterface", tsInterface);
 		}
 		return new ModelAndView("system/tsinterface/interface");
@@ -341,11 +341,11 @@ public class TSInterfaceController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdateop")
-	public ModelAndView addorupdateop(TSOperation operation, HttpServletRequest req) {
-		List<TSIcon> iconlist = systemService.getList(TSIcon.class);
+	public ModelAndView addorupdateop(OperationEntity operation, HttpServletRequest req) {
+		List<IconEntity> iconlist = systemService.getList(IconEntity.class);
 		req.setAttribute("iconlist", iconlist);
 		if (operation.getId() != null) {
-			operation = systemService.getEntity(TSOperation.class, operation.getId());
+			operation = systemService.getEntity(OperationEntity.class, operation.getId());
 			req.setAttribute("operation", operation);
 		}
 		String functionId = oConvertUtils.getString(req.getParameter("functionId"));
@@ -359,7 +359,7 @@ public class TSInterfaceController extends BaseController {
 	@RequestMapping(params = "interfaceGrid")
 	@ResponseBody
 	public List<TreeGrid> interfaceGrid(HttpServletRequest request, TreeGrid treegrid, Integer type) {
-		CriteriaQuery cq = new CriteriaQuery(TSInterfaceEntity.class);
+		CriteriaQuery cq = new CriteriaQuery(InterfaceEntity.class);
 		String selfId = request.getParameter("selfId");
 		if (selfId != null) {
 			cq.notEq("id", selfId);
@@ -374,10 +374,10 @@ public class TSInterfaceController extends BaseController {
 		cq.add();
 
 		// 获取装载数据权限的条件HQL
-		cq = HqlGenerateUtil.getDataAuthorConditionHql(cq, new TSInterfaceEntity());
+		cq = HqlGenerateUtil.getDataAuthorConditionHql(cq, new InterfaceEntity());
 		cq.add();
 
-		List<TSInterfaceEntity> interfaceList = systemService.getListByCriteriaQuery(cq, false);
+		List<InterfaceEntity> interfaceList = systemService.getListByCriteriaQuery(cq, false);
 		List<TreeGrid> treeGrids = new ArrayList<TreeGrid>();
 		TreeGridModel treeGridModel = new TreeGridModel();
 		treeGridModel.setTextField("interfaceName");
@@ -405,7 +405,7 @@ public class TSInterfaceController extends BaseController {
 	@RequestMapping(params = "setPInterface")
 	@ResponseBody
 	public List<ComboTree> setPInterface(HttpServletRequest request, ComboTree comboTree) {
-		CriteriaQuery cq = new CriteriaQuery(TSInterfaceEntity.class);
+		CriteriaQuery cq = new CriteriaQuery(InterfaceEntity.class);
 		if (null != request.getParameter("selfId")) {
 			cq.notEq("id", request.getParameter("selfId"));
 		}
@@ -416,7 +416,7 @@ public class TSInterfaceController extends BaseController {
 			cq.isNull("tSInterface");
 		}
 		cq.add();
-		List<TSInterfaceEntity> interfaceList = systemService.getListByCriteriaQuery(cq, false);
+		List<InterfaceEntity> interfaceList = systemService.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id", "interfaceName", "tsInterfaces");
 		comboTrees = systemService.ComboTree(interfaceList, comboTreeModel, null, false);
@@ -428,9 +428,9 @@ public class TSInterfaceController extends BaseController {
 	 * 添加修改权限数据
 	 */
 	@RequestMapping(params = "addorupdaterule")
-	public ModelAndView addorupdaterule(TSInterfaceDdataRuleEntity operation, HttpServletRequest req) {
+	public ModelAndView addorupdaterule(InterfaceDdataRuleEntity operation, HttpServletRequest req) {
 		if (operation.getId() != null) {
-			operation = systemService.getEntity(TSInterfaceDdataRuleEntity.class, operation.getId());
+			operation = systemService.getEntity(InterfaceDdataRuleEntity.class, operation.getId());
 			req.setAttribute("operation", operation);
 		}
 		String interfaceId = oConvertUtils.getString(req.getParameter("interfaceId"));
@@ -443,7 +443,7 @@ public class TSInterfaceController extends BaseController {
 	 */
 	@RequestMapping(params = "ruledatagrid")
 	public void ruledategrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSInterfaceDdataRuleEntity.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(InterfaceDdataRuleEntity.class, dataGrid);
 		String interfaceId = oConvertUtils.getString(request.getParameter("interfaceId"));
 		cq.eq("TSInterface.id", interfaceId);
 		cq.add();
@@ -457,10 +457,10 @@ public class TSInterfaceController extends BaseController {
 	 */
 	@RequestMapping(params = "delrule")
 	@ResponseBody
-	public AjaxJson delrule(TSInterfaceDdataRuleEntity operation, HttpServletRequest request) {
+	public AjaxJson delrule(InterfaceDdataRuleEntity operation, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		operation = systemService.getEntity(TSInterfaceDdataRuleEntity.class, operation.getId());
+		operation = systemService.getEntity(InterfaceDdataRuleEntity.class, operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
@@ -473,10 +473,10 @@ public class TSInterfaceController extends BaseController {
 	 */
 	@RequestMapping(params = "saverule")
 	@ResponseBody
-	public AjaxJson saverule(TSInterfaceDdataRuleEntity operation, HttpServletRequest request)throws Exception {
+	public AjaxJson saverule(InterfaceDdataRuleEntity operation, HttpServletRequest request)throws Exception {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		TSInterfaceEntity interfaceEntity = systemService.get(TSInterfaceEntity.class, operation.getTSInterface().getId());
+		InterfaceEntity interfaceEntity = systemService.get(InterfaceEntity.class, operation.getTSInterface().getId());
 		if(interfaceEntity!=null){
 			if (StringUtil.isNotEmpty(operation.getId())) {
 				message = MutiLangUtil.paramUpdSuccess("common.operation");
@@ -498,7 +498,7 @@ public class TSInterfaceController extends BaseController {
 		return j;
 	}
 
-	public int justHaveDataRule(TSInterfaceDdataRuleEntity dataRule) {
+	public int justHaveDataRule(InterfaceDdataRuleEntity dataRule) {
 
 		String column = dataRule.getRuleColumn();
 		if(oConvertUtils.isEmpty(column)){

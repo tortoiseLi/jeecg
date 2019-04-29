@@ -6,8 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.pojo.base.TSUser;
+import org.jeecgframework.web.system.pojo.base.DepartEntity;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
 
 import org.jeecgframework.core.common.model.common.UploadFile;
 import org.jeecgframework.core.common.model.json.ComboTree;
@@ -24,13 +24,13 @@ public interface ICommonDao extends IGenericBaseCommonDao{
 	 * admin账户密码初始化
 	 * @param user
 	 */
-	public void pwdInit(TSUser user,String newPwd);
+	public void pwdInit(UserEntity user,String newPwd);
 	/**
 	 * 检查用户是否存在
 	 * */
-	public TSUser getUserByUserIdAndUserNameExits(TSUser user);
-	public TSUser findUserByAccountAndPassword(String username,String password);
-	public String getUserRole(TSUser user);
+	public UserEntity getUserByUserIdAndUserNameExits(UserEntity user);
+	public UserEntity findUserByAccountAndPassword(String username,String password);
+	public String getUserRole(UserEntity user);
 	/**
 	 * 文件上传
 	 * @param request
@@ -54,7 +54,7 @@ public interface ICommonDao extends IGenericBaseCommonDao{
 	 * @param fileName XML全路径
 	 */
 	public void parserXml(String fileName);
-	public List<ComboTree> comTree(List<TSDepart> all,ComboTree comboTree);
+	public List<ComboTree> comTree(List<DepartEntity> all,ComboTree comboTree);
 
 	/**
      * 根据模型生成ComboTree JSON

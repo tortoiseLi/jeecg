@@ -1,16 +1,14 @@
 package org.jeecgframework.web.system.pojo.base;
 
-/**
- *@类:DuplicateCheckPage
- *@作者:张代浩
- *@E-mail:zhangdaiscott@163.com
- *@日期:2012-11-15
- *update-begin--Author:yankang  Date:201309012 for：[TASK#63]UI库常用控件参考示例【重复校验】
- *update-end--Author:yankang  Date:20130912 for：[TASK#63]UI库常用控件参考示例【重复校验】
- */
+import java.io.Serializable;
 
-@SuppressWarnings("serial")
-public class DuplicateCheckPage   implements java.io.Serializable {
+/**
+ * UI库常用控件参考示例【重复校验】
+ * @author DELL
+ * @date 2019-04-29
+ * @version V1.0
+ */
+public class DuplicateCheckPage   implements Serializable {
 
 	/**
 	 * 表名
@@ -27,7 +25,9 @@ public class DuplicateCheckPage   implements java.io.Serializable {
 	 */
 	private String fieldVlaue;
 	
-	/**编辑数据ID*/
+	/**
+	 * 编辑数据ID
+	 */
 	private String rowObid;
 
 	public String getRowObid() {

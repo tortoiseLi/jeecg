@@ -5,8 +5,7 @@ import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.jeecgframework.core.util.ApplicationContextUtil;
-import org.jeecgframework.web.system.service.MutiLangServiceI;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jeecgframework.web.system.service.MutiLangService;
 
 /**
  * 
@@ -46,7 +45,7 @@ public class TabTag extends TagSupport {
 	}
 	public void setTitle(String title) {
 
-		MutiLangServiceI mutiLangService = ApplicationContextUtil.getContext().getBean(MutiLangServiceI.class);	
+		MutiLangService mutiLangService = ApplicationContextUtil.getContext().getBean(MutiLangService.class);
 
 		String lang_context = mutiLangService.getLang(title, langArg);
 		

@@ -21,10 +21,10 @@ import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
 import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.pojo.base.TSDictTableConfigEntity;
-import org.jeecgframework.web.system.service.CacheServiceI;
+import org.jeecgframework.web.system.pojo.base.DictTableConfigEntity;
+import org.jeecgframework.web.system.service.CacheService;
 import org.jeecgframework.web.system.service.SystemService;
-import org.jeecgframework.web.system.service.TSDictTableConfigServiceI;
+import org.jeecgframework.web.system.service.DictTableConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +52,11 @@ public class TSDictTableConfigController extends BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(TSDictTableConfigController.class);
 
 	@Autowired
-	private TSDictTableConfigServiceI tSDictTableConfigService;
+	private DictTableConfigService tSDictTableConfigService;
 	@Autowired
 	private SystemService systemService;
 	@Autowired
-	private CacheServiceI cacheService;
+	private CacheService cacheService;
 	private static final String dictCacheKey = "dictTableConfigCache";
 	
 
@@ -81,8 +81,8 @@ public class TSDictTableConfigController extends BaseController {
 	 */
 
 	@RequestMapping(params = "datagrid")
-	public void datagrid(TSDictTableConfigEntity tSDictTableConfig,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSDictTableConfigEntity.class, dataGrid);
+	public void datagrid(DictTableConfigEntity tSDictTableConfig,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(DictTableConfigEntity.class, dataGrid);
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tSDictTableConfig, request.getParameterMap());
 		try{
@@ -102,10 +102,10 @@ public class TSDictTableConfigController extends BaseController {
 	 */
 	@RequestMapping(params = "doDel")
 	@ResponseBody
-	public AjaxJson doDel(TSDictTableConfigEntity tSDictTableConfig, HttpServletRequest request) {
+	public AjaxJson doDel(DictTableConfigEntity tSDictTableConfig, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tSDictTableConfig = systemService.getEntity(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
+		tSDictTableConfig = systemService.getEntity(DictTableConfigEntity.class, tSDictTableConfig.getId());
 		message = "字典表授权配置删除成功";
 		try{
 			cacheService.clean(dictCacheKey);
@@ -134,7 +134,7 @@ public class TSDictTableConfigController extends BaseController {
 		try{
 			cacheService.clean(dictCacheKey);
 			for(String id:ids.split(",")){
-				TSDictTableConfigEntity tSDictTableConfig = systemService.getEntity(TSDictTableConfigEntity.class, 
+				DictTableConfigEntity tSDictTableConfig = systemService.getEntity(DictTableConfigEntity.class,
 				id
 				);
 				tSDictTableConfigService.delete(tSDictTableConfig);
@@ -158,7 +158,7 @@ public class TSDictTableConfigController extends BaseController {
 	 */
 	@RequestMapping(params = "doAdd")
 	@ResponseBody
-	public AjaxJson doAdd(TSDictTableConfigEntity tSDictTableConfig, HttpServletRequest request) {
+	public AjaxJson doAdd(DictTableConfigEntity tSDictTableConfig, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "字典表授权配置添加成功";
@@ -183,11 +183,11 @@ public class TSDictTableConfigController extends BaseController {
 	 */
 	@RequestMapping(params = "doUpdate")
 	@ResponseBody
-	public AjaxJson doUpdate(TSDictTableConfigEntity tSDictTableConfig, HttpServletRequest request) {
+	public AjaxJson doUpdate(DictTableConfigEntity tSDictTableConfig, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "字典表授权配置更新成功";
-		TSDictTableConfigEntity t = tSDictTableConfigService.get(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
+		DictTableConfigEntity t = tSDictTableConfigService.get(DictTableConfigEntity.class, tSDictTableConfig.getId());
 		try {
 			cacheService.clean(dictCacheKey);
 			MyBeanUtils.copyBeanNotNull2Bean(tSDictTableConfig, t);
@@ -209,9 +209,9 @@ public class TSDictTableConfigController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "goAdd")
-	public ModelAndView goAdd(TSDictTableConfigEntity tSDictTableConfig, HttpServletRequest req) {
+	public ModelAndView goAdd(DictTableConfigEntity tSDictTableConfig, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSDictTableConfig.getId())) {
-			tSDictTableConfig = tSDictTableConfigService.getEntity(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
+			tSDictTableConfig = tSDictTableConfigService.getEntity(DictTableConfigEntity.class, tSDictTableConfig.getId());
 			req.setAttribute("tSDictTableConfigPage", tSDictTableConfig);
 		}
 		return new ModelAndView("system/dicttable/tSDictTableConfig-add");
@@ -222,9 +222,9 @@ public class TSDictTableConfigController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "goUpdate")
-	public ModelAndView goUpdate(TSDictTableConfigEntity tSDictTableConfig, HttpServletRequest req) {
+	public ModelAndView goUpdate(DictTableConfigEntity tSDictTableConfig, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSDictTableConfig.getId())) {
-			tSDictTableConfig = tSDictTableConfigService.getEntity(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
+			tSDictTableConfig = tSDictTableConfigService.getEntity(DictTableConfigEntity.class, tSDictTableConfig.getId());
 			req.setAttribute("tSDictTableConfigPage", tSDictTableConfig);
 		}
 		return new ModelAndView("system/dicttable/tSDictTableConfig-update");
@@ -248,13 +248,13 @@ public class TSDictTableConfigController extends BaseController {
 	 * @param response
 	 */
 	@RequestMapping(params = "exportXls")
-	public String exportXls(TSDictTableConfigEntity tSDictTableConfig,HttpServletRequest request,HttpServletResponse response
+	public String exportXls(DictTableConfigEntity tSDictTableConfig,HttpServletRequest request,HttpServletResponse response
 			, DataGrid dataGrid,ModelMap modelMap) {
-		CriteriaQuery cq = new CriteriaQuery(TSDictTableConfigEntity.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(DictTableConfigEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tSDictTableConfig, request.getParameterMap());
-		List<TSDictTableConfigEntity> tSDictTableConfigs = this.tSDictTableConfigService.getListByCriteriaQuery(cq,false);
+		List<DictTableConfigEntity> tSDictTableConfigs = this.tSDictTableConfigService.getListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"字典表授权配置");
-		modelMap.put(NormalExcelConstants.CLASS,TSDictTableConfigEntity.class);
+		modelMap.put(NormalExcelConstants.CLASS,DictTableConfigEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("字典表授权配置列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
 			"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,tSDictTableConfigs);
@@ -267,10 +267,10 @@ public class TSDictTableConfigController extends BaseController {
 	 * @param response
 	 */
 	@RequestMapping(params = "exportXlsByT")
-	public String exportXlsByT(TSDictTableConfigEntity tSDictTableConfig,HttpServletRequest request,HttpServletResponse response
+	public String exportXlsByT(DictTableConfigEntity tSDictTableConfig,HttpServletRequest request,HttpServletResponse response
 			, DataGrid dataGrid,ModelMap modelMap) {
     	modelMap.put(NormalExcelConstants.FILE_NAME,"字典表授权配置");
-    	modelMap.put(NormalExcelConstants.CLASS,TSDictTableConfigEntity.class);
+    	modelMap.put(NormalExcelConstants.CLASS,DictTableConfigEntity.class);
     	modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("字典表授权配置列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
     	"导出信息"));
     	modelMap.put(NormalExcelConstants.DATA_LIST,new ArrayList());
@@ -292,8 +292,8 @@ public class TSDictTableConfigController extends BaseController {
 			params.setHeadRows(1);
 			params.setNeedSave(true);
 			try {
-				List<TSDictTableConfigEntity> listTSDictTableConfigEntitys = ExcelImportUtil.importExcel(file.getInputStream(),TSDictTableConfigEntity.class,params);
-				for (TSDictTableConfigEntity tSDictTableConfig : listTSDictTableConfigEntitys) {
+				List<DictTableConfigEntity> listTSDictTableConfigEntitys = ExcelImportUtil.importExcel(file.getInputStream(),DictTableConfigEntity.class,params);
+				for (DictTableConfigEntity tSDictTableConfig : listTSDictTableConfigEntitys) {
 					tSDictTableConfigService.save(tSDictTableConfig);
 				}
 				j.setMsg("文件导入成功！");

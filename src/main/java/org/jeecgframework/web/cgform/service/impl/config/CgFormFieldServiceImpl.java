@@ -38,7 +38,7 @@ import org.jeecgframework.web.cgform.service.impl.config.util.DbTableProcess;
 import org.jeecgframework.web.cgform.service.impl.config.util.DbTableUtil;
 import org.jeecgframework.web.cgform.service.impl.config.util.ExtendJsonConvert;
 import org.jeecgframework.web.cgform.util.PublicUtil;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
+import org.jeecgframework.web.system.pojo.base.OperationEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.springframework.stereotype.Service;
@@ -583,11 +583,11 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 
 		//处理一遍权限问题
 		Set<String> operationCodes = (Set<String>) ContextHolderUtils.getRequest().getAttribute(Globals.OPERATIONCODES);
-		Map<String,TSOperation> operationCodesMap = new HashMap<String, TSOperation>();
+		Map<String,OperationEntity> operationCodesMap = new HashMap<String, OperationEntity>();
 		if(operationCodes != null){
-			TSOperation tsOperation;
+			OperationEntity tsOperation;
 			for (String id : operationCodes) {
-				tsOperation = this.getEntity(TSOperation.class, id);
+				tsOperation = this.getEntity(OperationEntity.class, id);
 				if(tsOperation != null && tsOperation.getStatus() == 0){
 					operationCodesMap.put(tsOperation.getOperationcode(), tsOperation);
 				}
@@ -686,7 +686,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		return data;
 	}
 
-	private List<Map<String, Object>> getFieldListFilterAuth(String tableName,List<Map<String, Object>> subTalbeFieldList,Map<String,TSOperation> operationCodesMap) {
+	private List<Map<String, Object>> getFieldListFilterAuth(String tableName,List<Map<String, Object>> subTalbeFieldList,Map<String,OperationEntity> operationCodesMap) {
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 		for(Map<String, Object> map :subTalbeFieldList){
 			String key = tableName+"."+map.get("field_name");
@@ -704,7 +704,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		return list;
 	}
 	
-	private List<Map<String, Object>> getHiddenFieldListFilterAuth(String tableName,List<Map<String, Object>> subTalbeFieldList,Map<String,TSOperation> operationCodesMap) {
+	private List<Map<String, Object>> getHiddenFieldListFilterAuth(String tableName,List<Map<String, Object>> subTalbeFieldList,Map<String,OperationEntity> operationCodesMap) {
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 		for(Map<String, Object> map :subTalbeFieldList){
 			String key = tableName+"."+map.get("field_name");

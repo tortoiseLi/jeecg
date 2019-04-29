@@ -1,37 +1,38 @@
 package org.jeecgframework.web.system.pojo.base;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.jeecgframework.core.common.entity.IdEntity;
+
+import javax.persistence.*;
 
 /**
  * 接口角色用户
- * @author  
+ * @author DELL
+ * @date 2019-04-29
+ * @version V1.0
  */
 @Entity
 @Table(name = "t_s_interrole_user")
 public class InterroleUserEntity extends IdEntity implements java.io.Serializable {
-	 
-	private static final long serialVersionUID = 1L;
-	private TSUser TSUser;
+
+	/**
+	 * 用户
+	 */
+	private UserEntity TSUser;
+
+	/**
+	 *
+	 */
 	private InterroleEntity interroleEntity;
-	
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
-	public TSUser getTSUser() {
+	public UserEntity getTSUser() {
 		return this.TSUser;
 	}
 
-	public void setTSUser(TSUser TSUser) {
+	public void setTSUser(UserEntity TSUser) {
 		this.TSUser = TSUser;
 	}
-
-	
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "interrole_id")

@@ -3,11 +3,11 @@ package org.jeecgframework.web.system.service.impl;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-import org.jeecgframework.web.system.service.CacheServiceI;
+import org.jeecgframework.web.system.service.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EhcacheService implements CacheServiceI {
+public class EhcacheService implements CacheService {
 	private static final Logger log = LoggerFactory.getLogger(EhcacheService.class);
 	public static CacheManager manager = CacheManager.create();
 	

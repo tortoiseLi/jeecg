@@ -30,14 +30,14 @@ import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.manager.ClientManager;
 import org.jeecgframework.web.system.pojo.base.Client;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.pojo.base.TSFunction;
-import org.jeecgframework.web.system.pojo.base.TSLog;
-import org.jeecgframework.web.system.pojo.base.TSRole;
-import org.jeecgframework.web.system.pojo.base.TSRoleUser;
-import org.jeecgframework.web.system.pojo.base.TSUser;
-import org.jeecgframework.web.system.pojo.base.TSUserOrg;
-import org.jeecgframework.web.system.service.MutiLangServiceI;
+import org.jeecgframework.web.system.pojo.base.DepartEntity;
+import org.jeecgframework.web.system.pojo.base.FunctionEntity;
+import org.jeecgframework.web.system.pojo.base.LogEntity;
+import org.jeecgframework.web.system.pojo.base.RoleEntity;
+import org.jeecgframework.web.system.pojo.base.RoleUserEntity;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.pojo.base.UserOrgEntity;
+import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,32 +52,32 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	private Logger log = Logger.getLogger(UserServiceImpl.class);
 	@Autowired
-	private MutiLangServiceI mutiLangService;
+	private MutiLangService mutiLangService;
 	@Resource
 	private ClientManager clientManager;
 	
 	@Transactional(readOnly = true)
-	public TSUser checkUserExits(TSUser user){
+	public UserEntity checkUserExits(UserEntity user){
 		return this.commonDao.getUserByUserIdAndUserNameExits(user);
 	}
 	
 	@Transactional(readOnly = true)
-	public TSUser checkUserExits(String username,String password){
+	public UserEntity checkUserExits(String username,String password){
 		return this.commonDao.findUserByAccountAndPassword(username,password);
 	}
 	
 	@Transactional(readOnly = true)
-	public String getUserRole(TSUser user){
+	public String getUserRole(UserEntity user){
 		return this.commonDao.getUserRole(user);
 	}
 	
-	public void pwdInit(TSUser user,String newPwd) {
+	public void pwdInit(UserEntity user,String newPwd) {
 			this.commonDao.pwdInit(user,newPwd);
 	}
 	
 	@Transactional(readOnly = true)
 	public int getUsersOfThisRole(String id) {
-		Criteria criteria = getSession().createCriteria(TSRoleUser.class);
+		Criteria criteria = getSession().createCriteria(RoleUserEntity.class);
 		criteria.add(Restrictions.eq("TSRole.id", id));
 		int allCounts = ((Long) criteria.setProjection(
 				Projections.rowCount()).uniqueResult()).intValue();
@@ -85,9 +85,9 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	}
 	
 	@Override
-	public String trueDel(TSUser user) {
+	public String trueDel(UserEntity user) {
 		String message = "";
-		List<TSRoleUser> roleUser = this.commonDao.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
+		List<RoleUserEntity> roleUser = this.commonDao.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
 		if (!user.getStatus().equals(Globals.User_ADMIN)) {
 			if (roleUser.size()>0) {
 				// 删除用户时先删除用户和角色关系表
@@ -106,11 +106,11 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 		return message;
 	}
 	
-	private void delRoleUser(TSUser user) {
+	private void delRoleUser(UserEntity user) {
 		// 同步删除用户角色关联表
-		List<TSRoleUser> roleUserList = this.commonDao.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
+		List<RoleUserEntity> roleUserList = this.commonDao.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
 		if (roleUserList.size() >= 1) {
-			for (TSRoleUser tRoleUser : roleUserList) {
+			for (RoleUserEntity tRoleUser : roleUserList) {
 				this.commonDao.delete(tRoleUser);
 			}
 		}
@@ -122,7 +122,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	private void addLog(String logcontent, Short loglevel, Short operatetype) {
 		HttpServletRequest request = ContextHolderUtils.getRequest();
 		String broswer = BrowserUtils.checkBrowse(request);
-		TSLog log = new TSLog();
+		LogEntity log = new LogEntity();
 		log.setLogcontent(logcontent);
 		log.setLoglevel(loglevel);
 		log.setOperatetype(operatetype);
@@ -131,7 +131,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 		log.setOperatetime(DateUtils.gettimestamp());
 //		log.setTSUser(ResourceUtil.getSessionUser());
 		/*start chenqian 201708031TASK #2317 【改造】系统日志表，增加两个字段，避免关联查询 [操作人账号] [操作人名字]*/
-		TSUser u = ResourceUtil.getSessionUser();
+		UserEntity u = ResourceUtil.getSessionUser();
 		log.setUserid(u.getId());
 		log.setUsername(u.getUserName());
 		log.setRealname(u.getRealName());
@@ -140,11 +140,11 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	}
 
 	@Override
-	public void saveOrUpdate(TSUser user, String[] orgIds, String[] roleIds) {
+	public void saveOrUpdate(UserEntity user, String[] orgIds, String[] roleIds) {
 		if(StringUtil.isNotEmpty(user.getId())){
 			commonDao.executeSql("delete from t_s_user_org where user_id=?", user.getId());
 			this.commonDao.updateEntitie(user);
-			List<TSRoleUser> ru = commonDao.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
+			List<RoleUserEntity> ru = commonDao.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
 			commonDao.deleteAllEntitie(ru);
 		}else{
 			this.commonDao.save(user);
@@ -158,15 +158,15 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
      * @param user user
      * @param orgIds 组织机构id数组
      */
-	private void saveUserOrgList(TSUser user,String[] orgIds) {
+	private void saveUserOrgList(UserEntity user,String[] orgIds) {
         if(orgIds!=null && orgIds.length>0){
-        	List<TSUserOrg> userOrgList = new ArrayList<TSUserOrg>();
+        	List<UserOrgEntity> userOrgList = new ArrayList<UserOrgEntity>();
         	for (String orgId : orgIds) {
         		if(StringUtils.isBlank(orgId))continue;
-        		TSDepart depart = new TSDepart();
+				DepartEntity depart = new DepartEntity();
         		depart.setId(orgId);
-        		
-        		TSUserOrg userOrg = new TSUserOrg();
+
+				UserOrgEntity userOrg = new UserOrgEntity();
         		userOrg.setTsUser(user);
         		userOrg.setTsDepart(depart);
         		
@@ -183,12 +183,12 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	 * @param user
 	 * @param roleIds
 	 */
-	private void saveRoleUser(TSUser user, String[] roleIds) {
+	private void saveRoleUser(UserEntity user, String[] roleIds) {
 		if(roleIds!=null && roleIds.length>0){
 			for (int i = 0; i < roleIds.length; i++) {
 				if(StringUtils.isBlank(roleIds[i]))continue;
-				TSRoleUser rUser = new TSRoleUser();
-				TSRole role = commonDao.get(TSRole.class, roleIds[i]);
+				RoleUserEntity rUser = new RoleUserEntity();
+				RoleEntity role = commonDao.get(RoleEntity.class, roleIds[i]);
 				rUser.setTSRole(role);
 				rUser.setTSUser(user);
 				commonDao.save(rUser);
@@ -204,18 +204,18 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public Map<String, TSFunction> getLoginUserFunction(String userId) {
-		Map<String, TSFunction> loginActionlist = new HashMap<String, TSFunction>();
+	public Map<String, FunctionEntity> getLoginUserFunction(String userId) {
+		Map<String, FunctionEntity> loginActionlist = new HashMap<String, FunctionEntity>();
 		//查询用户角色对应的授权菜单
-		StringBuilder hqlsb1 = new StringBuilder("select distinct f from TSFunction f,TSRoleFunction rf,TSRoleUser ru  ").append("where ru.TSRole.id=rf.TSRole.id and rf.TSFunction.id=f.id and ru.TSUser.id=? ");
+		StringBuilder hqlsb1 = new StringBuilder("select distinct f from TSFunction f,RoleFunctionEntity rf,RoleUserEntity ru  ").append("where ru.TSRole.id=rf.TSRole.id and rf.TSFunction.id=f.id and ru.TSUser.id=? ");
 		//查询用户组织机构授权的菜单
-		StringBuilder hqlsb2 = new StringBuilder("select distinct c from TSFunction c,TSRoleFunction rf,TSRoleOrg b,TSUserOrg a ").append("where a.tsDepart.id=b.tsDepart.id and b.tsRole.id=rf.TSRole.id and rf.TSFunction.id=c.id and a.tsUser.id=?");
-		List<TSFunction> list1 = this.findHql(hqlsb1.toString(), userId);
-		List<TSFunction> list2 = this.findHql(hqlsb2.toString(), userId);
-		for (TSFunction function : list1) {
+		StringBuilder hqlsb2 = new StringBuilder("select distinct c from TSFunction c,RoleFunctionEntity rf,RoleOrgEntity b,UserOrgEntity a ").append("where a.tsDepart.id=b.tsDepart.id and b.tsRole.id=rf.TSRole.id and rf.TSFunction.id=c.id and a.tsUser.id=?");
+		List<FunctionEntity> list1 = this.findHql(hqlsb1.toString(), userId);
+		List<FunctionEntity> list2 = this.findHql(hqlsb2.toString(), userId);
+		for (FunctionEntity function : list1) {
 			loginActionlist.put(function.getId(), function);
 		}
-		for (TSFunction function : list2) {
+		for (FunctionEntity function : list2) {
 			loginActionlist.put(function.getId(), function);
 		}
 		
@@ -233,17 +233,17 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public Map<Integer, List<TSFunction>> getFunctionMap(String userid) {
+	public Map<Integer, List<FunctionEntity>> getFunctionMap(String userid) {
 		HttpSession session = ContextHolderUtils.getSession();
 		Client client = clientManager.getClient(session.getId());
 		if (client.getFunctionMap() == null || client.getFunctionMap().size() == 0) {
 			log.debug("---------【从数据库中】---获取登录用户菜单--------------userid: "+ userid);
-			Map<Integer, List<TSFunction>> functionMap = new HashMap<Integer, List<TSFunction>>();
+			Map<Integer, List<FunctionEntity>> functionMap = new HashMap<Integer, List<FunctionEntity>>();
 			//获取用户授权菜单
-			Map<String, TSFunction> loginFunctionslist = this.getLoginUserFunction(userid);
+			Map<String, FunctionEntity> loginFunctionslist = this.getLoginUserFunction(userid);
 			if (loginFunctionslist.size() > 0) {
-				Collection<TSFunction> allFunctions = loginFunctionslist.values();
-				for (TSFunction function : allFunctions) {
+				Collection<FunctionEntity> allFunctions = loginFunctionslist.values();
+				for (FunctionEntity function : allFunctions) {
 				    //权限类型菜单不在首页加载
 		            if(Globals.Function_TYPE_FROM.intValue() == function.getFunctionType().intValue()){
 						continue;
@@ -251,14 +251,14 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 		            //菜单层级
 		            int level = function.getFunctionLevel();
 					if (!functionMap.containsKey(level)) {
-						functionMap.put(level,new ArrayList<TSFunction>());
+						functionMap.put(level,new ArrayList<FunctionEntity>());
 					}
 					functionMap.get(level).add(function);
 				}
 				// 菜单栏排序
-				Collection<List<TSFunction>> c = functionMap.values();
-				for (List<TSFunction> list : c) {
-					for (TSFunction function : list) {
+				Collection<List<FunctionEntity>> c = functionMap.values();
+				for (List<FunctionEntity> list : c) {
+					for (FunctionEntity function : list) {
 						//如果有子级菜单 则地址设为空
 						if(function.hasSubFunction(functionMap))function.setFunctionUrl("");
 					}
@@ -282,9 +282,9 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
      * @param user 		当前登录用户
      * @param orgId 	机构ID
      */
-    public void saveLoginUserInfo(HttpServletRequest req, TSUser user, String orgId) {
+    public void saveLoginUserInfo(HttpServletRequest req, UserEntity user, String orgId) {
     	String message = null;
-        TSDepart currentDepart = this.get(TSDepart.class, orgId);
+		DepartEntity currentDepart = this.get(DepartEntity.class, orgId);
         user.setCurrentDepart(currentDepart);
 
         HttpSession session = ContextHolderUtils.getSession();
@@ -340,9 +340,9 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public String getShortcutPrimaryMenu(List<TSFunction> primaryMenu) {
+	public String getShortcutPrimaryMenu(List<FunctionEntity> primaryMenu) {
 		String floor = "";
-		for (TSFunction function : primaryMenu) {
+		for (FunctionEntity function : primaryMenu) {
 			if (function.getFunctionLevel() == 0) {
 				String lang_key = function.getFunctionName();
 				String lang_context = mutiLangService.getLang(lang_key);
@@ -409,13 +409,13 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public String getShortcutPrimaryMenuDiy(List<TSFunction> primaryMenu) {
+	public String getShortcutPrimaryMenuDiy(List<FunctionEntity> primaryMenu) {
 		String floor = "";
 		if (primaryMenu == null) {
 			return floor;
 		}
 		String menuString = "user.manage role.manage department.manage menu.manage";
-		for (TSFunction function : primaryMenu) {
+		for (FunctionEntity function : primaryMenu) {
 			if (menuString.contains(function.getFunctionName())) {
 				if (function.getFunctionLevel() == 1) {
 
@@ -463,25 +463,25 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<TSFunction> getSubFunctionList(String userid, String functionId) {
-		Map<String, TSFunction> loginActionlist = new HashMap<String, TSFunction>();
+	public List<FunctionEntity> getSubFunctionList(String userid, String functionId) {
+		Map<String, FunctionEntity> loginActionlist = new HashMap<String, FunctionEntity>();
 		//查询用户角色对应的授权菜单
-		StringBuilder hqlsb1 = new StringBuilder("select distinct f from TSFunction f,TSRoleFunction rf,TSRoleUser ru  ").append("where ru.TSRole.id=rf.TSRole.id and rf.TSFunction.id=f.id and ru.TSUser.id=? and f.TSFunction.id = ?");
+		StringBuilder hqlsb1 = new StringBuilder("select distinct f from TSFunction f,RoleFunctionEntity rf,RoleUserEntity ru  ").append("where ru.TSRole.id=rf.TSRole.id and rf.TSFunction.id=f.id and ru.TSUser.id=? and f.TSFunction.id = ?");
 		//查询用户组织机构授权的菜单
-		StringBuilder hqlsb2 = new StringBuilder("select distinct c from TSFunction c,TSRoleFunction rf,TSRoleOrg b,TSUserOrg a ").append("where a.tsDepart.id=b.tsDepart.id and b.tsRole.id=rf.TSRole.id and rf.TSFunction.id=c.id and a.tsUser.id=? and c.TSFunction.id = ?");
-		List<TSFunction> list1 = this.findHql(hqlsb1.toString(), userid,functionId);
-		List<TSFunction> list2 = this.findHql(hqlsb2.toString(), userid,functionId);
-		for (TSFunction function : list1) {
+		StringBuilder hqlsb2 = new StringBuilder("select distinct c from TSFunction c,RoleFunctionEntity rf,RoleOrgEntity b,UserOrgEntity a ").append("where a.tsDepart.id=b.tsDepart.id and b.tsRole.id=rf.TSRole.id and rf.TSFunction.id=c.id and a.tsUser.id=? and c.TSFunction.id = ?");
+		List<FunctionEntity> list1 = this.findHql(hqlsb1.toString(), userid,functionId);
+		List<FunctionEntity> list2 = this.findHql(hqlsb2.toString(), userid,functionId);
+		for (FunctionEntity function : list1) {
 			loginActionlist.put(function.getId(), function);
 		}
-		for (TSFunction function : list2) {
+		for (FunctionEntity function : list2) {
 			loginActionlist.put(function.getId(), function);
 		}
 		list1.clear();
 		list2.clear();
 		list1 = null;
 		list2 = null;
-		List<TSFunction> list = new ArrayList<TSFunction>(loginActionlist.values());
+		List<FunctionEntity> list = new ArrayList<FunctionEntity>(loginActionlist.values());
 		Collections.sort(list, new NumberComparator());
 		return list;
 	}

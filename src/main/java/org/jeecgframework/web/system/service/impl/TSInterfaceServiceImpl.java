@@ -15,31 +15,31 @@ import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.web.cgform.enhance.CgformEnhanceJavaInter;
 import org.jeecgframework.web.system.enums.InterfaceEnum;
 import org.jeecgframework.web.system.pojo.base.InterfaceRuleDto;
-import org.jeecgframework.web.system.pojo.base.TSInterfaceDdataRuleEntity;
-import org.jeecgframework.web.system.pojo.base.TSInterfaceEntity;
-import org.jeecgframework.web.system.service.TSInterfaceServiceI;
+import org.jeecgframework.web.system.pojo.base.InterfaceDdataRuleEntity;
+import org.jeecgframework.web.system.pojo.base.InterfaceEntity;
+import org.jeecgframework.web.system.service.InterfaceService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("tSInterfaceService")
 @Transactional
-public class TSInterfaceServiceImpl extends CommonServiceImpl implements TSInterfaceServiceI {
+public class TSInterfaceServiceImpl extends CommonServiceImpl implements InterfaceService {
 
 
-	public void delete(TSInterfaceEntity entity) throws Exception{
+	public void delete(InterfaceEntity entity) throws Exception{
 		super.delete(entity);
 		//执行删除操作增强业务
 		this.doDelBus(entity);
 	}
 
-	public Serializable save(TSInterfaceEntity entity) throws Exception{
+	public Serializable save(InterfaceEntity entity) throws Exception{
 		Serializable t = super.save(entity);
 		//执行新增操作增强业务
 		this.doAddBus(entity);
 		return t;
 	}
 
-	public void saveOrUpdate(TSInterfaceEntity entity) throws Exception{
+	public void saveOrUpdate(InterfaceEntity entity) throws Exception{
 		super.saveOrUpdate(entity);
 		//执行更新操作增强业务
 		this.doUpdateBus(entity);
@@ -50,24 +50,24 @@ public class TSInterfaceServiceImpl extends CommonServiceImpl implements TSInter
 	 * @param t
 	 * @return
 	 */
-	private void doAddBus(TSInterfaceEntity t) throws Exception{
+	private void doAddBus(InterfaceEntity t) throws Exception{
 	}
 	/**
 	 * 更新操作增强业务
 	 * @param t
 	 * @return
 	 */
-	private void doUpdateBus(TSInterfaceEntity t) throws Exception{
+	private void doUpdateBus(InterfaceEntity t) throws Exception{
 	}
 	/**
 	 * 删除操作增强业务
 	 * @param id
 	 * @return
 	 */
-	private void doDelBus(TSInterfaceEntity t) throws Exception{
+	private void doDelBus(InterfaceEntity t) throws Exception{
 	}
 
-	private Map<String,Object> populationMap(TSInterfaceEntity t){
+	private Map<String,Object> populationMap(InterfaceEntity t){
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("id", t.getId());
 		map.put("create_name", t.getCreateName());
@@ -88,7 +88,7 @@ public class TSInterfaceServiceImpl extends CommonServiceImpl implements TSInter
 	 * @param t
 	 * @return
 	 */
-	public String replaceVal(String sql,TSInterfaceEntity t){
+	public String replaceVal(String sql,InterfaceEntity t){
 		sql  = sql.replace("#{id}",String.valueOf(t.getId()));
 		sql  = sql.replace("#{create_name}",String.valueOf(t.getCreateName()));
 		sql  = sql.replace("#{create_by}",String.valueOf(t.getCreateBy()));
@@ -145,13 +145,13 @@ public class TSInterfaceServiceImpl extends CommonServiceImpl implements TSInter
 			interfaceRuleDto.setInterfaceCode(interfaceCode);
 			interfaceRuleDto.setDataRule(dataRuleIds);
 			//根据数据规则id获取数据规则
-			List<TSInterfaceDdataRuleEntity> ruleList = new ArrayList<TSInterfaceDdataRuleEntity>();
+			List<InterfaceDdataRuleEntity> ruleList = new ArrayList<InterfaceDdataRuleEntity>();
 			if(StringUtils.isNotEmpty(dataRuleIds)){
 				String[] dataRuleIdArr = dataRuleIds.split(",");
-				String hql = "from TSInterfaceDdataRuleEntity where id in (:ids)";
+				String hql = "from InterfaceDdataRuleEntity where id in (:ids)";
 				ruleList = commonDao.getSession().createQuery(hql).setParameterList("ids", dataRuleIdArr).list();
 			}else if(StringUtils.isNotEmpty(id)){
-				ruleList=this.findByProperty(TSInterfaceDdataRuleEntity.class, "TSInterface.id", id);
+				ruleList=this.findByProperty(InterfaceDdataRuleEntity.class, "TSInterface.id", id);
 			}
 			interfaceRuleDto.setInterfaceDataRule(ruleList);
 		}

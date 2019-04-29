@@ -32,11 +32,11 @@ import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
 import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.pojo.base.TSCompanyPositionEntity;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.pojo.base.TSUserPositionRelEntity;
+import org.jeecgframework.web.system.pojo.base.CompanyPositionEntity;
+import org.jeecgframework.web.system.pojo.base.DepartEntity;
+import org.jeecgframework.web.system.pojo.base.UserPositionRelEntity;
 import org.jeecgframework.web.system.service.SystemService;
-import org.jeecgframework.web.system.service.TSCompanyPositionServiceI;
+import org.jeecgframework.web.system.service.CompanyPositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -73,7 +73,7 @@ public class TSCompanyPositionController extends BaseController {
 	private static final Logger logger = Logger.getLogger(TSCompanyPositionController.class);
 
 	@Autowired
-	private TSCompanyPositionServiceI tSCompanyPositionService;
+	private CompanyPositionService tSCompanyPositionService;
 	@Autowired
 	private SystemService systemService;
 	@Autowired
@@ -103,8 +103,8 @@ public class TSCompanyPositionController extends BaseController {
 	 */
 
 	@RequestMapping(params = "datagrid")
-	public void datagrid(TSCompanyPositionEntity tSCompanyPosition,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSCompanyPositionEntity.class, dataGrid);
+	public void datagrid(CompanyPositionEntity tSCompanyPosition,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(CompanyPositionEntity.class, dataGrid);
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tSCompanyPosition, request.getParameterMap());
 		try{
@@ -124,10 +124,10 @@ public class TSCompanyPositionController extends BaseController {
 	 */
 	@RequestMapping(params = "doDel")
 	@ResponseBody
-	public AjaxJson doDel(TSCompanyPositionEntity tSCompanyPosition, HttpServletRequest request) {
+	public AjaxJson doDel(CompanyPositionEntity tSCompanyPosition, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tSCompanyPosition = systemService.getEntity(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
+		tSCompanyPosition = systemService.getEntity(CompanyPositionEntity.class, tSCompanyPosition.getId());
 		message = "职务管理删除成功";
 		try{
 			tSCompanyPositionService.delete(tSCompanyPosition);
@@ -154,7 +154,7 @@ public class TSCompanyPositionController extends BaseController {
 		message = "职务管理删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSCompanyPositionEntity tSCompanyPosition = systemService.getEntity(TSCompanyPositionEntity.class, 
+				CompanyPositionEntity tSCompanyPosition = systemService.getEntity(CompanyPositionEntity.class,
 				id
 				);
 				tSCompanyPositionService.delete(tSCompanyPosition);
@@ -178,7 +178,7 @@ public class TSCompanyPositionController extends BaseController {
 	 */
 	@RequestMapping(params = "doAdd")
 	@ResponseBody
-	public AjaxJson doAdd(TSCompanyPositionEntity tSCompanyPosition, HttpServletRequest request) {
+	public AjaxJson doAdd(CompanyPositionEntity tSCompanyPosition, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "职务管理添加成功";
@@ -202,11 +202,11 @@ public class TSCompanyPositionController extends BaseController {
 	 */
 	@RequestMapping(params = "doUpdate")
 	@ResponseBody
-	public AjaxJson doUpdate(TSCompanyPositionEntity tSCompanyPosition, HttpServletRequest request) {
+	public AjaxJson doUpdate(CompanyPositionEntity tSCompanyPosition, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "职务管理更新成功";
-		TSCompanyPositionEntity t = tSCompanyPositionService.get(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
+		CompanyPositionEntity t = tSCompanyPositionService.get(CompanyPositionEntity.class, tSCompanyPosition.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSCompanyPosition, t);
 			tSCompanyPositionService.saveOrUpdate(t);
@@ -227,9 +227,9 @@ public class TSCompanyPositionController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "goAdd")
-	public ModelAndView goAdd(TSCompanyPositionEntity tSCompanyPosition, HttpServletRequest req) {
+	public ModelAndView goAdd(CompanyPositionEntity tSCompanyPosition, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSCompanyPosition.getId())) {
-			tSCompanyPosition = tSCompanyPositionService.getEntity(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
+			tSCompanyPosition = tSCompanyPositionService.getEntity(CompanyPositionEntity.class, tSCompanyPosition.getId());
 		}
 		req.setAttribute("tSCompanyPositionPage", tSCompanyPosition);
 		return new ModelAndView("system/position/tSCompanyPosition-add");
@@ -240,9 +240,9 @@ public class TSCompanyPositionController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "goUpdate")
-	public ModelAndView goUpdate(TSCompanyPositionEntity tSCompanyPosition, HttpServletRequest req) {
+	public ModelAndView goUpdate(CompanyPositionEntity tSCompanyPosition, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSCompanyPosition.getId())) {
-			tSCompanyPosition = tSCompanyPositionService.getEntity(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
+			tSCompanyPosition = tSCompanyPositionService.getEntity(CompanyPositionEntity.class, tSCompanyPosition.getId());
 			req.setAttribute("tSCompanyPositionPage", tSCompanyPosition);
 		}
 		return new ModelAndView("system/position/tSCompanyPosition-update");
@@ -266,13 +266,13 @@ public class TSCompanyPositionController extends BaseController {
 	 * @param response
 	 */
 	@RequestMapping(params = "exportXls")
-	public String exportXls(TSCompanyPositionEntity tSCompanyPosition,HttpServletRequest request,HttpServletResponse response
+	public String exportXls(CompanyPositionEntity tSCompanyPosition,HttpServletRequest request,HttpServletResponse response
 			, DataGrid dataGrid,ModelMap modelMap) {
-		CriteriaQuery cq = new CriteriaQuery(TSCompanyPositionEntity.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(CompanyPositionEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tSCompanyPosition, request.getParameterMap());
-		List<TSCompanyPositionEntity> tSCompanyPositions = this.tSCompanyPositionService.getListByCriteriaQuery(cq,false);
+		List<CompanyPositionEntity> tSCompanyPositions = this.tSCompanyPositionService.getListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"职务管理");
-		modelMap.put(NormalExcelConstants.CLASS,TSCompanyPositionEntity.class);
+		modelMap.put(NormalExcelConstants.CLASS,CompanyPositionEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("职务管理列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
 			"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,tSCompanyPositions);
@@ -285,10 +285,10 @@ public class TSCompanyPositionController extends BaseController {
 	 * @param response
 	 */
 	@RequestMapping(params = "exportXlsByT")
-	public String exportXlsByT(TSCompanyPositionEntity tSCompanyPosition,HttpServletRequest request,HttpServletResponse response
+	public String exportXlsByT(CompanyPositionEntity tSCompanyPosition,HttpServletRequest request,HttpServletResponse response
 			, DataGrid dataGrid,ModelMap modelMap) {
     	modelMap.put(NormalExcelConstants.FILE_NAME,"职务管理");
-    	modelMap.put(NormalExcelConstants.CLASS,TSCompanyPositionEntity.class);
+    	modelMap.put(NormalExcelConstants.CLASS,CompanyPositionEntity.class);
     	modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("职务管理列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
     	"导出信息"));
     	modelMap.put(NormalExcelConstants.DATA_LIST,new ArrayList());
@@ -310,8 +310,8 @@ public class TSCompanyPositionController extends BaseController {
 			params.setHeadRows(1);
 			params.setNeedSave(true);
 			try {
-				List<TSCompanyPositionEntity> listTSCompanyPositionEntitys = ExcelImportUtil.importExcel(file.getInputStream(),TSCompanyPositionEntity.class,params);
-				for (TSCompanyPositionEntity tSCompanyPosition : listTSCompanyPositionEntitys) {
+				List<CompanyPositionEntity> listTSCompanyPositionEntitys = ExcelImportUtil.importExcel(file.getInputStream(),CompanyPositionEntity.class,params);
+				for (CompanyPositionEntity tSCompanyPosition : listTSCompanyPositionEntitys) {
 					tSCompanyPositionService.save(tSCompanyPosition);
 				}
 				j.setMsg("文件导入成功！");
@@ -332,8 +332,8 @@ public class TSCompanyPositionController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 //	@ApiOperation(value="职务管理列表信息",produces="application/json",httpMethod="GET")
-	public List<TSCompanyPositionEntity> list() {
-		List<TSCompanyPositionEntity> listTSCompanyPositions=tSCompanyPositionService.getList(TSCompanyPositionEntity.class);
+	public List<CompanyPositionEntity> list() {
+		List<CompanyPositionEntity> listTSCompanyPositions=tSCompanyPositionService.getList(CompanyPositionEntity.class);
 		return listTSCompanyPositions;
 	}
 	
@@ -341,7 +341,7 @@ public class TSCompanyPositionController extends BaseController {
 	@ResponseBody
 //	@ApiOperation(value="根据ID获取职务管理信息",notes="根据ID获取职务管理信息",httpMethod="GET",produces="application/json")
 	public ResponseEntity<?> get(@ApiParam(required=true,name="id",value="ID")@PathVariable("id") String id) {
-		TSCompanyPositionEntity task = tSCompanyPositionService.get(TSCompanyPositionEntity.class, id);
+		CompanyPositionEntity task = tSCompanyPositionService.get(CompanyPositionEntity.class, id);
 		if (task == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
@@ -351,9 +351,9 @@ public class TSCompanyPositionController extends BaseController {
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 //	@ApiOperation(value="创建职务管理")
-	public ResponseEntity<?> create(@ApiParam(name="职务管理对象")@RequestBody TSCompanyPositionEntity tSCompanyPosition, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<?> create(@ApiParam(name="职务管理对象")@RequestBody CompanyPositionEntity tSCompanyPosition, UriComponentsBuilder uriBuilder) {
 		//调用JSR303 Bean Validator进行校验，如果出错返回含400错误码及json格式的错误信息.
-		Set<ConstraintViolation<TSCompanyPositionEntity>> failures = validator.validate(tSCompanyPosition);
+		Set<ConstraintViolation<CompanyPositionEntity>> failures = validator.validate(tSCompanyPosition);
 		if (!failures.isEmpty()) {
 			return new ResponseEntity(BeanValidators.extractPropertyAndMessage(failures), HttpStatus.BAD_REQUEST);
 		}
@@ -377,9 +377,9 @@ public class TSCompanyPositionController extends BaseController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 //	@ApiOperation(value="更新用户信息",notes="更新用户数据信息")
-	public ResponseEntity<?> update(@ApiParam(name="职务管理对象")@RequestBody TSCompanyPositionEntity tSCompanyPosition) {
+	public ResponseEntity<?> update(@ApiParam(name="职务管理对象")@RequestBody CompanyPositionEntity tSCompanyPosition) {
 		//调用JSR303 Bean Validator进行校验，如果出错返回含400错误码及json格式的错误信息.
-		Set<ConstraintViolation<TSCompanyPositionEntity>> failures = validator.validate(tSCompanyPosition);
+		Set<ConstraintViolation<CompanyPositionEntity>> failures = validator.validate(tSCompanyPosition);
 		if (!failures.isEmpty()) {
 			return new ResponseEntity(BeanValidators.extractPropertyAndMessage(failures), HttpStatus.BAD_REQUEST);
 		}
@@ -400,7 +400,7 @@ public class TSCompanyPositionController extends BaseController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 //	@ApiOperation(value="删除用户信息")
 	public void delete(@ApiParam(name="id",value="ID",required=true)@PathVariable("id") String id) {
-		tSCompanyPositionService.deleteEntityById(TSCompanyPositionEntity.class, id);
+		tSCompanyPositionService.deleteEntityById(CompanyPositionEntity.class, id);
 	}
 	
 	
@@ -429,12 +429,12 @@ public class TSCompanyPositionController extends BaseController {
 			}
 			
 			//根据公司id查询，该公司下的职务
-			List<TSCompanyPositionEntity> list = tSCompanyPositionService.findByProperty(TSCompanyPositionEntity.class, "companyId", companyId);
+			List<CompanyPositionEntity> list = tSCompanyPositionService.findByProperty(CompanyPositionEntity.class, "companyId", companyId);
 			
 			//根据用户id和公司id查询用户管理的职务
-			String hql = "select up from TSUserPositionRelEntity up,TSCompanyPositionEntity p where  p.companyId = up.companyId " +
+			String hql = "select up from UserPositionRelEntity up,CompanyPositionEntity p where  p.companyId = up.companyId " +
 					" and up.companyId = ? and up.userId = ?";
-			List<TSUserPositionRelEntity> selectlist = tSCompanyPositionService.findHql(hql, companyId,userId);
+			List<UserPositionRelEntity> selectlist = tSCompanyPositionService.findHql(hql, companyId,userId);
 			populateTree(list,selectlist,dataList);
 			
 		}catch(Exception e){
@@ -444,7 +444,7 @@ public class TSCompanyPositionController extends BaseController {
 	}
 	
 	private String getCompanyId(String departid){
-		TSDepart depart= this.systemService.findUniqueByProperty(TSDepart.class, "id", departid);
+		DepartEntity depart= this.systemService.findUniqueByProperty(DepartEntity.class, "id", departid);
 		if(depart!=null&&("1".equals(depart.getOrgType())||"4".equals(depart.getOrgType()))){
 			return depart.getId();
 		}else{
@@ -455,16 +455,16 @@ public class TSCompanyPositionController extends BaseController {
 		return null;
 	}
 	
-	private void populateTree(List<TSCompanyPositionEntity> list,List<TSUserPositionRelEntity> selectlist,List<Map<String,Object>> dataList){
+	private void populateTree(List<CompanyPositionEntity> list,List<UserPositionRelEntity> selectlist,List<Map<String,Object>> dataList){
 		Map<String,Object> map = null;
 		if(list!=null&&list.size()>0){
-			for(TSCompanyPositionEntity companyPositionEntity :list){
+			for(CompanyPositionEntity companyPositionEntity :list){
 				map = new HashMap<String,Object>();
 				map.put("open", false);
 				map.put("id", companyPositionEntity.getId());
 				map.put("name", companyPositionEntity.getPositionName());
 				if(selectlist!=null&&selectlist.size()>0){
-					for(TSUserPositionRelEntity selectCompanyPosition:selectlist){
+					for(UserPositionRelEntity selectCompanyPosition:selectlist){
 						if(companyPositionEntity.getId().equals(selectCompanyPosition.getPositionId())){
 							map.put("checked",true);
 							break;
@@ -510,9 +510,9 @@ public class TSCompanyPositionController extends BaseController {
 					return j;
 				}
 				String[] positionIdArr = positionIds.split(",");
-				TSUserPositionRelEntity userPositionRelEntity = null;
+				UserPositionRelEntity userPositionRelEntity = null;
 				for (String positionId : positionIdArr) {
-					userPositionRelEntity = new TSUserPositionRelEntity();
+					userPositionRelEntity = new UserPositionRelEntity();
 					userPositionRelEntity.setCompanyId(companyId);
 					userPositionRelEntity.setPositionId(positionId);
 					userPositionRelEntity.setUserId(userId);

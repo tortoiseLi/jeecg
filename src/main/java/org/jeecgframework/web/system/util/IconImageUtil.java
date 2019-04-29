@@ -1,6 +1,6 @@
 package org.jeecgframework.web.system.util;
 
-import org.jeecgframework.web.system.pojo.base.TSIcon;
+import org.jeecgframework.web.system.pojo.base.IconEntity;
 import org.jeecgframework.core.common.model.json.DataGrid;
 
 import javax.imageio.stream.FileImageOutputStream;
@@ -30,7 +30,7 @@ public class IconImageUtil {
         try {
             List list=dataGrid.getResults();
             for(Object obj:list){
-                TSIcon icon=(TSIcon)obj;
+                IconEntity icon=(IconEntity)obj;
                 String fileName="icon"+ UUID.randomUUID()+"."+icon.getExtend();
                 File tempFile=new File(fileDirName+File.separator+fileName);
                 if(icon.getIconContent()!=null){

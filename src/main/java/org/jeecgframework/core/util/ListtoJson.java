@@ -2,7 +2,7 @@ package org.jeecgframework.core.util;
 
 import java.util.List;
 
-import org.jeecgframework.web.system.pojo.base.TSFunction;
+import org.jeecgframework.web.system.pojo.base.FunctionEntity;
 
 
 public class ListtoJson {
@@ -36,8 +36,8 @@ public class ListtoJson {
 	 * @param args
 	 */
 
-	static void iterGet(List<TSFunction> list, String pid, StringBuffer buffer) {
-		for (TSFunction node : list) {
+	static void iterGet(List<FunctionEntity> list, String pid, StringBuffer buffer) {
+		for (FunctionEntity node : list) {
 
 			// 查找所有父节点为pid的所有对象，然后拼接为json格式的数据
 			if(node.getTSFunction()!=null)

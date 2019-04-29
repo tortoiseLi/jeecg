@@ -13,8 +13,8 @@ import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.PasswordUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.web.system.pojo.base.Client;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.pojo.base.TSUser;
+import org.jeecgframework.web.system.pojo.base.DepartEntity;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ public class UserRestControllerTest  extends AbstractUnitTest{
 		session = (MockHttpSession) request.getSession();
 
 		Client c = new Client();
-		TSUser u = new TSUser();
+		UserEntity u = new UserEntity();
 		u.setUserName("admin");
 		c.setUser(u);
 		session.setAttribute(session.getId(), c);
@@ -62,7 +62,7 @@ public class UserRestControllerTest  extends AbstractUnitTest{
 				.andDo(print())
 				.andExpect(jsonPath("$.success").value(Matchers.equalTo(true)));
 		//避免testGetAll()中admin用户的currentDepart属性循环嵌套导致json不正确
-		((Client)session.getAttribute(session.getId())).getUser().setCurrentDepart(new TSDepart());
+		((Client)session.getAttribute(session.getId())).getUser().setCurrentDepart(new DepartEntity());
 	}
 	
 	//测试get全部用户

@@ -39,8 +39,8 @@ import org.jeecgframework.web.cgform.service.impl.config.TableSQLServerHandleImp
 import org.jeecgframework.web.cgform.service.impl.config.util.DbTableUtil;
 import org.jeecgframework.web.cgform.service.impl.config.util.FieldNumComparator;
 import org.jeecgframework.web.cgform.util.PublicUtil;
-import org.jeecgframework.web.system.pojo.base.TSType;
-import org.jeecgframework.web.system.pojo.base.TSUser;
+import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -258,7 +258,7 @@ public class CgFormHeadController extends BaseController {
 			j.setMsg(message);
 			return j;
 		}
-		TSUser currentUser = ResourceUtil.getSessionUser();
+		UserEntity currentUser = ResourceUtil.getSessionUser();
         if(CgAutoListConstant.SYS_DEV_FLAG_0.equals(currentUser.getDevFlag())){
             message = "同步失败，当前用户未授权开发权限！";
             logger.info(message+" ----- 请求IP ---+"+IpUtil.getIpAddr(request));
@@ -631,7 +631,7 @@ public class CgFormHeadController extends BaseController {
 			req.setAttribute("cgFormHeadPage", cgFormHead);
 		}
 
-		List<TSType> typeList = ResourceUtil.getCacheTypes(MutiLangUtil.getLang("bdfl"));
+		List<TypeEntity> typeList = ResourceUtil.getCacheTypes(MutiLangUtil.getLang("bdfl"));
 		req.setAttribute("typeList", typeList);
 
 		return new ModelAndView("jeecg/cgform/config/cgFormHead");

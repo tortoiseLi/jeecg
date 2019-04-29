@@ -24,7 +24,8 @@ import org.jeecgframework.web.cgreport.dao.core.CgReportDao;
 import org.jeecgframework.web.cgreport.entity.core.CgreportConfigHeadEntity;
 import org.jeecgframework.web.cgreport.entity.core.CgreportConfigParamEntity;
 import org.jeecgframework.web.cgreport.service.core.CgReportServiceI;
-import org.jeecgframework.web.system.pojo.base.TSType;
+import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.pojo.base.TypeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -265,8 +266,8 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 	private List<Map<String, Object>> queryDic(String diccode) {
 
 		List<Map<String, Object>> dicDatas = new ArrayList<Map<String, Object>>();
-		List<TSType> tstypes = ResourceUtil.getCacheTypes(diccode.toLowerCase());
-		for(TSType t:tstypes){
+		List<TypeEntity> tstypes = ResourceUtil.getCacheTypes(diccode.toLowerCase());
+		for(TypeEntity t:tstypes){
 			Map<String,Object> mp = new HashMap<String,Object>();
 			mp.put("typecode",t.getTypecode());
 			mp.put("typename",MutiLangUtil.doMutiLang(t.getTypename(), null));

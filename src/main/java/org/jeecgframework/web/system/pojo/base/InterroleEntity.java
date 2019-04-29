@@ -1,207 +1,147 @@
 package org.jeecgframework.web.system.pojo.base;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.hibernate.annotations.GenericGenerator;
-import org.jeecgframework.poi.excel.annotation.Excel;
 
-/**   
- * @Title: 角色表
- * @Description: t_s_interrole
- * @author onlineGenerator
- * @date 2017-11-30 11:38:39
- * @version V1.0   
- *
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * 角色表
+ * @author DELL
+ * @date 2019-04-29
+ * @version V1.0
  */
 @Entity
-@Table(name = "t_s_interrole", schema = "")
-@SuppressWarnings("serial")
-public class InterroleEntity implements java.io.Serializable {
-	/**id*/
-	private java.lang.String id;
-	/**接口角色编码*/
-	@Excel(name="接口角色编码",width=15)
-	private java.lang.String roleCode;
-	/**接口角色名称*/
-	@Excel(name="接口角色名称",width=15)
-	private java.lang.String roleName;
-	/**修改时间*/
-	@Excel(name="修改时间",width=15)
-	private java.lang.String updateName;
-	/**修改时间*/
-	@Excel(name="修改时间",width=15,format = "yyyy-MM-dd")
-	private java.util.Date updateDate;
-	/**创建人id*/
-	@Excel(name="创建人id",width=15)
-	private java.lang.String updateBy;
-	/**创建人*/
-	@Excel(name="创建人",width=15)
-	private java.lang.String createName;
-	/**创建时间*/
-	@Excel(name="创建时间",width=15,format = "yyyy-MM-dd")
-	private java.util.Date createDate;
-	/**创建人id*/
-	@Excel(name="创建人id",width=15)
-	private java.lang.String createBy;
-	
+@Table(name = "t_s_interrole")
+public class InterroleEntity implements Serializable {
+
 	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  id
+	 * ID
 	 */
+	private String id;
+
+	/**
+	 * 接口角色编码
+	 */
+	private String roleCode;
+
+	/**
+	 * 接口角色名称
+	 */
+	private String roleName;
+
+	/**
+	 * 创建人ID
+	 */
+	private String createBy;
+
+	/**
+	 * 创建人姓名
+	 */
+	private String createName;
+
+	/**
+	 * 创建时间
+	 */
+	private Date createDate;
+
+	/**
+	 * 修改人ID
+	 */
+	private String updateBy;
+
+	/**
+	 * 修改人姓名
+	 */
+	private String updateName;
+
+	/**
+	 * 修改时间
+	 */
+	private Date updateDate;
+
 	@Id
 	@GeneratedValue(generator = "paymentableGenerator")
 	@GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
-
-	@Column(name ="ID",nullable=false,length=32)
-	public java.lang.String getId(){
+	@Column(name ="id",nullable=false,length=32)
+	public String getId(){
 		return this.id;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  id
-	 */
-	public void setId(java.lang.String id){
+	public void setId(String id){
 		this.id = id;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  接口角色编码
-	 */
 
-	@Column(name ="ROLE_CODE",nullable=true,length=10)
-	public java.lang.String getRoleCode(){
+	@Column(name ="role_code",nullable=true,length=10)
+	public String getRoleCode(){
 		return this.roleCode;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  接口角色编码
-	 */
-	public void setRoleCode(java.lang.String roleCode){
+	public void setRoleCode(String roleCode){
 		this.roleCode = roleCode;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  接口角色名称
-	 */
 
-	@Column(name ="ROLE_NAME",nullable=true,length=100)
-	public java.lang.String getRoleName(){
+	@Column(name ="role_name",nullable=true,length=100)
+	public String getRoleName(){
 		return this.roleName;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  接口角色名称
-	 */
-	public void setRoleName(java.lang.String roleName){
+	public void setRoleName(String roleName){
 		this.roleName = roleName;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  修改时间
-	 */
 
-	@Column(name ="UPDATE_NAME",nullable=true,length=32)
-	public java.lang.String getUpdateName(){
+	@Column(name ="update_name",nullable=true,length=32)
+	public String getUpdateName(){
 		return this.updateName;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  修改时间
-	 */
-	public void setUpdateName(java.lang.String updateName){
+	public void setUpdateName(String updateName){
 		this.updateName = updateName;
 	}
-	/**
-	 *方法: 取得java.util.Date
-	 *@return: java.util.Date  修改时间
-	 */
 
-	@Column(name ="UPDATE_DATE",nullable=true)
-	public java.util.Date getUpdateDate(){
+	@Column(name ="update_date",nullable=true)
+	public Date getUpdateDate(){
 		return this.updateDate;
 	}
 
-	/**
-	 *方法: 设置java.util.Date
-	 *@param: java.util.Date  修改时间
-	 */
-	public void setUpdateDate(java.util.Date updateDate){
+	public void setUpdateDate(Date updateDate){
 		this.updateDate = updateDate;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  创建人id
-	 */
 
-	@Column(name ="UPDATE_BY",nullable=true,length=32)
-	public java.lang.String getUpdateBy(){
+	@Column(name ="update_by",nullable=true,length=32)
+	public String getUpdateBy(){
 		return this.updateBy;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  创建人id
-	 */
-	public void setUpdateBy(java.lang.String updateBy){
+	public void setUpdateBy(String updateBy){
 		this.updateBy = updateBy;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  创建人
-	 */
 
-	@Column(name ="CREATE_NAME",nullable=true,length=32)
-	public java.lang.String getCreateName(){
+	@Column(name ="create_name",nullable=true,length=32)
+	public String getCreateName(){
 		return this.createName;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  创建人
-	 */
-	public void setCreateName(java.lang.String createName){
+	public void setCreateName(String createName){
 		this.createName = createName;
 	}
-	/**
-	 *方法: 取得java.util.Date
-	 *@return: java.util.Date  创建时间
-	 */
 
-	@Column(name ="CREATE_DATE",nullable=true)
-	public java.util.Date getCreateDate(){
+	@Column(name ="create_date",nullable=true)
+	public Date getCreateDate(){
 		return this.createDate;
 	}
 
-	/**
-	 *方法: 设置java.util.Date
-	 *@param: java.util.Date  创建时间
-	 */
-	public void setCreateDate(java.util.Date createDate){
+	public void setCreateDate(Date createDate){
 		this.createDate = createDate;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  创建人id
-	 */
 
-	@Column(name ="CREATE_BY",nullable=true,length=32)
-	public java.lang.String getCreateBy(){
+	@Column(name ="create_by",nullable=true,length=32)
+	public String getCreateBy(){
 		return this.createBy;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  创建人id
-	 */
-	public void setCreateBy(java.lang.String createBy){
+	public void setCreateBy(String createBy){
 		this.createBy = createBy;
 	}
 }

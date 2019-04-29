@@ -35,18 +35,8 @@ import org.jeecgframework.p3.core.page.SystemTools;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.web.system.dao.DepartAuthGroupDao;
-import org.jeecgframework.web.system.pojo.base.TSDataRule;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.pojo.base.TSDepartAuthGroupEntity;
-import org.jeecgframework.web.system.pojo.base.TSDepartAuthgFunctionRelEntity;
-import org.jeecgframework.web.system.pojo.base.TSDepartAuthgManagerEntity;
-import org.jeecgframework.web.system.pojo.base.TSFunction;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
-import org.jeecgframework.web.system.pojo.base.TSRole;
-import org.jeecgframework.web.system.pojo.base.TSRoleFunction;
-import org.jeecgframework.web.system.pojo.base.TSRoleUser;
-import org.jeecgframework.web.system.pojo.base.TSUser;
-import org.jeecgframework.web.system.pojo.base.TSUserOrg;
+import org.jeecgframework.web.system.pojo.base.*;
+import org.jeecgframework.web.system.pojo.base.FunctionEntity;
 import org.jeecgframework.web.system.service.DepartAuthGroupService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.util.OrgConstants;
@@ -145,7 +135,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "showDepartRoleAuth")
 	public ModelAndView showDepartRoleAuth(String id,HttpServletRequest request) {
-		TSDepartAuthGroupEntity departAuthGroup = systemService.getEntity(TSDepartAuthGroupEntity.class, id);
+		DepartAuthGroupEntity departAuthGroup = systemService.getEntity(DepartAuthGroupEntity.class, id);
 		request.setAttribute("departAuthGroup", departAuthGroup);
 		return new ModelAndView("system/authGroup/showDepartRoleAuth");
 	}
@@ -157,7 +147,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "addDepartRoleAuth")
 	public ModelAndView addDepartRoleAuth(String id, HttpServletRequest request) {
-		TSDepartAuthGroupEntity departAuthGroup = systemService.getEntity(TSDepartAuthGroupEntity.class, id);
+		DepartAuthGroupEntity departAuthGroup = systemService.getEntity(DepartAuthGroupEntity.class, id);
 		request.setAttribute("departAuthGroup", departAuthGroup);
 		return new ModelAndView("system/authGroup/addDepartRoleAuth");
 	}
@@ -169,7 +159,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "updateDepartRoleAuth")
 	public ModelAndView updateDepartRoleAuth(String id, HttpServletRequest request) {
-		TSRole role = systemService.getEntity(TSRole.class, id);
+		RoleEntity role = systemService.getEntity(RoleEntity.class, id);
 		request.setAttribute("role", role);
 		return new ModelAndView("system/authGroup/updateDepartRoleAuth");
 	}
@@ -182,8 +172,8 @@ public class DepartAuthGroupController extends BaseController {
 	 * @param dataGrid
 	 */
 	@RequestMapping(params = "datagridRole")
-	public void datagridRole(TSRole tsRole, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSRole.class, dataGrid);
+	public void datagridRole(RoleEntity tsRole, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(RoleEntity.class, dataGrid);
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tsRole);
 		this.systemService.getDataGridReturn(cq, true);
@@ -198,7 +188,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "addOrUpdate",method = {RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView addOrUpdate(String id, HttpServletRequest req) {
-		TSDepartAuthGroupEntity departAuthGroup = this.systemService.findUniqueByProperty(TSDepartAuthGroupEntity.class, "id", id);
+		DepartAuthGroupEntity departAuthGroup = this.systemService.findUniqueByProperty(DepartAuthGroupEntity.class, "id", id);
 		req.setAttribute("departAuthGroup", departAuthGroup);
 		return new ModelAndView("system/authGroup/authGroupSet");
 	}
@@ -222,21 +212,20 @@ public class DepartAuthGroupController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "departAuthGroupRel")
-	public ModelAndView departAuthGroupRel(String id,TSDepartAuthGroupEntity departAuthGroup, HttpServletRequest request) {
-		departAuthGroup = systemService.getEntity(TSDepartAuthGroupEntity.class, id);
+	public ModelAndView departAuthGroupRel(String id,DepartAuthGroupEntity departAuthGroup, HttpServletRequest request) {
+		departAuthGroup = systemService.getEntity(DepartAuthGroupEntity.class, id);
 		request.setAttribute("departAuthGroup", departAuthGroup);
 		return new ModelAndView("system/authGroup/departAuthGroupShow");
 	}
 	
 	/**
 	 * 角色页面跳转
-	 * @param departAuthGroup
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping(params = "departRoleAuthGroupRel")
 	public ModelAndView departRoleAuthGroupRel(String id, HttpServletRequest request) {
-		TSRole role = systemService.getEntity(TSRole.class, id);
+		RoleEntity role = systemService.getEntity(RoleEntity.class, id);
 		request.setAttribute("role", role);
 		return new ModelAndView("system/authGroup/departRoleAuthGroupShow");
 	}
@@ -288,7 +277,7 @@ public class DepartAuthGroupController extends BaseController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(params="getMainTreeData",method ={RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
-	public AjaxJson getMainTreeData(TSDepartAuthGroupEntity departAuthGroup,HttpServletResponse response,HttpServletRequest request ){
+	public AjaxJson getMainTreeData(DepartAuthGroupEntity departAuthGroup,HttpServletResponse response,HttpServletRequest request ){
 		AjaxJson j = new AjaxJson();
 		try{
 			List<Map<String,Object>> departAuthGroupList = new ArrayList<Map<String,Object>>();
@@ -327,7 +316,7 @@ public class DepartAuthGroupController extends BaseController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(params="getDepartRoleTree",method ={RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
-	public AjaxJson getDepartRoleTree(TSDepartAuthGroupEntity departAuthGroup,HttpServletResponse response,HttpServletRequest request ){
+	public AjaxJson getDepartRoleTree(DepartAuthGroupEntity departAuthGroup,HttpServletResponse response,HttpServletRequest request ){
 		AjaxJson j = new AjaxJson();
 		try{
 			List<Map<String,Object>> departAuthGroupList = new ArrayList<Map<String,Object>>();
@@ -366,7 +355,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params="getDepartGroupRoleTree",method ={RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
-	public AjaxJson getDepartGroupRoleTree(TSDepartAuthGroupEntity departAuthGroup, HttpServletResponse response, HttpServletRequest request) {
+	public AjaxJson getDepartGroupRoleTree(DepartAuthGroupEntity departAuthGroup, HttpServletResponse response, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		try {
 			List<Map<String, Object>> departAuthGroupList = new ArrayList<Map<String, Object>>();
@@ -416,7 +405,6 @@ public class DepartAuthGroupController extends BaseController {
 	/**
 	 * 不递归查询子级节点
 	 * @param dataList
-	 * @param functionGroupList
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void recursiveGroup(List<Map<String,Object>> dataList,
@@ -491,9 +479,11 @@ public class DepartAuthGroupController extends BaseController {
 	public AjaxJson getDepartInfo(HttpServletRequest request, HttpServletResponse response){
 		AjaxJson j = new AjaxJson();
 		//根据登陆用户判断，二级管理员根据一级权限组查询
-		TSUser sessionUser = ResourceUtil.getSessionUser();
+		UserEntity sessionUser = ResourceUtil.getSessionUser();
 		String userName = null;
-		if(sessionUser!=null)userName=sessionUser.getUserName();
+		if (sessionUser!=null) {
+			userName=sessionUser.getUserName();
+		}
 		String orgIds = request.getParameter("orgIds");
 		String[] ids = new String[]{}; 
 		if(StringUtils.isNotBlank(orgIds)){
@@ -502,12 +492,12 @@ public class DepartAuthGroupController extends BaseController {
 		}
 		String isRegister=request.getParameter("isRegister");
 		if(oConvertUtils.isEmpty(isRegister))isRegister="2";
-		TSDepart dePart = null;
-		List<TSDepart> tSDeparts = new ArrayList<TSDepart>();
+		DepartEntity dePart = null;
+		List<DepartEntity> tSDeparts = new ArrayList<DepartEntity>();
 		String parentid = request.getParameter("parentid");
-		StringBuffer hql = new StringBuffer(" from TSDepart t where 1=1 ");
+		StringBuffer hql = new StringBuffer(" from DepartEntity t where 1=1 ");
 		if(StringUtils.isNotBlank(parentid)){
-			dePart = this.systemService.getEntity(TSDepart.class, parentid);
+			dePart = this.systemService.getEntity(DepartEntity.class, parentid);
 			hql.append(" and TSPDepart = ? ");
 			tSDeparts = this.systemService.findHql(hql.toString(), dePart);
 		} else {
@@ -526,7 +516,7 @@ public class DepartAuthGroupController extends BaseController {
 			} else {
 				//当其他用户登陆的时候查询用户关联的管理员组的组织机构
 
-				hql.append(" and id in (select deptId from TSDepartAuthGroupEntity where id in (select groupId from TSDepartAuthgManagerEntity where userId = ?))");
+				hql.append(" and id in (select deptId from DepartAuthGroupEntity where id in (select groupId from DepartAuthgManagerEntity where userId = ?))");
 				tSDeparts = this.systemService.findHql(hql.toString(),userName);
 
 			}
@@ -539,7 +529,7 @@ public class DepartAuthGroupController extends BaseController {
 			Map<String,Object> map = null;
 			String sql = null;
 			 Object[] params = null;
-			for(TSDepart depart:tSDeparts){
+			for(DepartEntity depart:tSDeparts){
 				map = new HashMap<String,Object>();
 				map.put("id", depart.getId());
 				map.put("name", depart.getDepartname());
@@ -634,7 +624,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "save")
 	@ResponseBody
-	public AjaxJson save(TSDepartAuthGroupEntity departAuthGroup, HttpServletRequest request) {
+	public AjaxJson save(DepartAuthGroupEntity departAuthGroup, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		try {
 			//判断是新增还是更新
@@ -662,10 +652,10 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "del")
 	@ResponseBody
-	public AjaxJson del(TSDepartAuthGroupEntity departAuthGroup, HttpServletRequest request) {
+	public AjaxJson del(DepartAuthGroupEntity departAuthGroup, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		try{
-			departAuthGroup = systemService.getEntity(TSDepartAuthGroupEntity.class, departAuthGroup.getId());
+			departAuthGroup = systemService.getEntity(DepartAuthGroupEntity.class, departAuthGroup.getId());
 			systemService.delete(departAuthGroup);
 			j.setMsg("删除部门管理员组成功");
 			j.setSuccess(true);
@@ -686,7 +676,7 @@ public class DepartAuthGroupController extends BaseController {
 	@RequestMapping(params = "setAuthority")
 	@ResponseBody
 	public List<ComboTree> setAuthority(HttpServletRequest request, ComboTree comboTree) {
-		CriteriaQuery cq = new CriteriaQuery(TSFunction.class);
+		CriteriaQuery cq = new CriteriaQuery(FunctionEntity.class);
 		if (comboTree.getId() != null) {
 			cq.eq("TSFunction.id", comboTree.getId());
 		}
@@ -695,23 +685,23 @@ public class DepartAuthGroupController extends BaseController {
 		}
 		cq.notEq("functionLevel", Short.parseShort("-1"));
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(
+		List<FunctionEntity> functionList = systemService.getListByCriteriaQuery(
 				cq, false);
 		Collections.sort(functionList, new NumberComparator());
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		//获取pid,根据pid查出上级所拥有的权限
 		String groupId = request.getParameter("gid");
-		List<TSFunction> loginActionlist = new ArrayList<TSFunction>();// 已有权限菜单
+		List<FunctionEntity> loginActionlist = new ArrayList<FunctionEntity>();// 已有权限菜单
 		List<String> selectChild = new ArrayList<String>();
 		selectChild = null;
 		if (StringUtils.isNotEmpty(groupId)) {
-			List<TSDepartAuthgFunctionRelEntity> functionGroupList = systemService.findByProperty(TSDepartAuthgFunctionRelEntity.class, "tsDepartAuthGroup.id",groupId);
+			List<DepartAuthgFunctionRelEntity> functionGroupList = systemService.findByProperty(DepartAuthgFunctionRelEntity.class, "tsDepartAuthGroup.id",groupId);
 			if (functionGroupList.size() > 0) {
-				for (TSDepartAuthgFunctionRelEntity functionGroupRel : functionGroupList) {
+				for (DepartAuthgFunctionRelEntity functionGroupRel : functionGroupList) {
 					if(functionGroupRel.getTsFunction() == null) {
 						continue;
 					}
-					TSFunction function = (TSFunction) functionGroupRel.getTsFunction();
+					FunctionEntity function = (FunctionEntity) functionGroupRel.getTsFunction();
 					loginActionlist.add(function);
 				}
 			}
@@ -727,15 +717,15 @@ public class DepartAuthGroupController extends BaseController {
 		return comboTrees;
 	}
 	
-	private List<ComboTree> comboTree(List<TSFunction> all, ComboTreeModel comboTreeModel, List<TSFunction> in, boolean recursive,List<String> selectChild) {
+	private List<ComboTree> comboTree(List<FunctionEntity> all, ComboTreeModel comboTreeModel, List<FunctionEntity> in, boolean recursive, List<String> selectChild) {
 		List<ComboTree> trees = new ArrayList<ComboTree>();
-		for (TSFunction obj : all) {
+		for (FunctionEntity obj : all) {
 			trees.add(comboTree(obj, comboTreeModel, in, recursive, selectChild));
 		}
 		all.clear();
 		return trees;
 	}
-	private ComboTree comboTree(TSFunction obj, ComboTreeModel comboTreeModel, List<TSFunction> in, boolean recursive, List<String> selectChild) {
+	private ComboTree comboTree(FunctionEntity obj, ComboTreeModel comboTreeModel, List<FunctionEntity> in, boolean recursive, List<String> selectChild) {
 		ComboTree tree = new ComboTree();
 		String id = oConvertUtils.getString(obj.getId());
 		tree.setId(id);
@@ -743,7 +733,7 @@ public class DepartAuthGroupController extends BaseController {
 		if (in == null) {
 		} else {
 			if (in.size() > 0) {
-				for (TSFunction inobj : in) {
+				for (FunctionEntity inobj : in) {
 					String inId = oConvertUtils.getString(inobj.getId());
                     if (inId.equals(id)) {
 						tree.setChecked(true);
@@ -751,12 +741,12 @@ public class DepartAuthGroupController extends BaseController {
 				}
 			}
 		}
-		List<TSFunction> curChildList = obj.getTSFunctions();
+		List<FunctionEntity> curChildList = obj.getTSFunctions();
 		Collections.sort(curChildList, new Comparator<Object>(){
 			@Override
 	        public int compare(Object o1, Object o2) {
-	        	TSFunction tsFunction1=(TSFunction)o1;  
-	        	TSFunction tsFunction2=(TSFunction)o2;  
+				FunctionEntity tsFunction1=(FunctionEntity)o1;
+				FunctionEntity tsFunction2=(FunctionEntity)o2;
 	        	int flag=tsFunction1.getFunctionOrder().compareTo(tsFunction2.getFunctionOrder());
 	        	if(flag==0){
 	        		return tsFunction1.getFunctionName().compareTo(tsFunction2.getFunctionName());
@@ -769,7 +759,7 @@ public class DepartAuthGroupController extends BaseController {
 			tree.setState("closed");
             if (recursive) { // 递归查询子节点
                 List<ComboTree> children = new ArrayList<ComboTree>();
-                for (TSFunction childObj : curChildList) {
+                for (FunctionEntity childObj : curChildList) {
                 	//判断上级节点的ID
 					ComboTree t = comboTree(childObj, comboTreeModel, in, recursive,selectChild);
 					if(selectChild==null||selectChild.contains(childObj.getId())) {
@@ -803,12 +793,12 @@ public class DepartAuthGroupController extends BaseController {
 	public ModelAndView operationListForFunction(HttpServletRequest request,
 			String functionId) {
 		String gid = request.getParameter("groupId");
-		CriteriaQuery cq = new CriteriaQuery(TSOperation.class);
+		CriteriaQuery cq = new CriteriaQuery(OperationEntity.class);
 		cq.eq("TSFunction.id", functionId);
 		cq.eq("status", Short.valueOf("0"));
 		cq.in("id", null);
 		cq.add();
-		List<TSOperation> operationList = this.systemService
+		List<OperationEntity> operationList = this.systemService
 				.getListByCriteriaQuery(cq, false);
 		Set<String> operationCodes = systemService.getDepartAuthGroupOperationSet(gid, functionId,OrgConstants.GROUP_DEPART_ROLE_AUTH);
 		request.setAttribute("operationList", operationList);
@@ -828,11 +818,11 @@ public class DepartAuthGroupController extends BaseController {
 	public ModelAndView dataRuleListForFunction(HttpServletRequest request,
 			String functionId) {
 		String gid = request.getParameter("groupId");
-		CriteriaQuery cq = new CriteriaQuery(TSDataRule.class);
+		CriteriaQuery cq = new CriteriaQuery(DataRuleEntity.class);
 		cq.eq("TSFunction.id", functionId);
 		cq.in("id", null);
 		cq.add();
-		List<TSDataRule> dataRuleList = this.systemService.getListByCriteriaQuery(cq, false);
+		List<DataRuleEntity> dataRuleList = this.systemService.getListByCriteriaQuery(cq, false);
 		Set<String> dataRulecodes = systemService.getDepartAuthGroupDataRuleSet(gid, functionId,OrgConstants.GROUP_DEPART_ROLE_AUTH);
 		request.setAttribute("dataRuleList", dataRuleList);
 		request.setAttribute("dataRulecodes", dataRulecodes);
@@ -853,10 +843,10 @@ public class DepartAuthGroupController extends BaseController {
 		try {
 			String groupId = request.getParameter("groupId");
 			String function = request.getParameter("functions");
-			TSDepartAuthGroupEntity functionGroup = this.systemService.get(TSDepartAuthGroupEntity.class, groupId);
-			List<TSDepartAuthgFunctionRelEntity> functionGroupList = systemService.findByProperty(TSDepartAuthgFunctionRelEntity.class, "tsDepartAuthGroup.id",functionGroup.getId());
-			Map<String, TSDepartAuthgFunctionRelEntity> map = new HashMap<String, TSDepartAuthgFunctionRelEntity>();
-			for (TSDepartAuthgFunctionRelEntity functionofGroup : functionGroupList) {
+			DepartAuthGroupEntity functionGroup = this.systemService.get(DepartAuthGroupEntity.class, groupId);
+			List<DepartAuthgFunctionRelEntity> functionGroupList = systemService.findByProperty(DepartAuthgFunctionRelEntity.class, "tsDepartAuthGroup.id",functionGroup.getId());
+			Map<String, DepartAuthgFunctionRelEntity> map = new HashMap<String, DepartAuthgFunctionRelEntity>();
+			for (DepartAuthgFunctionRelEntity functionofGroup : functionGroupList) {
 				if(functionofGroup.getTsFunction()==null) {
 					continue;
 				}
@@ -886,23 +876,23 @@ public class DepartAuthGroupController extends BaseController {
 	 * @param map
 	 *            旧的权限列表
 	 */
-	private void updateCompare(Set<String> set, TSDepartAuthGroupEntity functionGroup,
-			Map<String, TSDepartAuthgFunctionRelEntity> map) {
-		List<TSDepartAuthgFunctionRelEntity> entitys = new ArrayList<TSDepartAuthgFunctionRelEntity>();
-		List<TSDepartAuthgFunctionRelEntity> deleteEntitys = new ArrayList<TSDepartAuthgFunctionRelEntity>();
+	private void updateCompare(Set<String> set, DepartAuthGroupEntity functionGroup,
+			Map<String, DepartAuthgFunctionRelEntity> map) {
+		List<DepartAuthgFunctionRelEntity> entitys = new ArrayList<DepartAuthgFunctionRelEntity>();
+		List<DepartAuthgFunctionRelEntity> deleteEntitys = new ArrayList<DepartAuthgFunctionRelEntity>();
 		for (String s : set) {
 			if (map.containsKey(s)) {
 				map.remove(s);
 			} else {
-				TSDepartAuthgFunctionRelEntity functionGroupRel = new TSDepartAuthgFunctionRelEntity();
-				TSFunction f = this.systemService.get(TSFunction.class, s);
+				DepartAuthgFunctionRelEntity functionGroupRel = new DepartAuthgFunctionRelEntity();
+				FunctionEntity f = this.systemService.get(FunctionEntity.class, s);
 				functionGroupRel.setTsFunction(f);
 				functionGroupRel.setTsDepartAuthGroup(functionGroup);
 				entitys.add(functionGroupRel);
 			}
 		}
-		Collection<TSDepartAuthgFunctionRelEntity> collection = map.values();
-		Iterator<TSDepartAuthgFunctionRelEntity> it = collection.iterator();
+		Collection<DepartAuthgFunctionRelEntity> collection = map.values();
+		Iterator<DepartAuthgFunctionRelEntity> it = collection.iterator();
 		for (; it.hasNext();) {
 			deleteEntitys.add(it.next());
 		}
@@ -929,14 +919,14 @@ public class DepartAuthGroupController extends BaseController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		CriteriaQuery cq1 = new CriteriaQuery(TSDepartAuthgFunctionRelEntity.class);
+		CriteriaQuery cq1 = new CriteriaQuery(DepartAuthgFunctionRelEntity.class);
 		cq1.eq("tsDepartAuthGroup.id", groupId);
 		cq1.eq("tsFunction.id", functionId);
 		cq1.add();
-		List<TSDepartAuthgFunctionRelEntity> functionGroups = systemService.getListByCriteriaQuery(
+		List<DepartAuthgFunctionRelEntity> functionGroups = systemService.getListByCriteriaQuery(
 				cq1, false);
 		if (null != functionGroups && functionGroups.size() > 0) {
-			TSDepartAuthgFunctionRelEntity tsfunctionGroup = functionGroups.get(0);
+			DepartAuthgFunctionRelEntity tsfunctionGroup = functionGroups.get(0);
 			tsfunctionGroup.setOperation(operationcodes);
 			systemService.saveOrUpdate(tsfunctionGroup);
 		}
@@ -963,14 +953,14 @@ public class DepartAuthGroupController extends BaseController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		CriteriaQuery cq1 = new CriteriaQuery(TSDepartAuthgFunctionRelEntity.class);
+		CriteriaQuery cq1 = new CriteriaQuery(DepartAuthgFunctionRelEntity.class);
 		cq1.eq("tsDepartAuthGroup.id", groupId);
 		cq1.eq("tsFunction.id", functionId);
 		cq1.add();
-		List<TSDepartAuthgFunctionRelEntity> functionGroups = systemService.getListByCriteriaQuery(
+		List<DepartAuthgFunctionRelEntity> functionGroups = systemService.getListByCriteriaQuery(
 				cq1, false);
 		if (null != functionGroups && functionGroups.size() > 0) {
-			TSDepartAuthgFunctionRelEntity tsFunctionGroup = functionGroups.get(0);
+			DepartAuthgFunctionRelEntity tsFunctionGroup = functionGroups.get(0);
 			tsFunctionGroup.setDatarule(dataRulecodes);
 			systemService.saveOrUpdate(tsFunctionGroup);
 		}
@@ -987,11 +977,11 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "getDepartGroupUser", method = RequestMethod.POST)
 	@ResponseBody
-	public void getDepartGroupUser(TSUser user,HttpServletRequest request,HttpServletResponse response,DataGrid dataGrid){
-		CriteriaQuery cq = new CriteriaQuery(TSUser.class, dataGrid);
+	public void getDepartGroupUser(UserEntity user,HttpServletRequest request,HttpServletResponse response,DataGrid dataGrid){
+		CriteriaQuery cq = new CriteriaQuery(UserEntity.class, dataGrid);
 		String groupId = request.getParameter("groupId");
 		//根据GroupId查询关系表中所有UserId
-		String hql = "select userId from TSDepartAuthgManagerEntity where groupId = ?";
+		String hql = "select userId from DepartAuthgManagerEntity where groupId = ?";
 		List<String> userList = systemService.findHql(hql, groupId);
         //查询条件组装器
 		if(userList!=null && userList.size()>0){
@@ -1007,9 +997,9 @@ public class DepartAuthGroupController extends BaseController {
 		}
 		//查询角色
 		Map<String,Map<String,Object>> extMap = new HashMap<String, Map<String,Object>>();
-		List<TSUser> tsUserList = dataGrid.getResults();
+		List<UserEntity> tsUserList = dataGrid.getResults();
 		if(tsUserList != null && tsUserList.size() > 0) {
-			for (TSUser temp : tsUserList) {
+			for (UserEntity temp : tsUserList) {
 				Map<String,Object> m = new HashMap<String, Object>();
 				//获取每个用户角色
 				String sql = "select r.rolename from t_s_role r,t_s_role_user ru,t_s_depart_authg_manager dam,t_s_base_user bs " +
@@ -1026,7 +1016,7 @@ public class DepartAuthGroupController extends BaseController {
 			}
 		}
 		if(dataGrid.getResults() == null) {
-			dataGrid.setResults(new ArrayList<TSUser>());
+			dataGrid.setResults(new ArrayList<UserEntity>());
 		}
         TagUtil.datagrid(response, dataGrid,extMap);
 	}
@@ -1040,8 +1030,8 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "getUserDataGrid", method = RequestMethod.POST)
 	@ResponseBody
-	public void getUserDataGrid(TSUser user,HttpServletRequest request,HttpServletResponse response,DataGrid dataGrid){
-		CriteriaQuery cq = new CriteriaQuery(TSUser.class, dataGrid);
+	public void getUserDataGrid(UserEntity user,HttpServletRequest request,HttpServletResponse response,DataGrid dataGrid){
+		CriteriaQuery cq = new CriteriaQuery(UserEntity.class, dataGrid);
 		// 查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, user);
 		Short[] userstate = new Short[] { Globals.User_Normal, Globals.User_ADMIN, Globals.User_Forbidden };
@@ -1049,13 +1039,13 @@ public class DepartAuthGroupController extends BaseController {
 		cq.eq("deleteFlag", Globals.Delete_Normal);
 		List<String> userLists = new ArrayList<String>();
 		String groupId = request.getParameter("groupId");
-		TSDepartAuthGroupEntity departAuthGroup = systemService.getEntity(TSDepartAuthGroupEntity.class, groupId);
-		TSDepart tsDept = this.systemService.getEntity(TSDepart.class, departAuthGroup.getDeptId());
+		DepartAuthGroupEntity departAuthGroup = systemService.getEntity(DepartAuthGroupEntity.class, groupId);
+		DepartEntity tsDept = this.systemService.getEntity(DepartEntity.class, departAuthGroup.getDeptId());
 		//设定某个组织机构管理员时，可以设定当前组织机构下级部门的人员
-		String deptHql = new String(" from TSUserOrg where tsDepart.orgCode like concat(?,'%')");
-		List<TSUserOrg> userList = this.systemService.findHql(deptHql, tsDept.getOrgCode());
+		String deptHql = new String(" from UserOrgEntity where tsDepart.orgCode like concat(?,'%')");
+		List<UserOrgEntity> userList = this.systemService.findHql(deptHql, tsDept.getOrgCode());
 		if (userList != null && userList.size() > 0) {
-			for (TSUserOrg u : userList) {
+			for (UserOrgEntity u : userList) {
 				if (u.getTsUser() != null) {
 					if (StringUtils.isNotEmpty(u.getTsUser().getId())) {
 						userLists.add(u.getTsUser().getId());
@@ -1083,20 +1073,20 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "saveByUser",method = RequestMethod.POST)
 	@ResponseBody
-	public AjaxJson saveByUser(TSDepartAuthgManagerEntity functionGroupUser, HttpServletRequest request) {
+	public AjaxJson saveByUser(DepartAuthgManagerEntity functionGroupUser, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		String groupId = request.getParameter("groupId");
 		String userName = request.getParameter("userName");
 		try {
 			if(StringUtils.isNotEmpty(userName) && StringUtils.isNotEmpty(groupId)) {
-				String hql = "from TSDepartAuthgManagerEntity where groupId = ?";
-				List<TSDepartAuthgManagerEntity> groupList = systemService.findHql(hql, groupId);
+				String hql = "from DepartAuthgManagerEntity where groupId = ?";
+				List<DepartAuthgManagerEntity> groupList = systemService.findHql(hql, groupId);
 				String arrayName[] = userName.split(",");
 				for (int i = 0; i < arrayName.length; i++) {
-					functionGroupUser = new TSDepartAuthgManagerEntity();
+					functionGroupUser = new DepartAuthgManagerEntity();
 					String uName = arrayName[i];
 					if(groupList!=null && groupList.size()>0) {
-						for (TSDepartAuthgManagerEntity group : groupList) {
+						for (DepartAuthgManagerEntity group : groupList) {
 							if(group.getUserId().equals(uName)) {
 								//判断如果存在数据先删除后添加
 								systemService.delete(group);
@@ -1128,7 +1118,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "deleteByUser",method = RequestMethod.POST)
 	@ResponseBody
-	public AjaxJson deleteByUser(TSDepartAuthgManagerEntity functionGroupUser,HttpServletRequest request) {
+	public AjaxJson deleteByUser(DepartAuthgManagerEntity functionGroupUser,HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		try {
 			String groupId = request.getParameter("groupId");
@@ -1157,24 +1147,24 @@ public class DepartAuthGroupController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		try {
 			//查询角色先删除后添加
-			String hql = "select id from TSRoleUser where TSUser.id = ?";
+			String hql = "select id from RoleUserEntity where TSUser.id = ?";
 			List<String> tsRoleUsers = systemService.findHql(hql, id);
 			if (tsRoleUsers != null && tsRoleUsers.size() > 0) {
 				for (String t : tsRoleUsers) {
-					TSRoleUser tsRoleUser = new TSRoleUser();
+					RoleUserEntity tsRoleUser = new RoleUserEntity();
 					tsRoleUser.setId(t);
 					systemService.delete(tsRoleUser);
 				}
 			}
 			if (oConvertUtils.isNotEmpty(id) && oConvertUtils.isNotEmpty(roleId)) {
-				TSRoleUser roleUser = null;
+				RoleUserEntity roleUser = null;
 				String[] roleArray = roleId.split(",");
 				for (String s : roleArray) {
-					roleUser = new TSRoleUser();
-					TSUser user = new TSUser();
+					roleUser = new RoleUserEntity();
+					UserEntity user = new UserEntity();
 					user.setId(id);
 					roleUser.setTSUser(user);
-					TSRole role = new TSRole();
+					RoleEntity role = new RoleEntity();
 					role.setId(s);
 					roleUser.setTSRole(role);
 					systemService.save(roleUser);
@@ -1201,7 +1191,7 @@ public class DepartAuthGroupController extends BaseController {
 	public AjaxJson saveDepartRoleAuth(String groupId,String roleName,String roleCode, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		try {
-			TSRole role = new TSRole();
+			RoleEntity role = new RoleEntity();
 			role.setDepartAgId(groupId);
 			role.setRoleCode(roleCode);
 			role.setRoleName(roleName);
@@ -1218,13 +1208,12 @@ public class DepartAuthGroupController extends BaseController {
 	
 	/**
 	 * 更新角色信息
-	 * @param groupId
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping(params = "doUpdateDepartRoleAuth",method = RequestMethod.POST)
 	@ResponseBody
-	public AjaxJson doUpdateDepartRoleAuth(TSRole role, HttpServletRequest request) {
+	public AjaxJson doUpdateDepartRoleAuth(RoleEntity role, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		try {
 			role.setRoleType(OrgConstants.DEPART_ROLE_TYPE);
@@ -1240,20 +1229,19 @@ public class DepartAuthGroupController extends BaseController {
 	
 	/**
 	 * 删除角色信息
-	 * @param departAuthGroup
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping(params = "delDepartRoleAuth")
 	@ResponseBody
-	public AjaxJson delDepartRoleAuth(TSRole role, HttpServletRequest request) {
+	public AjaxJson delDepartRoleAuth(RoleEntity role, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		try{
-			List<TSRoleFunction> roleFunctions = systemService.findByProperty(TSRoleFunction.class, "TSRole.id", role.getId());
+			List<RoleFunctionEntity> roleFunctions = systemService.findByProperty(RoleFunctionEntity.class, "TSRole.id", role.getId());
 			if(roleFunctions.size()>0 && roleFunctions != null) {
 				systemService.deleteAllEntitie(roleFunctions);
 			}
-			role = systemService.getEntity(TSRole.class, role.getId());
+			role = systemService.getEntity(RoleEntity.class, role.getId());
 			if(role != null) {
 				systemService.delete(role);
 			}
@@ -1278,7 +1266,7 @@ public class DepartAuthGroupController extends BaseController {
 	@RequestMapping(params = "setRoleAuthority")
 	@ResponseBody
 	public List<ComboTree> setRoleAuthority(HttpServletRequest request, ComboTree comboTree) {
-		CriteriaQuery cq = new CriteriaQuery(TSFunction.class);
+		CriteriaQuery cq = new CriteriaQuery(FunctionEntity.class);
 		if (comboTree.getId() != null) {
 			cq.eq("TSFunction.id", comboTree.getId());
 		}
@@ -1287,27 +1275,27 @@ public class DepartAuthGroupController extends BaseController {
 		}
 		cq.notEq("functionLevel", Short.parseShort("-1"));
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, false);
+		List<FunctionEntity> functionList = systemService.getListByCriteriaQuery(cq, false);
 		Collections.sort(functionList, new NumberComparator());
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		// 获取pid,根据pid查出上级所拥有的权限
 		String pid = request.getParameter("pid");
 		String groupId = request.getParameter("gid");
-		List<TSFunction> loginActionlist = new ArrayList<TSFunction>();// 已有权限菜单
+		List<FunctionEntity> loginActionlist = new ArrayList<FunctionEntity>();// 已有权限菜单
 		List<String> selectChild = new ArrayList<String>();
 		// 筛选条件
 		if (!pid.equals("0")) {
-			List<TSFunction> lists = new ArrayList<TSFunction>();
-			List<TSDepartAuthgFunctionRelEntity> pFunction = systemService.findByProperty(TSDepartAuthgFunctionRelEntity.class, "tsDepartAuthGroup.id", pid);
+			List<FunctionEntity> lists = new ArrayList<FunctionEntity>();
+			List<DepartAuthgFunctionRelEntity> pFunction = systemService.findByProperty(DepartAuthgFunctionRelEntity.class, "tsDepartAuthGroup.id", pid);
 			// 比较上级权限
 			if (pFunction.size() > 0) {
-				for (TSDepartAuthgFunctionRelEntity departGroupRel : pFunction) {
-					TSFunction function = (TSFunction) departGroupRel.getTsFunction();
+				for (DepartAuthgFunctionRelEntity departGroupRel : pFunction) {
+					FunctionEntity function = (FunctionEntity) departGroupRel.getTsFunction();
 
 					if(function!=null){
 						// 获取上级所有选中的ID
 						selectChild.add(function.getId());
-						for (TSFunction ts : functionList) {
+						for (FunctionEntity ts : functionList) {
 							if (ts.getId().equals(function.getId())) {
 								lists.add(ts);
 							}
@@ -1323,13 +1311,13 @@ public class DepartAuthGroupController extends BaseController {
 			selectChild = null;
 		}
 		if (StringUtils.isNotEmpty(groupId)) {
-			List<TSRoleFunction> functionGroupList = systemService.findByProperty(TSRoleFunction.class, "TSRole.id", groupId);
+			List<RoleFunctionEntity> functionGroupList = systemService.findByProperty(RoleFunctionEntity.class, "TSRole.id", groupId);
 			if (functionGroupList.size() > 0) {
-				for (TSRoleFunction functionGroupRel : functionGroupList) {
+				for (RoleFunctionEntity functionGroupRel : functionGroupList) {
 					if (functionGroupRel.getTSFunction() == null) {
 						continue;
 					}
-					TSFunction function = (TSFunction) functionGroupRel.getTSFunction();
+					FunctionEntity function = (FunctionEntity) functionGroupRel.getTSFunction();
 					loginActionlist.add(function);
 				}
 			}
@@ -1355,7 +1343,7 @@ public class DepartAuthGroupController extends BaseController {
 	@RequestMapping(params = "roleOperationListForFunction")
 	public ModelAndView roleOperationListForFunction(HttpServletRequest request, String functionId) {
 		String gid = request.getParameter("groupId");
-		TSRole role = systemService.getEntity(TSRole.class, gid);
+		RoleEntity role = systemService.getEntity(RoleEntity.class, gid);
 		List<Map<String, Object>> pGroup = new ArrayList<Map<String, Object>>();
 		if (role != null) {
 			if (oConvertUtils.isNotEmpty(role.getDepartAgId())) {
@@ -1379,12 +1367,12 @@ public class DepartAuthGroupController extends BaseController {
 				}
 			}
 		}
-		CriteriaQuery cq = new CriteriaQuery(TSOperation.class);
+		CriteriaQuery cq = new CriteriaQuery(OperationEntity.class);
 		cq.eq("TSFunction.id", functionId);
 		cq.eq("status", Short.valueOf("0"));
 		cq.in("id", pOperationArray);
 		cq.add();
-		List<TSOperation> operationList = this.systemService.getListByCriteriaQuery(cq, false);
+		List<OperationEntity> operationList = this.systemService.getListByCriteriaQuery(cq, false);
 		Set<String> operationCodes = systemService.getDepartAuthGroupOperationSet(gid, functionId, OrgConstants.GROUP_DEPART_ROLE);
 		request.setAttribute("operationList", operationList);
 		request.setAttribute("operationcodes", operationCodes);
@@ -1402,7 +1390,7 @@ public class DepartAuthGroupController extends BaseController {
 	@RequestMapping(params = "roleDataRuleListForFunction")
 	public ModelAndView roleDataRuleListForFunction(HttpServletRequest request, String functionId) {
 		String gid = request.getParameter("groupId");
-		TSRole role = systemService.getEntity(TSRole.class, gid);
+		RoleEntity role = systemService.getEntity(RoleEntity.class, gid);
 		List<Map<String, Object>> pGroup = new ArrayList<Map<String, Object>>();
 		if (role != null) {
 			if (oConvertUtils.isNotEmpty(role.getDepartAgId())) {
@@ -1426,11 +1414,11 @@ public class DepartAuthGroupController extends BaseController {
 				}
 			}
 		}
-		CriteriaQuery cq = new CriteriaQuery(TSDataRule.class);
+		CriteriaQuery cq = new CriteriaQuery(DataRuleEntity.class);
 		cq.eq("TSFunction.id", functionId);
 		cq.in("id", pDataRuleArray);
 		cq.add();
-		List<TSDataRule> dataRuleList = this.systemService.getListByCriteriaQuery(cq, false);
+		List<DataRuleEntity> dataRuleList = this.systemService.getListByCriteriaQuery(cq, false);
 		Set<String> dataRulecodes = systemService.getDepartAuthGroupDataRuleSet(gid, functionId, OrgConstants.GROUP_DEPART_ROLE);
 		request.setAttribute("dataRuleList", dataRuleList);
 		request.setAttribute("dataRulecodes", dataRulecodes);
@@ -1451,11 +1439,11 @@ public class DepartAuthGroupController extends BaseController {
 		try {
 			String groupId = request.getParameter("groupId");
 			String function = request.getParameter("functions");
-			TSRole role = this.systemService.get(TSRole.class, groupId);
-			List<TSRoleFunction> functionGroupList = systemService
-					.findByProperty(TSRoleFunction.class, "TSRole.id",role.getId());
-			Map<String, TSRoleFunction> map = new HashMap<String, TSRoleFunction>();
-			for (TSRoleFunction functionofGroup : functionGroupList) {
+			RoleEntity role = this.systemService.get(RoleEntity.class, groupId);
+			List<RoleFunctionEntity> functionGroupList = systemService
+					.findByProperty(RoleFunctionEntity.class, "TSRole.id",role.getId());
+			Map<String, RoleFunctionEntity> map = new HashMap<String, RoleFunctionEntity>();
+			for (RoleFunctionEntity functionofGroup : functionGroupList) {
 				if(functionofGroup.getTSFunction()==null) {
 					continue;
 				}
@@ -1482,23 +1470,23 @@ public class DepartAuthGroupController extends BaseController {
 	 * @param role 当前权限组
 	 * @param map 旧的权限列表
 	 */
-	private void updateRoleCompare(Set<String> set, TSRole role,
-			Map<String, TSRoleFunction> map) {
-		List<TSRoleFunction> entitys = new ArrayList<TSRoleFunction>();
-		List<TSRoleFunction> deleteEntitys = new ArrayList<TSRoleFunction>();
+	private void updateRoleCompare(Set<String> set, RoleEntity role,
+			Map<String, RoleFunctionEntity> map) {
+		List<RoleFunctionEntity> entitys = new ArrayList<RoleFunctionEntity>();
+		List<RoleFunctionEntity> deleteEntitys = new ArrayList<RoleFunctionEntity>();
 		for (String s : set) {
 			if (map.containsKey(s)) {
 				map.remove(s);
 			} else {
-				TSRoleFunction functionGroupRel = new TSRoleFunction();
-				TSFunction f = this.systemService.get(TSFunction.class, s);
+				RoleFunctionEntity functionGroupRel = new RoleFunctionEntity();
+				FunctionEntity f = this.systemService.get(FunctionEntity.class, s);
 				functionGroupRel.setTSFunction(f);
 				functionGroupRel.setTSRole(role);
 				entitys.add(functionGroupRel);
 			}
 		}
-		Collection<TSRoleFunction> collection = map.values();
-		Iterator<TSRoleFunction> it = collection.iterator();
+		Collection<RoleFunctionEntity> collection = map.values();
+		Iterator<RoleFunctionEntity> it = collection.iterator();
 		for (; it.hasNext();) {
 			deleteEntitys.add(it.next());
 		}
@@ -1525,14 +1513,14 @@ public class DepartAuthGroupController extends BaseController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
+		CriteriaQuery cq1 = new CriteriaQuery(RoleFunctionEntity.class);
 		cq1.eq("TSRole.id", groupId);
 		cq1.eq("TSFunction.id", functionId);
 		cq1.add();
-		List<TSRoleFunction> functionGroups = systemService.getListByCriteriaQuery(
+		List<RoleFunctionEntity> functionGroups = systemService.getListByCriteriaQuery(
 				cq1, false);
 		if (null != functionGroups && functionGroups.size() > 0) {
-			TSRoleFunction tsfunctionGroup = functionGroups.get(0);
+			RoleFunctionEntity tsfunctionGroup = functionGroups.get(0);
 			tsfunctionGroup.setOperation(operationcodes);
 			systemService.saveOrUpdate(tsfunctionGroup);
 		}
@@ -1559,14 +1547,14 @@ public class DepartAuthGroupController extends BaseController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
+		CriteriaQuery cq1 = new CriteriaQuery(RoleFunctionEntity.class);
 		cq1.eq("TSRole.id", groupId);
 		cq1.eq("TSFunction.id", functionId);
 		cq1.add();
-		List<TSRoleFunction> functionGroups = systemService.getListByCriteriaQuery(
+		List<RoleFunctionEntity> functionGroups = systemService.getListByCriteriaQuery(
 				cq1, false);
 		if (null != functionGroups && functionGroups.size() > 0) {
-			TSRoleFunction tsFunctionGroup = functionGroups.get(0);
+			RoleFunctionEntity tsFunctionGroup = functionGroups.get(0);
 			tsFunctionGroup.setDataRule(dataRulecodes);
 			systemService.saveOrUpdate(tsFunctionGroup);
 		}
@@ -1583,7 +1571,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "departRoleUserDataGrid", method = RequestMethod.POST)
 	@ResponseBody
-	public void departRoleUserDataGrid(TSUser user, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+	public void departRoleUserDataGrid(UserEntity user, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		Map<String, Map<String, Object>> extMap = new HashMap<String, Map<String, Object>>();
 		String departid = request.getParameter("orgIds");
 		if(oConvertUtils.isNotEmpty(departid)) {
@@ -1596,13 +1584,13 @@ public class DepartAuthGroupController extends BaseController {
 			}
 			
 			if(oConvertUtils.isNotEmpty(departid)){
-				TSDepart tsdepart = this.systemService.get(TSDepart.class,departid);
-				MiniDaoPage<TSUser> list = departAuthGroupDao.getUserByDepartCode(dataGrid.getPage(), dataGrid.getRows(),tsdepart.getOrgCode(),user);
+				DepartEntity tsdepart = this.systemService.get(DepartEntity.class,departid);
+				MiniDaoPage<UserEntity> list = departAuthGroupDao.getUserByDepartCode(dataGrid.getPage(), dataGrid.getRows(),tsdepart.getOrgCode(),user);
 				dataGrid.setTotal(list.getTotal());
 				dataGrid.setResults(list.getResults());
 				
 				//获取用户的部门名称
-				for (TSUser u : list.getResults()) {
+				for (UserEntity u : list.getResults()) {
 					if (oConvertUtils.isNotEmpty(u.getId())) {
 						List<String> depNames = departAuthGroupDao.getUserDepartNames(u.getId());
 						// 此为针对原来的行数据，拓展的新字段
@@ -1627,12 +1615,12 @@ public class DepartAuthGroupController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		try {
 			if(StringUtils.isNotEmpty(userId)) {
-				CriteriaQuery cq = new CriteriaQuery(TSRoleUser.class);
+				CriteriaQuery cq = new CriteriaQuery(RoleUserEntity.class);
 				cq.eq("TSUser.id",userId);
 				cq.add();
-				List<TSRoleUser> functionList = systemService.getListByCriteriaQuery(cq,false);
-				Map<String, TSRoleUser> map = new HashMap<String, TSRoleUser>();
-				for (TSRoleUser function : functionList) {
+				List<RoleUserEntity> functionList = systemService.getListByCriteriaQuery(cq,false);
+				Map<String, RoleUserEntity> map = new HashMap<String, RoleUserEntity>();
+				for (RoleUserEntity function : functionList) {
 					//部门角色
 					if("1".equals(function.getTSRole().getRoleType())){
 						map.put(function.getTSRole().getId(), function);
@@ -1664,25 +1652,25 @@ public class DepartAuthGroupController extends BaseController {
 	 * @param map 旧的角色信息表
 	 */
 	private void updateGroupUser(Set<String> set, String userId,
-			Map<String, TSRoleUser> map) {
-		List<TSRoleUser> entitys = new ArrayList<TSRoleUser>();
-		List<TSRoleUser> deleteEntitys = new ArrayList<TSRoleUser>();
+			Map<String, RoleUserEntity> map) {
+		List<RoleUserEntity> entitys = new ArrayList<RoleUserEntity>();
+		List<RoleUserEntity> deleteEntitys = new ArrayList<RoleUserEntity>();
 		for (String s : set) {
 			if (map.containsKey(s)) {
 				map.remove(s);
 			} else {
-				TSRole role = new TSRole();
+				RoleEntity role = new RoleEntity();
 				role.setId(s);
-				TSUser user = new TSUser();
+				UserEntity user = new UserEntity();
 				user.setId(userId);
-				TSRoleUser rf = new TSRoleUser();
+				RoleUserEntity rf = new RoleUserEntity();
 				rf.setTSRole(role);
 				rf.setTSUser(user);
 				entitys.add(rf);
 			}
 		}
-		Collection<TSRoleUser> collection = map.values();
-		Iterator<TSRoleUser> it = collection.iterator();
+		Collection<RoleUserEntity> collection = map.values();
+		Iterator<RoleUserEntity> it = collection.iterator();
 		for (; it.hasNext();) {
 			deleteEntitys.add(it.next());
 		}

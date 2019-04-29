@@ -11,8 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.web.system.pojo.base.Client;
-import org.jeecgframework.web.system.pojo.base.TSUser;
-import org.jeecgframework.web.system.service.CacheServiceI;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.service.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class ClientManager {
 	/**国际化缓存key*/
 	private final static String ONLINE_CLIENTS_CACHE_KEY ="online_client_users";
 	@Resource
-	private  CacheServiceI cacheService;
+	private CacheService cacheService;
 	
 	/**
 	 * 向ehcache缓存中增加Client对象
@@ -39,14 +39,14 @@ public class ClientManager {
 	@SuppressWarnings("unchecked")
 	private boolean addClientToCachedMap(String sessionId,Client client){
 		HashMap<String, Client> onLineClients ;
-		if(cacheService.get(CacheServiceI.FOREVER_CACHE, ONLINE_CLIENTS_CACHE_KEY)==null){
+		if(cacheService.get(CacheService.FOREVER_CACHE, ONLINE_CLIENTS_CACHE_KEY)==null){
 			onLineClients = new HashMap<String, Client>();
 		}
 		else{
-			onLineClients =(HashMap<String, Client>) cacheService.get(CacheServiceI.FOREVER_CACHE,ONLINE_CLIENTS_CACHE_KEY);
+			onLineClients =(HashMap<String, Client>) cacheService.get(CacheService.FOREVER_CACHE,ONLINE_CLIENTS_CACHE_KEY);
 		}
 		onLineClients.put(sessionId, client);
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ONLINE_CLIENTS_CACHE_KEY, onLineClients);
+		cacheService.put(CacheService.FOREVER_CACHE,ONLINE_CLIENTS_CACHE_KEY, onLineClients);
 		return true;
 	}
 	
@@ -56,10 +56,10 @@ public class ClientManager {
 	@SuppressWarnings("unchecked")
 	private boolean removeClientFromCachedMap(String sessionId){
 		HashMap<String, Client> onLineClients ;
-		if(cacheService.get(CacheServiceI.FOREVER_CACHE, ONLINE_CLIENTS_CACHE_KEY)!=null){
-			onLineClients =(HashMap<String, Client>) cacheService.get(CacheServiceI.FOREVER_CACHE,ONLINE_CLIENTS_CACHE_KEY);
+		if(cacheService.get(CacheService.FOREVER_CACHE, ONLINE_CLIENTS_CACHE_KEY)!=null){
+			onLineClients =(HashMap<String, Client>) cacheService.get(CacheService.FOREVER_CACHE,ONLINE_CLIENTS_CACHE_KEY);
 			onLineClients.remove(sessionId);
-			cacheService.put(CacheServiceI.FOREVER_CACHE, ONLINE_CLIENTS_CACHE_KEY, onLineClients);
+			cacheService.put(CacheService.FOREVER_CACHE, ONLINE_CLIENTS_CACHE_KEY, onLineClients);
 			return true;
 		}
 		else{
@@ -82,7 +82,7 @@ public class ClientManager {
 			ret.setIp(client.getIp());
 			ret.setLogindatetime(client.getLogindatetime());
 			//在线用户列表缓存，只保留几个字段显示即可，其他菜单权限内容不需要，降低内存占用
-			TSUser t = new TSUser();
+			UserEntity t = new UserEntity();
 			t.setUserName(client.getUser().getUserName());
 			t.setRealName(client.getUser().getRealName());
 			ret.setUser(t);
@@ -137,8 +137,8 @@ public class ClientManager {
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<Client> getAllClient(){
-		if(cacheService.get(CacheServiceI.FOREVER_CACHE,ONLINE_CLIENTS_CACHE_KEY)!=null){
-			HashMap<String, Client> onLineClients = (HashMap<String, Client>) cacheService.get(CacheServiceI.FOREVER_CACHE,ONLINE_CLIENTS_CACHE_KEY);
+		if(cacheService.get(CacheService.FOREVER_CACHE,ONLINE_CLIENTS_CACHE_KEY)!=null){
+			HashMap<String, Client> onLineClients = (HashMap<String, Client>) cacheService.get(CacheService.FOREVER_CACHE,ONLINE_CLIENTS_CACHE_KEY);
 			return onLineClients.values();
 		}
 		else

@@ -26,11 +26,11 @@ import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.datatable.SortDirection;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
-import org.jeecgframework.web.system.pojo.base.TSDataRule;
-import org.jeecgframework.web.system.pojo.base.TSFunction;
-import org.jeecgframework.web.system.pojo.base.TSIcon;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
-import org.jeecgframework.web.system.pojo.base.TSRoleFunction;
+import org.jeecgframework.web.system.pojo.base.DataRuleEntity;
+import org.jeecgframework.web.system.pojo.base.FunctionEntity;
+import org.jeecgframework.web.system.pojo.base.IconEntity;
+import org.jeecgframework.web.system.pojo.base.OperationEntity;
+import org.jeecgframework.web.system.pojo.base.RoleFunctionEntity;
 import org.jeecgframework.web.system.service.FunctionService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.service.UserService;
@@ -117,7 +117,7 @@ public class FunctionController extends BaseController {
 	@RequestMapping(params = "datagrid")
 	public void datagrid(HttpServletRequest request,
 			HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSFunction.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(FunctionEntity.class, dataGrid);
 		this.systemService.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
 	}
@@ -133,7 +133,7 @@ public class FunctionController extends BaseController {
 	@RequestMapping(params = "opdategrid")
 	public void opdategrid(HttpServletRequest request,
 			HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSOperation.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(OperationEntity.class, dataGrid);
 		String functionId = oConvertUtils.getString(request
 				.getParameter("functionId"));
 		cq.eq("TSFunction.id", functionId);
@@ -150,7 +150,7 @@ public class FunctionController extends BaseController {
 	 */
 	@RequestMapping(params = "del")
 	@ResponseBody
-	public AjaxJson del(TSFunction function, HttpServletRequest request) {
+	public AjaxJson del(FunctionEntity function, HttpServletRequest request) {
 		AjaxJson j = functionService.delFunction(function.getId());
 		systemService.addLog(j.getMsg(), Globals.Log_Type_DEL,Globals.Log_Leavel_INFO);
 		return j;
@@ -164,18 +164,18 @@ public class FunctionController extends BaseController {
 	 */
 	@RequestMapping(params = "delop")
 	@ResponseBody
-	public AjaxJson delop(TSOperation operation, HttpServletRequest request) {
+	public AjaxJson delop(OperationEntity operation, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		operation = systemService.getEntity(TSOperation.class,
+		operation = systemService.getEntity(OperationEntity.class,
 				operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
 
 		String operationId = operation.getId();
-		String hql = "from TSRoleFunction rolefun where rolefun.operation like '%"+operationId+"%'";
-		List<TSRoleFunction> roleFunctions= userService.findByQueryString(hql);
-		for(TSRoleFunction roleFunction:roleFunctions){
+		String hql = "from RoleFunctionEntity rolefun where rolefun.operation like '%"+operationId+"%'";
+		List<RoleFunctionEntity> roleFunctions= userService.findByQueryString(hql);
+		for(RoleFunctionEntity roleFunction:roleFunctions){
 			String newOper =roleFunction.getOperation().replace(operationId+",", "");
 			if(roleFunction.getOperation().length()==newOper.length()){
 				newOper = roleFunction.getOperation().replace(operationId, "");
@@ -198,15 +198,15 @@ public class FunctionController extends BaseController {
 	 * @param subFunction
 	 * @param parent
 	 */
-	private void updateSubFunction(List<TSFunction> subFunction,TSFunction  parent) {
+	private void updateSubFunction(List<FunctionEntity> subFunction,FunctionEntity  parent) {
 		if(subFunction.size() ==0){//没有子菜单是结束
               return;
        }else{
-    	   for (TSFunction tsFunction : subFunction) {
+    	   for (FunctionEntity tsFunction : subFunction) {
 				tsFunction.setFunctionLevel(Short.valueOf(parent.getFunctionLevel()
 						+ 1 + ""));
 				systemService.saveOrUpdate(tsFunction);
-				List<TSFunction> subFunction1 = systemService.findByProperty(TSFunction.class, "TSFunction.id", tsFunction.getId());
+				List<FunctionEntity> subFunction1 = systemService.findByProperty(FunctionEntity.class, "TSFunction.id", tsFunction.getId());
 				updateSubFunction(subFunction1,tsFunction);
 		   }
        }
@@ -220,7 +220,7 @@ public class FunctionController extends BaseController {
 	 */
 	@RequestMapping(params = "saveFunction")
 	@ResponseBody
-	public AjaxJson saveFunction(TSFunction function, HttpServletRequest request) {
+	public AjaxJson saveFunction(FunctionEntity function, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		function.setFunctionUrl(function.getFunctionUrl().trim());
@@ -231,12 +231,12 @@ public class FunctionController extends BaseController {
 		if (function.getTSFunction().getId().equals("")) {
 			function.setTSFunction(null);
 		} else {
-			TSFunction parent = systemService.getEntity(TSFunction.class,function.getTSFunction().getId());
+			FunctionEntity parent = systemService.getEntity(FunctionEntity.class,function.getTSFunction().getId());
 			function.setFunctionLevel(Short.valueOf(parent.getFunctionLevel()+ 1 + ""));
 		}
 		if (StringUtil.isNotEmpty(function.getId())) {
 			message = MutiLangUtil.paramUpdSuccess("common.menu");
-			TSFunction t = systemService.getEntity(TSFunction.class,function.getId());
+			FunctionEntity t = systemService.getEntity(FunctionEntity.class,function.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(function, t);
 
@@ -250,7 +250,7 @@ public class FunctionController extends BaseController {
 			}
 			systemService.addLog(message, Globals.Log_Type_UPDATE,Globals.Log_Leavel_INFO);
 
-			List<TSFunction> subFunction = systemService.findByProperty(TSFunction.class, "TSFunction.id", function.getId());
+			List<FunctionEntity> subFunction = systemService.findByProperty(FunctionEntity.class, "TSFunction.id", function.getId());
 			updateSubFunction(subFunction,function);
 
 
@@ -258,15 +258,15 @@ public class FunctionController extends BaseController {
 
 		} else {
 			if (function.getFunctionLevel().equals(Globals.Function_Leave_ONE)) {
-				List<TSFunction> functionList = systemService.findByProperty(
-						TSFunction.class, "functionLevel",
+				List<FunctionEntity> functionList = systemService.findByProperty(
+						FunctionEntity.class, "functionLevel",
 						Globals.Function_Leave_ONE);
 				// int ordre=functionList.size()+1;
 				// function.setFunctionOrder(Globals.Function_Order_ONE+ordre);
 				function.setFunctionOrder(function.getFunctionOrder());
 			} else {
-				List<TSFunction> functionList = systemService.findByProperty(
-						TSFunction.class, "functionLevel",
+				List<FunctionEntity> functionList = systemService.findByProperty(
+						FunctionEntity.class, "functionLevel",
 						Globals.Function_Leave_TWO);
 				// int ordre=functionList.size()+1;
 				// function.setFunctionOrder(Globals.Function_Order_TWO+ordre);
@@ -289,7 +289,7 @@ public class FunctionController extends BaseController {
 	 */
 	@RequestMapping(params = "saveop")
 	@ResponseBody
-	public AjaxJson saveop(TSOperation operation, HttpServletRequest request) {
+	public AjaxJson saveop(OperationEntity operation, HttpServletRequest request) {
 		String message = null;
 		String pid = request.getParameter("TSFunction.id");
 		if (pid.equals("")) {
@@ -318,28 +318,28 @@ public class FunctionController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdate")
-	public ModelAndView addorupdate(TSFunction function, HttpServletRequest req) {
+	public ModelAndView addorupdate(FunctionEntity function, HttpServletRequest req) {
 		String functionid = req.getParameter("id");
-		List<TSFunction> fuinctionlist = systemService.getList(TSFunction.class);
+		List<FunctionEntity> fuinctionlist = systemService.getList(FunctionEntity.class);
 		req.setAttribute("flist", fuinctionlist);
 
-		// List<TSIcon> iconlist = systemService.getList(TSIcon.class);
-		List<TSIcon> iconlist = systemService
-				.findByQueryString("from TSIcon where iconType != 3");
+		// List<IconEntity> iconlist = systemService.getList(IconEntity.class);
+		List<IconEntity> iconlist = systemService
+				.findByQueryString("from IconEntity where iconType != 3");
 		req.setAttribute("iconlist", iconlist);
-		List<TSIcon> iconDeskList = systemService
-				.findByQueryString("from TSIcon where iconType = 3");
+		List<IconEntity> iconDeskList = systemService
+				.findByQueryString("from IconEntity where iconType = 3");
 		req.setAttribute("iconDeskList", iconDeskList);
 
 		if (functionid != null) {
-			function = systemService.getEntity(TSFunction.class, functionid);
+			function = systemService.getEntity(FunctionEntity.class, functionid);
 			req.setAttribute("function", function);
 		}
 		if (function.getTSFunction() != null
 				&& function.getTSFunction().getId() != null) {
 			function.setFunctionLevel((short) 1);
-			function.setTSFunction((TSFunction) systemService.getEntity(
-					TSFunction.class, function.getTSFunction().getId()));
+			function.setTSFunction((FunctionEntity) systemService.getEntity(
+					FunctionEntity.class, function.getTSFunction().getId()));
 			req.setAttribute("function", function);
 		}
 		return new ModelAndView("system/function/function");
@@ -351,12 +351,12 @@ public class FunctionController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdateop")
-	public ModelAndView addorupdateop(TSOperation operation,
+	public ModelAndView addorupdateop(OperationEntity operation,
 			HttpServletRequest req) {
-		List<TSIcon> iconlist = systemService.getList(TSIcon.class);
+		List<IconEntity> iconlist = systemService.getList(IconEntity.class);
 		req.setAttribute("iconlist", iconlist);
 		if (operation.getId() != null) {
-			operation = systemService.getEntity(TSOperation.class,
+			operation = systemService.getEntity(OperationEntity.class,
 					operation.getId());
 			req.setAttribute("operation", operation);
 		}
@@ -372,7 +372,7 @@ public class FunctionController extends BaseController {
 	@RequestMapping(params = "functionGrid")
 	@ResponseBody
 	public List<TreeGrid> functionGrid(HttpServletRequest request,TreeGrid treegrid,Integer type) {
-		CriteriaQuery cq = new CriteriaQuery(TSFunction.class);
+		CriteriaQuery cq = new CriteriaQuery(FunctionEntity.class);
 		String selfId = request.getParameter("selfId");
 		if (selfId != null) {
 			cq.notEq("id", selfId);
@@ -390,11 +390,11 @@ public class FunctionController extends BaseController {
 		cq.add();
 
 		//获取装载数据权限的条件HQL
-		cq = HqlGenerateUtil.getDataAuthorConditionHql(cq, new TSFunction());
+		cq = HqlGenerateUtil.getDataAuthorConditionHql(cq, new FunctionEntity());
 		cq.add();
 
 		
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, false);
+		List<FunctionEntity> functionList = systemService.getListByCriteriaQuery(cq, false);
 
         Collections.sort(functionList, new NumberComparator());
 
@@ -434,14 +434,14 @@ public class FunctionController extends BaseController {
 	@ResponseBody
 	public void functionList(HttpServletRequest request,
 			HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSFunction.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(FunctionEntity.class, dataGrid);
 		String id = oConvertUtils.getString(request.getParameter("id"));
 		cq.isNull("TSFunction");
 		if (id != null) {
 			cq.eq("TSFunction.id", id);
 		}
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(
+		List<FunctionEntity> functionList = systemService.getListByCriteriaQuery(
 				cq, false);
 		List<TreeGrid> treeGrids = new ArrayList<TreeGrid>();
 		this.systemService.getDataGridReturn(cq, true);
@@ -455,7 +455,7 @@ public class FunctionController extends BaseController {
 	@ResponseBody
 	public List<ComboTree> setPFunction(HttpServletRequest request,
 			ComboTree comboTree) {
-		CriteriaQuery cq = new CriteriaQuery(TSFunction.class);
+		CriteriaQuery cq = new CriteriaQuery(FunctionEntity.class);
 		if (null != request.getParameter("selfId")) {
 			cq.notEq("id", request.getParameter("selfId"));
 		}
@@ -466,7 +466,7 @@ public class FunctionController extends BaseController {
 			cq.isNull("TSFunction");
 		}
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, false);
+		List<FunctionEntity> functionList = systemService.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id","functionName", "TSFunctions");
 		comboTrees = systemService.ComboTree(functionList, comboTreeModel,null, false);
@@ -480,13 +480,13 @@ public class FunctionController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "searchApp")
-	public ModelAndView searchApp(TSFunction function, HttpServletRequest req) {
+	public ModelAndView searchApp(FunctionEntity function, HttpServletRequest req) {
 
 		String name = req.getParameter("name");
 		String menuListMap = "";
 		// String menuListMap =
 		// "<div class='appListContainer ui-sortable' customacceptdrop='0' index='0' _olddisplay='block' style='width: auto; height: auto; margin-left: 10px; margin-top: 10px; display: block;'>";
-		CriteriaQuery cq = new CriteriaQuery(TSFunction.class);
+		CriteriaQuery cq = new CriteriaQuery(FunctionEntity.class);
 
 		cq.notEq("functionLevel", Short.valueOf("0"));
 		if (name == null || "".equals(name)) {
@@ -496,7 +496,7 @@ public class FunctionController extends BaseController {
 			cq.like("functionName", name1);
 		}
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(
+		List<FunctionEntity> functionList = systemService.getListByCriteriaQuery(
 				cq, false);
 		if (functionList.size() > 0 && functionList != null) {
 			for (int i = 0; i < functionList.size(); i++) {
@@ -555,12 +555,12 @@ public class FunctionController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(params = "addorupdaterule")
-	public ModelAndView addorupdaterule(TSDataRule operation,
+	public ModelAndView addorupdaterule(DataRuleEntity operation,
 			HttpServletRequest req) {
-		List<TSIcon> iconlist = systemService.getList(TSIcon.class);
+		List<IconEntity> iconlist = systemService.getList(IconEntity.class);
 		req.setAttribute("iconlist", iconlist);
 		if (operation.getId() != null) {
-			operation = systemService.getEntity(TSDataRule.class,
+			operation = systemService.getEntity(DataRuleEntity.class,
 					operation.getId());
 			req.setAttribute("operation", operation);
 		}
@@ -585,7 +585,7 @@ public class FunctionController extends BaseController {
 	@RequestMapping(params = "ruledategrid")
 	public void ruledategrid(HttpServletRequest request,
 			HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSDataRule.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(DataRuleEntity.class, dataGrid);
 		String functionId = oConvertUtils.getString(request
 				.getParameter("functionId"));
 		cq.eq("TSFunction.id", functionId);
@@ -608,11 +608,11 @@ public class FunctionController extends BaseController {
 	 */
 	@RequestMapping(params = "delrule")
 	@ResponseBody
-	public AjaxJson delrule(TSDataRule operation, HttpServletRequest request) {
+	public AjaxJson delrule(DataRuleEntity operation, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		operation = systemService
-				.getEntity(TSDataRule.class, operation.getId());
+				.getEntity(DataRuleEntity.class, operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
 		systemService.addLog(message, Globals.Log_Type_DEL,
@@ -637,7 +637,7 @@ public class FunctionController extends BaseController {
 	 */
 	@RequestMapping(params = "saverule")
 	@ResponseBody
-	public AjaxJson saverule(TSDataRule operation, HttpServletRequest request) {
+	public AjaxJson saverule(DataRuleEntity operation, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(operation.getId())) {
@@ -660,7 +660,7 @@ public class FunctionController extends BaseController {
 		return j;
 	}
 
-	public int justHaveDataRule(TSDataRule dataRule) {
+	public int justHaveDataRule(DataRuleEntity dataRule) {
 
 		String column = dataRule.getRuleColumn();
 		if(oConvertUtils.isEmpty(column)){

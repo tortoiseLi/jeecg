@@ -14,10 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.web.system.pojo.base.TSFunction;
-import org.jeecgframework.web.system.pojo.base.TSIcon;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
-import org.jeecgframework.web.system.service.MutiLangServiceI;
+import org.jeecgframework.web.system.pojo.base.FunctionEntity;
+import org.jeecgframework.web.system.pojo.base.IconEntity;
+import org.jeecgframework.web.system.pojo.base.OperationEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.util.IconImageUtil;
 
@@ -31,7 +30,6 @@ import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -76,14 +74,14 @@ public class IconController extends BaseController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(params = "datagrid")
-	public void datagrid(TSIcon icon,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSIcon.class, dataGrid);
+	public void datagrid(IconEntity icon,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(IconEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, icon);
 		cq.add();
 		this.systemService.getDataGridReturn(cq, true);
         IconImageUtil.convertDataGrid(dataGrid, request);//先把数据库的byte存成图片到临时目录，再给每个TsIcon设置目录路径
-        List<TSIcon> list = dataGrid.getResults();
-        for(TSIcon tsicon:list){
+        List<IconEntity> list = dataGrid.getResults();
+        for(IconEntity tsicon:list){
         	tsicon.setIconName(MutiLangUtil.doMutiLang(tsicon.getIconName(), ""));
 		}
         TagUtil.datagrid(response, dataGrid);
@@ -100,8 +98,8 @@ public class IconController extends BaseController {
 	@ResponseBody
 	public AjaxJson saveOrUpdateIcon(HttpServletRequest request) throws Exception {
 		String message = null;
-		AjaxJson j = new AjaxJson();		
-		TSIcon icon = new TSIcon();
+		AjaxJson j = new AjaxJson();
+		IconEntity icon = new IconEntity();
 		Short iconType = oConvertUtils.getShort(request.getParameter("iconType"));
 		String iconName = oConvertUtils.getString(request.getParameter("iconName"));
 		String id = request.getParameter("id");
@@ -141,9 +139,9 @@ public class IconController extends BaseController {
 		Short iconType = oConvertUtils.getShort(request.getParameter("iconType"));
 		String iconName = java.net.URLDecoder.decode(oConvertUtils.getString(request.getParameter("iconName")));
 		String id = request.getParameter("id");
-		TSIcon icon = new TSIcon();
+		IconEntity icon = new IconEntity();
 		if (StringUtil.isNotEmpty(id)) {
-			icon = systemService.get(TSIcon.class, id);
+			icon = systemService.get(IconEntity.class, id);
 			icon.setId(id);
 		}
 		icon.setIconName(iconName);
@@ -188,12 +186,12 @@ public class IconController extends BaseController {
 	@ResponseBody
 	public AjaxJson repair(HttpServletRequest request) throws Exception {
 		AjaxJson json = new AjaxJson();
-		List<TSIcon> icons = systemService.loadAll(TSIcon.class);
+		List<IconEntity> icons = systemService.loadAll(IconEntity.class);
 		String rootpath = request.getSession().getServletContext().getRealPath("/");
 		String csspath = request.getSession().getServletContext().getRealPath("/plug-in/accordion/css/icons.css");
 		// 清空CSS文件内容
 		clearFile(csspath);
-		for (TSIcon c : icons) {
+		for (IconEntity c : icons) {
 			File file = new File(rootpath + c.getIconPath());
 			if (!file.exists()) {
 				byte[] content = c.getIconContent();
@@ -236,11 +234,11 @@ public class IconController extends BaseController {
 	 */
 	@RequestMapping(params = "del")
 	@ResponseBody
-	public AjaxJson del(TSIcon icon, HttpServletRequest request) {
+	public AjaxJson del(IconEntity icon, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		
-		icon = systemService.getEntity(TSIcon.class, icon.getId());
+		icon = systemService.getEntity(IconEntity.class, icon.getId());
 		
 		boolean isPermit=isPermitDel(icon);
 		
@@ -267,25 +265,25 @@ public class IconController extends BaseController {
 	 * @param icon 图标。
 	 * @return true允许；false不允许；
 	 */
-	private boolean isPermitDel(TSIcon icon) {
-		List<TSFunction> functions = systemService.findByProperty(TSFunction.class, "TSIcon.id", icon.getId());
+	private boolean isPermitDel(IconEntity icon) {
+		List<FunctionEntity> functions = systemService.findByProperty(FunctionEntity.class, "TSIcon.id", icon.getId());
 		if (functions==null||functions.isEmpty()) {
 			return true;
 		}
 		return false;
 	}
 
-	public void upEntity(TSIcon icon) {
-		List<TSFunction> functions = systemService.findByProperty(TSFunction.class, "TSIcon.id", icon.getId());
+	public void upEntity(IconEntity icon) {
+		List<FunctionEntity> functions = systemService.findByProperty(FunctionEntity.class, "TSIcon.id", icon.getId());
 		if (functions.size() > 0) {
-			for (TSFunction tsFunction : functions) {
+			for (FunctionEntity tsFunction : functions) {
 				tsFunction.setTSIcon(null);
 				systemService.saveOrUpdate(tsFunction);
 			}
 		}
-		List<TSOperation> operations = systemService.findByProperty(TSOperation.class, "TSIcon.id", icon.getId());
+		List<OperationEntity> operations = systemService.findByProperty(OperationEntity.class, "TSIcon.id", icon.getId());
 		if (operations.size() > 0) {
-			for (TSOperation tsOperation : operations) {
+			for (OperationEntity tsOperation : operations) {
 				tsOperation.setTSIcon(null);
 				systemService.saveOrUpdate(tsOperation);
 			}
@@ -300,9 +298,9 @@ public class IconController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdate")
-	public ModelAndView addorupdate(TSIcon icon, HttpServletRequest req) {
+	public ModelAndView addorupdate(IconEntity icon, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(icon.getId())) {
-			icon = systemService.getEntity(TSIcon.class, icon.getId());
+			icon = systemService.getEntity(IconEntity.class, icon.getId());
 			req.setAttribute("icon", icon);
 		}
 		return new ModelAndView("system/icon/icons");
@@ -316,11 +314,11 @@ public class IconController extends BaseController {
 	 */
 	@RequestMapping(params = "updateInfo")
 	@ResponseBody
-	public AjaxJson updateInfo(TSIcon icon, HttpServletRequest request) {
+	public AjaxJson updateInfo(IconEntity icon, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		try {
-			TSIcon iconOld= systemService.getEntity(TSIcon.class, icon.getId());
+			IconEntity iconOld= systemService.getEntity(IconEntity.class, icon.getId());
 			iconOld.setIconName(icon.getIconName());
 			iconOld.setIconType(icon.getIconType());
 			this.systemService.updateEntitie(iconOld);

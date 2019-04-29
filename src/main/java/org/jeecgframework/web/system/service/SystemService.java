@@ -3,13 +3,7 @@ package org.jeecgframework.web.system.service;
 import java.util.List;
 import java.util.Set;
 
-import org.jeecgframework.web.system.pojo.base.DictEntity;
-import org.jeecgframework.web.system.pojo.base.TSFunction;
-import org.jeecgframework.web.system.pojo.base.TSIcon;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
-import org.jeecgframework.web.system.pojo.base.TSType;
-import org.jeecgframework.web.system.pojo.base.TSTypegroup;
-import org.jeecgframework.web.system.pojo.base.TSUser;
+import org.jeecgframework.web.system.pojo.base.*;
 import org.jeecgframework.core.common.service.CommonService;
 
 /**
@@ -36,7 +30,7 @@ public interface SystemService extends CommonService{
 	 * @return
 	 * @throws Exception
 	 */
-	public TSUser checkUserExits(TSUser user) throws Exception;
+	public UserEntity checkUserExits(UserEntity user) throws Exception;
 	/**
 	 * 日志添加
 	 * @param LogContent 内容
@@ -51,14 +45,14 @@ public interface SystemService extends CommonService{
 	 * @param typename
 	 * @return
 	 */
-	public TSType getType(String typecode,String typename,TSTypegroup tsTypegroup);
+	public TypeEntity getType(String typecode, String typename, TypeGroupEntity tsTypegroup);
 	/**
 	 * 根据类型分组编码和名称获取TypeGroup,如果为空则创建一个
 	 * @param typecode
 	 * @param typename
 	 * @return
 	 */
-	public TSTypegroup getTypeGroup(String typegroupcode,String typgroupename);
+	public TypeGroupEntity getTypeGroup(String typegroupcode,String typgroupename);
 	
 	/**
 	 * 获取页面控件权限控制的
@@ -73,7 +67,7 @@ public interface SystemService extends CommonService{
 	 * @param typegroupCode
 	 * @return
 	 */
-	public TSTypegroup getTypeGroupByCode(String typegroupCode);
+	public TypeGroupEntity getTypeGroupByCode(String typegroupCode);
 	/**
 	 * 对数据字典进行缓存
 	 */
@@ -83,7 +77,7 @@ public interface SystemService extends CommonService{
 	 * 刷新字典缓存
 	 * @param type
 	 */
-	public void refleshTypesCach(TSType type);
+	public void refleshTypesCach(TypeEntity type);
 	/**
 	 * 刷新字典分组缓存
 	 */
@@ -100,7 +94,7 @@ public interface SystemService extends CommonService{
 	 *
 	 * @param id
 	 */
-	public void flushRoleFunciton(String id, TSFunction newFunciton);
+	public void flushRoleFunciton(String id, FunctionEntity newFunciton);
 
     /**
      * 生成组织机构编码
@@ -141,12 +135,12 @@ public interface SystemService extends CommonService{
 	 * 更新图标
 	 * @param icon
 	 */
-	public  void upTSIcons(TSIcon icon);
+	public  void upTSIcons(IconEntity icon);
 	/**
 	 * 删除图标
 	 * @param icon
 	 */
-	public  void delTSIcons(TSIcon icon);
+	public  void delTSIcons(IconEntity icon);
 
 	/**
 	 * 添加数据日志
@@ -188,7 +182,7 @@ public interface SystemService extends CommonService{
 	 * 【AuthInterceptor】获取登录用户的页面控件权限
 	 */
 
-	public List<TSOperation> getLoginOperationsByUserId(String userId,String functionId, String orgId);
+	public List<OperationEntity> getLoginOperationsByUserId(String userId,String functionId, String orgId);
 
 	
 	/**

@@ -22,22 +22,9 @@ import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.dao.JeecgDictDao;
-import org.jeecgframework.web.system.pojo.base.DictEntity;
-import org.jeecgframework.web.system.pojo.base.TSDatalogEntity;
-import org.jeecgframework.web.system.pojo.base.TSDepartAuthGroupEntity;
-import org.jeecgframework.web.system.pojo.base.TSDepartAuthgFunctionRelEntity;
-import org.jeecgframework.web.system.pojo.base.TSFunction;
-import org.jeecgframework.web.system.pojo.base.TSIcon;
-import org.jeecgframework.web.system.pojo.base.TSLog;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
-import org.jeecgframework.web.system.pojo.base.TSRole;
-import org.jeecgframework.web.system.pojo.base.TSRoleFunction;
-import org.jeecgframework.web.system.pojo.base.TSRoleOrg;
-import org.jeecgframework.web.system.pojo.base.TSRoleUser;
-import org.jeecgframework.web.system.pojo.base.TSType;
-import org.jeecgframework.web.system.pojo.base.TSTypegroup;
-import org.jeecgframework.web.system.pojo.base.TSUser;
-import org.jeecgframework.web.system.service.CacheServiceI;
+import org.jeecgframework.web.system.pojo.base.*;
+import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.service.CacheService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.util.OrgConstants;
 import org.slf4j.Logger;
@@ -54,13 +41,15 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	@Autowired
 	private JeecgDictDao jeecgDictDao;
 	@Autowired
-	private CacheServiceI cacheService;
+	private CacheService cacheService;
 
+	@Override
 	@Transactional(readOnly = true)
-	public TSUser checkUserExits(TSUser user) throws Exception {
+	public UserEntity checkUserExits(UserEntity user) throws Exception {
 		return this.commonDao.getUserByUserIdAndUserNameExits(user);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<DictEntity> queryDict(String dicTable, String dicCode,String dicText){
 		List<DictEntity> dictList = null;
@@ -80,10 +69,11 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	/**
 	 * 添加日志
 	 */
+	@Override
 	public void addLog(String logcontent, Short operatetype, Short loglevel) {
 		HttpServletRequest request = ContextHolderUtils.getRequest();
 		String broswer = BrowserUtils.checkBrowse(request);
-		TSLog log = new TSLog();
+		LogEntity log = new LogEntity();
 		log.setLogcontent(logcontent);
 		log.setLoglevel(loglevel);
 		log.setOperatetype(operatetype);
@@ -96,7 +86,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		/* end dangzhenghui 201703016TASK #1784 【online bug】Online 表单保存的时候，报错*/
 //		log.setTSUser(ResourceUtil.getSessionUser());
 		/*start chenqian 201708031TASK #2317 【改造】系统日志表，增加两个字段，避免关联查询 [操作人账号] [操作人名字]*/
-		TSUser u = ResourceUtil.getSessionUser();
+		UserEntity u = ResourceUtil.getSessionUser();
 		if(u!=null){
 			log.setUserid(u.getId());
 			log.setUsername(u.getUserName());
@@ -113,13 +103,14 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	 * @param typename
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
-	public TSType getType(String typecode, String typename, TSTypegroup tsTypegroup) {
+	public TypeEntity getType(String typecode, String typename, TypeGroupEntity tsTypegroup) {
 		//TSType actType = commonDao.findUniqueByProperty(TSType.class, "typecode", typecode,tsTypegroup.getId());
-		List<TSType> ls = commonDao.findHql("from TSType where typecode = ? and typegroupid = ?",typecode,tsTypegroup.getId());
-		TSType actType = null;
+		List<TypeEntity> ls = commonDao.findHql("from TypeEntity where typecode = ? and typegroupid = ?",typecode,tsTypegroup.getId());
+		TypeEntity actType = null;
 		if (ls == null || ls.size()==0) {
-			actType = new TSType();
+			actType = new TypeEntity();
 			actType.setTypecode(typecode);
 			actType.setTypename(typename);
 			actType.setTSTypegroup(tsTypegroup);
@@ -133,16 +124,14 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 
 	/**
 	 * 根据类型分组编码和名称获取TypeGroup,如果为空则创建一个
-	 *
-	 * @param typecode
-	 * @param typename
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
-	public TSTypegroup getTypeGroup(String typegroupcode, String typgroupename) {
-		TSTypegroup tsTypegroup = commonDao.findUniqueByProperty(TSTypegroup.class, "typegroupcode", typegroupcode);
+	public TypeGroupEntity getTypeGroup(String typegroupcode, String typgroupename) {
+		TypeGroupEntity tsTypegroup = commonDao.findUniqueByProperty(TypeGroupEntity.class, "typegroupcode", typegroupcode);
 		if (tsTypegroup == null) {
-			tsTypegroup = new TSTypegroup();
+			tsTypegroup = new TypeGroupEntity();
 			tsTypegroup.setTypegroupcode(typegroupcode);
 			tsTypegroup.setTypegroupname(typgroupename);
 			commonDao.save(tsTypegroup);
@@ -151,22 +140,23 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	}
 
 	@Transactional(readOnly = true)
-	public TSTypegroup getTypeGroupByCode(String typegroupCode) {
-		TSTypegroup tsTypegroup = commonDao.findUniqueByProperty(TSTypegroup.class, "typegroupcode", typegroupCode);
+	public TypeGroupEntity getTypeGroupByCode(String typegroupCode) {
+		TypeGroupEntity tsTypegroup = commonDao.findUniqueByProperty(TypeGroupEntity.class, "typegroupcode", typegroupCode);
 		return tsTypegroup;
 	}
 
 
+	@Override
 	@Transactional(readOnly = true)
 	public void initAllTypeGroups() {
-		List<TSTypegroup> typeGroups = this.commonDao.loadAll(TSTypegroup.class);
-		Map<String, TSTypegroup> typeGroupsList = new HashMap<String, TSTypegroup>();
-		Map<String, List<TSType>> typesList = new HashMap<String, List<TSType>>();
-		for (TSTypegroup tsTypegroup : typeGroups) {
+		List<TypeGroupEntity> typeGroups = this.commonDao.loadAll(TypeGroupEntity.class);
+		Map<String, TypeGroupEntity> typeGroupsList = new HashMap<String, TypeGroupEntity>();
+		Map<String, List<TypeEntity>> typesList = new HashMap<String, List<TypeEntity>>();
+		for (TypeGroupEntity tsTypegroup : typeGroups) {
 			tsTypegroup.setTSTypes(null);
 			typeGroupsList.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
-			List<TSType> types = this.commonDao.findHql("from TSType where TSTypegroup.id = ? order by orderNum" , tsTypegroup.getId());
-			for(TSType t:types){
+			List<TypeEntity> types = this.commonDao.findHql("from TypeEntity where TSTypegroup.id = ? order by orderNum" , tsTypegroup.getId());
+			for(TypeEntity t:types){
 				t.setTSType(null);
 				t.setTSTypegroup(null);
 				t.setTSTypes(null);
@@ -174,30 +164,30 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			typesList.put(tsTypegroup.getTypegroupcode().toLowerCase(), types);
 		}
 		
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.DICT_TYPE_GROUPS_KEY,typeGroupsList);
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY,typesList);
+		cacheService.put(CacheService.FOREVER_CACHE,ResourceUtil.DICT_TYPE_GROUPS_KEY,typeGroupsList);
+		cacheService.put(CacheService.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY,typesList);
 		
 		logger.info("  ------ 初始化字典组 【系统缓存】-----------typeGroupsList-----size: [{}]",typeGroupsList.size());
 		logger.info("  ------ 初始化字典 【系统缓存】-----------typesList-----size: [{}]",typesList.size());
 	}
 
 	@Transactional(readOnly = true)
-	public void refleshTypesCach(TSType type) {
-		Map<String, List<TSType>> typesList = null;
-		TSTypegroup result = null;
-		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY);
+	public void refleshTypesCach(TypeEntity type) {
+		Map<String, List<TypeEntity>> typesList = null;
+		TypeGroupEntity result = null;
+		Object obj = cacheService.get(CacheService.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY);
 		if(obj!=null){
-			typesList = (Map<String, List<TSType>>) obj;
+			typesList = (Map<String, List<TypeEntity>>) obj;
 		}else{
-			typesList = new HashMap<String, List<TSType>>();
+			typesList = new HashMap<String, List<TypeEntity>>();
 		}
-		TSTypegroup tsTypegroup = type.getTSTypegroup();
-		TSTypegroup typeGroupEntity = this.commonDao.get(TSTypegroup.class, tsTypegroup.getId());
+		TypeGroupEntity tsTypegroup = type.getTSTypegroup();
+		TypeGroupEntity typeGroupEntity = this.commonDao.get(TypeGroupEntity.class, tsTypegroup.getId());
 
-		List<TSType> tempList = this.commonDao.findHql("from TSType where TSTypegroup.id = ? order by orderNum" , tsTypegroup.getId());
-		List<TSType> types = new ArrayList<TSType>();
-		for(TSType t:tempList){
-			TSType tt = new TSType();
+		List<TypeEntity> tempList = this.commonDao.findHql("from TypeEntity where TSTypegroup.id = ? order by orderNum" , tsTypegroup.getId());
+		List<TypeEntity> types = new ArrayList<TypeEntity>();
+		for(TypeEntity t:tempList){
+			TypeEntity tt = new TypeEntity();
 			tt.setTSType(null);
 			tt.setTSTypegroup(null);
 			tt.setTSTypes(null);
@@ -209,24 +199,26 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		}
 
 		typesList.put(typeGroupEntity.getTypegroupcode().toLowerCase(), types);
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY,typesList);
+		cacheService.put(CacheService.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY,typesList);
 		logger.info("  ------ 重置字典缓存【系统缓存】  ----------- typegroupcode: [{}] ",typeGroupEntity.getTypegroupcode().toLowerCase());
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public void refleshTypeGroupCach() {
-		Map<String, TSTypegroup> typeGroupsList = new HashMap<String, TSTypegroup>();
-		List<TSTypegroup> typeGroups = this.commonDao.loadAll(TSTypegroup.class);
-		for (TSTypegroup tsTypegroup : typeGroups) {
+		Map<String, TypeGroupEntity> typeGroupsList = new HashMap<String, TypeGroupEntity>();
+		List<TypeGroupEntity> typeGroups = this.commonDao.loadAll(TypeGroupEntity.class);
+		for (TypeGroupEntity tsTypegroup : typeGroups) {
 			typeGroupsList.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
 		}
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.DICT_TYPE_GROUPS_KEY,typeGroupsList);
+		cacheService.put(CacheService.FOREVER_CACHE,ResourceUtil.DICT_TYPE_GROUPS_KEY,typeGroupsList);
 		logger.info("  ------ 重置字典分组缓存&字典缓存【系统缓存】  ------ refleshTypeGroupCach --------  ");
 	}
 	
 	/**
 	 * 刷新字典分组缓存&字典缓存
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public void refreshTypeGroupAndTypes() {
 		logger.info("  ------ 重置字典分组缓存&字典缓存【系统缓存】  ------ refreshTypeGroupAndTypes --------  ");
@@ -240,17 +232,18 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	 * @param functionId
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public Set<String> getOperationCodesByRoleIdAndFunctionId(String roleId, String functionId) {
 		Set<String> operationCodes = new HashSet<String>();
-		TSRole role = commonDao.get(TSRole.class, roleId);
-		CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
+		RoleEntity role = commonDao.get(RoleEntity.class, roleId);
+		CriteriaQuery cq1 = new CriteriaQuery(RoleFunctionEntity.class);
 		cq1.eq("TSRole.id", role.getId());
 		cq1.eq("TSFunction.id", functionId);
 		cq1.add();
-		List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+		List<RoleFunctionEntity> rFunctions = getListByCriteriaQuery(cq1, false);
 		if (null != rFunctions && rFunctions.size() > 0) {
-			TSRoleFunction tsRoleFunction = rFunctions.get(0);
+			RoleFunctionEntity tsRoleFunction = rFunctions.get(0);
 			if (null != tsRoleFunction.getOperation()) {
 				String[] operationArry = tsRoleFunction.getOperation().split(",");
 				for (int i = 0; i < operationArry.length; i++) {
@@ -265,8 +258,8 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	/**
 	 * 获取页面控件权限控制的
 	 * JS片段
-	 * @param out
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public String getAuthFilterJS() {
 		StringBuilder out = new StringBuilder();
@@ -281,7 +274,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 				for (String MyoperationCode : operationCodes) {
 					if (oConvertUtils.isEmpty(MyoperationCode))
 						break;
-					TSOperation operation = this.getEntity(TSOperation.class, MyoperationCode);
+					OperationEntity operation = this.getEntity(OperationEntity.class, MyoperationCode);
 					if (operation.getOperationcode().startsWith(".") || operation.getOperationcode().startsWith("#")){
 						if (operation.getOperationType().intValue()==Globals.OPERATION_TYPE_HIDE){
 							//out.append("$(\""+name+"\").find(\"#"+operation.getOperationcode().replaceAll(" ", "")+"\").hide();");
@@ -303,20 +296,21 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		return out.toString();
 	}
 	
+	@Override
 	@Transactional(readOnly = true)
-	public void flushRoleFunciton(String id, TSFunction newFunction) {
-		TSFunction functionEntity = this.getEntity(TSFunction.class, id);
+	public void flushRoleFunciton(String id, FunctionEntity newFunction) {
+		FunctionEntity functionEntity = this.getEntity(FunctionEntity.class, id);
 		if (functionEntity.getTSIcon() == null || !StringUtil.isNotEmpty(functionEntity.getTSIcon().getId())) {
 			return;
 		}
-		TSIcon oldIcon = this.getEntity(TSIcon.class, functionEntity.getTSIcon().getId());
+		IconEntity oldIcon = this.getEntity(IconEntity.class, functionEntity.getTSIcon().getId());
 		if (!oldIcon.getIconClas().equals(newFunction.getTSIcon().getIconClas())) {
 			// 刷新缓存
 			HttpSession session = ContextHolderUtils.getSession();
-			TSUser user = ResourceUtil.getSessionUser();
-			List<TSRoleUser> rUsers = this.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
-			for (TSRoleUser ru : rUsers) {
-				TSRole role = ru.getTSRole();
+			UserEntity user = ResourceUtil.getSessionUser();
+			List<RoleUserEntity> rUsers = this.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
+			for (RoleUserEntity ru : rUsers) {
+				RoleEntity role = ru.getTSRole();
 				session.removeAttribute(role.getId());
 			}
 		}
@@ -360,17 +354,18 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
         return newOrgCode;
     }
 
+	@Override
 	@Transactional(readOnly = true)
 	public Set<String> getDataRuleIdsByRoleIdAndFunctionId(String roleId,String functionId) {
 		Set<String> operationCodes = new HashSet<String>();
-		TSRole role = commonDao.get(TSRole.class, roleId);
-		CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
+		RoleEntity role = commonDao.get(RoleEntity.class, roleId);
+		CriteriaQuery cq1 = new CriteriaQuery(RoleFunctionEntity.class);
 		cq1.eq("TSRole.id", role.getId());
 		cq1.eq("TSFunction.id", functionId);
 		cq1.add();
-		List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+		List<RoleFunctionEntity> rFunctions = getListByCriteriaQuery(cq1, false);
 		if (null != rFunctions && rFunctions.size() > 0) {
-			TSRoleFunction tsRoleFunction = rFunctions.get(0);
+			RoleFunctionEntity tsRoleFunction = rFunctions.get(0);
 			if (null != tsRoleFunction.getDataRule()) {
 				String[] operationArry = tsRoleFunction.getDataRule().split(",");
 				for (int i = 0; i < operationArry.length; i++) {
@@ -385,10 +380,11 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	 * 加载所有图标
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public  void initAllTSIcons() {
-		List<TSIcon> list = this.loadAll(TSIcon.class);
-		for (TSIcon tsIcon : list) {
+		List<IconEntity> list = this.loadAll(IconEntity.class);
+		for (IconEntity tsIcon : list) {
 			ResourceUtil.allTSIcons.put(tsIcon.getId(), tsIcon);
 		}
 	}
@@ -396,14 +392,16 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	 * 更新图标
 	 * @param icon
 	 */
-	public void upTSIcons(TSIcon icon) {
+	@Override
+	public void upTSIcons(IconEntity icon) {
 		ResourceUtil.allTSIcons.put(icon.getId(), icon);
 	}
 	/**
 	 * 更新图标
 	 * @param icon
 	 */
-	public void delTSIcons(TSIcon icon) {
+	@Override
+	public void delTSIcons(IconEntity icon) {
 		ResourceUtil.allTSIcons.remove(icon.getId());
 	}
 
@@ -423,7 +421,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			versionNumber = integer.intValue();
 		}
 
-		TSDatalogEntity tsDatalogEntity = new TSDatalogEntity();
+		DataLogEntity tsDatalogEntity = new DataLogEntity();
 		tsDatalogEntity.setTableName(tableName);
 		tsDatalogEntity.setDataId(dataId);
 		tsDatalogEntity.setDataContent(dataContent);
@@ -442,16 +440,16 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	@Transactional(readOnly = true)
 	public Set<String> getDepartAuthGroupOperationSet(String groupId,String functionId,String type) {
 		Set<String> operationCodes = new HashSet<String>();
-		TSDepartAuthGroupEntity functionGroup = null;
+		DepartAuthGroupEntity functionGroup = null;
 		if(OrgConstants.GROUP_DEPART_ROLE.equals(type)) {
-			TSRole role = commonDao.get(TSRole.class, groupId);
-			CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
+			RoleEntity role = commonDao.get(RoleEntity.class, groupId);
+			CriteriaQuery cq1 = new CriteriaQuery(RoleFunctionEntity.class);
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> functionGroups = getListByCriteriaQuery(cq1, false);
+			List<RoleFunctionEntity> functionGroups = getListByCriteriaQuery(cq1, false);
 			if (null != functionGroups && functionGroups.size() > 0) {
-				TSRoleFunction tsFunctionGroup = functionGroups.get(0);
+				RoleFunctionEntity tsFunctionGroup = functionGroups.get(0);
 				if (null != tsFunctionGroup.getOperation()) {
 					String[] operationArry = tsFunctionGroup.getOperation().split(",");
 					for (int i = 0; i < operationArry.length; i++) {
@@ -460,14 +458,14 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 				}
 			}
 		} else {
-			functionGroup = commonDao.get(TSDepartAuthGroupEntity.class, groupId);
-			CriteriaQuery cq1 = new CriteriaQuery(TSDepartAuthgFunctionRelEntity.class);
+			functionGroup = commonDao.get(DepartAuthGroupEntity.class, groupId);
+			CriteriaQuery cq1 = new CriteriaQuery(DepartAuthgFunctionRelEntity.class);
 			cq1.eq("tsDepartAuthGroup.id", functionGroup.getId());
 			cq1.eq("tsFunction.id", functionId);
 			cq1.add();
-			List<TSDepartAuthgFunctionRelEntity> functionGroups = getListByCriteriaQuery(cq1, false);
+			List<DepartAuthgFunctionRelEntity> functionGroups = getListByCriteriaQuery(cq1, false);
 			if (null != functionGroups && functionGroups.size() > 0) {
-				TSDepartAuthgFunctionRelEntity tsFunctionGroup = functionGroups.get(0);
+				DepartAuthgFunctionRelEntity tsFunctionGroup = functionGroups.get(0);
 				if (null != tsFunctionGroup.getOperation()) {
 					String[] operationArry = tsFunctionGroup.getOperation().split(",");
 					for (int i = 0; i < operationArry.length; i++) {
@@ -490,16 +488,16 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	@Transactional(readOnly = true)
 	public Set<String> getDepartAuthGroupDataRuleSet(String groupId, String functionId,String type) {
 		Set<String> dataRuleCodes = new HashSet<String>();
-		TSDepartAuthGroupEntity functionGroup = null;
+		DepartAuthGroupEntity functionGroup = null;
 		if(OrgConstants.GROUP_DEPART_ROLE.equals(type)) {
-			TSRole role = commonDao.get(TSRole.class, groupId);
-			CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
+			RoleEntity role = commonDao.get(RoleEntity.class, groupId);
+			CriteriaQuery cq1 = new CriteriaQuery(RoleFunctionEntity.class);
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> functionGroups = getListByCriteriaQuery(cq1, false);
+			List<RoleFunctionEntity> functionGroups = getListByCriteriaQuery(cq1, false);
 			if (null != functionGroups && functionGroups.size() > 0) {
-				TSRoleFunction tsFunctionGroup = functionGroups.get(0);
+				RoleFunctionEntity tsFunctionGroup = functionGroups.get(0);
 				if (null != tsFunctionGroup.getDataRule()) {
 					String[] dataRuleArry = tsFunctionGroup.getDataRule().split(",");
 					for (int i = 0; i < dataRuleArry.length; i++) {
@@ -508,14 +506,14 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 				}
 			}
 		} else {
-			functionGroup = commonDao.get(TSDepartAuthGroupEntity.class, groupId);
-			CriteriaQuery cq1 = new CriteriaQuery(TSDepartAuthgFunctionRelEntity.class);
+			functionGroup = commonDao.get(DepartAuthGroupEntity.class, groupId);
+			CriteriaQuery cq1 = new CriteriaQuery(DepartAuthgFunctionRelEntity.class);
 			cq1.eq("tsDepartAuthGroup.id", functionGroup.getId());
 			cq1.eq("tsFunction.id", functionId);
 			cq1.add();
-			List<TSDepartAuthgFunctionRelEntity> functionGroups = getListByCriteriaQuery(cq1, false);
+			List<DepartAuthgFunctionRelEntity> functionGroups = getListByCriteriaQuery(cq1, false);
 			if (null != functionGroups && functionGroups.size() > 0) {
-				TSDepartAuthgFunctionRelEntity tsFunctionGroup = functionGroups.get(0);
+				DepartAuthgFunctionRelEntity tsFunctionGroup = functionGroups.get(0);
 				if (null != tsFunctionGroup.getDatarule()) {
 					String[] dataRuleArry = tsFunctionGroup.getDatarule().split(",");
 					for (int i = 0; i < dataRuleArry.length; i++) {
@@ -547,7 +545,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		if(realRequestPath.indexOf("autoFormController/af/")>-1 && realRequestPath.indexOf("?")!=-1){
 			realRequestPath = realRequestPath.substring(0, realRequestPath.indexOf("?"));
 		}
-		List<TSFunction> functions = this.findByProperty(TSFunction.class, "functionUrl", realRequestPath);
+		List<FunctionEntity> functions = this.findByProperty(FunctionEntity.class, "functionUrl", realRequestPath);
 		if (functions.size()>0){
 			functionId = functions.get(0).getId();
 		}
@@ -563,6 +561,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	 * @param orgId   			用户登录机构ID
 	 * @return
 	 */
+	@Override
 	@Ehcache(cacheName="sysAuthCache")
 	public boolean loginUserIsHasMenuAuth(String requestPath,String clickFunctionId,String userid,String orgId){
         //step.1 先判断请求是否配置菜单，没有配置菜单默认不作权限控制[注意：这里不限制权限类型菜单]
@@ -599,16 +598,16 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	@Transactional(readOnly = true)
 	public Set<String> getLoginDataRuleIdsByUserId(String userId,String functionId,String orgId) {
 		Set<String> dataRuleIds = new HashSet<String>();
-		List<TSRoleUser> rUsers = findByProperty(TSRoleUser.class, "TSUser.id", userId);
-		for (TSRoleUser ru : rUsers) {
-			TSRole role = ru.getTSRole();
-			CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
+		List<RoleUserEntity> rUsers = findByProperty(RoleUserEntity.class, "TSUser.id", userId);
+		for (RoleUserEntity ru : rUsers) {
+			RoleEntity role = ru.getTSRole();
+			CriteriaQuery cq1 = new CriteriaQuery(RoleFunctionEntity.class);
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+			List<RoleFunctionEntity> rFunctions = getListByCriteriaQuery(cq1, false);
 			if (null != rFunctions && rFunctions.size() > 0) {
-				TSRoleFunction tsRoleFunction = rFunctions.get(0);
+				RoleFunctionEntity tsRoleFunction = rFunctions.get(0);
 				if (oConvertUtils.isNotEmpty(tsRoleFunction.getDataRule())) {
 					String[] dataRuleArry = tsRoleFunction.getDataRule().split(",");
 					for (int i = 0; i < dataRuleArry.length; i++) {
@@ -618,16 +617,16 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			}
 		}
 
-		List<TSRoleOrg> tsRoleOrg = findByProperty(TSRoleOrg.class, "tsDepart.id", orgId);
-		for (TSRoleOrg roleOrg : tsRoleOrg) {
-			TSRole role = roleOrg.getTsRole();
-			CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
+		List<RoleOrgEntity> tsRoleOrg = findByProperty(RoleOrgEntity.class, "tsDepart.id", orgId);
+		for (RoleOrgEntity roleOrg : tsRoleOrg) {
+			RoleEntity role = roleOrg.getTsRole();
+			CriteriaQuery cq1 = new CriteriaQuery(RoleFunctionEntity.class);
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+			List<RoleFunctionEntity> rFunctions = getListByCriteriaQuery(cq1, false);
 			if (null != rFunctions && rFunctions.size() > 0) {
-				TSRoleFunction tsRoleFunction = rFunctions.get(0);
+				RoleFunctionEntity tsRoleFunction = rFunctions.get(0);
 				if (oConvertUtils.isNotEmpty(tsRoleFunction.getDataRule())) {
 					String[] dataRuleArry = tsRoleFunction.getDataRule().split(",");
 					for (int i = 0; i < dataRuleArry.length; i++) {
@@ -650,23 +649,23 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	@Override
 	@Ehcache(cacheName="sysAuthCache")
 	@Transactional(readOnly = true)
-	public List<TSOperation> getLoginOperationsByUserId(String userId, String functionId, String orgId) {
-		String hql="FROM TSOperation where functionid = ?";
-		List<TSOperation> operations = findHql(hql,functionId);
+	public List<OperationEntity> getLoginOperationsByUserId(String userId, String functionId, String orgId) {
+		String hql="FROM OperationEntity where functionid = ?";
+		List<OperationEntity> operations = findHql(hql,functionId);
 		if(operations == null || operations.size()<1){
 			return null;
 		}
-		List<TSRoleUser> rUsers = findByProperty(TSRoleUser.class, "TSUser.id", userId);
+		List<RoleUserEntity> rUsers = findByProperty(RoleUserEntity.class, "TSUser.id", userId);
 		
-		for(TSRoleUser ru : rUsers){
-			TSRole role = ru.getTSRole();
-			CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
+		for(RoleUserEntity ru : rUsers){
+			RoleEntity role = ru.getTSRole();
+			CriteriaQuery cq1 = new CriteriaQuery(RoleFunctionEntity.class);
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+			List<RoleFunctionEntity> rFunctions = getListByCriteriaQuery(cq1, false);
 			if (null != rFunctions && rFunctions.size() > 0) {
-				TSRoleFunction tsRoleFunction = rFunctions.get(0);
+				RoleFunctionEntity tsRoleFunction = rFunctions.get(0);
 				if (oConvertUtils.isNotEmpty(tsRoleFunction.getOperation())) {
 					String[] operationArry = tsRoleFunction.getOperation().split(",");
 					for (int i = 0; i < operationArry.length; i++) {
@@ -681,16 +680,16 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			}
 		}
 
-		List<TSRoleOrg> tsRoleOrgs = findByProperty(TSRoleOrg.class, "tsDepart.id", orgId);
-		for (TSRoleOrg tsRoleOrg : tsRoleOrgs) {
-			TSRole role = tsRoleOrg.getTsRole();
-			CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
+		List<RoleOrgEntity> tsRoleOrgs = findByProperty(RoleOrgEntity.class, "tsDepart.id", orgId);
+		for (RoleOrgEntity tsRoleOrg : tsRoleOrgs) {
+			RoleEntity role = tsRoleOrg.getTsRole();
+			CriteriaQuery cq1 = new CriteriaQuery(RoleFunctionEntity.class);
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+			List<RoleFunctionEntity> rFunctions = getListByCriteriaQuery(cq1, false);
 			if (null != rFunctions && rFunctions.size() > 0) {
-				TSRoleFunction tsRoleFunction = rFunctions.get(0);
+				RoleFunctionEntity tsRoleFunction = rFunctions.get(0);
 				if (oConvertUtils.isNotEmpty(tsRoleFunction.getOperation())) {
 					String[] operationArry = tsRoleFunction.getOperation().split(",");
 					for (int i = 0; i < operationArry.length; i++) {

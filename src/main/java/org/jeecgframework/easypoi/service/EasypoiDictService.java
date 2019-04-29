@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.web.system.dao.JeecgDictDao;
 import org.jeecgframework.web.system.pojo.base.DictEntity;
-import org.jeecgframework.web.system.service.MutiLangServiceI;
+import org.jeecgframework.web.system.service.MutiLangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class EasypoiDictService implements EasypoiDictServiceI {
 	@Autowired
 	private JeecgDictDao jeecgDictDao;
 	@Autowired
-	private MutiLangServiceI mutiLangService;
+	private MutiLangService mutiLangService;
 	
 	/**
 	 * 通过字典查询easypoi，所需字典文本

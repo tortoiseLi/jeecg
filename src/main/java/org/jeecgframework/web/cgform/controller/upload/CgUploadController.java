@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jeecgframework.web.cgform.entity.upload.CgUploadEntity;
 import org.jeecgframework.web.cgform.service.upload.CgUploadServiceI;
-import org.jeecgframework.web.system.pojo.base.TSAttachment;
+import org.jeecgframework.web.system.pojo.base.AttachmentEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -194,7 +194,7 @@ public class CgUploadController extends BaseController {
 					String myfilename=noextfilename+"."+extend;//自定义文件名称
 					String savePath = realPath + myfilename;// 文件保存全路径
 					write2Disk(mf, extend, savePath);
-					TSAttachment attachment = new TSAttachment();
+					AttachmentEntity attachment = new AttachmentEntity();
 					attachment.setId(UUID.randomUUID().toString().replace("-", ""));
 					attachment.setAttachmenttitle(fileName.substring(0,fileName.lastIndexOf(".")));
 					attachment.setCreatedate(new Timestamp(new Date().getTime()));
@@ -292,7 +292,7 @@ public class CgUploadController extends BaseController {
 			CgUploadEntity file = systemService.getEntity(CgUploadEntity.class, id);
 			if(file==null){
 				//如果关系表中无数据,则表示是情景1
-				TSAttachment attachment = systemService.getEntity(TSAttachment.class, id);
+				AttachmentEntity attachment = systemService.getEntity(AttachmentEntity.class, id);
 				cgUploadService.deleteAttachment(attachment);
 				j.setObj(1);//情景1
 			}else{

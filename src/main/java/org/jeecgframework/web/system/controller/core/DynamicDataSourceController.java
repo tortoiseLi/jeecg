@@ -25,7 +25,7 @@ import org.jeecgframework.core.util.PasswordUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.web.system.pojo.base.DynamicDataSourceEntity;
-import org.jeecgframework.web.system.service.DynamicDataSourceServiceI;
+import org.jeecgframework.web.system.service.DynamicDataSourceService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,7 +51,7 @@ public class DynamicDataSourceController extends BaseController {
 	private static final Logger logger = Logger.getLogger(DynamicDataSourceController.class);
 
 	@Autowired
-	private DynamicDataSourceServiceI dynamicDataSourceService;
+	private DynamicDataSourceService dynamicDataSourceService;
 	@Autowired
 	private SystemService systemService;
 	private String message;

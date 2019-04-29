@@ -9,7 +9,7 @@ import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
+import org.jeecgframework.web.system.pojo.base.OperationEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 /**
@@ -47,7 +47,7 @@ public class HasPermissionTag extends TagSupport{
 				for (String operationCodeId : operationCodeIds) {
 					if (oConvertUtils.isEmpty(operationCodeId))
 						break;
-					TSOperation operation = systemService.getEntity(TSOperation.class, operationCodeId);
+					OperationEntity operation = systemService.getEntity(OperationEntity.class, operationCodeId);
 					if (operation!=null && operation.getOperationcode().equals(code)){
 						return true;
 					}

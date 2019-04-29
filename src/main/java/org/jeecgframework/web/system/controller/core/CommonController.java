@@ -24,9 +24,9 @@ import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.easyui.Autocomplete;
-import org.jeecgframework.web.system.pojo.base.TSAttachment;
+import org.jeecgframework.web.system.pojo.base.AttachmentEntity;
 import org.jeecgframework.web.system.service.SystemService;
-import org.jeecgframework.web.system.service.TSDictTableConfigServiceI;
+import org.jeecgframework.web.system.service.DictTableConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -53,7 +53,7 @@ public class CommonController extends BaseController {
 	private static final Logger logger = Logger.getLogger(CommonController.class);
 	private SystemService systemService;
 	@Autowired
-	private TSDictTableConfigServiceI tSDictTableConfigService;
+	private DictTableConfigService tSDictTableConfigService;
 
 	@Autowired
 	public void setSystemService(SystemService systemService) {
@@ -78,7 +78,7 @@ public class CommonController extends BaseController {
 	@RequestMapping(params = "openViewFile")
 	public ModelAndView openViewFile(HttpServletRequest request) {
 		String fileid = request.getParameter("fileid");
-		String subclassname = oConvertUtils.getString(request.getParameter("subclassname"), "org.jeecgframework.web.system.pojo.base.TSAttachment");
+		String subclassname = oConvertUtils.getString(request.getParameter("subclassname"), "org.jeecgframework.web.system.pojo.base.AttachmentEntity");
 		String contentfield = oConvertUtils.getString(request.getParameter("contentfield"));
 		Class<?> fileClass = MyClassLoader.getClassByScn(subclassname);// 附件的实际类
 		Object fileobj = systemService.getEntity(fileClass, fileid);
@@ -117,7 +117,7 @@ public class CommonController extends BaseController {
 
 		String subclassname = request.getParameter("subclassname");
 		if(oConvertUtils.isEmpty(subclassname)){
-			TSAttachment tsAttachment = systemService.getEntity(TSAttachment.class, fileid);
+			AttachmentEntity tsAttachment = systemService.getEntity(AttachmentEntity.class, fileid);
 			UploadFile uploadFile = new UploadFile(request, response);
 			//byte[] content = tsAttachment.getAttachmentcontent();
 			String path = tsAttachment.getRealpath();;
@@ -129,7 +129,7 @@ public class CommonController extends BaseController {
 			//uploadFile.setContent(content);
 			//uploadFile.setView(true);
 			systemService.viewOrDownloadFile(uploadFile);
-			logger.info("--附件预览----TSAttachment---viewFile-----path--"+path);
+			logger.info("--附件预览----AttachmentEntity---viewFile-----path--"+path);
 		}else{
 			subclassname = oConvertUtils.getString(subclassname);
 			Class<?> fileClass = MyClassLoader.getClassByScn(subclassname);// 自定义附件实体类
@@ -253,7 +253,7 @@ public class CommonController extends BaseController {
 	}
 
 	/**
-	 * 删除继承于TSAttachment附件的公共方法
+	 * 删除继承于AttachmentEntity附件的公共方法
 	 * 	
 	 * @param ids
 	 * @return
@@ -264,7 +264,7 @@ public class CommonController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		String fileKey = oConvertUtils.getString(request.getParameter("fileKey"));// 文件ID
-		TSAttachment attachment = systemService.getEntity(TSAttachment.class,fileKey);
+		AttachmentEntity attachment = systemService.getEntity(AttachmentEntity.class,fileKey);
 		String subclassname = attachment.getSubclassname(); // 子类类名
 		Object objfile = systemService.getEntity(MyClassLoader.getClassByScn(subclassname), attachment.getId());// 子类对象
 		message = "" + attachment.getAttachmenttitle() + "删除成功";
@@ -277,7 +277,7 @@ public class CommonController extends BaseController {
 	}
 
 	/**
-	 * 继承于TSAttachment附件公共列表跳转
+	 * 继承于AttachmentEntity附件公共列表跳转
 	 * 
 	 * @return
 	 */
@@ -285,7 +285,7 @@ public class CommonController extends BaseController {
 	public ModelAndView objfileList(HttpServletRequest request) {
 		Object object = null;// 业务实体对象
 		String fileKey = oConvertUtils.getString(request.getParameter("fileKey"));// 文件ID
-		TSAttachment attachment = systemService.getEntity(TSAttachment.class,fileKey);
+		AttachmentEntity attachment = systemService.getEntity(AttachmentEntity.class,fileKey);
 		String businessKey = oConvertUtils.getString(request.getParameter("businessKey"));// 业务主键
 		String busentityName = oConvertUtils.getString(request.getParameter("busentityName"));// 业务主键
 		String typename = oConvertUtils.getString(request.getParameter("typename"));// 类型
@@ -307,7 +307,7 @@ public class CommonController extends BaseController {
 	}
 
 	/**
-	 * 继承于TSAttachment附件公共列表数据
+	 * 继承于AttachmentEntity附件公共列表数据
 	 */
 	@RequestMapping(params = "objfileGrid")
 	public void objfileGrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {

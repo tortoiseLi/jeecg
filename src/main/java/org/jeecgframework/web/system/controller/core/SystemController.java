@@ -61,17 +61,9 @@ import org.jeecgframework.tag.vo.easyui.TreeGridModel;
 import org.jeecgframework.web.cgform.exception.BusinessException;
 import org.jeecgframework.web.system.manager.ClientManager;
 import org.jeecgframework.web.system.manager.ClientSort;
-import org.jeecgframework.web.system.pojo.base.Client;
-import org.jeecgframework.web.system.pojo.base.DataLogDiff;
-import org.jeecgframework.web.system.pojo.base.DictEntity;
-import org.jeecgframework.web.system.pojo.base.TSDatalogEntity;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.pojo.base.TSFunction;
-import org.jeecgframework.web.system.pojo.base.TSRole;
-import org.jeecgframework.web.system.pojo.base.TSRoleFunction;
-import org.jeecgframework.web.system.pojo.base.TSType;
-import org.jeecgframework.web.system.pojo.base.TSTypegroup;
-import org.jeecgframework.web.system.service.MutiLangServiceI;
+import org.jeecgframework.web.system.pojo.base.*;
+import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,7 +93,7 @@ public class SystemController extends BaseController {
 	private static final Logger logger = Logger.getLogger(SystemController.class);
 	private UserService userService;
 	private SystemService systemService;
-	private MutiLangServiceI mutiLangService;
+	private MutiLangService mutiLangService;
 	@Resource
 	private ClientManager clientManager;
 
@@ -112,7 +104,7 @@ public class SystemController extends BaseController {
 	}
 
 	@Autowired
-	public void setMutiLangService(MutiLangServiceI mutiLangService) {
+	public void setMutiLangService(MutiLangService mutiLangService) {
 		this.mutiLangService = mutiLangService;
 	}
 
@@ -137,13 +129,13 @@ public class SystemController extends BaseController {
 		try {
 			String dicTable = request.getParameter("dicTable");
 			if(oConvertUtils.isEmpty(dicTable)){
-				List<TSType> typeList = ResourceUtil.getCacheTypes(typeGroupName.toLowerCase());
+				List<TypeEntity> typeList = ResourceUtil.getCacheTypes(typeGroupName.toLowerCase());
 				JSONObject headJson = new JSONObject();
 				headJson.put("typecode", "");
 				headJson.put("typename", "");
 				typeArray.add(headJson);
 				if(typeList != null && !typeList.isEmpty()){
-					for (TSType type : typeList) {
+					for (TypeEntity type : typeList) {
 						JSONObject typeJson = new JSONObject();
 						typeJson.put("typecode", type.getTypecode());
 
@@ -189,7 +181,7 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "typeGroupTabs")
 	public ModelAndView typeGroupTabs(HttpServletRequest request) {
-		List<TSTypegroup> typegroupList = systemService.loadAll(TSTypegroup.class);
+		List<TypeGroupEntity> typegroupList = systemService.loadAll(TypeGroupEntity.class);
 		request.setAttribute("typegroupList", typegroupList);
 		return new ModelAndView("system/type/typeGroupTabs");
 	}
@@ -212,7 +204,7 @@ public class SystemController extends BaseController {
 	@RequestMapping(params = "typeList")
 	public ModelAndView typeList(HttpServletRequest request) {
 		String typegroupid = request.getParameter("typegroupid");
-		TSTypegroup typegroup = systemService.getEntity(TSTypegroup.class, typegroupid);
+		TypeGroupEntity typegroup = systemService.getEntity(TypeGroupEntity.class, typegroupid);
 		request.setAttribute("typegroup", typegroup);
 		return new ModelAndView("system/type/typeList");
 	}
@@ -222,13 +214,13 @@ public class SystemController extends BaseController {
 	 */
 
 	@RequestMapping(params = "typeGroupGrid")
-	public void typeGroupGrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid, TSTypegroup typegroup) {
-		CriteriaQuery cq = new CriteriaQuery(TSTypegroup.class, dataGrid);
+	public void typeGroupGrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid, TypeGroupEntity typegroup) {
+		CriteriaQuery cq = new CriteriaQuery(TypeGroupEntity.class, dataGrid);
 
         String typegroupname = request.getParameter("typegroupname");
         if(oConvertUtils.isNotEmpty(typegroupname)) {
             typegroupname = typegroupname.trim();
-            List<String> typegroupnameKeyList = systemService.findByQueryString("select typegroupname from TSTypegroup");
+            List<String> typegroupnameKeyList = systemService.findByQueryString("select typegroupname from TypeGroupEntity");
             if(typegroupname.lastIndexOf("*")==-1){
             	typegroupname = typegroupname + "*";
             }
@@ -258,10 +250,10 @@ public class SystemController extends BaseController {
 	@ResponseBody
 	public List<ComboTree> formTree(HttpServletRequest request,final ComboTree rootCombotree) {
 		String typegroupCode = request.getParameter("typegroupCode");
-		TSTypegroup group = ResourceUtil.getCacheTypeGroup(typegroupCode.toLowerCase());
+		TypeGroupEntity group = ResourceUtil.getCacheTypeGroup(typegroupCode.toLowerCase());
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 
-		for(TSType tsType : ResourceUtil.getCacheTypes(typegroupCode.toLowerCase())){
+		for(TypeEntity tsType : ResourceUtil.getCacheTypes(typegroupCode.toLowerCase())){
 			ComboTree combotree = new ComboTree();
 			combotree.setId(tsType.getTypecode());
 			combotree.setText(tsType.getTypename());
@@ -288,7 +280,7 @@ public class SystemController extends BaseController {
 	public void typeGrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		String typegroupid = request.getParameter("typegroupid");
 		String typename = request.getParameter("typename");
-		CriteriaQuery cq = new CriteriaQuery(TSType.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(TypeEntity.class, dataGrid);
 		cq.eq("TSTypegroup.id", typegroupid);
 		cq.like("typename", typename);
 
@@ -352,11 +344,11 @@ public class SystemController extends BaseController {
 		CriteriaQuery cq;
 		List<TreeGrid> treeGrids = new ArrayList<TreeGrid>();
 		if (treegrid.getId() != null) {
-			cq = new CriteriaQuery(TSType.class);
+			cq = new CriteriaQuery(TypeEntity.class);
 			cq.eq("TSTypegroup.id", treegrid.getId().substring(1));
 			cq.add();
-			List<TSType> typeList = systemService.getListByCriteriaQuery(cq, false);
-			for (TSType obj : typeList) {
+			List<TypeEntity> typeList = systemService.getListByCriteriaQuery(cq, false);
+			for (TypeEntity obj : typeList) {
 				TreeGrid treeNode = new TreeGrid();
 				treeNode.setId("T"+obj.getId());
 				treeNode.setText(obj.getTypename());
@@ -364,7 +356,7 @@ public class SystemController extends BaseController {
 				treeGrids.add(treeNode);
 			}
 		} else {
-			cq = new CriteriaQuery(TSTypegroup.class);
+			cq = new CriteriaQuery(TypeGroupEntity.class);
 
             String typegroupcode = request.getParameter("typegroupcode");
             if(typegroupcode != null ) {
@@ -380,12 +372,12 @@ public class SystemController extends BaseController {
             String typegroupname = request.getParameter("typegroupname");
             if(typegroupname != null && typegroupname.trim().length() > 0) {
                 typegroupname = typegroupname.trim();
-                List<String> typegroupnameKeyList = systemService.findByQueryString("select typegroupname from TSTypegroup");
+                List<String> typegroupnameKeyList = systemService.findByQueryString("select typegroupname from TypeGroupEntity");
                 MutiLangSqlCriteriaUtil.assembleCondition(typegroupnameKeyList, cq, "typegroupname", typegroupname);
             }
 
-            List<TSTypegroup> typeGroupList = systemService.getListByCriteriaQuery(cq, false);
-			for (TSTypegroup obj : typeGroupList) {
+            List<TypeGroupEntity> typeGroupList = systemService.getListByCriteriaQuery(cq, false);
+			for (TypeGroupEntity obj : typeGroupList) {
 				TreeGrid treeNode = new TreeGrid();
 				treeNode.setId("G"+obj.getId());
 				treeNode.setText(obj.getTypegroupname());
@@ -444,11 +436,11 @@ public class SystemController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		if (id.startsWith("G")) {//分组
-			TSTypegroup typegroup = systemService.getEntity(TSTypegroup.class, id.substring(1));
+			TypeGroupEntity typegroup = systemService.getEntity(TypeGroupEntity.class, id.substring(1));
 			message = "数据字典分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + "被删除 成功";
 			systemService.delete(typegroup);
 		} else {
-			TSType type = systemService.getEntity(TSType.class, id.substring(1));
+			TypeEntity type = systemService.getEntity(TypeEntity.class, id.substring(1));
 			message = "数据字典类型: " + mutiLangService.getLang(type.getTypename()) + "被删除 成功";
 			systemService.delete(type);
 		}
@@ -466,10 +458,10 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "delTypeGroup")
 	@ResponseBody
-	public AjaxJson delTypeGroup(TSTypegroup typegroup, HttpServletRequest request) {
+	public AjaxJson delTypeGroup(TypeGroupEntity typegroup, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		typegroup = systemService.getEntity(TSTypegroup.class, typegroup.getId());
+		typegroup = systemService.getEntity(TypeGroupEntity.class, typegroup.getId());
 
 		message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + " 被删除 成功";
         if (ListUtils.isNullOrEmpty(typegroup.getTSTypes())) {
@@ -492,10 +484,10 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "delType")
 	@ResponseBody
-	public AjaxJson delType(TSType type, HttpServletRequest request) {
+	public AjaxJson delType(TypeEntity type, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		type = systemService.getEntity(TSType.class, type.getId());
+		type = systemService.getEntity(TypeEntity.class, type.getId());
 		message = "类型: " + mutiLangService.getLang(type.getTypename()) + "被删除 成功";
 		systemService.delete(type);
 		//刷新缓存
@@ -517,7 +509,7 @@ public class SystemController extends BaseController {
 		ValidForm v = new ValidForm();
 		String typegroupcode=oConvertUtils.getString(request.getParameter("param"));
 		String code=oConvertUtils.getString(request.getParameter("code"));
-		List<TSTypegroup> typegroups=systemService.findByProperty(TSTypegroup.class,"typegroupcode",typegroupcode);
+		List<TypeGroupEntity> typegroups=systemService.findByProperty(TypeGroupEntity.class,"typegroupcode",typegroupcode);
 		if(typegroups.size()>0&&!code.equals(typegroupcode))
 		{
 			v.setInfo("分组已存在");
@@ -556,7 +548,7 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "saveTypeGroup")
 	@ResponseBody
-	public AjaxJson saveTypeGroup(TSTypegroup typegroup, HttpServletRequest request) {
+	public AjaxJson saveTypeGroup(TypeGroupEntity typegroup, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(typegroup.getId())) {
@@ -586,7 +578,7 @@ public class SystemController extends BaseController {
 		String typecode=oConvertUtils.getString(request.getParameter("param"));
 		String code=oConvertUtils.getString(request.getParameter("code"));
 		String typeGroupCode=oConvertUtils.getString(request.getParameter("typeGroupCode"));
-		StringBuilder hql = new StringBuilder("FROM ").append(TSType.class.getName()).append(" AS entity WHERE 1=1 ");
+		StringBuilder hql = new StringBuilder("FROM ").append(TypeEntity.class.getName()).append(" AS entity WHERE 1=1 ");
 
 		hql.append(" AND entity.TSTypegroup.typegroupcode =  ?");
 		hql.append(" AND entity.typecode =  ?");
@@ -609,7 +601,7 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "saveType")
 	@ResponseBody
-	public AjaxJson saveType(TSType type, HttpServletRequest request) {
+	public AjaxJson saveType(TypeEntity type, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(type.getId())) {
@@ -635,9 +627,9 @@ public class SystemController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "aouTypeGroup")
-	public ModelAndView aouTypeGroup(TSTypegroup typegroup, HttpServletRequest req) {
+	public ModelAndView aouTypeGroup(TypeGroupEntity typegroup, HttpServletRequest req) {
 		if (typegroup.getId() != null) {
-			typegroup = systemService.getEntity(TSTypegroup.class, typegroup.getId());
+			typegroup = systemService.getEntity(TypeGroupEntity.class, typegroup.getId());
 			req.setAttribute("typegroup", typegroup);
 		}
 		return new ModelAndView("system/type/typegroup");
@@ -649,17 +641,17 @@ public class SystemController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdateType")
-	public ModelAndView addorupdateType(TSType type, HttpServletRequest req) {
+	public ModelAndView addorupdateType(TypeEntity type, HttpServletRequest req) {
 		String typegroupid = req.getParameter("typegroupid");
 		req.setAttribute("typegroupid", typegroupid);
-        TSTypegroup typegroup = systemService.findUniqueByProperty(TSTypegroup.class, "id", typegroupid);
+		TypeGroupEntity typegroup = systemService.findUniqueByProperty(TypeGroupEntity.class, "id", typegroupid);
         String typegroupname = typegroup.getTypegroupname();
 
         req.setAttribute("typegroup", typegroup);
 
         req.setAttribute("typegroupname", mutiLangService.getLang(typegroupname));
 		if (StringUtil.isNotEmpty(type.getId())) {
-			type = systemService.getEntity(TSType.class, type.getId());
+			type = systemService.getEntity(TypeEntity.class, type.getId());
 			req.setAttribute("type", type);
 		}
 		return new ModelAndView("system/type/type");
@@ -689,7 +681,7 @@ public class SystemController extends BaseController {
 
 	@RequestMapping(params = "datagridDepart")
 	public void datagridDepart(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSDepart.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(DepartEntity.class, dataGrid);
 		this.systemService.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
 		;
@@ -702,10 +694,10 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "delDepart")
 	@ResponseBody
-	public AjaxJson delDepart(TSDepart depart, HttpServletRequest request) {
+	public AjaxJson delDepart(DepartEntity depart, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		depart = systemService.getEntity(TSDepart.class, depart.getId());
+		depart = systemService.getEntity(DepartEntity.class, depart.getId());
 		message = "部门: " + depart.getDepartname() + "被删除 成功";
 		systemService.delete(depart);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
@@ -721,7 +713,7 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "saveDepart")
 	@ResponseBody
-	public AjaxJson saveDepart(TSDepart depart, HttpServletRequest request) {
+	public AjaxJson saveDepart(DepartEntity depart, HttpServletRequest request) {
 		String message = null;
 		// 设置上级部门
 		String pid = request.getParameter("TSPDepart.id");
@@ -739,7 +731,7 @@ public class SystemController extends BaseController {
 //			String orgCode = systemService.generateOrgCode(depart.getId(), pid);
 //			depart.setOrgCode(orgCode);
 			if(oConvertUtils.isNotEmpty(pid)){
-				TSDepart paretDept = systemService.findUniqueByProperty(TSDepart.class, "id", pid);
+				DepartEntity paretDept = systemService.findUniqueByProperty(DepartEntity.class, "id", pid);
 				String localMaxCode  = getMaxLocalCode(paretDept.getOrgCode());
 				depart.setOrgCode(YouBianCodeUtil.getSubYouBianCode(paretDept.getOrgCode(), localMaxCode));
 			}else{
@@ -794,11 +786,11 @@ public class SystemController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdateDepart")
-	public ModelAndView addorupdateDepart(TSDepart depart, HttpServletRequest req) {
-		List<TSDepart> departList = systemService.getList(TSDepart.class);
+	public ModelAndView addorupdateDepart(DepartEntity depart, HttpServletRequest req) {
+		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
 		req.setAttribute("departList", departList);
 		if (depart.getId() != null) {
-			depart = systemService.getEntity(TSDepart.class, depart.getId());
+			depart = systemService.getEntity(DepartEntity.class, depart.getId());
 			req.setAttribute("depart", depart);
 		}
 		return new ModelAndView("system/depart/depart");
@@ -813,7 +805,7 @@ public class SystemController extends BaseController {
 	@RequestMapping(params = "setPFunction")
 	@ResponseBody
 	public List<ComboTree> setPFunction(HttpServletRequest request, ComboTree comboTree) {
-		CriteriaQuery cq = new CriteriaQuery(TSDepart.class);
+		CriteriaQuery cq = new CriteriaQuery(DepartEntity.class);
 		if (StringUtil.isNotEmpty(comboTree.getId())) {
 			cq.eq("TSPDepart.id", comboTree.getId());
 		}
@@ -821,7 +813,7 @@ public class SystemController extends BaseController {
 			cq.isNull("TSPDepart.id");
 		}
 		cq.add();
-		List<TSDepart> departsList = systemService.getListByCriteriaQuery(cq, false);
+		List<DepartEntity> departsList = systemService.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		comboTrees = systemService.comTree(departsList, comboTree);
 		return comboTrees;
@@ -851,7 +843,7 @@ public class SystemController extends BaseController {
 
 	@RequestMapping(params = "datagridRole")
 	public void datagridRole(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSRole.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(RoleEntity.class, dataGrid);
 		this.systemService.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
 	}
@@ -864,11 +856,11 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "delRole")
 	@ResponseBody
-	public AjaxJson delRole(TSRole role, String ids, HttpServletRequest request) {
+	public AjaxJson delRole(RoleEntity role, String ids, HttpServletRequest request) {
 		String message = null;
 		message = "角色: " + role.getRoleName() + "被删除成功";
 		AjaxJson j = new AjaxJson();
-		role = systemService.getEntity(TSRole.class, role.getId());
+		role = systemService.getEntity(RoleEntity.class, role.getId());
 		userService.delete(role);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		j.setMsg(message);
@@ -883,7 +875,7 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "saveRole")
 	@ResponseBody
-	public AjaxJson saveRole(TSRole role, HttpServletRequest request) {
+	public AjaxJson saveRole(RoleEntity role, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		if (role.getId() != null) {
@@ -920,8 +912,8 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "setAuthority")
 	@ResponseBody
-	public List<ComboTree> setAuthority(TSRole role, HttpServletRequest request, ComboTree comboTree) {
-		CriteriaQuery cq = new CriteriaQuery(TSFunction.class);
+	public List<ComboTree> setAuthority(RoleEntity role, HttpServletRequest request, ComboTree comboTree) {
+		CriteriaQuery cq = new CriteriaQuery(FunctionEntity.class);
 		if (comboTree.getId() != null) {
 			cq.eq("TFunction.functionid", oConvertUtils.getInt(comboTree.getId(), 0));
 		}
@@ -929,16 +921,16 @@ public class SystemController extends BaseController {
 			cq.isNull("TFunction");
 		}
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, false);
+		List<FunctionEntity> functionList = systemService.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		Integer roleid = oConvertUtils.getInt(request.getParameter("roleid"), 0);
-		List<TSFunction> loginActionlist = new ArrayList<TSFunction>();// 已有权限菜单
-		role = this.systemService.get(TSRole.class, roleid);
+		List<FunctionEntity> loginActionlist = new ArrayList<FunctionEntity>();// 已有权限菜单
+		role = this.systemService.get(RoleEntity.class, roleid);
 		if (role != null) {
-			List<TSRoleFunction> roleFunctionList = systemService.findByProperty(TSRoleFunction.class, "TSRole.id", role.getId());
+			List<RoleFunctionEntity> roleFunctionList = systemService.findByProperty(RoleFunctionEntity.class, "TSRole.id", role.getId());
 			if (roleFunctionList.size() > 0) {
-				for (TSRoleFunction roleFunction : roleFunctionList) {
-					TSFunction function = (TSFunction) roleFunction.getTSFunction();
+				for (RoleFunctionEntity roleFunction : roleFunctionList) {
+					FunctionEntity function = (FunctionEntity) roleFunction.getTSFunction();
 					loginActionlist.add(function);
 				}
 			}
@@ -958,15 +950,15 @@ public class SystemController extends BaseController {
 	public String updateAuthority(HttpServletRequest request) {
 		Integer roleid = oConvertUtils.getInt(request.getParameter("roleid"), 0);
 		String rolefunction = request.getParameter("rolefunctions");
-		TSRole role = this.systemService.get(TSRole.class, roleid);
-		List<TSRoleFunction> roleFunctionList = systemService.findByProperty(TSRoleFunction.class, "TSRole.id", role.getId());
+		RoleEntity role = this.systemService.get(RoleEntity.class, roleid);
+		List<RoleFunctionEntity> roleFunctionList = systemService.findByProperty(RoleFunctionEntity.class, "TSRole.id", role.getId());
 		systemService.deleteAllEntitie(roleFunctionList);
 		String[] roleFunctions = null;
 		if (rolefunction != "") {
 			roleFunctions = rolefunction.split(",");
 			for (String s : roleFunctions) {
-				TSRoleFunction rf = new TSRoleFunction();
-				TSFunction f = this.systemService.get(TSFunction.class, Integer.valueOf(s));
+				RoleFunctionEntity rf = new RoleFunctionEntity();
+				FunctionEntity f = this.systemService.get(FunctionEntity.class, Integer.valueOf(s));
 				rf.setTSFunction(f);
 				rf.setTSRole(role);
 				this.systemService.save(rf);
@@ -983,9 +975,9 @@ public class SystemController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdateRole")
-	public ModelAndView addorupdateRole(TSRole role, HttpServletRequest req) {
+	public ModelAndView addorupdateRole(RoleEntity role, HttpServletRequest req) {
 		if (role.getId() != null) {
-			role = systemService.getEntity(TSRole.class, role.getId());
+			role = systemService.getEntity(RoleEntity.class, role.getId());
 			req.setAttribute("role", role);
 		}
 		return new ModelAndView("system/role/role");
@@ -1013,7 +1005,7 @@ public class SystemController extends BaseController {
 	@ResponseBody
 	public List<TreeGrid> setOperate(HttpServletRequest request, TreeGrid treegrid) {
 		String roleid = request.getParameter("roleid");
-		CriteriaQuery cq = new CriteriaQuery(TSFunction.class);
+		CriteriaQuery cq = new CriteriaQuery(FunctionEntity.class);
 		if (treegrid.getId() != null) {
 			cq.eq("TFunction.functionid", oConvertUtils.getInt(treegrid.getId(), 0));
 		}
@@ -1021,7 +1013,7 @@ public class SystemController extends BaseController {
 			cq.isNull("TFunction");
 		}
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, false);
+		List<FunctionEntity> functionList = systemService.getListByCriteriaQuery(cq, false);
 		List<TreeGrid> treeGrids = new ArrayList<TreeGrid>();
 		Collections.sort(functionList, new SetListSort());
 		TreeGridModel treeGridModel = new TreeGridModel();
@@ -1090,7 +1082,7 @@ public class SystemController extends BaseController {
 	 */
 	public void savep(String roleid, String functionid, String ids) {
 		String hql = "from TRoleFunction t where" + " t.TSRole.id=" + roleid + " " + "and t.TFunction.functionid=" + functionid;
-		TSRoleFunction rFunction = systemService.singleResult(hql);
+		RoleFunctionEntity rFunction = systemService.singleResult(hql);
 		if (rFunction != null) {
 			rFunction.setOperation(ids);
 			systemService.saveOrUpdate(rFunction);
@@ -1104,9 +1096,9 @@ public class SystemController extends BaseController {
 	 */
 	public void clearp(String roleid) {
 		String hql = "from TRoleFunction t where" + " t.TSRole.id=" + roleid;
-		List<TSRoleFunction> rFunctions = systemService.findByQueryString(hql);
+		List<RoleFunctionEntity> rFunctions = systemService.findByQueryString(hql);
 		if (rFunctions.size() > 0) {
-			for (TSRoleFunction tRoleFunction : rFunctions) {
+			for (RoleFunctionEntity tRoleFunction : rFunctions) {
 				tRoleFunction.setOperation(null);
 				systemService.saveOrUpdate(tRoleFunction);
 			}
@@ -1174,8 +1166,8 @@ public class SystemController extends BaseController {
     }
 
     @RequestMapping(params = "datagridDataLog")
-    public void dataLogDatagrid(TSDatalogEntity datalogEntity,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid){
-    	CriteriaQuery cq = new CriteriaQuery(TSDatalogEntity.class, dataGrid);
+    public void dataLogDatagrid(DataLogEntity datalogEntity,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid){
+    	CriteriaQuery cq = new CriteriaQuery(DataLogEntity.class, dataGrid);
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, datalogEntity, request.getParameterMap());
 		cq.add();
@@ -1185,7 +1177,7 @@ public class SystemController extends BaseController {
 
     @RequestMapping(params = "popDataContent")
 	public ModelAndView popDataContent(ModelMap modelMap, @RequestParam String id, HttpServletRequest request) {
-    	TSDatalogEntity datalogEntity = this.systemService.get(TSDatalogEntity.class, id);
+		DataLogEntity datalogEntity = this.systemService.get(DataLogEntity.class, id);
         modelMap.put("dataContent",datalogEntity.getDataContent());
 		return new ModelAndView("system/dataLog/popDataContent");
 	}
@@ -1204,8 +1196,8 @@ public class SystemController extends BaseController {
 	@ResponseBody
     public AjaxJson getDataVersion(@RequestParam String tableName, @RequestParam String dataId){
     	AjaxJson j = new AjaxJson();
-    	String hql = "from TSDatalogEntity where tableName = ? and dataId = ? order by versionNumber desc";
-    	List<TSDatalogEntity> datalogEntities = this.systemService.findHql(hql, new Object[]{tableName,dataId});
+    	String hql = "from DataLogEntity where tableName = ? and dataId = ? order by versionNumber desc";
+    	List<DataLogEntity> datalogEntities = this.systemService.findHql(hql, new Object[]{tableName,dataId});
 
     	if (datalogEntities.size() > 0) {
 			j.setObj(datalogEntities);
@@ -1217,8 +1209,8 @@ public class SystemController extends BaseController {
 	@RequestMapping(params = "diffDataVersion")
 	public ModelAndView diffDataVersion(HttpServletRequest request, @RequestParam String id1, @RequestParam String id2) throws ParseException {
 
-		TSDatalogEntity datalogEntity1 = this.systemService.getEntity(TSDatalogEntity.class, id1);
-		TSDatalogEntity datalogEntity2 = this.systemService.getEntity(TSDatalogEntity.class, id2);
+		DataLogEntity datalogEntity1 = this.systemService.getEntity(DataLogEntity.class, id1);
+		DataLogEntity datalogEntity2 = this.systemService.getEntity(DataLogEntity.class, id2);
 
 		if (datalogEntity1 != null && datalogEntity2 != null) {
 			//正则用于去掉头尾的[]字符(如存在)

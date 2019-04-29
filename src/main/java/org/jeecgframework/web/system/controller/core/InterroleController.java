@@ -40,11 +40,11 @@ import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.web.system.pojo.base.InterroleEntity;
 import org.jeecgframework.web.system.pojo.base.InterroleInterfaceEntity;
 import org.jeecgframework.web.system.pojo.base.InterroleUserEntity;
-import org.jeecgframework.web.system.pojo.base.TSInterfaceDdataRuleEntity;
-import org.jeecgframework.web.system.pojo.base.TSInterfaceEntity;
-import org.jeecgframework.web.system.pojo.base.TSRoleUser;
-import org.jeecgframework.web.system.pojo.base.TSUser;
-import org.jeecgframework.web.system.service.InterroleServiceI;
+import org.jeecgframework.web.system.pojo.base.InterfaceDdataRuleEntity;
+import org.jeecgframework.web.system.pojo.base.InterfaceEntity;
+import org.jeecgframework.web.system.pojo.base.RoleUserEntity;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.service.InterroleService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class InterroleController extends BaseController {
 	private static final Logger logger = Logger.getLogger(InterroleController.class);
 
 	@Autowired
-	private InterroleServiceI interroleService;
+	private InterroleService interroleService;
 	@Autowired
 	private SystemService systemService;
 	@Autowired
@@ -238,8 +238,8 @@ public class InterroleController extends BaseController {
 			}
 		}
 		// TODO 用户关系
-		List<TSRoleUser> roleUsers = systemService.findByProperty(TSRoleUser.class, "TSRole.id", role.getId());
-		for (TSRoleUser tsRoleUser : roleUsers) {
+		List<RoleUserEntity> roleUsers = systemService.findByProperty(RoleUserEntity.class, "TSRole.id", role.getId());
+		for (RoleUserEntity tsRoleUser : roleUsers) {
 			systemService.delete(tsRoleUser);
 		}
 	}
@@ -267,7 +267,7 @@ public class InterroleController extends BaseController {
 	@RequestMapping(params = "setAuthority")
 	@ResponseBody
 	public List<ComboTree> setAuthority(InterroleEntity role, HttpServletRequest request, ComboTree comboTree) {
-		CriteriaQuery cq = new CriteriaQuery(TSInterfaceEntity.class);
+		CriteriaQuery cq = new CriteriaQuery(InterfaceEntity.class);
 		if (comboTree.getId() != null) {
 			cq.eq("tSInterface.id", comboTree.getId());
 		}
@@ -276,18 +276,18 @@ public class InterroleController extends BaseController {
 		}
 		cq.notEq("interfaceLevel", Short.parseShort("-1"));
 		cq.add();
-		List<TSInterfaceEntity> interfaceList = systemService.getListByCriteriaQuery(cq, false);
+		List<InterfaceEntity> interfaceList = systemService.getListByCriteriaQuery(cq, false);
 		// Collections.sort(interfaceList, new NumberComparator());
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		String roleId = request.getParameter("roleId");
-		List<TSInterfaceEntity> loginActionlist = new ArrayList<TSInterfaceEntity>();// 已有权限菜单
+		List<InterfaceEntity> loginActionlist = new ArrayList<InterfaceEntity>();// 已有权限菜单
 		role = this.systemService.get(InterroleEntity.class, roleId);
 		if (role != null) {
 			List<InterroleInterfaceEntity> roleInterfaceList = systemService
 					.findHql("from InterroleInterfaceEntity where interroleEntity.id = ?", role.getId());
 			if (roleInterfaceList.size() > 0) {
 				for (InterroleInterfaceEntity roleInterface : roleInterfaceList) {
-					TSInterfaceEntity inter = (TSInterfaceEntity) roleInterface.getInterfaceEntity();
+					InterfaceEntity inter = (InterfaceEntity) roleInterface.getInterfaceEntity();
 
 					if(inter!=null){
 						loginActionlist.add(inter);
@@ -307,10 +307,10 @@ public class InterroleController extends BaseController {
 		return comboTrees;
 	}
 
-	private List<ComboTree> comboTree(List<TSInterfaceEntity> all, ComboTreeModel comboTreeModel,
-			List<TSInterfaceEntity> in, boolean recursive) {
+	private List<ComboTree> comboTree(List<InterfaceEntity> all, ComboTreeModel comboTreeModel,
+			List<InterfaceEntity> in, boolean recursive) {
 		List<ComboTree> trees = new ArrayList<ComboTree>();
-		for (TSInterfaceEntity obj : all) {
+		for (InterfaceEntity obj : all) {
 			trees.add(comboTree(obj, comboTreeModel, in, recursive));
 		}
 		all.clear();
@@ -331,7 +331,7 @@ public class InterroleController extends BaseController {
 	 * @return
 	 */
 
-	private ComboTree comboTree(TSInterfaceEntity obj, ComboTreeModel comboTreeModel, List<TSInterfaceEntity> in,
+	private ComboTree comboTree(InterfaceEntity obj, ComboTreeModel comboTreeModel, List<InterfaceEntity> in,
 			boolean recursive) {
 		ComboTree tree = new ComboTree();
 		String id = oConvertUtils.getString(obj.getId());
@@ -341,7 +341,7 @@ public class InterroleController extends BaseController {
 		if (in == null) {
 		} else {
 			if (in.size() > 0) {
-				for (TSInterfaceEntity inobj : in) {
+				for (InterfaceEntity inobj : in) {
 					String inId = oConvertUtils.getString(inobj.getId());
 					if (inId.equals(id)) {
 						tree.setChecked(true);
@@ -349,12 +349,12 @@ public class InterroleController extends BaseController {
 				}
 			}
 		}
-		List<TSInterfaceEntity> curChildList = obj.getTSInterfaces();
+		List<InterfaceEntity> curChildList = obj.getTSInterfaces();
 		Collections.sort(curChildList, new Comparator<Object>() {
 			@Override
 			public int compare(Object o1, Object o2) {
-				TSInterfaceEntity tsInterface1 = (TSInterfaceEntity) o1;
-				TSInterfaceEntity tsInterface2 = (TSInterfaceEntity) o2;
+				InterfaceEntity tsInterface1 = (InterfaceEntity) o1;
+				InterfaceEntity tsInterface2 = (InterfaceEntity) o2;
 				int flag = tsInterface1.getInterfaceOrder().compareTo(tsInterface2.getInterfaceOrder());
 				if (flag == 0) {
 					return tsInterface1.getInterfaceName().compareTo(tsInterface2.getInterfaceName());
@@ -367,7 +367,7 @@ public class InterroleController extends BaseController {
 			tree.setState("closed");
 			if (recursive) { // 递归查询子节点
 				List<ComboTree> children = new ArrayList<ComboTree>();
-				for (TSInterfaceEntity childObj : curChildList) {
+				for (InterfaceEntity childObj : curChildList) {
 					ComboTree t = comboTree(childObj, comboTreeModel, in, recursive);
 					children.add(t);
 				}
@@ -397,13 +397,13 @@ public class InterroleController extends BaseController {
 	 */
 	@RequestMapping(params = "dataRuleListForInterface")
 	public ModelAndView dataRuleListForInterface(HttpServletRequest request, String interfaceId, String roleId) {
-		CriteriaQuery cq = new CriteriaQuery(TSInterfaceDdataRuleEntity.class);
+		CriteriaQuery cq = new CriteriaQuery(InterfaceDdataRuleEntity.class);
 		cq.eq("interfaceEntity.id", interfaceId);
 		cq.add();
 		// List<TSInterfaceDdataRuleEntity> dataRuleList =
 		// this.systemService.getListByCriteriaQuery(cq, false);
-		List<TSInterfaceDdataRuleEntity> dataRuleList = systemService
-				.findHql("from TSInterfaceDdataRuleEntity where TSInterface.id = ?", interfaceId);
+		List<InterfaceDdataRuleEntity> dataRuleList = systemService
+				.findHql("from InterfaceDdataRuleEntity where TSInterface.id = ?", interfaceId);
 
 		Set<String> dataRulecodes = interroleService.getOperationCodesByRoleIdAndruleDataId(roleId, interfaceId);
 		request.setAttribute("dataRuleList", dataRuleList);
@@ -471,7 +471,7 @@ public class InterroleController extends BaseController {
 				map.remove(s);
 			} else {
 				InterroleInterfaceEntity rf = new InterroleInterfaceEntity();
-				TSInterfaceEntity f = this.systemService.get(TSInterfaceEntity.class, s);
+				InterfaceEntity f = this.systemService.get(InterfaceEntity.class, s);
 				rf.setInterfaceEntity(f);
 				rf.setInterroleEntity(role);
 				entitys.add(rf);
@@ -540,18 +540,18 @@ public class InterroleController extends BaseController {
 	 * @param dataGrid
 	 */
 	@RequestMapping(params = "roleUserDatagrid")
-	public void roleUserDatagrid(TSUser user, HttpServletRequest request, HttpServletResponse response,
+	public void roleUserDatagrid(UserEntity user, HttpServletRequest request, HttpServletResponse response,
 			DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSUser.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(UserEntity.class, dataGrid);
 		// 查询条件组装器
 		String roleId = request.getParameter("roleId");
-		// List<TSRoleUser> roleUser =
-		// systemService.findByProperty(TSRoleUser.class, "TSRole.id", roleId);
+		// List<RoleUserEntity> roleUser =
+		// systemService.findByProperty(RoleUserEntity.class, "TSRole.id", roleId);
 		List<InterroleUserEntity> interRoleUser = systemService.findByProperty(InterroleUserEntity.class,
 				"interroleEntity.id", roleId);
 		/*
 		 * // zhanggm：这个查询逻辑也可以使用这种 子查询的方式进行查询 CriteriaQuery subCq = new
-		 * CriteriaQuery(TSRoleUser.class);
+		 * CriteriaQuery(RoleUserEntity.class);
 		 * subCq.setProjection(Property.forName("TSUser.id"));
 		 * subCq.eq("TSRole.id", roleId); subCq.add();
 		 * cq.add(Property.forName("id").in(subCq.getDetachedCriteria()));
@@ -597,11 +597,11 @@ public class InterroleController extends BaseController {
 	 * @return 处理结果信息
 	 */
 	@RequestMapping(params = "addUserToRoleList")
-	public void addUserToOrgList(TSUser user, HttpServletRequest request, HttpServletResponse response,
+	public void addUserToOrgList(UserEntity user, HttpServletRequest request, HttpServletResponse response,
 			DataGrid dataGrid) {
 		String roleId = request.getParameter("roleId");
 
-		CriteriaQuery cq = new CriteriaQuery(TSUser.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(UserEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, user);
 
 		// 获取 当前组织机构的用户信息
@@ -652,7 +652,7 @@ public class InterroleController extends BaseController {
 		List<InterroleUserEntity> interRoleUserList = new ArrayList<InterroleUserEntity>();
 		List<String> userIdList = extractIdListByComma(userIds);
 		for (String userId : userIdList) {
-			TSUser user = new TSUser();
+			UserEntity user = new UserEntity();
 			user.setId(userId);
 
 			InterroleUserEntity interRoleUser = new InterroleUserEntity();
@@ -678,8 +678,8 @@ public class InterroleController extends BaseController {
 			@RequestParam(required = true) String roleid) {
 		AjaxJson ajaxJson = new AjaxJson();
 		try {
-			// List<TSRoleUser> roleUserList =
-			// this.systemService.findByProperty(TSRoleUser.class, "TSUser.id",
+			// List<RoleUserEntity> roleUserList =
+			// this.systemService.findByProperty(RoleUserEntity.class, "TSUser.id",
 			// userid);
 			List<InterroleUserEntity> interRoleUser = this.systemService.findByProperty(InterroleUserEntity.class,
 					"interroleEntity.id", userid);

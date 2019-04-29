@@ -11,7 +11,7 @@ import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.JSONHelper;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.web.cgform.common.CgAutoListConstant;
-import org.jeecgframework.web.system.pojo.base.TSUser;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -49,7 +49,7 @@ public class SqlInjectInterceptor implements HandlerInterceptor {
     	//1.在线开发功能（有SQL值情况），针对数据库SQL操作，进行开发者权限控制，防止SQL注入
     	String requestPath = ResourceUtil.getJgAuthRequsetPath(request);
     	if (onlineOptUrls.contains(requestPath)) {
-    		TSUser currentUser = ResourceUtil.getSessionUser();
+            UserEntity currentUser = ResourceUtil.getSessionUser();
             if(CgAutoListConstant.SYS_DEV_FLAG_0.equals(currentUser.getDevFlag())){
                 logger.info(" ---操作失败，当前用户未授权开发权限-------- 请求IP ---------+"+IpUtil.getIpAddr(request));
                 

@@ -23,7 +23,7 @@ import org.jeecgframework.web.cgform.service.build.DataBaseService;
 import org.jeecgframework.web.cgform.service.cgformftl.CgformFtlServiceI;
 import org.jeecgframework.web.cgform.service.config.CgFormFieldServiceI;
 import org.jeecgframework.web.cgform.util.TemplateUtil;
-import org.jeecgframework.web.system.service.CacheServiceI;
+import org.jeecgframework.web.system.service.CacheService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class TempletContextWord {
 	
 	private static final String ENCODING = "UTF-8";
 	@Autowired
-	private CacheServiceI cacheService;
+	private CacheService cacheService;
 	
 	/**
 	 * 系统模式：
@@ -123,10 +123,10 @@ public class TempletContextWord {
 		try {
 			//cache的键：类名.方法名.参数名
 			String cacheKey = this.getClass().getSimpleName()+".getTemplateFormCache."+tableName+"."+version;
-			Object templateObj = cacheService.get(CacheServiceI.SYSTEM_BASE_CACHE,cacheKey);
+			Object templateObj = cacheService.get(CacheService.SYSTEM_BASE_CACHE,cacheKey);
 			if(templateObj==null){
 				template = freemarker.getTemplate(tableName,freemarker.getLocale(), ENCODING);
-				cacheService.put(CacheServiceI.SYSTEM_BASE_CACHE,cacheKey,template);
+				cacheService.put(CacheService.SYSTEM_BASE_CACHE,cacheKey,template);
 				log.info("--setTemplateFromCache-------cacheKey: [{}]-------------",cacheKey);
 			}else{
 				template = (Template)templateObj;

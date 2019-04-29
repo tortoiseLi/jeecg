@@ -5,11 +5,11 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
-import org.jeecgframework.web.system.pojo.base.TSNotice;
-import org.jeecgframework.web.system.pojo.base.TSNoticeAuthorityRole;
-import org.jeecgframework.web.system.pojo.base.TSNoticeAuthorityUser;
-import org.jeecgframework.web.system.pojo.base.TSNoticeReadUser;
-import org.jeecgframework.web.system.pojo.base.TSUser;
+import org.jeecgframework.web.system.pojo.base.NoticeEntity;
+import org.jeecgframework.web.system.pojo.base.NoticeAuthorityRoleEntity;
+import org.jeecgframework.web.system.pojo.base.NoticeAuthorityUserEntity;
+import org.jeecgframework.web.system.pojo.base.NoticeReadUserEntity;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
 import org.jeecgframework.web.system.service.NoticeService;
 import org.springframework.stereotype.Service;
 
@@ -31,11 +31,12 @@ public class NoticeServiceImpl extends CommonServiceImpl implements NoticeServic
 	 * @param createUser 创建者
 	 * @return
 	 */
+	@Override
 	public String addNotice(String noticeTitle, String noticeContent,
-			String noticeType, String noticeLevel, Date noticeTerm,
-			String createUser) {
+							String noticeType, String noticeLevel, Date noticeTerm,
+							String createUser) {
 		String noticeId=null;
-		TSNotice notice = new TSNotice();
+		NoticeEntity notice = new NoticeEntity();
 		notice.setNoticeTitle(noticeTitle);
 		notice.setNoticeContent(noticeContent);
 		notice.setNoticeType(noticeType);
@@ -51,64 +52,65 @@ public class NoticeServiceImpl extends CommonServiceImpl implements NoticeServic
     /**
      * 追加通告授权用户
      */
+	@Override
 	public void addNoticeAuthorityUser(String noticeId, String userid) {
 		if(noticeId != null && userid!=null){
-			TSNoticeAuthorityUser entity = new  TSNoticeAuthorityUser();
+			NoticeAuthorityUserEntity entity = new  NoticeAuthorityUserEntity();
 			entity.setNoticeId(noticeId);
-			TSUser tsuser = new TSUser();
+			UserEntity tsuser = new UserEntity();
 			tsuser.setId(userid);
 			entity.setUser(tsuser);
 			this.saveOrUpdate(entity);
 		}
 	}
 	
+	@Override
 	public <T> void delete(T entity) {
 
-		TSNotice notice = (TSNotice)entity;
-		super.deleteAllEntitie(super.findByProperty(TSNoticeReadUser.class, "noticeId", notice.getId()));
-		super.deleteAllEntitie(super.findByProperty(TSNoticeAuthorityUser.class, "noticeId", notice.getId()));
-		super.deleteAllEntitie(super.findByProperty(TSNoticeAuthorityRole.class, "noticeId", notice.getId()));
+		NoticeEntity notice = (NoticeEntity)entity;
+		super.deleteAllEntitie(super.findByProperty(NoticeReadUserEntity.class, "noticeId", notice.getId()));
+		super.deleteAllEntitie(super.findByProperty(NoticeAuthorityUserEntity.class, "noticeId", notice.getId()));
+		super.deleteAllEntitie(super.findByProperty(NoticeAuthorityRoleEntity.class, "noticeId", notice.getId()));
 		super.delete(notice);
  		//执行删除操作配置的sql增强
 		this.doDelSql(notice);
 
  	}
  	
- 	public <T> Serializable save(T entity) {
+ 	@Override
+	public <T> Serializable save(T entity) {
  		Serializable t = super.save(entity);
  		//执行新增操作配置的sql增强
- 		this.doAddSql((TSNotice)entity);
+ 		this.doAddSql((NoticeEntity)entity);
  		return t;
  	}
  	
- 	public <T> void saveOrUpdate(T entity) {
+ 	@Override
+	public <T> void saveOrUpdate(T entity) {
  		super.saveOrUpdate(entity);
  		//执行更新操作配置的sql增强
- 		this.doUpdateSql((TSNotice)entity);
+ 		this.doUpdateSql((NoticeEntity)entity);
  	}
  	
  	/**
 	 * 默认按钮-sql增强-新增操作
-	 * @param id
 	 * @return
 	 */
- 	public boolean doAddSql(TSNotice t){
+ 	public boolean doAddSql(NoticeEntity t){
 	 	return true;
  	}
  	/**
 	 * 默认按钮-sql增强-更新操作
-	 * @param id
 	 * @return
 	 */
- 	public boolean doUpdateSql(TSNotice t){
+ 	public boolean doUpdateSql(NoticeEntity t){
 	 	return true;
  	}
  	/**
 	 * 默认按钮-sql增强-删除操作
-	 * @param id
 	 * @return
 	 */
- 	public boolean doDelSql(TSNotice t){
+ 	public boolean doDelSql(NoticeEntity t){
 	 	return true;
  	}
  	
@@ -117,7 +119,7 @@ public class NoticeServiceImpl extends CommonServiceImpl implements NoticeServic
 	 * @param sql
 	 * @return
 	 */
- 	public String replaceVal(String sql,TSNotice t){
+ 	public String replaceVal(String sql,NoticeEntity t){
  		sql  = sql.replace("#{id}",String.valueOf(t.getId()));
  		sql  = sql.replace("#{notice_title}",String.valueOf(t.getNoticeTitle()));
  		sql  = sql.replace("#{notice_content}",String.valueOf(t.getNoticeContent()));

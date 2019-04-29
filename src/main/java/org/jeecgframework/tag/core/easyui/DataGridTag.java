@@ -42,8 +42,8 @@ import org.jeecgframework.web.cgform.entity.config.CgFormHeadEntity;
 import org.jeecgframework.web.cgform.entity.config.CgSubTableVO;
 import org.jeecgframework.web.cgform.service.config.CgFormFieldServiceI;
 import org.jeecgframework.web.cgform.util.PublicUtil;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
-import org.jeecgframework.web.system.pojo.base.TSType;
+import org.jeecgframework.web.system.pojo.base.OperationEntity;
+import org.jeecgframework.web.system.pojo.base.TypeEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -548,7 +548,7 @@ public class DataGridTag extends TagSupport {
 					break;
 				systemService = ApplicationContextUtil.getContext().getBean(
 							SystemService.class);
-				TSOperation operation = systemService.getEntity(TSOperation.class, MyoperationCode);
+				OperationEntity operation = systemService.getEntity(OperationEntity.class, MyoperationCode);
 				if(operation.getOperationcode().equals(field)){
 					columnList.remove(dataGridColumn);
 				}
@@ -600,9 +600,9 @@ public class DataGridTag extends TagSupport {
 			}else{
 				String text = "";
 				String value = "";
-				List<TSType> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
+				List<TypeEntity> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
 				if (typeList != null && !typeList.isEmpty()) {
-					for (TSType type : typeList) {
+					for (TypeEntity type : typeList) {
 						text += MutiLangUtil.doMutiLang(type.getTypename(), "") + ",";
 						value += type.getTypecode() + ",";
 					}
@@ -934,11 +934,11 @@ public class DataGridTag extends TagSupport {
 								}
 							}else{
 								//字典表数据
-								List<TSType> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
+								List<TypeEntity> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
 								if(typeList != null && !typeList.isEmpty()){
 									String field = column.getField().replaceAll("_","\\.");
 									sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_radio\"/>");
-									for (TSType type : typeList) {
+									for (TypeEntity type : typeList) {
 
 										sb.append(" <input type=\"radio\" value=\"" + type.getTypecode() + "\" name=\""+field+"_radio\" onclick=\"javascrpt:$('#"+ field+"_radio').val('" + type.getTypecode() + "');\" />");										
 
@@ -971,11 +971,11 @@ public class DataGridTag extends TagSupport {
 								}
 							}else{
 								//字典表数据
-								List<TSType> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
+								List<TypeEntity> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
 								if(typeList != null && !typeList.isEmpty()){
 									String field = column.getField().replaceAll("_","\\.");
 									sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_checkbox\" value=\"\" />");									
-									for (TSType type : typeList) {
+									for (TypeEntity type : typeList) {
 										String typeCode = type.getTypecode();
 										sb.append(" <input type=\"checkbox\" onclick=\"javascript:if(this.checked)$('#"+ field +"_checkbox').val($('#"+ field +"_checkbox').val()+',"+typeCode+",');else{$('#"+ field +"_checkbox').val($('#"+ field +"_checkbox').val().replace(',"+typeCode+",',''));}\" value=\"" + typeCode + "\" name=\"" + field +"_checkbox\" class=\"" + field + "_checkbox\" />");
 										sb.append(MutiLangUtil.getLang(type.getTypename()));
@@ -1011,9 +1011,9 @@ public class DataGridTag extends TagSupport {
 								}
 							}else{
 								//字典表数据
-								List<TSType> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
+								List<TypeEntity> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
 								if(typeList != null && !typeList.isEmpty()){
-									for (TSType type : typeList) {
+									for (TypeEntity type : typeList) {
 										sb.append("<option value=\"");
 										sb.append(type.getTypecode());
 										sb.append("\">");
@@ -2308,14 +2308,14 @@ public class DataGridTag extends TagSupport {
 								}
 								
 							}else{
-								List<TSType> types = ResourceUtil.getCacheTypes(col.getDictionary().toLowerCase());
+								List<TypeEntity> types = ResourceUtil.getCacheTypes(col.getDictionary().toLowerCase());
 								
 								String showMode = col.getShowMode();
 								if (null != showMode && "radio".equals(showMode)) {
 									if (types != null) {
 										String field = col.getField().replaceAll("_","\\.");
 										sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_radio\"/>");										
-										for (TSType type : types) {
+										for (TypeEntity type : types) {
 											String typeCode = type.getTypecode();
 
 											if(col.getDefaultVal()!=null&&col.getDefaultVal().trim().equals(typeCode)){
@@ -2334,7 +2334,7 @@ public class DataGridTag extends TagSupport {
 									if (types != null) {
 										String field = col.getField().replaceAll("_","\\.");
 										sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_checkbox\" value=\"\" />");
-										for (TSType type : types) {
+										for (TypeEntity type : types) {
 											String typeCode = type.getTypecode();
 											if(col.getDefaultVal()!=null&&col.getDefaultVal().trim().equals(typeCode)){
 												sb.append(" <input type=\"checkbox\" onclick=\"javascript:if(this.checked)$('#"+ field +"_checkbox').val($('#"+ field +"_checkbox').val()+',"+typeCode+",');else{$('#"+ field +"_checkbox').val($('#"+ field +"_checkbox').val().replace(',"+typeCode+",',''));}\" value=\"" + typeCode + "\" name=\"" + field +"_checkbox\" class=\"" + field + "_checkbox\" checked=\"checked\" />");
@@ -2351,7 +2351,7 @@ public class DataGridTag extends TagSupport {
 									sb.append("<select name=\""+col.getField().replaceAll("_","\\.")+"\" WIDTH=\"120\" style=\"width: 120px\"> ");
 									sb.append(StringUtil.replaceAll("<option value =\"\" >{0}</option>", "{0}", MutiLangUtil.getLang("common.please.select")));
 									if (types != null) {
-										for (TSType type : types) {
+										for (TypeEntity type : types) {
 
 											if(col.getDefaultVal()!=null&&col.getDefaultVal().trim().equals(type.getTypecode())){
 												sb.append(" <option value=\""
@@ -3013,16 +3013,16 @@ public class DataGridTag extends TagSupport {
 							}
 
 						}else{
-							List<TSType> types = ResourceUtil.getCacheTypes(column.getDictionary().toLowerCase());
+							List<TypeEntity> types = ResourceUtil.getCacheTypes(column.getDictionary().toLowerCase());
 							if (types != null) {
 								comboboxStr.append("editor:{type:'combobox',options:{valueField:'typecode',textField:'typename',data:[");
-								for (TSType type : types) {
+								for (TypeEntity type : types) {
 									comboboxStr.append("{'typecode':'"+type.getTypecode()+"','typename':'"+MutiLangUtil.getLang(type.getTypename())+"'},");
 								}
 								comboboxStr.append("],required:true}}");
 								//再增加formatter参数
 								comboboxStr.append(",formatter:function(value,row){");
-								for (TSType type : types) {
+								for (TypeEntity type : types) {
 									comboboxStr.append("if(value =='"+type.getTypecode()+"'){");
 									comboboxStr.append("return '"+MutiLangUtil.getLang(type.getTypename())+"';");
 									comboboxStr.append("}");
@@ -3278,7 +3278,7 @@ public class DataGridTag extends TagSupport {
 						break;
 					systemService = ApplicationContextUtil.getContext().getBean(
 								SystemService.class);
-					TSOperation operation = systemService.getEntity(TSOperation.class, MyoperationCode);
+					OperationEntity operation = systemService.getEntity(OperationEntity.class, MyoperationCode);
 					if (operation.getOperationcode().startsWith(".") || operation.getOperationcode().startsWith("#")){
 						if (operation.getOperationType().intValue()==Globals.OPERATION_TYPE_HIDE){
 							//out.append("$(\""+name+"\").find(\"#"+operation.getOperationcode().replaceAll(" ", "")+"\").hide();");
@@ -3316,7 +3316,7 @@ public class DataGridTag extends TagSupport {
 						break;
 					systemService = ApplicationContextUtil.getContext().getBean(
 								SystemService.class);
-					TSOperation operation = systemService.getEntity(TSOperation.class, MyoperationCode);
+					OperationEntity operation = systemService.getEntity(OperationEntity.class, MyoperationCode);
 					operationCodesStr.add(operation.getOperationcode());
 				}
 				if (!operationCodesStr.contains(operationCode)){
@@ -3668,10 +3668,10 @@ public class DataGridTag extends TagSupport {
 									}
 									sb.append("</select>");
 								}else{
-									List<TSType> types = ResourceUtil.getCacheTypes(col.getDictionary().toLowerCase());
+									List<TypeEntity> types = ResourceUtil.getCacheTypes(col.getDictionary().toLowerCase());
 									sb.append("<select name=\""+col.getField().replaceAll("_","\\.")+"\" WIDTH=\"100\" style=\"width: 104px\"> ");
 									sb.append(StringUtil.replaceAll("<option value =\"\" >{0}</option>", "{0}", MutiLangUtil.getLang("common.please.select")));
-									for (TSType type : types) {
+									for (TypeEntity type : types) {
 										sb.append(" <option value=\""+type.getTypecode()+"\">");
 										sb.append(MutiLangUtil.getLang(type.getTypename()));
 										sb.append(" </option>");
@@ -4026,10 +4026,10 @@ appendLine(sb,"					}}\">关系</th>");
 		appendLine(sb,"<th data-options=\"field:'condition',width:20,align:'right',formatter:function(value,row){");
 		appendLine(sb,"							var data=  ");
 		appendLine(sb,"					[  ");
-		List<TSType> types = ResourceUtil.getCacheTypes("rulecon");
+		List<TypeEntity> types = ResourceUtil.getCacheTypes("rulecon");
 		if (types != null) {
 			for (int i=0;i<types.size();i++){
-				TSType type = types.get(i);
+				TypeEntity type = types.get(i);
 				appendLine(sb," {'conditionId':'"+type.getTypecode()+"','conditionName':'"
 						+MutiLangUtil.getLang(type.getTypename())+"'}");
 				if(i<types.size()-1){
@@ -4053,7 +4053,7 @@ appendLine(sb,"					}}\">关系</th>");
 		appendLine(sb,"[");
 		if (types != null) {
 			for (int i=0;i<types.size();i++){
-				TSType type = types.get(i);
+				TypeEntity type = types.get(i);
 				appendLine(sb," {'conditionId':'"+type.getTypecode()+"','conditionName':'"
 						+MutiLangUtil.getLang(type.getTypename())+"'}");
 				if(i<types.size()-1){

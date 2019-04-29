@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jeecgframework.jwt.service.TokenManager;
 import org.jeecgframework.jwt.util.ResponseMessage;
 import org.jeecgframework.jwt.util.Result;
-import org.jeecgframework.web.system.pojo.base.TSUser;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
 import org.jeecgframework.web.system.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class TokenController {
 		Assert.notNull(username, "username can not be empty");
 		Assert.notNull(password, "password can not be empty");
 
-		TSUser user = userService.checkUserExits(username, password);
+		UserEntity user = userService.checkUserExits(username, password);
 		if (user == null) {
 			// 提示用户名或密码错误
 			logger.info("获取TOKEN,户账号密码错误[{}]" , username);

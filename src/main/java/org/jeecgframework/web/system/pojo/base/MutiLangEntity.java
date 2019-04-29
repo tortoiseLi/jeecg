@@ -1,216 +1,164 @@
 package org.jeecgframework.web.system.pojo.base;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 
-/**   
- * @Title: Entity
- * @Description: 多语言
- * @author Rocky
- * @date 2014-06-28 00:09:31
- * @version V1.0   
- *
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * 多语言表
+ * @author DELL
+ * @date 2019-04-29
+ * @version V1.0
  */
 @Entity
-@Table(name = "t_s_muti_lang", schema = "")
-@DynamicUpdate(true)
-@DynamicInsert(true)
-@SuppressWarnings("serial")
-public class MutiLangEntity implements java.io.Serializable {
-	/**主键*/
-	private java.lang.String id;
-	/**语言主键*/
-	private java.lang.String langKey;
-	/**内容*/
-	private java.lang.String langContext;
-	/**语言*/
-	private java.lang.String langCode;
-	/**创建时间*/
-	private java.util.Date createDate;
-	/**创建人编号*/
-	private java.lang.String createBy;
-	/**创建人姓名*/
-	private java.lang.String createName;
-	/**更新日期*/
-	private java.util.Date updateDate;
-	/**更新人编号*/
-	private java.lang.String updateBy;
-	/**更新人姓名*/
-	private java.lang.String updateName;
+@Table(name = "t_s_muti_lang")
+@DynamicUpdate()
+@DynamicInsert()
+public class MutiLangEntity implements Serializable {
 
-	
 	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  主键
+	 * ID
 	 */
-	
+	private String id;
+
+	/**
+	 * 语言主键
+	 */
+	private String langKey;
+
+	/**
+	 * 内容
+	 */
+	private String langContext;
+
+	/**
+	 * 语言
+	 */
+	private String langCode;
+
+	/**
+	 * 创建时间
+	 */
+	private Date createDate;
+
+	/**
+	 * 创建人编号
+	 */
+	private String createBy;
+
+	/**
+	 * 创建人姓名
+	 */
+	private String createName;
+
+	/**
+	 * 更新日期
+	 */
+	private Date updateDate;
+
+	/**
+	 * 更新人编号
+	 */
+	private String updateBy;
+
+	/**
+	 * 更新人姓名
+	 */
+	private String updateName;
+
 	@Id
 	@GeneratedValue(generator = "paymentableGenerator")
 	@GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
-	@Column(name ="ID",nullable=false,length=32)
-	public java.lang.String getId(){
+	@Column(name ="id",nullable=false,length=32)
+	public String getId(){
 		return this.id;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  主键
-	 */
-	public void setId(java.lang.String id){
+	public void setId(String id){
 		this.id = id;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  语言主键
-	 */
-	@Column(name ="LANG_KEY",nullable=false,length=50)
-	public java.lang.String getLangKey(){
+
+	@Column(name ="lang_key",nullable=false,length=50)
+	public String getLangKey(){
 		return this.langKey;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  语言主键
-	 */
-	public void setLangKey(java.lang.String langKey){
+	public void setLangKey(String langKey){
 		this.langKey = langKey;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  内容
-	 */
-	@Column(name ="LANG_CONTEXT",nullable=false,length=500)
-	public java.lang.String getLangContext(){
+
+	@Column(name ="lang_context",nullable=false,length=500)
+	public String getLangContext(){
 		return this.langContext;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  内容
-	 */
-	public void setLangContext(java.lang.String langContext){
+	public void setLangContext(String langContext){
 		this.langContext = langContext;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  语言
-	 */
-	@Column(name ="LANG_CODE",nullable=false,length=50)
-	public java.lang.String getLangCode(){
+
+	@Column(name ="lang_code",nullable=false,length=50)
+	public String getLangCode(){
 		return this.langCode;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  语言
-	 */
-	public void setLangCode(java.lang.String langCode){
+	public void setLangCode(String langCode){
 		this.langCode = langCode;
 	}
-	/**
-	 *方法: 取得java.util.Date
-	 *@return: java.util.Date  创建时间
-	 */
-	@Column(name ="CREATE_DATE",nullable=false)
-	public java.util.Date getCreateDate(){
+
+	@Column(name ="create_date",nullable=false)
+	public Date getCreateDate(){
 		return this.createDate;
 	}
 
-	/**
-	 *方法: 设置java.util.Date
-	 *@param: java.util.Date  创建时间
-	 */
-	public void setCreateDate(java.util.Date createDate){
+	public void setCreateDate(Date createDate){
 		this.createDate = createDate;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  创建人编号
-	 */
-	@Column(name ="CREATE_BY",nullable=false,length=50)
-	public java.lang.String getCreateBy(){
+
+	@Column(name ="create_by",nullable=false,length=50)
+	public String getCreateBy(){
 		return this.createBy;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  创建人编号
-	 */
-	public void setCreateBy(java.lang.String createBy){
+	public void setCreateBy(String createBy){
 		this.createBy = createBy;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  创建人姓名
-	 */
-	@Column(name ="CREATE_NAME",nullable=false,length=50)
-	public java.lang.String getCreateName(){
+	@Column(name ="create_name",nullable=false,length=50)
+	public String getCreateName(){
 		return this.createName;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  创建人姓名
-	 */
-	public void setCreateName(java.lang.String createName){
+	public void setCreateName(String createName){
 		this.createName = createName;
 	}
-	/**
-	 *方法: 取得java.util.Date
-	 *@return: java.util.Date  更新日期
-	 */
-	@Column(name ="UPDATE_DATE",nullable=false)
-	public java.util.Date getUpdateDate(){
+
+	@Column(name ="update_date",nullable=false)
+	public Date getUpdateDate(){
 		return this.updateDate;
 	}
 
-	/**
-	 *方法: 设置java.util.Date
-	 *@param: java.util.Date  更新日期
-	 */
-	public void setUpdateDate(java.util.Date updateDate){
+	public void setUpdateDate(Date updateDate){
 		this.updateDate = updateDate;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  更新人编号
-	 */
-	@Column(name ="UPDATE_BY",nullable=false,length=50)
-	public java.lang.String getUpdateBy(){
+
+	@Column(name ="update_by",nullable=false,length=50)
+	public String getUpdateBy(){
 		return this.updateBy;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  更新人编号
-	 */
-	public void setUpdateBy(java.lang.String updateBy){
+	public void setUpdateBy(String updateBy){
 		this.updateBy = updateBy;
 	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  更新人姓名
-	 */
-	@Column(name ="UPDATE_NAME",nullable=false,length=50)
-	public java.lang.String getUpdateName(){
+
+	@Column(name ="update_name",nullable=false,length=50)
+	public String getUpdateName(){
 		return this.updateName;
 	}
 
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  更新人姓名
-	 */
-	public void setUpdateName(java.lang.String updateName){
+	public void setUpdateName(String updateName){
 		this.updateName = updateName;
 	}
 }

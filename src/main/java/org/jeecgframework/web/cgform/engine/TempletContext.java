@@ -11,7 +11,7 @@ import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.PropertiesUtil;
 import org.jeecgframework.web.cgform.common.CgAutoListConstant;
 import org.jeecgframework.web.cgform.service.config.CgFormFieldServiceI;
-import org.jeecgframework.web.system.service.CacheServiceI;
+import org.jeecgframework.web.system.service.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class TempletContext {
 	private static final String ENCODING = "UTF-8";
 
 	@Autowired
-	private CacheServiceI cacheService;
+	private CacheService cacheService;
 	
 	/**
 	 * 系统模式：
@@ -101,10 +101,10 @@ public class TempletContext {
 		try {
 			//cache的键：类名.方法名.参数名.version
 			String cacheKey = this.getClass().getSimpleName()+".getTemplateFormCache."+tableName+"."+version;;
-			Object templateObj = cacheService.get(CacheServiceI.SYSTEM_BASE_CACHE,cacheKey);
+			Object templateObj = cacheService.get(CacheService.SYSTEM_BASE_CACHE,cacheKey);
 			if(templateObj==null){
 				template = freemarker.getTemplate(tableName,freemarker.getLocale(), ENCODING);
-				cacheService.put(CacheServiceI.SYSTEM_BASE_CACHE,cacheKey,template);
+				cacheService.put(CacheService.SYSTEM_BASE_CACHE,cacheKey,template);
 				log.info("--setTemplateFromCache-------cacheKey: [{}]-------------",cacheKey);
 			}else{
 				log.info("--getTemplateFromCache-------cacheKey: [{}]-------------",cacheKey);
@@ -128,7 +128,7 @@ public class TempletContext {
 	    	String version = cgFormFieldService.getCgFormVersionByTableName(tableName);
 			//cache的键：类名.方法名.参数名
 			String cacheKey = FreemarkerHelper.class.getName()+".getTemplateFormCache."+tableName+"."+version;
-			cacheService.remove(CacheServiceI.SYSTEM_BASE_CACHE,cacheKey);
+			cacheService.remove(CacheService.SYSTEM_BASE_CACHE,cacheKey);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -153,6 +153,6 @@ public class TempletContext {
 	 * 清空online缓存
 	 */
 	public void clearCache(){
-		cacheService.clean(CacheServiceI.SYSTEM_BASE_CACHE);
+		cacheService.clean(CacheService.SYSTEM_BASE_CACHE);
 	}
 }

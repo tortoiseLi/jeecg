@@ -54,12 +54,7 @@ import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.datatable.SortDirection;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
-import org.jeecgframework.web.system.pojo.base.TSAttachment;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.pojo.base.TSFunction;
-import org.jeecgframework.web.system.pojo.base.TSType;
-import org.jeecgframework.web.system.pojo.base.TSTypegroup;
-import org.jeecgframework.web.system.pojo.base.TSUser;
+import org.jeecgframework.web.system.pojo.base.*;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -183,7 +178,7 @@ public class JeecgFormDemoController extends BaseController {
 	@RequestMapping(params = "getComboTreeData")
 	@ResponseBody
 	public List<ComboTree> getComboTreeData(HttpServletRequest request, ComboTree comboTree) {
-		CriteriaQuery cq = new CriteriaQuery(TSDepart.class);
+		CriteriaQuery cq = new CriteriaQuery(DepartEntity.class);
 		if (comboTree.getId() != null) {
 			cq.eq("TSPDepart.id", comboTree.getId());
 		}
@@ -191,7 +186,7 @@ public class JeecgFormDemoController extends BaseController {
 			cq.isNull("TSPDepart");
 		}
 		cq.add();
-		List<TSDepart> demoList = systemService.getListByCriteriaQuery(cq, false);
+		List<DepartEntity> demoList = systemService.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id", "departname", "TSDeparts");
 		comboTrees = systemService.ComboTree(demoList, comboTreeModel, null, false);
@@ -206,16 +201,16 @@ public class JeecgFormDemoController extends BaseController {
 	 */
 	@RequestMapping(params="getTreeData",method ={RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
-	public AjaxJson getTreeData(TSDepart depatr,HttpServletResponse response,HttpServletRequest request ){
+	public AjaxJson getTreeData(DepartEntity depatr,HttpServletResponse response,HttpServletRequest request ){
 		AjaxJson j = new AjaxJson();
 		try{
-			List<TSDepart> depatrList = new ArrayList<TSDepart>();
-			StringBuffer hql = new StringBuffer(" from TSDepart t");
+			List<DepartEntity> depatrList = new ArrayList<DepartEntity>();
+			StringBuffer hql = new StringBuffer(" from DepartEntity t");
 			//hql.append(" and (parent.id is null or parent.id='')");
 			depatrList = this.systemService.findHql(hql.toString());
 			List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
 			Map<String,Object> map = null;
-			for (TSDepart tsdepart : depatrList) {
+			for (DepartEntity tsdepart : depatrList) {
 				String sqls = null;
 				Object[] paramss = null;
 				map = new HashMap<String,Object>();
@@ -234,7 +229,7 @@ public class JeecgFormDemoController extends BaseController {
 				if(counts>0){
 					dataList.add(map);
 				}else{
-					TSDepart de = this.systemService.get(TSDepart.class, tsdepart.getId());
+					DepartEntity de = this.systemService.get(DepartEntity.class, tsdepart.getId());
 					if (de != null) {
 						map.put("id", de.getId());
 						map.put("name", de.getDepartname());
@@ -341,8 +336,8 @@ public class JeecgFormDemoController extends BaseController {
 				ajaxJson.setMsg("未上传文件");
 				return ajaxJson;
 			}
-			TSTypegroup tsTypegroup=systemService.getTypeGroup("fieltype","文档分类");
-			TSType tsType = systemService.getType("files","附件", tsTypegroup);
+			TypeGroupEntity tsTypegroup=systemService.getTypeGroup("fieltype","文档分类");
+			TypeEntity tsType = systemService.getType("files","附件", tsTypegroup);
 			TSDocument document = new TSDocument();
 			document.setDocumentTitle(documentTitle);
 			document.setRealpath(filename);
@@ -385,7 +380,7 @@ public class JeecgFormDemoController extends BaseController {
 		if (StringUtil.isNotEmpty(doc.getId())) {
 			doc = systemService.getEntity(TSDocument.class, doc.getId());
 			map.put("doc", doc);
-			TSAttachment attachment = systemService.get(TSAttachment.class, doc.getId());
+			AttachmentEntity attachment = systemService.get(AttachmentEntity.class, doc.getId());
 			map.put("attachment",attachment);
 		}
 		return new ModelAndView("system/document/files");
@@ -403,8 +398,8 @@ public class JeecgFormDemoController extends BaseController {
 	public AjaxJson saveFiles(HttpServletRequest request, HttpServletResponse response, TSDocument document) {
 		AjaxJson j = new AjaxJson();
 		Map<String, Object> attributes = new HashMap<String, Object>();
-		TSTypegroup tsTypegroup=systemService.getTypeGroup("fieltype","文档分类");
-		TSType tsType = systemService.getType("files","附件", tsTypegroup);
+		TypeGroupEntity tsTypegroup=systemService.getTypeGroup("fieltype","文档分类");
+		TypeEntity tsType = systemService.getType("files","附件", tsTypegroup);
 		String documentId = oConvertUtils.getString(request.getParameter("documentId"));// 文件ID
 		String documentTitle = oConvertUtils.getString(request.getParameter("documentTitle"));// 文件标题
 		if (StringUtil.isNotEmpty(documentId)) {
@@ -501,7 +496,7 @@ public class JeecgFormDemoController extends BaseController {
 	@RequestMapping(params = "functionGrid")
 	@ResponseBody
 	public  Object functionGrid(HttpServletRequest request,TreeGrid treegrid, Integer type,HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSFunction.class,dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(FunctionEntity.class,dataGrid);
 		boolean pageflag=true;
 		String selfId = request.getParameter("selfId");
 		if (selfId != null) {
@@ -522,10 +517,10 @@ public class JeecgFormDemoController extends BaseController {
 
 		//--手工加载数据权限条件--------
 		//获取装载数据权限的条件HQL
-		cq = HqlGenerateUtil.getDataAuthorConditionHql(cq, new TSFunction());
+		cq = HqlGenerateUtil.getDataAuthorConditionHql(cq, new FunctionEntity());
 		cq.add();
 
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, pageflag);
+		List<FunctionEntity> functionList = systemService.getListByCriteriaQuery(cq, pageflag);
 		Long total=systemService.getCountForJdbc("select count(*) from t_s_function where functionlevel=0");
 		//菜单管理页面：菜单排序
 		Collections.sort(functionList, new NumberComparator());
@@ -597,8 +592,8 @@ public class JeecgFormDemoController extends BaseController {
 	 */
 	@RequestMapping(params = "easyUIGrid", method = RequestMethod.POST)
 	@ResponseBody
-	public void getEasyUIGrid(TSUser user,HttpServletRequest request,HttpServletResponse response,DataGrid dataGrid)throws Exception{
-		CriteriaQuery cq = new CriteriaQuery(TSUser.class, dataGrid);
+	public void getEasyUIGrid(UserEntity user,HttpServletRequest request,HttpServletResponse response,DataGrid dataGrid)throws Exception{
+		CriteriaQuery cq = new CriteriaQuery(UserEntity.class, dataGrid);
         //查询条件组装器
         org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, user);
         Short[] userstate = new Short[]{Globals.User_Normal, Globals.User_ADMIN, Globals.User_Forbidden};
@@ -617,15 +612,15 @@ public class JeecgFormDemoController extends BaseController {
 	
 	@RequestMapping(params="getTreeDemoData",method ={RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
-	public AjaxJson getTreeDemoData(TSDepart depatr,HttpServletResponse response,HttpServletRequest request ){
+	public AjaxJson getTreeDemoData(DepartEntity depatr,HttpServletResponse response,HttpServletRequest request ){
 		AjaxJson j = new AjaxJson();
 		try{
-			List<TSDepart> depatrList = new ArrayList<TSDepart>();
-			StringBuffer hql = new StringBuffer(" from TSDepart t");
+			List<DepartEntity> depatrList = new ArrayList<DepartEntity>();
+			StringBuffer hql = new StringBuffer(" from DepartEntity t");
 			depatrList = this.systemService.findHql(hql.toString());
 			List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
 			Map<String,Object> map = null;
-			for (TSDepart tsdepart : depatrList) {
+			for (DepartEntity tsdepart : depatrList) {
 				map = new HashMap<String,Object>();
 				map.put("chkDisabled",false);
 				map.put("click", true);
@@ -656,9 +651,9 @@ public class JeecgFormDemoController extends BaseController {
 	 */
 	@RequestMapping(params = "del")
 	@ResponseBody
-	public AjaxJson del(TSDepart depart, HttpServletRequest request) {
+	public AjaxJson del(DepartEntity depart, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		depart = systemService.getEntity(TSDepart.class, depart.getId());
+		depart = systemService.getEntity(DepartEntity.class, depart.getId());
         Long childCount = systemService.getCountForJdbcParam("select count(1) from t_s_depart where parentdepartid = ?", depart.getId());
         if(childCount>0){
         	j.setSuccess(false);

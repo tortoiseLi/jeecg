@@ -16,7 +16,7 @@ import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
+import org.jeecgframework.web.system.pojo.base.OperationEntity;
 import org.jeecgframework.web.system.service.SystemService;
 /**
  * 
@@ -212,7 +212,7 @@ public class MenuButtonsTag extends TagSupport{
 			for (String operationCodeId : operationCodeIds) {
 				if (oConvertUtils.isEmpty(operationCodeId))
 					continue;
-				TSOperation operation = systemService.getEntity(TSOperation.class, operationCodeId);
+				OperationEntity operation = systemService.getEntity(OperationEntity.class, operationCodeId);
 				if(operation!=null){
 					list.add(operation.getOperationcode());
 				}

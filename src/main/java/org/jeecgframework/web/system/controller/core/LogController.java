@@ -30,7 +30,7 @@ import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.pojo.base.TSLog;
+import org.jeecgframework.web.system.pojo.base.LogEntity;
 import org.jeecgframework.web.system.service.LogService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.slf4j.Logger;
@@ -88,7 +88,7 @@ public class LogController extends BaseController {
 	 */
 	@RequestMapping(params = "datagrid")
 	public void datagrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(TSLog.class, dataGrid);
+		CriteriaQuery cq = new CriteriaQuery(LogEntity.class, dataGrid);
 		
 		//日志级别查询条件
 		String operatetype = request.getParameter("operatetype");
@@ -128,9 +128,9 @@ public class LogController extends BaseController {
 	 * @Date 2015-05-10
 	 */
 	@RequestMapping(params = "logDetail")
-	public ModelAndView logDetail(TSLog tsLog,HttpServletRequest request){
+	public ModelAndView logDetail(LogEntity tsLog,HttpServletRequest request){
 		if (StringUtil.isNotEmpty(tsLog.getId())) {
-			tsLog = logService.getEntity(TSLog.class, tsLog.getId());
+			tsLog = logService.getEntity(LogEntity.class, tsLog.getId());
 			request.setAttribute("tsLog", tsLog);
 		}
 		return new ModelAndView("system/log/logDetail");
@@ -139,9 +139,9 @@ public class LogController extends BaseController {
 	
 	/**
 	 * @RequestMapping(params = "addorupdate")
-	public ModelAndView addorupdate(TSTimeTaskEntity timeTask, HttpServletRequest req) {
+	public ModelAndView addorupdate(TimeTaskEntity timeTask, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(timeTask.getId())) {
-			timeTask = timeTaskService.getEntity(TSTimeTaskEntity.class, timeTask.getId());
+			timeTask = timeTaskService.getEntity(TimeTaskEntity.class, timeTask.getId());
 			req.setAttribute("timeTaskPage", timeTask);
 		}
 		return new ModelAndView("system/timetask/timeTask");
@@ -185,7 +185,7 @@ public class LogController extends BaseController {
 		List<Highchart> list = new ArrayList<Highchart>();
 		Highchart hc = new Highchart();
 		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT broswer ,count(broswer) FROM TSLog group by broswer");
+		sb.append("SELECT broswer ,count(broswer) FROM LogEntity group by broswer");
 		List userBroswerList = systemService.findByQueryString(sb.toString());
 		Long count = systemService.getCountForJdbc("SELECT COUNT(1) FROM T_S_Log WHERE 1=1");
 		List lt = new ArrayList();

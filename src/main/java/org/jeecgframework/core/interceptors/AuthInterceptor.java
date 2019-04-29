@@ -25,9 +25,9 @@ import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.manager.ClientManager;
 import org.jeecgframework.web.system.pojo.base.Client;
-import org.jeecgframework.web.system.pojo.base.TSDataRule;
-import org.jeecgframework.web.system.pojo.base.TSOperation;
-import org.jeecgframework.web.system.pojo.base.TSUser;
+import org.jeecgframework.web.system.pojo.base.DataRuleEntity;
+import org.jeecgframework.web.system.pojo.base.OperationEntity;
+import org.jeecgframework.web.system.pojo.base.UserEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -91,7 +91,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 			return true;
 		} else {
 			Client client = clientManager.getClient(ContextHolderUtils.getSession().getId());
-			TSUser currLoginUser = client!=null?client.getUser():null;
+			UserEntity currLoginUser = client!=null?client.getUser():null;
 			if (currLoginUser!=null ) {
 				String loginUserName = currLoginUser.getUserName();
 				String loginUserId = currLoginUser.getId();
@@ -137,19 +137,19 @@ public class AuthInterceptor implements HandlerInterceptor {
 					//获取菜单对应的页面控制权限（包括表单字段和操作按钮）
 					//多个角色权限（并集问题），因为是反的控制，导致有admin的最大权限反而受小权限控制
 
-					List<TSOperation> operations = systemService.getLoginOperationsByUserId(loginUserId, functionId, orgId);
+					List<OperationEntity> operations = systemService.getLoginOperationsByUserId(loginUserId, functionId, orgId);
 
 					request.setAttribute(Globals.NOAUTO_OPERATIONCODES, operations);
 					if(operations!=null){
 						Set<String> operationCodes = new HashSet<String>();
-						for (TSOperation operation : operations) {
+						for (OperationEntity operation : operations) {
 							operationCodes.add(operation.getId());
 						}
 						request.setAttribute(Globals.OPERATIONCODES, operationCodes);
 					}
 					
 					 //Step.2  【数据权限】第二部分处理列表数据级权限 (菜单数据规则集合)
-					 List<TSDataRule> MENU_DATA_AUTHOR_RULES = new ArrayList<TSDataRule>(); 
+					 List<DataRuleEntity> MENU_DATA_AUTHOR_RULES = new ArrayList<DataRuleEntity>();
 					 String MENU_DATA_AUTHOR_RULE_SQL="";
 					
 				 	//数据权限规则的查询
@@ -159,7 +159,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 					 request.setAttribute("dataRulecodes", dataRuleIds);
 					 for (String dataRuleId : dataRuleIds) {
-						TSDataRule dataRule = systemService.getEntity(TSDataRule.class, dataRuleId);
+						 DataRuleEntity dataRule = systemService.getEntity(DataRuleEntity.class, dataRuleId);
 					 	MENU_DATA_AUTHOR_RULES.add(dataRule);
 					 	MENU_DATA_AUTHOR_RULE_SQL += SysContextSqlConvert.setSqlModel(dataRule);
 					}

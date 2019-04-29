@@ -7,14 +7,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Set;
 import javax.annotation.Resource;
-import org.jeecgframework.web.system.service.CacheServiceI;
+import org.jeecgframework.web.system.service.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import freemarker.template.Template;
 
-public class RedisCacheService implements CacheServiceI {
+public class RedisCacheService implements CacheService {
 	private static final Logger log = LoggerFactory.getLogger(RedisCacheService.class);
 
 	@Resource

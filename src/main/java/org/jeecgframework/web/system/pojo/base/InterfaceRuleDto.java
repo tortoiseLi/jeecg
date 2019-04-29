@@ -2,6 +2,12 @@ package org.jeecgframework.web.system.pojo.base;
 
 import java.util.List;
 
+/**
+ * 接口规则
+ * @author DELL
+ * @date 2019-04-29
+ * @version V1.0
+ */
 public class InterfaceRuleDto {
 	
 	/**
@@ -17,7 +23,7 @@ public class InterfaceRuleDto {
 	/**
 	 * 接口规则
 	 */
-	private List<TSInterfaceDdataRuleEntity> interfaceDataRule;
+	private List<InterfaceDdataRuleEntity> interfaceDataRule;
 
 	public String getInterfaceCode() {
 		return interfaceCode;
@@ -35,27 +41,12 @@ public class InterfaceRuleDto {
 		this.dataRule = dataRule;
 	}
 
-	public List<TSInterfaceDdataRuleEntity> getInterfaceDataRule() {
+	public List<InterfaceDdataRuleEntity> getInterfaceDataRule() {
 		return interfaceDataRule;
 	}
 
 	public void setInterfaceDataRule(
-			List<TSInterfaceDdataRuleEntity> interfaceDataRule) {
+			List<InterfaceDdataRuleEntity> interfaceDataRule) {
 		this.interfaceDataRule = interfaceDataRule;
 	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("InterfaceRuleDto [interfaceCode=");
-		builder.append(interfaceCode);
-		builder.append(", dataRule=");
-		builder.append(dataRule);
-		builder.append(", interfaceDataRule=");
-		builder.append(interfaceDataRule);
-		builder.append("]");
-		return builder.toString();
-	}
-	
-	
 }

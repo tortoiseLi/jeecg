@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.jeecgframework.web.system.pojo.base.TSAttachment;
+import org.jeecgframework.web.system.pojo.base.AttachmentEntity;
 
 /**
  * 
@@ -19,7 +19,7 @@ import org.jeecgframework.web.system.pojo.base.TSAttachment;
 @Table(name = "cgform_uploadfiles", schema = "")
 @PrimaryKeyJoinColumn(name = "id")
 @SuppressWarnings("serial")
-public class CgUploadEntity extends TSAttachment implements java.io.Serializable{
+public class CgUploadEntity extends AttachmentEntity implements java.io.Serializable{
 	
 	/**自定义表名*/
 	private String cgformName;

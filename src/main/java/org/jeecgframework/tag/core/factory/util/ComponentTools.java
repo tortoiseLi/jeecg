@@ -17,7 +17,8 @@ import org.jeecgframework.tag.vo.easyui.ColumnValue;
 import org.jeecgframework.tag.vo.easyui.DataGridColumn;
 import org.jeecgframework.tag.vo.easyui.DataGridUrl;
 import org.jeecgframework.tag.vo.easyui.OptTypeDirection;
-import org.jeecgframework.web.system.pojo.base.TSType;
+import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.pojo.base.TypeEntity;
 import org.jeecgframework.web.system.service.SystemService;
 
 public class ComponentTools {
@@ -268,8 +269,8 @@ public class ComponentTools {
 		return sb.toString();
 	}
 	
-	public List<TSType> getDictData(DataGridColumn col){
-		List<TSType> types = ResourceUtil.getCacheTypes(col.getDictionary().toLowerCase());
+	public List<TypeEntity> getDictData(DataGridColumn col){
+		List<TypeEntity> types = ResourceUtil.getCacheTypes(col.getDictionary().toLowerCase());
 		return types;
 	}
 	

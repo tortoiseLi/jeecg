@@ -10,7 +10,7 @@ import org.jeecgframework.core.extend.hqlsearch.parse.vo.HqlRuleEnum;
 import org.jeecgframework.core.util.DateUtils;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.pojo.base.TSDataRule;
+import org.jeecgframework.web.system.pojo.base.DataRuleEntity;
 
 /**
  * 数据库列表序列化转换sql
@@ -38,7 +38,7 @@ public class SysContextSqlConvert {
 	 * @return String 返回类型
 	 * @throws
 	 */
-	public static String setSqlModel(TSDataRule dataRule){
+	public static String setSqlModel(DataRuleEntity dataRule){
 		if(dataRule == null) 
 		return "";
 		String sqlValue="";
