@@ -17,7 +17,7 @@ public class FunctionServiceImpl extends CommonServiceImpl implements FunctionSe
 	@Override
 	public AjaxJson delFunction(String functionId) {
 		AjaxJson j = new AjaxJson();
-		FunctionEntity function = this.getEntity(FunctionEntity.class, functionId);
+		FunctionEntity function = this.getById(FunctionEntity.class, functionId);
 		String message = MutiLangUtil.paramDelSuccess("common.menu");
 		//删除角色菜单关系
 		this.executeSql("delete from t_s_role_function where functionid=?", functionId);
@@ -41,7 +41,7 @@ public class FunctionServiceImpl extends CommonServiceImpl implements FunctionSe
 				j.setSuccess(false);
 				return j;
 			}
-			List<DataRuleEntity> tsdr = this.findByProperty(DataRuleEntity.class, "TSFunction", function);
+			List<DataRuleEntity> tsdr = this.findListByProperty(DataRuleEntity.class, "TSFunction", function);
 			if (tsdr != null && tsdr.size() > 0) {
 				message = "菜单【" + MutiLangUtil.getLang(function.getFunctionName()) + "】存在数据规则，不能删除";
 				j.setMsg(message);

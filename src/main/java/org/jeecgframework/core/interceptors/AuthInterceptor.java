@@ -159,7 +159,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 					 request.setAttribute("dataRulecodes", dataRuleIds);
 					 for (String dataRuleId : dataRuleIds) {
-						 DataRuleEntity dataRule = systemService.getEntity(DataRuleEntity.class, dataRuleId);
+						 DataRuleEntity dataRule = systemService.getById(DataRuleEntity.class, dataRuleId);
 					 	MENU_DATA_AUTHOR_RULES.add(dataRule);
 					 	MENU_DATA_AUTHOR_RULE_SQL += SysContextSqlConvert.setSqlModel(dataRule);
 					}

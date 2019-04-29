@@ -56,11 +56,13 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	@Resource
 	private ClientManager clientManager;
 	
+	@Override
 	@Transactional(readOnly = true)
 	public UserEntity checkUserExits(UserEntity user){
 		return this.commonDao.getUserByUserIdAndUserNameExits(user);
 	}
 	
+	@Override
 	@Transactional(readOnly = true)
 	public UserEntity checkUserExits(String username,String password){
 		return this.commonDao.findUserByAccountAndPassword(username,password);
@@ -87,7 +89,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	@Override
 	public String trueDel(UserEntity user) {
 		String message = "";
-		List<RoleUserEntity> roleUser = this.commonDao.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
+		List<RoleUserEntity> roleUser = this.commonDao.findListByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
 		if (!user.getStatus().equals(Globals.User_ADMIN)) {
 			if (roleUser.size()>0) {
 				// 删除用户时先删除用户和角色关系表
@@ -108,7 +110,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	
 	private void delRoleUser(UserEntity user) {
 		// 同步删除用户角色关联表
-		List<RoleUserEntity> roleUserList = this.commonDao.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
+		List<RoleUserEntity> roleUserList = this.commonDao.findListByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
 		if (roleUserList.size() >= 1) {
 			for (RoleUserEntity tRoleUser : roleUserList) {
 				this.commonDao.delete(tRoleUser);
@@ -136,18 +138,18 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 		log.setUsername(u.getUserName());
 		log.setRealname(u.getRealName());
 		/*update-end--Author chenqian 201708031TASK #2317 【改造】系统日志表，增加两个字段，避免关联查询 [操作人账号] [操作人名字]*/
-		commonDao.save(log);
+		commonDao.insert(log);
 	}
 
 	@Override
 	public void saveOrUpdate(UserEntity user, String[] orgIds, String[] roleIds) {
 		if(StringUtil.isNotEmpty(user.getId())){
 			commonDao.executeSql("delete from t_s_user_org where user_id=?", user.getId());
-			this.commonDao.updateEntitie(user);
-			List<RoleUserEntity> ru = commonDao.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
-			commonDao.deleteAllEntitie(ru);
+			this.commonDao.update(user);
+			List<RoleUserEntity> ru = commonDao.findListByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
+			commonDao.deleteByCollection(ru);
 		}else{
-			this.commonDao.save(user);
+			this.commonDao.insert(user);
 		}
 		saveUserOrgList(user,orgIds);
 		saveRoleUser(user,roleIds);
@@ -173,7 +175,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
         		userOrgList.add(userOrg);
         	}
         	if (!userOrgList.isEmpty()) {
-        		commonDao.batchSave(userOrgList);
+        		commonDao.batchInsert(userOrgList);
         	}
         }
     }
@@ -188,10 +190,10 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 			for (int i = 0; i < roleIds.length; i++) {
 				if(StringUtils.isBlank(roleIds[i]))continue;
 				RoleUserEntity rUser = new RoleUserEntity();
-				RoleEntity role = commonDao.get(RoleEntity.class, roleIds[i]);
+				RoleEntity role = commonDao.getById(RoleEntity.class, roleIds[i]);
 				rUser.setTSRole(role);
 				rUser.setTSUser(user);
-				commonDao.save(rUser);
+				commonDao.insert(rUser);
 			}
 		}
 	}
@@ -203,13 +205,14 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	 * @param userId 用户ID
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public Map<String, FunctionEntity> getLoginUserFunction(String userId) {
 		Map<String, FunctionEntity> loginActionlist = new HashMap<String, FunctionEntity>();
 		//查询用户角色对应的授权菜单
-		StringBuilder hqlsb1 = new StringBuilder("select distinct f from TSFunction f,RoleFunctionEntity rf,RoleUserEntity ru  ").append("where ru.TSRole.id=rf.TSRole.id and rf.TSFunction.id=f.id and ru.TSUser.id=? ");
+		StringBuilder hqlsb1 = new StringBuilder("select distinct f from FunctionEntity f,RoleFunctionEntity rf,RoleUserEntity ru  ").append("where ru.TSRole.id=rf.TSRole.id and rf.TSFunction.id=f.id and ru.TSUser.id=? ");
 		//查询用户组织机构授权的菜单
-		StringBuilder hqlsb2 = new StringBuilder("select distinct c from TSFunction c,RoleFunctionEntity rf,RoleOrgEntity b,UserOrgEntity a ").append("where a.tsDepart.id=b.tsDepart.id and b.tsRole.id=rf.TSRole.id and rf.TSFunction.id=c.id and a.tsUser.id=?");
+		StringBuilder hqlsb2 = new StringBuilder("select distinct c from FunctionEntity c,RoleFunctionEntity rf,RoleOrgEntity b,UserOrgEntity a ").append("where a.tsDepart.id=b.tsDepart.id and b.tsRole.id=rf.TSRole.id and rf.TSFunction.id=c.id and a.tsUser.id=?");
 		List<FunctionEntity> list1 = this.findHql(hqlsb1.toString(), userId);
 		List<FunctionEntity> list2 = this.findHql(hqlsb2.toString(), userId);
 		for (FunctionEntity function : list1) {
@@ -232,6 +235,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	 * @param userid 	用户ID
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public Map<Integer, List<FunctionEntity>> getFunctionMap(String userid) {
 		HttpSession session = ContextHolderUtils.getSession();
@@ -284,7 +288,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
      */
     public void saveLoginUserInfo(HttpServletRequest req, UserEntity user, String orgId) {
     	String message = null;
-		DepartEntity currentDepart = this.get(DepartEntity.class, orgId);
+		DepartEntity currentDepart = this.getById(DepartEntity.class, orgId);
         user.setCurrentDepart(currentDepart);
 
         HttpSession session = ContextHolderUtils.getSession();

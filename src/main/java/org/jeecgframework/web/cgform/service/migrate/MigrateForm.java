@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 import org.apache.tools.zip.ZipOutputStream;
-import org.jeecgframework.core.common.model.common.DBTable;
+import org.jeecgframework.core.common.model.common.DbTable;
 import org.jeecgframework.core.util.ReflectHelper;
 import org.jeecgframework.web.cgform.entity.button.CgformButtonEntity;
 import org.jeecgframework.web.cgform.entity.button.CgformButtonSqlEntity;
@@ -156,8 +156,8 @@ public class MigrateForm<T> {
 		return listSQL;
 	}
 	
-	public static List<DBTable> buildExportDbTableList(String ids, JdbcTemplate jdbcTemplate) throws Exception {
-		List<DBTable> listTables = new ArrayList<DBTable>();// SQL语句列表
+	public static List<DbTable> buildExportDbTableList(String ids, JdbcTemplate jdbcTemplate) throws Exception {
+		List<DbTable> listTables = new ArrayList<DbTable>();// SQL语句列表
 		listTables.clear();
 		String ls_sql = "";
 		String ls_tmpsql = "";
@@ -253,8 +253,8 @@ public class MigrateForm<T> {
 			getColumnNameAndColumeValue(listSQL, jdbcTemplate);
 	}
 
-	public static <T> DBTable<T> bulidDbTableFromSQL(String sql, Class<T> clazz, JdbcTemplate jdbcTemplate) throws InstantiationException, IllegalAccessException, Exception {
-		DBTable<T> dbTable = new DBTable<T>();
+	public static <T> DbTable<T> bulidDbTableFromSQL(String sql, Class<T> clazz, JdbcTemplate jdbcTemplate) throws InstantiationException, IllegalAccessException, Exception {
+		DbTable<T> dbTable = new DbTable<T>();
 		dbTable.setTableName(PublicUtil.getTableName(sql));
 		dbTable.setClass1(clazz);
 
@@ -380,7 +380,7 @@ public class MigrateForm<T> {
 		insertList.add(insertSQL.toString()); // 放到全局list里面
 	}
 	
-	public static void generateXmlDataOutFlieContent(List<DBTable> dbTables, String parentDir) throws BusinessException{
+	public static void generateXmlDataOutFlieContent(List<DbTable> dbTables, String parentDir) throws BusinessException{
 		File file = new File(parentDir);
 		if (!file.exists()) {
 			buildFile(parentDir, true);
@@ -388,7 +388,7 @@ public class MigrateForm<T> {
 		try {
 			XStream xStream = new XStream();
 			xStream.registerConverter(new NullConverter());
-			xStream.processAnnotations(DBTable.class);
+			xStream.processAnnotations(DbTable.class);
 			FileOutputStream outputStream = new FileOutputStream(buildFile(parentDir+"/migrateExport.xml", false));
 			Writer writer = new OutputStreamWriter(outputStream, "UTF-8");
 			writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n");

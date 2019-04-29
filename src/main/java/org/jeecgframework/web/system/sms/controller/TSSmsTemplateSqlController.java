@@ -129,7 +129,7 @@ public class TSSmsTemplateSqlController extends BaseController {
 	@ResponseBody
 	public AjaxJson doDel(TSSmsTemplateSqlEntity tSSmsTemplateSql, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		tSSmsTemplateSql = systemService.getEntity(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
+		tSSmsTemplateSql = systemService.getById(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
 		message = "消息模板_业务SQL配置表删除成功";
 		try{
 			tSSmsTemplateSqlService.delete(tSSmsTemplateSql);
@@ -155,7 +155,7 @@ public class TSSmsTemplateSqlController extends BaseController {
 		message = "消息模板_业务SQL配置表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSSmsTemplateSqlEntity tSSmsTemplateSql = systemService.getEntity(TSSmsTemplateSqlEntity.class, 
+				TSSmsTemplateSqlEntity tSSmsTemplateSql = systemService.getById(TSSmsTemplateSqlEntity.class,
 				id
 				);
 				tSSmsTemplateSqlService.delete(tSSmsTemplateSql);
@@ -205,7 +205,7 @@ public class TSSmsTemplateSqlController extends BaseController {
 	public AjaxJson doUpdate(TSSmsTemplateSqlEntity tSSmsTemplateSql, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		message = "消息模板_业务SQL配置表更新成功";
-		TSSmsTemplateSqlEntity t = tSSmsTemplateSqlService.get(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
+		TSSmsTemplateSqlEntity t = tSSmsTemplateSqlService.getById(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSSmsTemplateSql, t);
 			tSSmsTemplateSqlService.saveOrUpdate(t);
@@ -228,7 +228,7 @@ public class TSSmsTemplateSqlController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(TSSmsTemplateSqlEntity tSSmsTemplateSql, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSmsTemplateSql.getId())) {
-			tSSmsTemplateSql = tSSmsTemplateSqlService.getEntity(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
+			tSSmsTemplateSql = tSSmsTemplateSqlService.getById(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
 			req.setAttribute("tSSmsTemplateSqlPage", tSSmsTemplateSql);
 		}
 		return new ModelAndView("system/sms/tSSmsTemplateSql-add");
@@ -241,7 +241,7 @@ public class TSSmsTemplateSqlController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(TSSmsTemplateSqlEntity tSSmsTemplateSql, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSmsTemplateSql.getId())) {
-			tSSmsTemplateSql = tSSmsTemplateSqlService.getEntity(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
+			tSSmsTemplateSql = tSSmsTemplateSqlService.getById(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
 			req.setAttribute("tSSmsTemplateSqlPage", tSSmsTemplateSql);
 		}
 		return new ModelAndView("system/sms/tSSmsTemplateSql-update");

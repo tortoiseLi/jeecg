@@ -19,20 +19,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class CgFormIndexServiceImpl extends CommonServiceImpl implements CgFormIndexServiceI {
 	private static final Logger logger = Logger.getLogger(CgFormIndexServiceImpl.class);
 	
- 	public <T> void delete(T entity) {
+ 	@Override
+	public <T> void delete(T entity) {
  		super.delete(entity);
  		//执行删除操作配置的sql增强
 		this.doDelSql((CgFormIndexEntity)entity);
  	}
  	
- 	public <T> Serializable save(T entity) {
- 		Serializable t = super.save(entity);
+ 	@Override
+	public <T> Serializable save(T entity) {
+ 		Serializable t = super.add(entity);
  		//执行新增操作配置的sql增强
  		this.doAddSql((CgFormIndexEntity)entity);
  		return t;
  	}
  	
- 	public <T> void saveOrUpdate(T entity) {
+ 	@Override
+	public <T> void saveOrUpdate(T entity) {
  		super.saveOrUpdate(entity);
  		//执行更新操作配置的sql增强
  		this.doUpdateSql((CgFormIndexEntity)entity);
@@ -43,7 +46,8 @@ public class CgFormIndexServiceImpl extends CommonServiceImpl implements CgFormI
 	 * @param id
 	 * @return
 	 */
- 	public boolean doAddSql(CgFormIndexEntity t){
+ 	@Override
+	public boolean doAddSql(CgFormIndexEntity t){
 	 	return true;
  	}
  	/**
@@ -51,7 +55,8 @@ public class CgFormIndexServiceImpl extends CommonServiceImpl implements CgFormI
 	 * @param id
 	 * @return
 	 */
- 	public boolean doUpdateSql(CgFormIndexEntity t){
+ 	@Override
+	public boolean doUpdateSql(CgFormIndexEntity t){
 	 	return true;
  	}
  	/**
@@ -59,7 +64,8 @@ public class CgFormIndexServiceImpl extends CommonServiceImpl implements CgFormI
 	 * @param id
 	 * @return
 	 */
- 	public boolean doDelSql(CgFormIndexEntity t){
+ 	@Override
+	public boolean doDelSql(CgFormIndexEntity t){
 	 	return true;
  	}
  	
@@ -110,7 +116,7 @@ public class CgFormIndexServiceImpl extends CommonServiceImpl implements CgFormI
 		}
 		cgFormHead.setIsDbSynch(isChange ? "N" : cgFormHead.getIsDbSynch());
 		String id = cgFormHead.getId();
-		CgFormHeadEntity formhead = this.getEntity(CgFormHeadEntity.class, cgFormHead.getId());
+		CgFormHeadEntity formhead = this.getById(CgFormHeadEntity.class, cgFormHead.getId());
 		//根据名称先删除索引
 		/*List<CgFormIndexEntity> oldindexes = this.getSession().
 				createSQLQuery("select * from cgform_index where table_id = '" + cgFormHead.getId() + "'").addEntity(CgFormIndexEntity.class).list();*/
@@ -143,7 +149,7 @@ public class CgFormIndexServiceImpl extends CommonServiceImpl implements CgFormI
 
 	@Override
 	public void createIndexes(CgFormHeadEntity cgFormHead) {
-		CgFormHeadEntity formhead = this.getEntity(CgFormHeadEntity.class, cgFormHead.getId());
+		CgFormHeadEntity formhead = this.getById(CgFormHeadEntity.class, cgFormHead.getId());
 		List<CgFormIndexEntity> indexes = this.getSession().createSQLQuery("select * from cgform_index where table_id = '" + cgFormHead.getId() + "'").addEntity(CgFormIndexEntity.class).list();
 		if(indexes.size()!=0){
 			for(CgFormIndexEntity cgform : indexes){

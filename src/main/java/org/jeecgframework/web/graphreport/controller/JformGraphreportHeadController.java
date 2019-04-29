@@ -105,7 +105,7 @@ public class JformGraphreportHeadController extends BaseController {
 	@ResponseBody
 	public AjaxJson doDel(JformGraphreportHeadEntity jformGraphreportHead, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		jformGraphreportHead = systemService.getEntity(JformGraphreportHeadEntity.class, jformGraphreportHead.getId());
+		jformGraphreportHead = systemService.getById(JformGraphreportHeadEntity.class, jformGraphreportHead.getId());
 		String message = "图表配置删除成功";
 		try{
 			jformGraphreportHeadService.delMain(jformGraphreportHead);
@@ -132,7 +132,7 @@ public class JformGraphreportHeadController extends BaseController {
 		String message = "图表配置删除成功";
 		try{
 			for(String id:ids.split(",")){
-				JformGraphreportHeadEntity jformGraphreportHead = systemService.getEntity(JformGraphreportHeadEntity.class,
+				JformGraphreportHeadEntity jformGraphreportHead = systemService.getById(JformGraphreportHeadEntity.class,
 				id
 				);
 				jformGraphreportHeadService.delMain(jformGraphreportHead);
@@ -205,7 +205,7 @@ public class JformGraphreportHeadController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(JformGraphreportHeadEntity jformGraphreportHead, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jformGraphreportHead.getId())) {
-			jformGraphreportHead = jformGraphreportHeadService.getEntity(JformGraphreportHeadEntity.class, jformGraphreportHead.getId());
+			jformGraphreportHead = jformGraphreportHeadService.getById(JformGraphreportHeadEntity.class, jformGraphreportHead.getId());
 			req.setAttribute("jformGraphreportHeadPage", jformGraphreportHead);
 		}
 		return new ModelAndView("jeecg/graphreport/jformGraphreportHead-add");
@@ -219,7 +219,7 @@ public class JformGraphreportHeadController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(JformGraphreportHeadEntity jformGraphreportHead, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jformGraphreportHead.getId())) {
-			jformGraphreportHead = jformGraphreportHeadService.getEntity(JformGraphreportHeadEntity.class, jformGraphreportHead.getId());
+			jformGraphreportHead = jformGraphreportHeadService.getById(JformGraphreportHeadEntity.class, jformGraphreportHead.getId());
 			req.setAttribute("jformGraphreportHeadPage", jformGraphreportHead);
 		}
 		return new ModelAndView("jeecg/graphreport/jformGraphreportHead-update");

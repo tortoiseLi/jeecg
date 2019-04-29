@@ -35,7 +35,7 @@ public class NoticeAuthorityRoleServiceImpl extends CommonServiceImpl implements
  	}
  	
  	public <T> Serializable save(T entity) {
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		//执行新增操作配置的sql增强
  		this.doAddSql((NoticeAuthorityRoleEntity)entity);
  		return t;
@@ -126,12 +126,12 @@ public class NoticeAuthorityRoleServiceImpl extends CommonServiceImpl implements
 								noticeRead.setNoticeId(noticeId);
 								noticeRead.setUserId(userId);
 								noticeRead.setCreateTime(new Date());
-								systemService.save(noticeRead);
+								systemService.add(noticeRead);
 							}else if(noticeReadList.size() > 0){
 								for (NoticeReadUserEntity readUser : noticeReadList) {
 									if(readUser.getDelFlag() == 1){
 										readUser.setDelFlag(0);
-										systemService.updateEntitie(readUser);
+										systemService.update(readUser);
 									}
 								}
 							}
@@ -146,7 +146,7 @@ public class NoticeAuthorityRoleServiceImpl extends CommonServiceImpl implements
 	@Override
 	public void doDelTSNoticeAuthorityRole(
 			NoticeAuthorityRoleEntity noticeAuthorityRole) {
-		noticeAuthorityRole = systemService.getEntity(NoticeAuthorityRoleEntity.class, noticeAuthorityRole.getId());
+		noticeAuthorityRole = systemService.getById(NoticeAuthorityRoleEntity.class, noticeAuthorityRole.getId());
 		final String noticeId = noticeAuthorityRole.getNoticeId();
 		final String roleId = noticeAuthorityRole.getRole().getId();
 		executor.execute(new Runnable() {
@@ -173,7 +173,7 @@ public class NoticeAuthorityRoleServiceImpl extends CommonServiceImpl implements
 					}
 				}
 				for (NoticeReadUserEntity tsNoticeReadUser : updateList) {
-					systemService.updateEntitie(tsNoticeReadUser);
+					systemService.update(tsNoticeReadUser);
 				}
 				for (NoticeReadUserEntity readUser : deleteList) {
 					systemService.delete(readUser);

@@ -147,7 +147,7 @@ public class SuperQueryMainController extends BaseController {
 	@ResponseBody
 	public AjaxJson doDel(SuperQueryMainEntity superQueryMain, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		superQueryMain = systemService.getEntity(SuperQueryMainEntity.class, superQueryMain.getId());
+		superQueryMain = systemService.getById(SuperQueryMainEntity.class, superQueryMain.getId());
 		String message = "高级查询删除成功";
 		try{
 			superQueryMainService.delMain(superQueryMain);
@@ -173,7 +173,7 @@ public class SuperQueryMainController extends BaseController {
 		String message = "高级查询删除成功";
 		try{
 			for(String id:ids.split(",")){
-				SuperQueryMainEntity superQueryMain = systemService.getEntity(SuperQueryMainEntity.class,
+				SuperQueryMainEntity superQueryMain = systemService.getById(SuperQueryMainEntity.class,
 				id
 				);
 				superQueryMainService.delMain(superQueryMain);
@@ -245,7 +245,7 @@ public class SuperQueryMainController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(SuperQueryMainEntity superQueryMain, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(superQueryMain.getId())) {
-			superQueryMain = superQueryMainService.getEntity(SuperQueryMainEntity.class, superQueryMain.getId());
+			superQueryMain = superQueryMainService.getById(SuperQueryMainEntity.class, superQueryMain.getId());
 			req.setAttribute("superQueryMainPage", superQueryMain);
 			
 		}
@@ -263,7 +263,7 @@ public class SuperQueryMainController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(SuperQueryMainEntity superQueryMain, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(superQueryMain.getId())) {
-			superQueryMain = superQueryMainService.getEntity(SuperQueryMainEntity.class, superQueryMain.getId());
+			superQueryMain = superQueryMainService.getById(SuperQueryMainEntity.class, superQueryMain.getId());
 			req.setAttribute("superQueryMainPage", superQueryMain);
 		}
 		return new ModelAndView("jeecg/superquery/superQueryMain-update");
@@ -430,7 +430,7 @@ public class SuperQueryMainController extends BaseController {
 	@ResponseBody
 	//@ApiOperation(value="高级查询列表信息",produces="application/json",httpMethod="GET")
 	public ResponseMessage<List<SuperQueryMainPage>> list() {
-		List<SuperQueryMainEntity> list= superQueryMainService.getList(SuperQueryMainEntity.class);
+		List<SuperQueryMainEntity> list= superQueryMainService.findList(SuperQueryMainEntity.class);
     	List<SuperQueryMainPage> pageList=new ArrayList<SuperQueryMainPage>();
         if(list!=null&&list.size()>0){
         	for(SuperQueryMainEntity entity:list){
@@ -458,7 +458,7 @@ public class SuperQueryMainController extends BaseController {
 	@ResponseBody
 	//@ApiOperation(value="根据ID获取高级查询信息",notes="根据ID获取高级查询信息",httpMethod="GET",produces="application/json")
 	public ResponseMessage<?> get(@ApiParam(required=true,name="id",value="ID")@PathVariable("id") String id) {
-		SuperQueryMainEntity task = superQueryMainService.get(SuperQueryMainEntity.class, id);
+		SuperQueryMainEntity task = superQueryMainService.getById(SuperQueryMainEntity.class, id);
 		if (task == null) {
 			return Result.error("根据ID获取高级查询信息为空");
 		}
@@ -542,7 +542,7 @@ public class SuperQueryMainController extends BaseController {
 			return Result.error("ID不能为空");
 		}
 		try {
-			SuperQueryMainEntity superQueryMain = superQueryMainService.get(SuperQueryMainEntity.class, id);
+			SuperQueryMainEntity superQueryMain = superQueryMainService.getById(SuperQueryMainEntity.class, id);
 			superQueryMainService.delMain(superQueryMain);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -690,7 +690,7 @@ public class SuperQueryMainController extends BaseController {
 					historyEntity.setRecord(substring );
 					historyEntity.setUserId(userId);
 					historyEntity.setQueryCode(queryCode);
-					systemService.save(historyEntity);
+					systemService.add(historyEntity);
 					ajaxJson.setSuccess(true);
 				}
 			} 

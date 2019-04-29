@@ -34,7 +34,7 @@ public class InterroleServiceImpl extends CommonServiceImpl implements Interrole
  	}
  	
  	public Serializable save(InterroleEntity entity) throws Exception{
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		//执行新增操作增强业务
  		this.doAddBus(entity);
  		return t;
@@ -136,7 +136,7 @@ public class InterroleServiceImpl extends CommonServiceImpl implements Interrole
  	
  	public Set<String> getOperationCodesByRoleIdAndruleDataId(String roleId,String interfaceId) {
 		Set<String> operationCodes = new HashSet<String>();
-		InterroleEntity role = commonDao.get(InterroleEntity.class, roleId);
+		InterroleEntity role = commonDao.getById(InterroleEntity.class, roleId);
 		CriteriaQuery cq1 = new CriteriaQuery(InterroleInterfaceEntity.class);
 		cq1.eq("interroleEntity.id", role.getId());
 		cq1.eq("interfaceEntity.id", interfaceId);

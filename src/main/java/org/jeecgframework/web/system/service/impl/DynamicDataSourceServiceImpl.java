@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.jeecgframework.core.common.dao.ICommonDao;
+import org.jeecgframework.core.common.dao.CommonDao;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.web.system.pojo.base.DynamicDataSourceEntity;
 import org.jeecgframework.web.system.service.CacheService;
@@ -23,7 +23,7 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceService {
 	private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceServiceImpl.class);
 	
 	@Autowired
-	public ICommonDao commonDao;
+	public CommonDao commonDao;
 	@Resource
 	private CacheService cacheService;
 	
@@ -31,7 +31,7 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceService {
 	@Transactional(readOnly = true)
 	public List<DynamicDataSourceEntity> initDynamicDataSource() {
 		Map<String, DynamicDataSourceEntity> dynamicDataSourceMap = new HashMap<String, DynamicDataSourceEntity>();
-		List<DynamicDataSourceEntity> dynamicSourceEntityList = this.commonDao.loadAll(DynamicDataSourceEntity.class);
+		List<DynamicDataSourceEntity> dynamicSourceEntityList = this.commonDao.findList(DynamicDataSourceEntity.class);
 
 		for (DynamicDataSourceEntity dynamicSourceEntity : dynamicSourceEntityList) {
 			dynamicDataSourceMap.put(dynamicSourceEntity.getDbKey(), dynamicSourceEntity);

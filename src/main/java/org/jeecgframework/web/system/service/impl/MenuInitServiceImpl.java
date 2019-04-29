@@ -42,8 +42,8 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 		// 4.循环@AutoMenuOperation方法标签，判断该菜单下是否有该操作码配置，如果存在不插入，不存在进行插入
 		// 比较规则[菜单ID-操作码 ：全匹配]
 
-		List<FunctionEntity> functionList = this.loadAll(FunctionEntity.class);
-		List<OperationEntity> operationList = this.loadAll(OperationEntity.class);
+		List<FunctionEntity> functionList = this.findList(FunctionEntity.class);
+		List<OperationEntity> operationList = this.findList(OperationEntity.class);
 		
 		Map<String, FunctionEntity> functionMap = new HashMap<String, FunctionEntity>();//菜单map,key为菜单匹配规则的字符串
 		Map<String, OperationEntity> operationMap = new HashMap<String, OperationEntity>();//菜单操作按钮map,key为菜单操作按钮匹配规则的字符串
@@ -96,7 +96,7 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 						
 						String iconId = autoMenu.icon();
 						if (StringUtil.isNotEmpty(iconId)) {
-							Object obj = this.get(IconEntity.class, iconId);
+							Object obj = this.getById(IconEntity.class, iconId);
 							if(obj!=null){
 								function.setTSIcon((IconEntity)obj);
 							}else{
@@ -105,7 +105,7 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 						} else {
 							function.setTSIcon(null);
 						}
-						Serializable id = this.save(function);
+						Serializable id = this.add(function);
 						function.setId(id.toString());
 					} else {
 						function = functionMap.get(menuKey.toString());
@@ -151,7 +151,7 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 									} else {
 										operation.setTSIcon(null);
 									}
-									this.save(operation);
+									this.add(operation);
 								}
 							}
 						}

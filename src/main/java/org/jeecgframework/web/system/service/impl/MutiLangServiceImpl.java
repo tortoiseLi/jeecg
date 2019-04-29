@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jeecgframework.core.common.dao.ICommonDao;
+import org.jeecgframework.core.common.dao.CommonDao;
 import org.jeecgframework.core.util.BrowserUtils;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.ResourceUtil;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MutiLangServiceImpl implements MutiLangService {
 	private static final Logger logger = LoggerFactory.getLogger(MutiLangServiceImpl.class);
 	@Autowired
-	public ICommonDao commonDao;
+	public CommonDao commonDao;
 	@Autowired
 	private CacheService cacheService;
 	
@@ -35,7 +35,7 @@ public class MutiLangServiceImpl implements MutiLangService {
 	@Transactional(readOnly = true)
 	public void initAllMutiLang() {
 		Map<String, String> ls = new HashMap<String, String>();
-		List<MutiLangEntity> mutiLang = this.commonDao.loadAll(MutiLangEntity.class);
+		List<MutiLangEntity> mutiLang = this.commonDao.findList(MutiLangEntity.class);
 		for (MutiLangEntity mutiLangEntity : mutiLang) {
 			ls.put(mutiLangEntity.getLangKey() + "_" + mutiLangEntity.getLangCode(), mutiLangEntity.getLangContext());
 		}

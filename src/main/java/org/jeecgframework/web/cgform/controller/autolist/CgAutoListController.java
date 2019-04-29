@@ -464,7 +464,7 @@ public class CgAutoListController extends BaseController{
 		if(operationCodes != null){
 			OperationEntity tsOperation;
 			for (String id : operationCodes) {
-				tsOperation = systemService.getEntity(OperationEntity.class, id);
+				tsOperation = systemService.getById(OperationEntity.class, id);
 				if(tsOperation != null && tsOperation.getOperationType() == 0 && tsOperation.getStatus() == 0){
 					operationCodesMap.put(tsOperation.getOperationcode(), tsOperation);
 				}

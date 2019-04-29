@@ -167,21 +167,21 @@ public class FunctionController extends BaseController {
 	public AjaxJson delop(OperationEntity operation, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		operation = systemService.getEntity(OperationEntity.class,
+		operation = systemService.getById(OperationEntity.class,
 				operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
 
 		String operationId = operation.getId();
 		String hql = "from RoleFunctionEntity rolefun where rolefun.operation like '%"+operationId+"%'";
-		List<RoleFunctionEntity> roleFunctions= userService.findByQueryString(hql);
+		List<RoleFunctionEntity> roleFunctions= userService.findListByHql(hql);
 		for(RoleFunctionEntity roleFunction:roleFunctions){
 			String newOper =roleFunction.getOperation().replace(operationId+",", "");
 			if(roleFunction.getOperation().length()==newOper.length()){
 				newOper = roleFunction.getOperation().replace(operationId, "");
 			}
 			roleFunction.setOperation(newOper);
-			userService.updateEntitie(roleFunction);
+			userService.update(roleFunction);
 		}
 
 
@@ -206,7 +206,7 @@ public class FunctionController extends BaseController {
 				tsFunction.setFunctionLevel(Short.valueOf(parent.getFunctionLevel()
 						+ 1 + ""));
 				systemService.saveOrUpdate(tsFunction);
-				List<FunctionEntity> subFunction1 = systemService.findByProperty(FunctionEntity.class, "TSFunction.id", tsFunction.getId());
+				List<FunctionEntity> subFunction1 = systemService.findListByProperty(FunctionEntity.class, "TSFunction.id", tsFunction.getId());
 				updateSubFunction(subFunction1,tsFunction);
 		   }
        }
@@ -231,12 +231,12 @@ public class FunctionController extends BaseController {
 		if (function.getTSFunction().getId().equals("")) {
 			function.setTSFunction(null);
 		} else {
-			FunctionEntity parent = systemService.getEntity(FunctionEntity.class,function.getTSFunction().getId());
+			FunctionEntity parent = systemService.getById(FunctionEntity.class,function.getTSFunction().getId());
 			function.setFunctionLevel(Short.valueOf(parent.getFunctionLevel()+ 1 + ""));
 		}
 		if (StringUtil.isNotEmpty(function.getId())) {
 			message = MutiLangUtil.paramUpdSuccess("common.menu");
-			FunctionEntity t = systemService.getEntity(FunctionEntity.class,function.getId());
+			FunctionEntity t = systemService.getById(FunctionEntity.class,function.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(function, t);
 
@@ -250,7 +250,7 @@ public class FunctionController extends BaseController {
 			}
 			systemService.addLog(message, Globals.Log_Type_UPDATE,Globals.Log_Leavel_INFO);
 
-			List<FunctionEntity> subFunction = systemService.findByProperty(FunctionEntity.class, "TSFunction.id", function.getId());
+			List<FunctionEntity> subFunction = systemService.findListByProperty(FunctionEntity.class, "TSFunction.id", function.getId());
 			updateSubFunction(subFunction,function);
 
 
@@ -258,14 +258,14 @@ public class FunctionController extends BaseController {
 
 		} else {
 			if (function.getFunctionLevel().equals(Globals.Function_Leave_ONE)) {
-				List<FunctionEntity> functionList = systemService.findByProperty(
+				List<FunctionEntity> functionList = systemService.findListByProperty(
 						FunctionEntity.class, "functionLevel",
 						Globals.Function_Leave_ONE);
 				// int ordre=functionList.size()+1;
 				// function.setFunctionOrder(Globals.Function_Order_ONE+ordre);
 				function.setFunctionOrder(function.getFunctionOrder());
 			} else {
-				List<FunctionEntity> functionList = systemService.findByProperty(
+				List<FunctionEntity> functionList = systemService.findListByProperty(
 						FunctionEntity.class, "functionLevel",
 						Globals.Function_Leave_TWO);
 				// int ordre=functionList.size()+1;
@@ -273,7 +273,7 @@ public class FunctionController extends BaseController {
 				function.setFunctionOrder(function.getFunctionOrder());
 			}
 			message = MutiLangUtil.paramAddSuccess("common.menu");
-			systemService.save(function);
+			systemService.add(function);
 			systemService.addLog(message, Globals.Log_Type_INSERT,Globals.Log_Leavel_INFO);
 		}
 
@@ -303,7 +303,7 @@ public class FunctionController extends BaseController {
 					Globals.Log_Leavel_INFO);
 		} else {
 			message = MutiLangUtil.paramAddSuccess("common.operation");
-			userService.save(operation);
+			userService.add(operation);
 			systemService.addLog(message, Globals.Log_Type_INSERT,
 					Globals.Log_Leavel_INFO);
 		}
@@ -320,25 +320,25 @@ public class FunctionController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(FunctionEntity function, HttpServletRequest req) {
 		String functionid = req.getParameter("id");
-		List<FunctionEntity> fuinctionlist = systemService.getList(FunctionEntity.class);
+		List<FunctionEntity> fuinctionlist = systemService.findList(FunctionEntity.class);
 		req.setAttribute("flist", fuinctionlist);
 
 		// List<IconEntity> iconlist = systemService.getList(IconEntity.class);
 		List<IconEntity> iconlist = systemService
-				.findByQueryString("from IconEntity where iconType != 3");
+				.findListByHql("from IconEntity where iconType != 3");
 		req.setAttribute("iconlist", iconlist);
 		List<IconEntity> iconDeskList = systemService
-				.findByQueryString("from IconEntity where iconType = 3");
+				.findListByHql("from IconEntity where iconType = 3");
 		req.setAttribute("iconDeskList", iconDeskList);
 
 		if (functionid != null) {
-			function = systemService.getEntity(FunctionEntity.class, functionid);
+			function = systemService.getById(FunctionEntity.class, functionid);
 			req.setAttribute("function", function);
 		}
 		if (function.getTSFunction() != null
 				&& function.getTSFunction().getId() != null) {
 			function.setFunctionLevel((short) 1);
-			function.setTSFunction((FunctionEntity) systemService.getEntity(
+			function.setTSFunction((FunctionEntity) systemService.getById(
 					FunctionEntity.class, function.getTSFunction().getId()));
 			req.setAttribute("function", function);
 		}
@@ -353,10 +353,10 @@ public class FunctionController extends BaseController {
 	@RequestMapping(params = "addorupdateop")
 	public ModelAndView addorupdateop(OperationEntity operation,
 			HttpServletRequest req) {
-		List<IconEntity> iconlist = systemService.getList(IconEntity.class);
+		List<IconEntity> iconlist = systemService.findList(IconEntity.class);
 		req.setAttribute("iconlist", iconlist);
 		if (operation.getId() != null) {
-			operation = systemService.getEntity(OperationEntity.class,
+			operation = systemService.getById(OperationEntity.class,
 					operation.getId());
 			req.setAttribute("operation", operation);
 		}
@@ -557,10 +557,10 @@ public class FunctionController extends BaseController {
 	@RequestMapping(params = "addorupdaterule")
 	public ModelAndView addorupdaterule(DataRuleEntity operation,
 			HttpServletRequest req) {
-		List<IconEntity> iconlist = systemService.getList(IconEntity.class);
+		List<IconEntity> iconlist = systemService.findList(IconEntity.class);
 		req.setAttribute("iconlist", iconlist);
 		if (operation.getId() != null) {
-			operation = systemService.getEntity(DataRuleEntity.class,
+			operation = systemService.getById(DataRuleEntity.class,
 					operation.getId());
 			req.setAttribute("operation", operation);
 		}
@@ -612,7 +612,7 @@ public class FunctionController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		operation = systemService
-				.getEntity(DataRuleEntity.class, operation.getId());
+				.getById(DataRuleEntity.class, operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
 		systemService.addLog(message, Globals.Log_Type_DEL,
@@ -648,7 +648,7 @@ public class FunctionController extends BaseController {
 		} else {
 			if (justHaveDataRule(operation) == 0) {
 				message = MutiLangUtil.paramAddSuccess("common.operation");
-				userService.save(operation);
+				userService.add(operation);
 				systemService.addLog(message, Globals.Log_Type_INSERT,
 						Globals.Log_Leavel_INFO);
 			} else {

@@ -76,7 +76,7 @@ public class UserRestfulTest extends AbstractUnitTest {
 	// 测试update
 	// @Test
 	public void testUpdate() throws Exception {
-		UserEntity user = userService.get(UserEntity.class, "402880e74d75c4dd014d75d44af30005");
+		UserEntity user = userService.getById(UserEntity.class, "402880e74d75c4dd014d75d44af30005");
 		user.setRealName("real demo");
 		template.put("http://localhost:8080/jeecg/rest/user/{id}", user, "402880e74d75c4dd014d75d44af30005");
 	}

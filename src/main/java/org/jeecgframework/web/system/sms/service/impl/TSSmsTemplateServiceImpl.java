@@ -19,7 +19,7 @@ public class TSSmsTemplateServiceImpl extends CommonServiceImpl implements TSSms
  	}
  	
  	public <T> Serializable save(T entity) {
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		//执行新增操作配置的sql增强
  		this.doAddSql((TSSmsTemplateEntity)entity);
  		return t;

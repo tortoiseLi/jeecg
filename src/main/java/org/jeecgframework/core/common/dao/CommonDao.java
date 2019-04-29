@@ -17,44 +17,43 @@ import org.jeecgframework.core.extend.template.Template;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
 
-public interface ICommonDao extends IGenericBaseCommonDao{
+public interface CommonDao extends BaseDao {
 	
 	
 	/**
 	 * admin账户密码初始化
 	 * @param user
 	 */
-	public void pwdInit(UserEntity user,String newPwd);
+	void pwdInit(UserEntity user, String newPwd);
 	/**
 	 * 检查用户是否存在
 	 * */
-	public UserEntity getUserByUserIdAndUserNameExits(UserEntity user);
-	public UserEntity findUserByAccountAndPassword(String username,String password);
-	public String getUserRole(UserEntity user);
+	UserEntity getUserByUserIdAndUserNameExits(UserEntity user);
+	UserEntity findUserByAccountAndPassword(String username, String password);
+	String getUserRole(UserEntity user);
 	/**
 	 * 文件上传
-	 * @param request
 	 */
-	public <T> T  uploadFile(UploadFile uploadFile);
+	<T> T  uploadFile(UploadFile uploadFile);
 	/**
 	 * 文件上传或预览
 	 * @param uploadFile
 	 * @return
 	 */
-	public HttpServletResponse viewOrDownloadFile(UploadFile uploadFile);
+	HttpServletResponse viewOrDownloadFile(UploadFile uploadFile);
 
-	public Map<Object,Object> getDataSourceMap(Template template);
+	Map<Object,Object> getDataSourceMap(Template template);
 	/**
 	 * 生成XML文件
 	 * @param fileName XML全路径
 	 */
-	public HttpServletResponse createXml(ImportFile importFile);
+	HttpServletResponse createXml(ImportFile importFile);
 	/**
 	 * 解析XML文件
 	 * @param fileName XML全路径
 	 */
-	public void parserXml(String fileName);
-	public List<ComboTree> comTree(List<DepartEntity> all,ComboTree comboTree);
+	void parserXml(String fileName);
+	List<ComboTree> comTree(List<DepartEntity> all, ComboTree comboTree);
 
 	/**
      * 根据模型生成ComboTree JSON
@@ -65,8 +64,8 @@ public interface ICommonDao extends IGenericBaseCommonDao{
      * @param recursive 是否递归加载所有子节点
      * @return List<ComboTree>
      */
-	public  List<ComboTree> ComboTree(List all, ComboTreeModel comboTreeModel, List in, boolean recursive);
+	List<ComboTree> ComboTree(List all, ComboTreeModel comboTreeModel, List in, boolean recursive);
 
-	public  List<TreeGrid> treegrid(List<?> all,TreeGridModel treeGridModel);
+	List<TreeGrid> treegrid(List<?> all, TreeGridModel treeGridModel);
 }
 

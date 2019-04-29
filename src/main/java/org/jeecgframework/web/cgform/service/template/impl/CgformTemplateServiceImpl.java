@@ -15,20 +15,23 @@ import java.util.UUID;
 public class CgformTemplateServiceImpl extends CommonServiceImpl implements CgformTemplateServiceI {
 
 	
- 	public <T> void delete(T entity) {
+ 	@Override
+	public <T> void delete(T entity) {
  		super.delete(entity);
  		//执行删除操作配置的sql增强
 		this.doDelSql((CgformTemplateEntity)entity);
  	}
  	
- 	public <T> Serializable save(T entity) {
- 		Serializable t = super.save(entity);
+ 	@Override
+	public <T> Serializable save(T entity) {
+ 		Serializable t = super.add(entity);
  		//执行新增操作配置的sql增强
  		this.doAddSql((CgformTemplateEntity)entity);
  		return t;
  	}
  	
- 	public <T> void saveOrUpdate(T entity) {
+ 	@Override
+	public <T> void saveOrUpdate(T entity) {
  		super.saveOrUpdate(entity);
  		//执行更新操作配置的sql增强
  		this.doUpdateSql((CgformTemplateEntity)entity);
@@ -86,7 +89,7 @@ public class CgformTemplateServiceImpl extends CommonServiceImpl implements Cgfo
 
 	@Override
 	public CgformTemplateEntity findByCode(String code) {
-		return findUniqueByProperty(CgformTemplateEntity.class,"templateCode",code);
+		return getByProperty(CgformTemplateEntity.class,"templateCode",code);
 	}
 
 	@Override

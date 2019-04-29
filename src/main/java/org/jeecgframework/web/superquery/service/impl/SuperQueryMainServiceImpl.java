@@ -20,40 +20,43 @@ import java.util.UUID;
 @Transactional
 public class SuperQueryMainServiceImpl extends CommonServiceImpl implements SuperQueryMainServiceI {
 	
- 	public <T> void delete(T entity) {
+ 	@Override
+	public <T> void delete(T entity) {
  		super.delete(entity);
  		//执行删除操作配置的sql增强
 		this.doDelSql((SuperQueryMainEntity)entity);
  	}
 	
+	@Override
 	public void addMain(SuperQueryMainEntity superQueryMain,
-	        List<SuperQueryTableEntity> superQueryTableList,List<SuperQueryFieldEntity> superQueryFieldList){
+						List<SuperQueryTableEntity> superQueryTableList, List<SuperQueryFieldEntity> superQueryFieldList){
 			//保存主信息
-			this.save(superQueryMain);
+			this.add(superQueryMain);
 		
 			/**保存-表集合*/
 			for(SuperQueryTableEntity superQueryTable:superQueryTableList){
 				//外键设置
 				superQueryTable.setMainId(superQueryMain.getId());
-				this.save(superQueryTable);
+				this.add(superQueryTable);
 			}
 			/**保存-字段配置*/
 			for(SuperQueryFieldEntity superQueryField:superQueryFieldList){
 				//外键设置
 				superQueryField.setMainId(superQueryMain.getId());
-				this.save(superQueryField);
+				this.add(superQueryField);
 			}
 			//执行新增操作配置的sql增强
  			this.doAddSql(superQueryMain);
 	}
 
 	
+	@Override
 	public void updateMain(SuperQueryMainEntity superQueryMain,
-	        List<SuperQueryTableEntity> superQueryTableList,List<SuperQueryFieldEntity> superQueryFieldList) {
+						   List<SuperQueryTableEntity> superQueryTableList, List<SuperQueryFieldEntity> superQueryFieldList) {
 		//保存主表信息
 		if(StringUtil.isNotEmpty(superQueryMain.getId())){
 			try {
-				SuperQueryMainEntity temp = findUniqueByProperty(SuperQueryMainEntity.class, "id", superQueryMain.getId());
+				SuperQueryMainEntity temp = getByProperty(SuperQueryMainEntity.class, "id", superQueryMain.getId());
 				MyBeanUtils.copyBeanNotNull2Bean(superQueryMain, temp);
 				this.saveOrUpdate(temp);
 			} catch (Exception e) {
@@ -99,7 +102,7 @@ public class SuperQueryMainServiceImpl extends CommonServiceImpl implements Supe
 				if(oConvertUtils.isEmpty(superQueryTable.getId())){
 					//外键设置
 					superQueryTable.setMainId(superQueryMain.getId());
-					this.save(superQueryTable);
+					this.add(superQueryTable);
 				}
 			}
 		}
@@ -136,7 +139,7 @@ public class SuperQueryMainServiceImpl extends CommonServiceImpl implements Supe
 				if(oConvertUtils.isEmpty(superQueryField.getId())){
 					//外键设置
 					superQueryField.setMainId(superQueryMain.getId());
-					this.save(superQueryField);
+					this.add(superQueryField);
 				}
 			}
 		}
@@ -156,12 +159,12 @@ public class SuperQueryMainServiceImpl extends CommonServiceImpl implements Supe
 		//删除-表集合
 	    String hql0 = "from SuperQueryTableEntity where 1 = 1 AND mAIN_ID = ? ";
 	    List<SuperQueryTableEntity> superQueryTableOldList = this.findHql(hql0,id0);
-		this.deleteAllEntitie(superQueryTableOldList);
+		this.deleteByCollection(superQueryTableOldList);
 		//===================================================================================
 		//删除-字段配置
 	    String hql1 = "from SuperQueryFieldEntity where 1 = 1 AND mAIN_ID = ? ";
 	    List<SuperQueryFieldEntity> superQueryFieldOldList = this.findHql(hql1,id1);
-		this.deleteAllEntitie(superQueryFieldOldList);
+		this.deleteByCollection(superQueryFieldOldList);
 	}
 	
  	
@@ -170,7 +173,8 @@ public class SuperQueryMainServiceImpl extends CommonServiceImpl implements Supe
 	 * @param id
 	 * @return
 	 */
- 	public boolean doAddSql(SuperQueryMainEntity t){
+ 	@Override
+	public boolean doAddSql(SuperQueryMainEntity t){
 	 	return true;
  	}
  	/**
@@ -178,7 +182,8 @@ public class SuperQueryMainServiceImpl extends CommonServiceImpl implements Supe
 	 * @param id
 	 * @return
 	 */
- 	public boolean doUpdateSql(SuperQueryMainEntity t){
+ 	@Override
+	public boolean doUpdateSql(SuperQueryMainEntity t){
 	 	return true;
  	}
  	/**
@@ -186,7 +191,8 @@ public class SuperQueryMainServiceImpl extends CommonServiceImpl implements Supe
 	 * @param id
 	 * @return
 	 */
- 	public boolean doDelSql(SuperQueryMainEntity t){
+ 	@Override
+	public boolean doDelSql(SuperQueryMainEntity t){
 	 	return true;
  	}
  	

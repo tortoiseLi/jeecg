@@ -141,7 +141,7 @@ public class IconController extends BaseController {
 		String id = request.getParameter("id");
 		IconEntity icon = new IconEntity();
 		if (StringUtil.isNotEmpty(id)) {
-			icon = systemService.get(IconEntity.class, id);
+			icon = systemService.getById(IconEntity.class, id);
 			icon.setId(id);
 		}
 		icon.setIconName(iconName);
@@ -186,7 +186,7 @@ public class IconController extends BaseController {
 	@ResponseBody
 	public AjaxJson repair(HttpServletRequest request) throws Exception {
 		AjaxJson json = new AjaxJson();
-		List<IconEntity> icons = systemService.loadAll(IconEntity.class);
+		List<IconEntity> icons = systemService.findList(IconEntity.class);
 		String rootpath = request.getSession().getServletContext().getRealPath("/");
 		String csspath = request.getSession().getServletContext().getRealPath("/plug-in/accordion/css/icons.css");
 		// 清空CSS文件内容
@@ -238,7 +238,7 @@ public class IconController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		
-		icon = systemService.getEntity(IconEntity.class, icon.getId());
+		icon = systemService.getById(IconEntity.class, icon.getId());
 		
 		boolean isPermit=isPermitDel(icon);
 		
@@ -266,7 +266,7 @@ public class IconController extends BaseController {
 	 * @return true允许；false不允许；
 	 */
 	private boolean isPermitDel(IconEntity icon) {
-		List<FunctionEntity> functions = systemService.findByProperty(FunctionEntity.class, "TSIcon.id", icon.getId());
+		List<FunctionEntity> functions = systemService.findListByProperty(FunctionEntity.class, "TSIcon.id", icon.getId());
 		if (functions==null||functions.isEmpty()) {
 			return true;
 		}
@@ -274,14 +274,14 @@ public class IconController extends BaseController {
 	}
 
 	public void upEntity(IconEntity icon) {
-		List<FunctionEntity> functions = systemService.findByProperty(FunctionEntity.class, "TSIcon.id", icon.getId());
+		List<FunctionEntity> functions = systemService.findListByProperty(FunctionEntity.class, "TSIcon.id", icon.getId());
 		if (functions.size() > 0) {
 			for (FunctionEntity tsFunction : functions) {
 				tsFunction.setTSIcon(null);
 				systemService.saveOrUpdate(tsFunction);
 			}
 		}
-		List<OperationEntity> operations = systemService.findByProperty(OperationEntity.class, "TSIcon.id", icon.getId());
+		List<OperationEntity> operations = systemService.findListByProperty(OperationEntity.class, "TSIcon.id", icon.getId());
 		if (operations.size() > 0) {
 			for (OperationEntity tsOperation : operations) {
 				tsOperation.setTSIcon(null);
@@ -300,7 +300,7 @@ public class IconController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(IconEntity icon, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(icon.getId())) {
-			icon = systemService.getEntity(IconEntity.class, icon.getId());
+			icon = systemService.getById(IconEntity.class, icon.getId());
 			req.setAttribute("icon", icon);
 		}
 		return new ModelAndView("system/icon/icons");
@@ -318,10 +318,10 @@ public class IconController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		try {
-			IconEntity iconOld= systemService.getEntity(IconEntity.class, icon.getId());
+			IconEntity iconOld= systemService.getById(IconEntity.class, icon.getId());
 			iconOld.setIconName(icon.getIconName());
 			iconOld.setIconType(icon.getIconType());
-			this.systemService.updateEntitie(iconOld);
+			this.systemService.update(iconOld);
 			message = MutiLangUtil.paramUpdSuccess("common.icon");
 			j.setMsg(message);
 		} catch (Exception e) {

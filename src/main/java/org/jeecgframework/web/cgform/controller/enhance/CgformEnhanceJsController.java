@@ -85,7 +85,7 @@ public class CgformEnhanceJsController extends BaseController {
 	public AjaxJson del(CgformEnhanceJsEntity cgformenhanceJs, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		cgformenhanceJs = systemService.getEntity(CgformEnhanceJsEntity.class, cgformenhanceJs.getId());
+		cgformenhanceJs = systemService.getById(CgformEnhanceJsEntity.class, cgformenhanceJs.getId());
 		message = "删除成功";
 		cgformenhanceJsService.delete(cgformenhanceJs);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
@@ -126,7 +126,7 @@ public class CgformEnhanceJsController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(cgformenhanceJs.getId())) {
 			message = "更新成功";
-			CgformEnhanceJsEntity t = cgformenhanceJsService.get(CgformEnhanceJsEntity.class, cgformenhanceJs.getId());
+			CgformEnhanceJsEntity t = cgformenhanceJsService.getById(CgformEnhanceJsEntity.class, cgformenhanceJs.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformenhanceJs, t);
 				cgformenhanceJsService.saveOrUpdate(t);
@@ -136,7 +136,7 @@ public class CgformEnhanceJsController extends BaseController {
 			}
 		} else {
 			message = "添加成功";
-			cgformenhanceJsService.save(cgformenhanceJs);
+			cgformenhanceJsService.add(cgformenhanceJs);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
 		j.setMsg(message);

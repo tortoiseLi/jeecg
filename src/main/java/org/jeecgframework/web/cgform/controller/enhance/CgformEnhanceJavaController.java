@@ -102,7 +102,7 @@ public class CgformEnhanceJavaController extends BaseController {
 	public AjaxJson doDel(CgformEnhanceJavaEntity cgformEnhanceJava, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		cgformEnhanceJava = systemService.getEntity(CgformEnhanceJavaEntity.class, cgformEnhanceJava.getId());
+		cgformEnhanceJava = systemService.getById(CgformEnhanceJavaEntity.class, cgformEnhanceJava.getId());
 		message = "删除成功";
 		try{
 			cgformEnhanceJavaService.delete(cgformEnhanceJava);
@@ -129,7 +129,7 @@ public class CgformEnhanceJavaController extends BaseController {
 		message = "删除成功";
 		try{
 			for(String id:ids.split(",")){
-				CgformEnhanceJavaEntity cgformEnhanceJava = systemService.getEntity(CgformEnhanceJavaEntity.class, 
+				CgformEnhanceJavaEntity cgformEnhanceJava = systemService.getById(CgformEnhanceJavaEntity.class,
 				id
 				);
 				cgformEnhanceJavaService.delete(cgformEnhanceJava);
@@ -191,7 +191,7 @@ public class CgformEnhanceJavaController extends BaseController {
 		
 		if (StringUtil.isNotEmpty(cgformEnhanceJavaEntity.getId())) {
 			message = "更新成功";
-			CgformEnhanceJavaEntity t = cgformEnhanceJavaService.get(CgformEnhanceJavaEntity.class, cgformEnhanceJavaEntity.getId());
+			CgformEnhanceJavaEntity t = cgformEnhanceJavaService.getById(CgformEnhanceJavaEntity.class, cgformEnhanceJavaEntity.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformEnhanceJavaEntity, t);
 				cgformEnhanceJavaService.saveOrUpdate(t);

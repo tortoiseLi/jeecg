@@ -348,7 +348,7 @@ public class TreeSelectTag extends TagSupport {
 				String[] defaultValArray = defaultVal.split(",");
 				for (int i = 0; i < defaultValArray.length; i++) {
 					if(StringUtil.isNotEmpty(defaultValArray[i])){
-						List<CategoryEntity> categoryList = systemService.findByProperty(CategoryEntity.class, "code", defaultValArray[i]);
+						List<CategoryEntity> categoryList = systemService.findListByProperty(CategoryEntity.class, "code", defaultValArray[i]);
 						if(categoryList != null && !categoryList.isEmpty()){
 							CategoryEntity categoryEntity = categoryList.get(0);
 							if(StringUtil.isEmpty(result)){
@@ -360,7 +360,7 @@ public class TreeSelectTag extends TagSupport {
 					}
 				}
 			}else{
-				List<CategoryEntity> categoryList = systemService.findByProperty(CategoryEntity.class, "code", defaultVal);
+				List<CategoryEntity> categoryList = systemService.findListByProperty(CategoryEntity.class, "code", defaultVal);
 				if(categoryList != null && !categoryList.isEmpty()){
 					CategoryEntity categoryEntity = categoryList.get(0);
 					result = categoryEntity.getName();

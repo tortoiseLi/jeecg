@@ -181,7 +181,7 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "typeGroupTabs")
 	public ModelAndView typeGroupTabs(HttpServletRequest request) {
-		List<TypeGroupEntity> typegroupList = systemService.loadAll(TypeGroupEntity.class);
+		List<TypeGroupEntity> typegroupList = systemService.findList(TypeGroupEntity.class);
 		request.setAttribute("typegroupList", typegroupList);
 		return new ModelAndView("system/type/typeGroupTabs");
 	}
@@ -204,7 +204,7 @@ public class SystemController extends BaseController {
 	@RequestMapping(params = "typeList")
 	public ModelAndView typeList(HttpServletRequest request) {
 		String typegroupid = request.getParameter("typegroupid");
-		TypeGroupEntity typegroup = systemService.getEntity(TypeGroupEntity.class, typegroupid);
+		TypeGroupEntity typegroup = systemService.getById(TypeGroupEntity.class, typegroupid);
 		request.setAttribute("typegroup", typegroup);
 		return new ModelAndView("system/type/typeList");
 	}
@@ -220,7 +220,7 @@ public class SystemController extends BaseController {
         String typegroupname = request.getParameter("typegroupname");
         if(oConvertUtils.isNotEmpty(typegroupname)) {
             typegroupname = typegroupname.trim();
-            List<String> typegroupnameKeyList = systemService.findByQueryString("select typegroupname from TypeGroupEntity");
+            List<String> typegroupnameKeyList = systemService.findListByHql("select typegroupname from TypeGroupEntity");
             if(typegroupname.lastIndexOf("*")==-1){
             	typegroupname = typegroupname + "*";
             }
@@ -372,7 +372,7 @@ public class SystemController extends BaseController {
             String typegroupname = request.getParameter("typegroupname");
             if(typegroupname != null && typegroupname.trim().length() > 0) {
                 typegroupname = typegroupname.trim();
-                List<String> typegroupnameKeyList = systemService.findByQueryString("select typegroupname from TypeGroupEntity");
+                List<String> typegroupnameKeyList = systemService.findListByHql("select typegroupname from TypeGroupEntity");
                 MutiLangSqlCriteriaUtil.assembleCondition(typegroupnameKeyList, cq, "typegroupname", typegroupname);
             }
 
@@ -436,11 +436,11 @@ public class SystemController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		if (id.startsWith("G")) {//分组
-			TypeGroupEntity typegroup = systemService.getEntity(TypeGroupEntity.class, id.substring(1));
+			TypeGroupEntity typegroup = systemService.getById(TypeGroupEntity.class, id.substring(1));
 			message = "数据字典分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + "被删除 成功";
 			systemService.delete(typegroup);
 		} else {
-			TypeEntity type = systemService.getEntity(TypeEntity.class, id.substring(1));
+			TypeEntity type = systemService.getById(TypeEntity.class, id.substring(1));
 			message = "数据字典类型: " + mutiLangService.getLang(type.getTypename()) + "被删除 成功";
 			systemService.delete(type);
 		}
@@ -461,7 +461,7 @@ public class SystemController extends BaseController {
 	public AjaxJson delTypeGroup(TypeGroupEntity typegroup, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		typegroup = systemService.getEntity(TypeGroupEntity.class, typegroup.getId());
+		typegroup = systemService.getById(TypeGroupEntity.class, typegroup.getId());
 
 		message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + " 被删除 成功";
         if (ListUtils.isNullOrEmpty(typegroup.getTSTypes())) {
@@ -487,7 +487,7 @@ public class SystemController extends BaseController {
 	public AjaxJson delType(TypeEntity type, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		type = systemService.getEntity(TypeEntity.class, type.getId());
+		type = systemService.getById(TypeEntity.class, type.getId());
 		message = "类型: " + mutiLangService.getLang(type.getTypename()) + "被删除 成功";
 		systemService.delete(type);
 		//刷新缓存
@@ -509,7 +509,7 @@ public class SystemController extends BaseController {
 		ValidForm v = new ValidForm();
 		String typegroupcode=oConvertUtils.getString(request.getParameter("param"));
 		String code=oConvertUtils.getString(request.getParameter("code"));
-		List<TypeGroupEntity> typegroups=systemService.findByProperty(TypeGroupEntity.class,"typegroupcode",typegroupcode);
+		List<TypeGroupEntity> typegroups=systemService.findListByProperty(TypeGroupEntity.class,"typegroupcode",typegroupcode);
 		if(typegroups.size()>0&&!code.equals(typegroupcode))
 		{
 			v.setInfo("分组已存在");
@@ -557,7 +557,7 @@ public class SystemController extends BaseController {
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} else {
 			message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + "被添加成功";
-			userService.save(typegroup);
+			userService.add(typegroup);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
 		//刷新缓存
@@ -610,7 +610,7 @@ public class SystemController extends BaseController {
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} else {
 			message = "类型: " + mutiLangService.getLang(type.getTypename()) + "被添加成功";
-			userService.save(type);
+			userService.add(type);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
 		//刷新缓存
@@ -629,7 +629,7 @@ public class SystemController extends BaseController {
 	@RequestMapping(params = "aouTypeGroup")
 	public ModelAndView aouTypeGroup(TypeGroupEntity typegroup, HttpServletRequest req) {
 		if (typegroup.getId() != null) {
-			typegroup = systemService.getEntity(TypeGroupEntity.class, typegroup.getId());
+			typegroup = systemService.getById(TypeGroupEntity.class, typegroup.getId());
 			req.setAttribute("typegroup", typegroup);
 		}
 		return new ModelAndView("system/type/typegroup");
@@ -644,14 +644,14 @@ public class SystemController extends BaseController {
 	public ModelAndView addorupdateType(TypeEntity type, HttpServletRequest req) {
 		String typegroupid = req.getParameter("typegroupid");
 		req.setAttribute("typegroupid", typegroupid);
-		TypeGroupEntity typegroup = systemService.findUniqueByProperty(TypeGroupEntity.class, "id", typegroupid);
+		TypeGroupEntity typegroup = systemService.getByProperty(TypeGroupEntity.class, "id", typegroupid);
         String typegroupname = typegroup.getTypegroupname();
 
         req.setAttribute("typegroup", typegroup);
 
         req.setAttribute("typegroupname", mutiLangService.getLang(typegroupname));
 		if (StringUtil.isNotEmpty(type.getId())) {
-			type = systemService.getEntity(TypeEntity.class, type.getId());
+			type = systemService.getById(TypeEntity.class, type.getId());
 			req.setAttribute("type", type);
 		}
 		return new ModelAndView("system/type/type");
@@ -697,7 +697,7 @@ public class SystemController extends BaseController {
 	public AjaxJson delDepart(DepartEntity depart, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		depart = systemService.getEntity(DepartEntity.class, depart.getId());
+		depart = systemService.getById(DepartEntity.class, depart.getId());
 		message = "部门: " + depart.getDepartname() + "被删除 成功";
 		systemService.delete(depart);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
@@ -731,7 +731,7 @@ public class SystemController extends BaseController {
 //			String orgCode = systemService.generateOrgCode(depart.getId(), pid);
 //			depart.setOrgCode(orgCode);
 			if(oConvertUtils.isNotEmpty(pid)){
-				DepartEntity paretDept = systemService.findUniqueByProperty(DepartEntity.class, "id", pid);
+				DepartEntity paretDept = systemService.getByProperty(DepartEntity.class, "id", pid);
 				String localMaxCode  = getMaxLocalCode(paretDept.getOrgCode());
 				depart.setOrgCode(YouBianCodeUtil.getSubYouBianCode(paretDept.getOrgCode(), localMaxCode));
 			}else{
@@ -739,7 +739,7 @@ public class SystemController extends BaseController {
 				depart.setOrgCode(YouBianCodeUtil.getNextYouBianCode(localMaxCode));
 			}
 
-			userService.save(depart);
+			userService.add(depart);
             message = MutiLangUtil.paramAddSuccess("common.department");
             systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 
@@ -787,10 +787,10 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "addorupdateDepart")
 	public ModelAndView addorupdateDepart(DepartEntity depart, HttpServletRequest req) {
-		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
+		List<DepartEntity> departList = systemService.findList(DepartEntity.class);
 		req.setAttribute("departList", departList);
 		if (depart.getId() != null) {
-			depart = systemService.getEntity(DepartEntity.class, depart.getId());
+			depart = systemService.getById(DepartEntity.class, depart.getId());
 			req.setAttribute("depart", depart);
 		}
 		return new ModelAndView("system/depart/depart");
@@ -860,7 +860,7 @@ public class SystemController extends BaseController {
 		String message = null;
 		message = "角色: " + role.getRoleName() + "被删除成功";
 		AjaxJson j = new AjaxJson();
-		role = systemService.getEntity(RoleEntity.class, role.getId());
+		role = systemService.getById(RoleEntity.class, role.getId());
 		userService.delete(role);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		j.setMsg(message);
@@ -925,9 +925,9 @@ public class SystemController extends BaseController {
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		Integer roleid = oConvertUtils.getInt(request.getParameter("roleid"), 0);
 		List<FunctionEntity> loginActionlist = new ArrayList<FunctionEntity>();// 已有权限菜单
-		role = this.systemService.get(RoleEntity.class, roleid);
+		role = this.systemService.getById(RoleEntity.class, roleid);
 		if (role != null) {
-			List<RoleFunctionEntity> roleFunctionList = systemService.findByProperty(RoleFunctionEntity.class, "TSRole.id", role.getId());
+			List<RoleFunctionEntity> roleFunctionList = systemService.findListByProperty(RoleFunctionEntity.class, "TSRole.id", role.getId());
 			if (roleFunctionList.size() > 0) {
 				for (RoleFunctionEntity roleFunction : roleFunctionList) {
 					FunctionEntity function = (FunctionEntity) roleFunction.getTSFunction();
@@ -950,18 +950,18 @@ public class SystemController extends BaseController {
 	public String updateAuthority(HttpServletRequest request) {
 		Integer roleid = oConvertUtils.getInt(request.getParameter("roleid"), 0);
 		String rolefunction = request.getParameter("rolefunctions");
-		RoleEntity role = this.systemService.get(RoleEntity.class, roleid);
-		List<RoleFunctionEntity> roleFunctionList = systemService.findByProperty(RoleFunctionEntity.class, "TSRole.id", role.getId());
-		systemService.deleteAllEntitie(roleFunctionList);
+		RoleEntity role = this.systemService.getById(RoleEntity.class, roleid);
+		List<RoleFunctionEntity> roleFunctionList = systemService.findListByProperty(RoleFunctionEntity.class, "TSRole.id", role.getId());
+		systemService.deleteByCollection(roleFunctionList);
 		String[] roleFunctions = null;
 		if (rolefunction != "") {
 			roleFunctions = rolefunction.split(",");
 			for (String s : roleFunctions) {
 				RoleFunctionEntity rf = new RoleFunctionEntity();
-				FunctionEntity f = this.systemService.get(FunctionEntity.class, Integer.valueOf(s));
+				FunctionEntity f = this.systemService.getById(FunctionEntity.class, Integer.valueOf(s));
 				rf.setTSFunction(f);
 				rf.setTSRole(role);
-				this.systemService.save(rf);
+				this.systemService.add(rf);
 			}
 		}
 		return "system/role/roleList";
@@ -977,7 +977,7 @@ public class SystemController extends BaseController {
 	@RequestMapping(params = "addorupdateRole")
 	public ModelAndView addorupdateRole(RoleEntity role, HttpServletRequest req) {
 		if (role.getId() != null) {
-			role = systemService.getEntity(RoleEntity.class, role.getId());
+			role = systemService.getById(RoleEntity.class, role.getId());
 			req.setAttribute("role", role);
 		}
 		return new ModelAndView("system/role/role");
@@ -1082,7 +1082,7 @@ public class SystemController extends BaseController {
 	 */
 	public void savep(String roleid, String functionid, String ids) {
 		String hql = "from TRoleFunction t where" + " t.TSRole.id=" + roleid + " " + "and t.TFunction.functionid=" + functionid;
-		RoleFunctionEntity rFunction = systemService.singleResult(hql);
+		RoleFunctionEntity rFunction = systemService.getByHql(hql);
 		if (rFunction != null) {
 			rFunction.setOperation(ids);
 			systemService.saveOrUpdate(rFunction);
@@ -1096,7 +1096,7 @@ public class SystemController extends BaseController {
 	 */
 	public void clearp(String roleid) {
 		String hql = "from TRoleFunction t where" + " t.TSRole.id=" + roleid;
-		List<RoleFunctionEntity> rFunctions = systemService.findByQueryString(hql);
+		List<RoleFunctionEntity> rFunctions = systemService.findListByHql(hql);
 		if (rFunctions.size() > 0) {
 			for (RoleFunctionEntity tRoleFunction : rFunctions) {
 				tRoleFunction.setOperation(null);
@@ -1177,7 +1177,7 @@ public class SystemController extends BaseController {
 
     @RequestMapping(params = "popDataContent")
 	public ModelAndView popDataContent(ModelMap modelMap, @RequestParam String id, HttpServletRequest request) {
-		DataLogEntity datalogEntity = this.systemService.get(DataLogEntity.class, id);
+		DataLogEntity datalogEntity = this.systemService.getById(DataLogEntity.class, id);
         modelMap.put("dataContent",datalogEntity.getDataContent());
 		return new ModelAndView("system/dataLog/popDataContent");
 	}
@@ -1209,8 +1209,8 @@ public class SystemController extends BaseController {
 	@RequestMapping(params = "diffDataVersion")
 	public ModelAndView diffDataVersion(HttpServletRequest request, @RequestParam String id1, @RequestParam String id2) throws ParseException {
 
-		DataLogEntity datalogEntity1 = this.systemService.getEntity(DataLogEntity.class, id1);
-		DataLogEntity datalogEntity2 = this.systemService.getEntity(DataLogEntity.class, id2);
+		DataLogEntity datalogEntity1 = this.systemService.getById(DataLogEntity.class, id1);
+		DataLogEntity datalogEntity2 = this.systemService.getById(DataLogEntity.class, id2);
 
 		if (datalogEntity1 != null && datalogEntity2 != null) {
 			//正则用于去掉头尾的[]字符(如存在)

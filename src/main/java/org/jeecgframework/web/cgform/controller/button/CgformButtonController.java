@@ -92,7 +92,7 @@ public class CgformButtonController extends BaseController {
 	public AjaxJson del(CgformButtonEntity cgformButton, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		cgformButton = systemService.getEntity(CgformButtonEntity.class, cgformButton.getId());
+		cgformButton = systemService.getById(CgformButtonEntity.class, cgformButton.getId());
 		message = "删除成功";
 		cgformButtonService.delete(cgformButton);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
@@ -128,7 +128,7 @@ public class CgformButtonController extends BaseController {
 		}
 		if (StringUtil.isNotEmpty(cgformButton.getId())) {
 			message = "更新成功";
-			CgformButtonEntity t = cgformButtonService.get(CgformButtonEntity.class, cgformButton.getId());
+			CgformButtonEntity t = cgformButtonService.getById(CgformButtonEntity.class, cgformButton.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformButton, t);
 				cgformButtonService.saveOrUpdate(t);
@@ -138,7 +138,7 @@ public class CgformButtonController extends BaseController {
 			}
 		} else {
 			message = "添加成功";
-			cgformButtonService.save(cgformButton);
+			cgformButtonService.add(cgformButton);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单自定义按钮添加编辑]"+message);
@@ -154,7 +154,7 @@ public class CgformButtonController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(CgformButtonEntity cgformButton, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgformButton.getId())) {
-			cgformButton = cgformButtonService.getEntity(CgformButtonEntity.class, cgformButton.getId());
+			cgformButton = cgformButtonService.getById(CgformButtonEntity.class, cgformButton.getId());
 		}
 		req.setAttribute("cgformButtonPage", cgformButton);
 		return new ModelAndView("jeecg/cgform/button/cgformButton");

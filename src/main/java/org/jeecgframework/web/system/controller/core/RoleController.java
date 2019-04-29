@@ -68,7 +68,6 @@ import org.springframework.web.servlet.ModelAndView;
  * @author 张代浩
  * 
  */
-//@Scope("prototype")
 @Controller
 @RequestMapping("/roleController")
 public class RoleController extends BaseController {
@@ -133,7 +132,7 @@ public class RoleController extends BaseController {
 	public AjaxJson delUserRole(@RequestParam(required=true)String userid,@RequestParam(required=true)String roleid) {
 		AjaxJson ajaxJson = new AjaxJson();
 		try {
-			List<RoleUserEntity> roleUserList = this.systemService.findByProperty(RoleUserEntity.class, "TSUser.id", userid);
+			List<RoleUserEntity> roleUserList = this.systemService.findListByProperty(RoleUserEntity.class, "TSUser.id", userid);
 			if(roleUserList.size() == 1){
 				ajaxJson.setSuccess(false);
 				ajaxJson.setMsg("不可删除用户的角色关系，请使用修订用户角色关系");
@@ -187,7 +186,7 @@ public class RoleController extends BaseController {
 
             systemService.executeSql("delete from t_s_role_org where role_id=?", role.getId()); // 删除 角色-机构 关系信息
 
-            role = systemService.getEntity(RoleEntity.class, role.getId());
+            role = systemService.getById(RoleEntity.class, role.getId());
 			userService.delete(role);
 			message = "角色: " + role.getRoleName() + "被删除成功";
 			systemService.addLog(message, Globals.Log_Type_DEL,
@@ -214,7 +213,7 @@ public class RoleController extends BaseController {
 		String roleCode = oConvertUtils
 				.getString(request.getParameter("param"));
 		String code = oConvertUtils.getString(request.getParameter("code"));
-		List<RoleEntity> roles = systemService.findByProperty(RoleEntity.class,
+		List<RoleEntity> roles = systemService.findListByProperty(RoleEntity.class,
 				"roleCode", roleCode);
 		if (roles.size() > 0 && !code.equals(roleCode)) {
 			v.setInfo("角色编码已存在");
@@ -229,14 +228,14 @@ public class RoleController extends BaseController {
 	 * @param role
 	 */
 	protected void delRoleFunction(RoleEntity role) {
-		List<RoleFunctionEntity> roleFunctions = systemService.findByProperty(
+		List<RoleFunctionEntity> roleFunctions = systemService.findListByProperty(
 				RoleFunctionEntity.class, "TSRole.id", role.getId());
 		if (roleFunctions.size() > 0) {
 			for (RoleFunctionEntity tsRoleFunction : roleFunctions) {
 				systemService.delete(tsRoleFunction);
 			}
 		}
-		List<RoleUserEntity> roleUsers = systemService.findByProperty(
+		List<RoleUserEntity> roleUsers = systemService.findListByProperty(
 				RoleUserEntity.class, "TSRole.id", role.getId());
 		for (RoleUserEntity tsRoleUser : roleUsers) {
 			systemService.delete(tsRoleUser);
@@ -266,7 +265,7 @@ public class RoleController extends BaseController {
 
 			role.setRoleType(OrgConstants.SYSTEM_ROLE_TYPE);//默认系统角色
 
-			userService.save(role);
+			userService.add(role);
 			systemService.addLog(message, Globals.Log_Type_INSERT,
 					Globals.Log_Leavel_INFO);
 		}
@@ -312,7 +311,7 @@ public class RoleController extends BaseController {
 
 		//查询条件组装器
         String roleId = request.getParameter("roleId");
-        List<RoleUserEntity> roleUser = systemService.findByProperty(RoleUserEntity.class, "TSRole.id", roleId);
+        List<RoleUserEntity> roleUser = systemService.findListByProperty(RoleUserEntity.class, "TSRole.id", roleId);
         /*
         // zhanggm：这个查询逻辑也可以使用这种 子查询的方式进行查询
         CriteriaQuery subCq = new CriteriaQuery(RoleUserEntity.class);
@@ -361,7 +360,7 @@ public class RoleController extends BaseController {
 		List<UserEntity> loginActionlist = new ArrayList<UserEntity>();
 		if (user != null) {
 
-			List<RoleUserEntity> roleUser = systemService.findByProperty(RoleUserEntity.class, "TSRole.id", roleId);
+			List<RoleUserEntity> roleUser = systemService.findListByProperty(RoleUserEntity.class, "TSRole.id", roleId);
 			if (roleUser.size() > 0) {
 				for (RoleUserEntity ru : roleUser) {
 					loginActionlist.add(ru.getTSUser());
@@ -405,7 +404,7 @@ public class RoleController extends BaseController {
 			orgRoleList.add((RoleEntity) roleArr[0]);
 		}
 
-		List<Object> allRoleList = this.systemService.getList(RoleEntity.class);
+		List<RoleEntity> allRoleList = this.systemService.findList(RoleEntity.class);
 		List<ComboTree> comboTrees = systemService.ComboTree(allRoleList,
 				comboTreeModel, orgRoleList, false);
 
@@ -442,7 +441,7 @@ public class RoleController extends BaseController {
 					roleOrg.setTsDepart(depart);
 					roleOrgList.add(roleOrg);
 				}
-				systemService.batchSave(roleOrgList);
+				systemService.batchAdd(roleOrgList);
 			}
 			j.setMsg("角色更新成功");
 		} catch (Exception e) {
@@ -480,9 +479,9 @@ public class RoleController extends BaseController {
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		String roleId = request.getParameter("roleId");
 		List<FunctionEntity> loginActionlist = new ArrayList<FunctionEntity>();// 已有权限菜单
-		role = this.systemService.get(RoleEntity.class, roleId);
+		role = this.systemService.getById(RoleEntity.class, roleId);
 		if (role != null) {
-			List<RoleFunctionEntity> roleFunctionList = systemService.findByProperty(RoleFunctionEntity.class, "TSRole.id",role.getId());
+			List<RoleFunctionEntity> roleFunctionList = systemService.findListByProperty(RoleFunctionEntity.class, "TSRole.id",role.getId());
 			if (roleFunctionList.size() > 0) {
 				for (RoleFunctionEntity roleFunction : roleFunctionList) {
 					FunctionEntity function = (FunctionEntity) roleFunction.getTSFunction();
@@ -603,9 +602,9 @@ public class RoleController extends BaseController {
 		try {
 			String roleId = request.getParameter("roleId");
 			String rolefunction = request.getParameter("rolefunctions");
-			RoleEntity role = this.systemService.get(RoleEntity.class, roleId);
+			RoleEntity role = this.systemService.getById(RoleEntity.class, roleId);
 			List<RoleFunctionEntity> roleFunctionList = systemService
-					.findByProperty(RoleFunctionEntity.class, "TSRole.id",
+					.findListByProperty(RoleFunctionEntity.class, "TSRole.id",
 							role.getId());
 			Map<String, RoleFunctionEntity> map = new HashMap<String, RoleFunctionEntity>();
 			for (RoleFunctionEntity functionOfRole : roleFunctionList) {
@@ -648,7 +647,7 @@ public class RoleController extends BaseController {
 				map.remove(s);
 			} else {
 				RoleFunctionEntity rf = new RoleFunctionEntity();
-				FunctionEntity f = this.systemService.get(FunctionEntity.class, s);
+				FunctionEntity f = this.systemService.getById(FunctionEntity.class, s);
 				rf.setTSFunction(f);
 				rf.setTSRole(role);
 				entitys.add(rf);
@@ -659,8 +658,8 @@ public class RoleController extends BaseController {
 		for (; it.hasNext();) {
 			deleteEntitys.add(it.next());
 		}
-		systemService.batchSave(entitys);
-		systemService.deleteAllEntitie(deleteEntitys);
+		systemService.batchAdd(entitys);
+		systemService.deleteByCollection(deleteEntitys);
 
 	}
 
@@ -674,7 +673,7 @@ public class RoleController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(RoleEntity role, HttpServletRequest req) {
 		if (role.getId() != null) {
-			role = systemService.getEntity(RoleEntity.class, role.getId());
+			role = systemService.getById(RoleEntity.class, role.getId());
 			req.setAttribute("role", role);
 		}
 		return new ModelAndView("system/role/role");
@@ -791,7 +790,7 @@ public class RoleController extends BaseController {
 	 * @param roleId
 	 */
 	public void clearp(String roleId) {
-		List<RoleFunctionEntity> rFunctions = systemService.findByProperty(
+		List<RoleFunctionEntity> rFunctions = systemService.findListByProperty(
 				RoleFunctionEntity.class, "TSRole.id", roleId);
 		if (rFunctions.size() > 0) {
 			for (RoleFunctionEntity tRoleFunction : rFunctions) {
@@ -973,7 +972,7 @@ public class RoleController extends BaseController {
     public AjaxJson doAddUserToOrg(HttpServletRequest req) {
     	String message = null;
         AjaxJson j = new AjaxJson();
-		RoleEntity role = systemService.getEntity(RoleEntity.class, req.getParameter("roleId"));
+		RoleEntity role = systemService.getById(RoleEntity.class, req.getParameter("roleId"));
         saveRoleUserList(req, role);
         message =  MutiLangUtil.paramAddSuccess("common.user");
 //      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
@@ -1002,7 +1001,7 @@ public class RoleController extends BaseController {
             roleUserList.add(roleUser);
         }
         if (!roleUserList.isEmpty()) {
-            systemService.batchSave(roleUserList);
+            systemService.batchAdd(roleUserList);
         }
     }
 
@@ -1073,13 +1072,13 @@ public class RoleController extends BaseController {
 				List<RoleEntity> tsRoles = ExcelImportUtil.importExcel(file.getInputStream(),RoleEntity.class,params);
 				for (RoleEntity tsRole : tsRoles) {
 					String roleCode = tsRole.getRoleCode();
-					List<RoleEntity> roles = systemService.findByProperty(RoleEntity.class,"roleCode",roleCode);
+					List<RoleEntity> roles = systemService.findListByProperty(RoleEntity.class,"roleCode",roleCode);
 					if(roles.size()!=0){
 						RoleEntity role = roles.get(0);
 						MyBeanUtils.copyBeanNotNull2Bean(tsRole,role);
 						systemService.saveOrUpdate(role);
 					}else {
-						systemService.save(tsRole);
+						systemService.add(tsRole);
 					}
 				}
 				j.setMsg("文件导入成功！");

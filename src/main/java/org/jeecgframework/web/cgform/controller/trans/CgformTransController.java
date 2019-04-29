@@ -75,7 +75,7 @@ public class CgformTransController {
 
 		Collections.sort(list,new StringSort(SortDirection.toEnum(dataGrid.getOrder())));
 
-		List<String> tables = cgFormFieldService.findByQueryString("select tableName from CgFormHeadEntity");
+		List<String> tables = cgFormFieldService.findListByHql("select tableName from CgFormHeadEntity");
 		list.removeAll(tables);
 		List<String> index = new ArrayList<String>();
 		if (StringUtil.isNotEmpty(tableName)) {
@@ -124,7 +124,7 @@ public class CgformTransController {
 		String yes = "";
 		for (int i = 0; i < ids.length; i++) {
 			if (StringUtil.isNotEmpty(ids[i])) {
-				List<CgFormHeadEntity> cffList = cgFormFieldService.findByProperty(CgFormHeadEntity.class, "tableName",ids[i]);
+				List<CgFormHeadEntity> cffList = cgFormFieldService.findListByProperty(CgFormHeadEntity.class, "tableName",ids[i]);
 				if (cffList.size() > 0) {
 					if (no != "")
 						no += ",";

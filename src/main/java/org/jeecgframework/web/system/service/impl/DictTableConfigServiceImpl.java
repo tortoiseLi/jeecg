@@ -30,7 +30,7 @@ public class DictTableConfigServiceImpl extends CommonServiceImpl implements Dic
  	}
  	
  	public Serializable save(DictTableConfigEntity entity) throws Exception{
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		return t;
  	}
  	

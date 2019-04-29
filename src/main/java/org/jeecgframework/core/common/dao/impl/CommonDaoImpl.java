@@ -2,14 +2,15 @@ package org.jeecgframework.core.common.dao.impl;
 
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.hibernate.Query;
-import org.jeecgframework.core.common.dao.ICommonDao;
-import org.jeecgframework.core.common.dao.IGenericBaseCommonDao;
+import org.jeecgframework.core.common.dao.BaseDao;
+import org.jeecgframework.core.common.dao.CommonDao;
 import org.jeecgframework.core.common.model.common.UploadFile;
 import org.jeecgframework.core.common.model.json.ComboTree;
 import org.jeecgframework.core.common.model.json.ImportFile;
@@ -42,14 +43,15 @@ import java.util.*;
  */
 @SuppressWarnings("unchecked")
 @Repository
-public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGenericBaseCommonDao {
+public class CommonDaoImpl extends BaseDaoImpl implements CommonDao, BaseDao {
 
 	/**
 	 * 检查用户是否存在
 	 * */
+	@Override
 	public UserEntity getUserByUserIdAndUserNameExits(UserEntity user) {
 		String password = PasswordUtil.encrypt(user.getUserName(), user.getPassword(), PasswordUtil.getStaticSalt());
-		String query = "from TSUser u where u.userName = :username and u.password=:passowrd";
+		String query = "from UserEntity u where u.userName = :username and u.password=:passowrd";
 		Query queryObject = getSession().createQuery(query);
 		queryObject.setParameter("username", user.getUserName());
 		queryObject.setParameter("passowrd", password);
@@ -73,7 +75,8 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * 检查用户是否存在
 	 * */
-	public UserEntity findUserByAccountAndPassword(String username,String inpassword) {
+	@Override
+	public UserEntity findUserByAccountAndPassword(String username, String inpassword) {
 		String password = PasswordUtil.encrypt(username, inpassword, PasswordUtil.getStaticSalt());
 		String query = "from TSUser u where u.userName = :username and u.password=:passowrd";
 		Query queryObject = getSession().createQuery(query);
@@ -90,7 +93,8 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * admin账户初始化
 	 */
-	public void pwdInit(UserEntity user,String newPwd){
+	@Override
+	public void pwdInit(UserEntity user, String newPwd){
 		String query ="from TSUser u where u.userName = :username ";
 		Query queryObject = getSession().createQuery(query);
 		queryObject.setParameter("username", user.getUserName());
@@ -99,15 +103,16 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 			user = users.get(0);
 			String pwd = PasswordUtil.encrypt(user.getUserName(), newPwd, PasswordUtil.getStaticSalt());
 			user.setPassword(pwd);
-			save(user);
+			insert(user);
 		}
 		
 	}
 	
 
+	@Override
 	public String getUserRole(UserEntity user) {
 		String userRole = "";
-		List<RoleUserEntity> sRoleUser = findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
+		List<RoleUserEntity> sRoleUser = findListByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
 		for (RoleUserEntity tsRoleUser : sRoleUser) {
 			userRole += tsRoleUser.getTSRole().getRoleCode() + ",";
 		}
@@ -121,12 +126,13 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	 * @param request
 	 * @throws Exception
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object uploadFile(UploadFile uploadFile) {
 		Object object = uploadFile.getObject();
 		if(uploadFile.getFileKey()!=null)
 		{
-			updateEntitie(object);
+			update(object);
 		}
 		else {
 		try {
@@ -289,6 +295,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	 * @throws Exception
 	 * @throws Exception
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public HttpServletResponse viewOrDownloadFile(UploadFile uploadFile) {
 		uploadFile.getResponse().setContentType("UTF-8");
@@ -375,7 +382,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 			Class entityClass = importFile.getEntityClass();
 			String[] fields = importFile.getField().split(",");
 			// 得到导出对象的集合
-			List objList = loadAll(entityClass);
+			List objList = findList(entityClass);
 			Class classType = entityClass.getClass();
 			for (Object t : objList) {
 				Element childElement = rElement.addElement(importFile.getEntityName());
@@ -412,6 +419,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * 解析XML文件将数据导入数据库中
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void parserXml(String fileName) {
 		try {
@@ -431,7 +439,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 				// 得到实体的ID
 				String id = employee.attributeValue(fields[0].getName());
 				// 判断实体是否已存在
-				Object obj1 = getEntity(entityClass, id);
+				Object obj1 = getById(entityClass, id);
 				// 实体不存在new个实体
 				if (obj1 == null) {
 					obj1 = entityClass.newInstance();
@@ -463,7 +471,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 				if (obj1 != null) {
 					saveOrUpdate(obj1);
 				} else {
-					save(obj1);
+					insert(obj1);
 				}
 			}
 		} catch (Exception e) {
@@ -476,12 +484,11 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	 * 
 	 * @param all
 	 *            全部对象
-	 * @param in
-	 *            已拥有的对象
-	 * @param comboBox
-	 *            模型
+	 * @param in 已拥有的对象
+	 * @param comboBox 模型
 	 * @return
 	 */
+	@Override
 	public List<ComboTree> comTree(List<DepartEntity> all, ComboTree comboTree) {
 		List<ComboTree> trees = new ArrayList<ComboTree>();
 		for (DepartEntity depart : all) {
@@ -496,7 +503,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 		ComboTree tree = new ComboTree();
 		tree.setId(oConvertUtils.getString(depart.getId()));
 		tree.setText(depart.getDepartname());
-		List<DepartEntity> departsList = findByProperty(DepartEntity.class, "TSPDepart.id", depart.getId());
+		List<DepartEntity> departsList = findListByProperty(DepartEntity.class, "TSPDepart.id", depart.getId());
 		if (departsList != null && departsList.size() > 0) {
 			tree.setState("closed");
 			tree.setChecked(false);
@@ -630,7 +637,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 			}
 			if (treeGridModel.getRoleid() != null) {
 				String[] opStrings = {};
-				List<RoleFunctionEntity> roleFunctions = findByProperty(RoleFunctionEntity.class, "TSFunction.id", id);
+				List<RoleFunctionEntity> roleFunctions = findListByProperty(RoleFunctionEntity.class, "TSFunction.id", id);
 
 				if (roleFunctions.size() > 0) {
 					for (RoleFunctionEntity tRoleFunction : roleFunctions) {
@@ -644,7 +651,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 						}
 					}
 				}
-				List<OperationEntity> operateions = findByProperty(OperationEntity.class, "TSFunction.id", id);
+				List<OperationEntity> operateions = findListByProperty(OperationEntity.class, "TSFunction.id", id);
 				StringBuffer attributes = new StringBuffer();
 				if (operateions.size() > 0) {
 					for (OperationEntity tOperation : operateions) {
@@ -685,5 +692,10 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 			treegrid.add(tg);
 		}
 		return treegrid;
+	}
+
+	@Override
+	public T getBySql(String sql) {
+		return null;
 	}
 }

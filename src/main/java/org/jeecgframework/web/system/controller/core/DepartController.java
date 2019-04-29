@@ -124,7 +124,7 @@ public class DepartController extends BaseController {
 		public AjaxJson delUserOrg(@RequestParam(required=true)String userid,@RequestParam(required=true)String departid) {
 			AjaxJson ajaxJson = new AjaxJson();
 			try {
-				List<UserOrgEntity> userOrgList = this.systemService.findByProperty(UserOrgEntity.class, "tsUser.id", userid);
+				List<UserOrgEntity> userOrgList = this.systemService.findListByProperty(UserOrgEntity.class, "tsUser.id", userid);
 				if(userOrgList.size() == 1){
 					ajaxJson.setSuccess(false);
 					ajaxJson.setMsg("当前用户只包含有当前组织机构关系，不可删除，请切换用户的组织机构关系");
@@ -165,7 +165,7 @@ public class DepartController extends BaseController {
 	public AjaxJson del(DepartEntity depart, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		depart = systemService.getEntity(DepartEntity.class, depart.getId());
+		depart = systemService.getById(DepartEntity.class, depart.getId());
         message = MutiLangUtil.paramDelSuccess("common.department");
         if (depart.getTSDeparts().size() == 0) {
 
@@ -193,7 +193,7 @@ public class DepartController extends BaseController {
 
 
 	public void upEntity(DepartEntity depart) {
-		List<UserEntity> users = systemService.findByProperty(UserEntity.class, "TSDepart.id", depart.getId());
+		List<UserEntity> users = systemService.findListByProperty(UserEntity.class, "TSDepart.id", depart.getId());
 		if (users.size() > 0) {
 			for (UserEntity tsUser : users) {
 				//tsUser.setTSDepart(null);
@@ -225,7 +225,7 @@ public class DepartController extends BaseController {
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} else {
             message = MutiLangUtil.paramAddSuccess("common.department");
-			userService.save(depart);
+			userService.add(depart);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
 
@@ -234,7 +234,7 @@ public class DepartController extends BaseController {
 	}
 	@RequestMapping(params = "add")
 	public ModelAndView add(DepartEntity depart, HttpServletRequest req) {
-		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
+		List<DepartEntity> departList = systemService.findList(DepartEntity.class);
 		req.setAttribute("departList", departList);
 //        这个if代码段没有用吧，注释之
 //		if (StringUtil.isNotEmpty(depart.getId())) {
@@ -256,10 +256,10 @@ public class DepartController extends BaseController {
 	 */
 	@RequestMapping(params = "update")
 	public ModelAndView update(DepartEntity depart, HttpServletRequest req) {
-		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
+		List<DepartEntity> departList = systemService.findList(DepartEntity.class);
 		req.setAttribute("departList", departList);
 		if (StringUtil.isNotEmpty(depart.getId())) {
-			depart = systemService.getEntity(DepartEntity.class, depart.getId());
+			depart = systemService.getById(DepartEntity.class, depart.getId());
 			req.setAttribute("depart", depart);
 		}
 		return new ModelAndView("system/depart/depart");
@@ -456,7 +456,7 @@ public class DepartController extends BaseController {
     public List<ComboTree> getOrgTree(HttpServletRequest request) {
 //        findHql不能处理is null条件
 //        List<TSDepart> departsList = systemService.findHql("from TSPDepart where TSPDepart.id is null");
-        List<DepartEntity> departsList = systemService.findByQueryString("from TSDepart where TSPDepart.id is null");
+        List<DepartEntity> departsList = systemService.findListByHql("from TSDepart where TSPDepart.id is null");
         List<ComboTree> comboTrees = new ArrayList<ComboTree>();
         ComboTreeModel comboTreeModel = new ComboTreeModel("id", "departname", "TSDeparts");
         comboTrees = systemService.ComboTree(departsList, comboTreeModel, null, true);
@@ -512,7 +512,7 @@ public class DepartController extends BaseController {
     public AjaxJson doAddUserToOrg(HttpServletRequest req) {
     	String message = null;
         AjaxJson j = new AjaxJson();
-		DepartEntity depart = systemService.getEntity(DepartEntity.class, req.getParameter("orgId"));
+		DepartEntity depart = systemService.getById(DepartEntity.class, req.getParameter("orgId"));
         saveOrgUserList(req, depart);
         message =  MutiLangUtil.paramAddSuccess("common.user");
 //      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
@@ -541,7 +541,7 @@ public class DepartController extends BaseController {
             userOrgList.add(userOrg);
         }
         if (!userOrgList.isEmpty()) {
-            systemService.batchSave(userOrgList);
+            systemService.batchAdd(userOrgList);
         }
     }
 
@@ -756,7 +756,7 @@ public class DepartController extends BaseController {
 			String localMaxCode  = getMaxLocalCode(null);
 			depart.setOrgCode(YouBianCodeUtil.getNextYouBianCode(localMaxCode));
 		}
-		this.systemService.save(depart);
+		this.systemService.add(depart);
 		return depart;
 	}
 
@@ -780,7 +780,7 @@ public class DepartController extends BaseController {
 				List<DepartEntity> tsDeparts = ExcelImportUtil.importExcel(file.getInputStream(),DepartEntity.class,params);
 				for (DepartEntity tsDepart : tsDeparts) {
 					String orgCode = tsDepart.getOrgCode();
-					List<DepartEntity> departs = systemService.findByProperty(DepartEntity.class,"orgCode",orgCode);
+					List<DepartEntity> departs = systemService.findListByProperty(DepartEntity.class,"orgCode",orgCode);
 					if(departs.size()!=0){
 						DepartEntity depart = departs.get(0);
 						MyBeanUtils.copyBeanNotNull2Bean(tsDepart,depart);
@@ -820,7 +820,7 @@ public class DepartController extends BaseController {
 						}
 						tsDepart.setDepartOrder("0");
 
-						systemService.save(tsDepart);
+						systemService.add(tsDepart);
 					}
 				}
 				j.setMsg("文件导入成功！");
@@ -859,7 +859,7 @@ public class DepartController extends BaseController {
 		StringBuffer hql = new StringBuffer(" from TSDepart t where 1=1 ");
 		if(StringUtils.isNotBlank(parentid)){
 
-			DepartEntity dePart = this.systemService.getEntity(DepartEntity.class, parentid);
+			DepartEntity dePart = this.systemService.getById(DepartEntity.class, parentid);
 			
 			hql.append(" and TSPDepart = ?");
 			tSDeparts = this.systemService.findHql(hql.toString(), dePart);

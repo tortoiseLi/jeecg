@@ -131,7 +131,7 @@ public class LoginController extends BaseController{
 			//用户登录验证逻辑
 			UserEntity u = userService.checkUserExits(user);
 			if (u == null) {
-				u = userService.findUniqueByProperty(UserEntity.class, "email", user.getUserName());
+				u = userService.getByProperty(UserEntity.class, "email", user.getUserName());
 
 				if(u == null || !u.getPassword().equals(PasswordUtil.encrypt(u.getUserName(),user.getPassword(), PasswordUtil.getStaticSalt()))){
 
@@ -198,7 +198,7 @@ public class LoginController extends BaseController{
 		String orgId = req.getParameter("orgId");
 		UserEntity u = userService.checkUserExits(user);
 		if(u == null){
-			u = userService.findUniqueByProperty(UserEntity.class, "email", user.getUserName());
+			u = userService.getByProperty(UserEntity.class, "email", user.getUserName());
 		}
 		if (oConvertUtils.isNotEmpty(orgId)) {
 			attrMap.put("orgNum", 1);
@@ -221,7 +221,7 @@ public class LoginController extends BaseController{
 		String roles = "";
 		if (user != null) {
 			log.info(" >>>>>>>>>>>>>>>>>>>>>>>>>>  Login 用户登录成功，初始化Main首页用户信息  （Main 首页加载逻辑）  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
-			List<RoleUserEntity> rUsers = systemService.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
+			List<RoleUserEntity> rUsers = systemService.findListByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
 			for (RoleUserEntity ru : rUsers) {
 				RoleEntity role = ru.getTSRole();
 				roles += role.getRoleName() + ",";
@@ -434,14 +434,14 @@ public class LoginController extends BaseController{
 	@ResponseBody
 	public AjaxJson resetPwd(String key,String password){
 		AjaxJson ajaxJson = new AjaxJson();
-		PasswordResetKeyEntity passwordResetkey = systemService.get(PasswordResetKeyEntity.class, key);
+		PasswordResetKeyEntity passwordResetkey = systemService.getById(PasswordResetKeyEntity.class, key);
 		Date now = new Date();
 		if(passwordResetkey != null && passwordResetkey.getIsReset() != 1 && (now.getTime() - passwordResetkey.getCreateDate().getTime()) < 1000*60*60*3){
-			UserEntity user = systemService.findUniqueByProperty(UserEntity.class, "userName", passwordResetkey.getUsername());
+			UserEntity user = systemService.getByProperty(UserEntity.class, "userName", passwordResetkey.getUsername());
 			user.setPassword(PasswordUtil.encrypt(user.getUserName(), password, PasswordUtil.getStaticSalt()));
-			systemService.updateEntitie(user);
+			systemService.update(user);
 			passwordResetkey.setIsReset(1);
-			systemService.updateEntitie(passwordResetkey);
+			systemService.update(passwordResetkey);
 			ajaxJson.setMsg("密码重置成功");
 		}else{
 			ajaxJson.setSuccess(false);
@@ -474,7 +474,7 @@ public class LoginController extends BaseController{
 				ajaxJson.setMsg("邮件地址不能为空");
 				return ajaxJson;
 			}
-			UserEntity user = systemService.findUniqueByProperty(UserEntity.class, "email", email);
+			UserEntity user = systemService.getByProperty(UserEntity.class, "email", email);
 			if(user == null){
 				ajaxJson.setSuccess(false);
 				ajaxJson.setMsg("用户名对应的用户信息不存在");
@@ -497,7 +497,7 @@ public class LoginController extends BaseController{
 			passwordResetKey.setUsername(user.getUserName());
 			passwordResetKey.setCreateDate(new Date());
 			passwordResetKey.setIsReset(0);
-			userService.save(passwordResetKey);
+			userService.add(passwordResetKey);
 			String content = ResourceUtil.getConfigByName("resetpwd.mail.content");
 			if(content.indexOf("${username}") > -1){
 				content = content.replace("${username}", user.getUserName());
@@ -739,7 +739,7 @@ public class LoginController extends BaseController{
 	
 	public JSONArray getChildOfAdminLteTree(FunctionEntity function) {
 		JSONArray jsonArray = new JSONArray();
-		List<FunctionEntity> functions = this.systemService.findByProperty(FunctionEntity.class, "TSFunction.id", function.getId());
+		List<FunctionEntity> functions = this.systemService.findListByProperty(FunctionEntity.class, "TSFunction.id", function.getId());
 		if(functions != null && functions.size() > 0) {
 			for (FunctionEntity tsFunction : functions) {
 				JSONObject jsonObject = new JSONObject();

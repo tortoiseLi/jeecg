@@ -115,7 +115,7 @@ public class CategoryController extends BaseController {
 	@ResponseBody
 	public AjaxJson del(CategoryEntity tSCategory, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		tSCategory = systemService.getEntity(CategoryEntity.class,
+		tSCategory = systemService.getById(CategoryEntity.class,
 				tSCategory.getId());
 		j.setMsg("分类管理删除成功");
 		categoryService.delete(tSCategory);
@@ -136,7 +136,7 @@ public class CategoryController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(category.getId())) {
 			j.setMsg("分类管理更新成功");
-			CategoryEntity t = categoryService.get(CategoryEntity.class,
+			CategoryEntity t = categoryService.getById(CategoryEntity.class,
 					category.getId());
 
 			category.getParent().setCode(t.getParent()==null||"".equals(t.getParent().getCode())? null :t.getParent().getCode());
@@ -167,15 +167,15 @@ public class CategoryController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public String addorupdate(ModelMap map, CategoryEntity category) {
 		if (StringUtil.isNotEmpty(category.getCode())) {
-			category = categoryService.findUniqueByProperty(CategoryEntity.class,
+			category = categoryService.getByProperty(CategoryEntity.class,
 					"code",category.getCode());
 			map.put("categoryPage", category);
 		}
-		map.put("iconlist", systemService.findByProperty(IconEntity.class,
+		map.put("iconlist", systemService.findListByProperty(IconEntity.class,
 				"iconType", (short) 1));
 		if (category.getParent() != null
 				&& StringUtil.isNotEmpty(category.getParent().getCode())) {
-			CategoryEntity parent = categoryService.findUniqueByProperty(CategoryEntity.class, "code", category.getParent().getCode());
+			CategoryEntity parent = categoryService.getByProperty(CategoryEntity.class, "code", category.getParent().getCode());
 			category.setParent(parent);
 			map.put("categoryPage", category);
 		}

@@ -130,7 +130,7 @@ public class LogController extends BaseController {
 	@RequestMapping(params = "logDetail")
 	public ModelAndView logDetail(LogEntity tsLog,HttpServletRequest request){
 		if (StringUtil.isNotEmpty(tsLog.getId())) {
-			tsLog = logService.getEntity(LogEntity.class, tsLog.getId());
+			tsLog = logService.getById(LogEntity.class, tsLog.getId());
 			request.setAttribute("tsLog", tsLog);
 		}
 		return new ModelAndView("system/log/logDetail");
@@ -186,7 +186,7 @@ public class LogController extends BaseController {
 		Highchart hc = new Highchart();
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT broswer ,count(broswer) FROM LogEntity group by broswer");
-		List userBroswerList = systemService.findByQueryString(sb.toString());
+		List userBroswerList = systemService.findListByHql(sb.toString());
 		Long count = systemService.getCountForJdbc("SELECT COUNT(1) FROM T_S_Log WHERE 1=1");
 		List lt = new ArrayList();
 		hc = new Highchart();

@@ -25,7 +25,7 @@ public class NoticeAuthorityUserServiceImpl extends CommonServiceImpl implements
  	}
  	
  	public <T> Serializable save(T entity) {
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		//执行新增操作配置的sql增强
  		this.doAddSql((NoticeAuthorityUserEntity)entity);
  		return t;
@@ -106,23 +106,23 @@ public class NoticeAuthorityUserServiceImpl extends CommonServiceImpl implements
 				noticeRead.setNoticeId(noticeId);
 				noticeRead.setUserId(userId);
 				noticeRead.setCreateTime(new Date());
-				this.commonDao.save(noticeRead);
+				this.commonDao.insert(noticeRead);
 			}else if(noticeReadList.size() > 0){
 				for (NoticeReadUserEntity noticeRead : noticeReadList) {
 					if(noticeRead.getDelFlag() == 1){
 						noticeRead.setDelFlag(0);
-						this.commonDao.updateEntitie(noticeRead);
+						this.commonDao.update(noticeRead);
 					}
 				}
 				noticeReadList.clear();
 			}
-			this.commonDao.save(noticeAuthorityUser);
+			this.commonDao.insert(noticeAuthorityUser);
 		}
 	}
 
 	@Override
 	public void doDelNoticeAuthorityUser(NoticeAuthorityUserEntity noticeAuthorityUser) {
-		noticeAuthorityUser = this.commonDao.getEntity(NoticeAuthorityUserEntity.class, noticeAuthorityUser.getId());
+		noticeAuthorityUser = this.commonDao.getById(NoticeAuthorityUserEntity.class, noticeAuthorityUser.getId());
 		if(noticeAuthorityUser != null){
 			//删除授权关系的时候，判断是否已被阅读，如果已被阅读过，通过标记逻辑删除，否则直接删除数据
 			String hql = "from NoticeReadUserEntity where noticeId = ? and userId = ?";
@@ -131,7 +131,7 @@ public class NoticeAuthorityUserServiceImpl extends CommonServiceImpl implements
 				for (NoticeReadUserEntity noticeReadUser : noticeReadList) {
 					if(noticeReadUser.getIsRead() == 1){
 						noticeReadUser.setDelFlag(1);
-						this.commonDao.updateEntitie(noticeReadUser);
+						this.commonDao.update(noticeReadUser);
 					}else if(noticeReadUser.getIsRead() == 0){
 						this.commonDao.delete(noticeReadUser);
 					}

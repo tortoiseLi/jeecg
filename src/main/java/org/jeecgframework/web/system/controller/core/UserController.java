@@ -112,10 +112,10 @@ public class UserController extends BaseController {
 		UserEntity u = ResourceUtil.getSessionUser();
 		// 登陆者的权限
 		Set<FunctionEntity> loginActionlist = new HashSet<FunctionEntity>();// 已有权限菜单
-		List<RoleUserEntity> rUsers = systemService.findByProperty(RoleUserEntity.class, "TSUser.id", u.getId());
+		List<RoleUserEntity> rUsers = systemService.findListByProperty(RoleUserEntity.class, "TSUser.id", u.getId());
 		for (RoleUserEntity ru : rUsers) {
 			RoleEntity role = ru.getTSRole();
-			List<RoleFunctionEntity> roleFunctionList = systemService.findByProperty(RoleFunctionEntity.class, "TSRole.id", role.getId());
+			List<RoleFunctionEntity> roleFunctionList = systemService.findListByProperty(RoleFunctionEntity.class, "TSRole.id", role.getId());
 			if (roleFunctionList.size() > 0) {
 				for (RoleFunctionEntity roleFunction : roleFunctionList) {
 					FunctionEntity function = (FunctionEntity) roleFunction.getTSFunction();
@@ -162,7 +162,7 @@ public class UserController extends BaseController {
 	@RequestMapping(params = "user")
 	public String user(HttpServletRequest request) {
 		// 给部门查询条件中的下拉框准备数据
-		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
+		List<DepartEntity> departList = systemService.findList(DepartEntity.class);
 		request.setAttribute("departsReplace", RoletoJson.listToReplaceStr(departList, "departname", "id"));
 		departList.clear();
 		return "system/user/userList";
@@ -171,7 +171,7 @@ public class UserController extends BaseController {
 	@RequestMapping(params = "interfaceUser")
 	public String interfaceUser(HttpServletRequest request) {
 		// 给部门查询条件中的下拉框准备数据
-		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
+		List<DepartEntity> departList = systemService.findList(DepartEntity.class);
 		request.setAttribute("departsReplace", RoletoJson.listToReplaceStr(departList, "departname", "id"));
 		departList.clear();
 		return "system/user/interfaceUserList";
@@ -193,7 +193,7 @@ public class UserController extends BaseController {
             if (o instanceof UserEntity) {
                 UserEntity cfe = (UserEntity) o;
                 if (cfe.getId() != null && !"".equals(cfe.getId())) {
-                    List<InterroleUserEntity> roleUser = systemService.findByProperty(InterroleUserEntity.class, "TSUser.id", cfe.getId());
+                    List<InterroleUserEntity> roleUser = systemService.findListByProperty(InterroleUserEntity.class, "TSUser.id", cfe.getId());
                     if (roleUser.size() > 0) {
                         String roleName = "";
                         for (InterroleUserEntity ru : roleUser) {
@@ -214,7 +214,7 @@ public class UserController extends BaseController {
 	public AjaxJson delInterfaceUser(@RequestParam(required = true) String userid) {
 		AjaxJson ajaxJson = new AjaxJson();
 		try {
-			UserEntity user = this.userService.getEntity(UserEntity.class, userid);
+			UserEntity user = this.userService.getById(UserEntity.class, userid);
 			if(user!=null) {
 				String sql = "delete from t_s_interrole_user where user_id = ?";
 				this.systemService.executeSql(sql, userid);
@@ -275,7 +275,7 @@ public class UserController extends BaseController {
 		user.setPortrait(fileName);
 		j.setMsg("修改成功");
 		try {
-			systemService.updateEntitie(user);
+			systemService.update(user);
 		} catch (Exception e) {
 			j.setMsg("修改失败");
 			e.printStackTrace();
@@ -307,7 +307,7 @@ public class UserController extends BaseController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			systemService.updateEntitie(user);
+			systemService.update(user);
 			j.setMsg("修改成功");
 			logger.info("["+IpUtil.getIpAddr(request)+"][修改密码]修改成功 userId:"+user.getUserName());
 
@@ -326,7 +326,7 @@ public class UserController extends BaseController {
 	public ModelAndView changepasswordforuser(UserEntity user, HttpServletRequest req) {
 		logger.info("["+IpUtil.getIpAddr(req)+"][跳转重置用户密码页面]["+user.getUserName()+"]");
 		if (StringUtil.isNotEmpty(user.getId())) {
-			user = systemService.getEntity(UserEntity.class, user.getId());
+			user = systemService.getById(UserEntity.class, user.getId());
 			req.setAttribute("user", user);
 			idandname(req, user);
 			//System.out.println(user.getPassword()+"-----"+user.getRealName());
@@ -351,7 +351,7 @@ public class UserController extends BaseController {
 		String password = oConvertUtils.getString(req.getParameter("password"));
 		
 		if (StringUtil.isNotEmpty(id)) {
-			UserEntity users = systemService.getEntity(UserEntity.class,id);
+			UserEntity users = systemService.getById(UserEntity.class,id);
 			if("admin".equals(users.getUserName()) && !"admin".equals(ResourceUtil.getSessionUser().getUserName())){
 				message = "超级管理员[admin]，只有admin本人可操作，其他人无权限!";
 				logger.info("["+IpUtil.getIpAddr(req)+"]"+message);
@@ -363,7 +363,7 @@ public class UserController extends BaseController {
 			users.setPassword(PasswordUtil.encrypt(users.getUserName(), password, PasswordUtil.getStaticSalt()));
 			users.setStatus(Globals.User_Normal);
 			users.setActivitiSync(users.getActivitiSync());
-			systemService.updateEntitie(users);	
+			systemService.update(users);
 			message = "用户: " + users.getUserName() + "密码重置成功";
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 			logger.info("["+IpUtil.getIpAddr(req)+"][重置密码]"+message);
@@ -384,7 +384,7 @@ public class UserController extends BaseController {
 	public AjaxJson lock(String id, HttpServletRequest req) {
 		AjaxJson j = new AjaxJson();
 		String message = null;
-		UserEntity user = systemService.getEntity(UserEntity.class, id);
+		UserEntity user = systemService.getById(UserEntity.class, id);
 		if("admin".equals(user.getUserName())){
 			message = "超级管理员[admin]不可操作";
 			j.setMsg(message);
@@ -394,7 +394,7 @@ public class UserController extends BaseController {
 
 		user.setStatus(new Short(lockValue));
 		try{
-		userService.updateEntitie(user);
+		userService.update(user);
 		if("0".equals(lockValue)){
 			message = "用户：" + user.getUserName() + "锁定成功!";
 		}else if("1".equals(lockValue)){
@@ -422,14 +422,14 @@ public class UserController extends BaseController {
 		List<ComboBox> comboBoxs = new ArrayList<ComboBox>();
 		List<RoleEntity> roles = new ArrayList<RoleEntity>();
 		if (StringUtil.isNotEmpty(id)) {
-			List<RoleUserEntity> roleUser = systemService.findByProperty(RoleUserEntity.class, "TSUser.id", id);
+			List<RoleUserEntity> roleUser = systemService.findListByProperty(RoleUserEntity.class, "TSUser.id", id);
 			if (roleUser.size() > 0) {
 				for (RoleUserEntity ru : roleUser) {
 					roles.add(ru.getTSRole());
 				}
 			}
 		}
-		List<RoleEntity> roleList = systemService.getList(RoleEntity.class);
+		List<RoleEntity> roleList = systemService.findList(RoleEntity.class);
 		comboBoxs = TagUtil.getComboBox(roleList, roles, comboBox);
 
 		roleList.clear();
@@ -450,7 +450,7 @@ public class UserController extends BaseController {
 		List<ComboBox> comboBoxs = new ArrayList<ComboBox>();
 		List<DepartEntity> departs = new ArrayList();
 		if (StringUtil.isNotEmpty(id)) {
-			UserEntity user = systemService.get(UserEntity.class, id);
+			UserEntity user = systemService.getById(UserEntity.class, id);
 //			if (user.getTSDepart() != null) {
 //				TSDepart depart = systemService.get(TSDepart.class, user.getTSDepart().getId());
 //				departs.add(depart);
@@ -461,7 +461,7 @@ public class UserController extends BaseController {
                 departs.add(departArr[0]);
             }
         }
-		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
+		List<DepartEntity> departList = systemService.findList(DepartEntity.class);
 		comboBoxs = TagUtil.getComboBox(departList, departs, comboBox);
 		return comboBoxs;
 	}
@@ -488,7 +488,7 @@ public class UserController extends BaseController {
 		//获取公司编码
 		String orgCode = null;
 		if (oConvertUtils.isNotEmpty(departid)) {
-			DepartEntity tsdepart = this.systemService.get(DepartEntity.class, departid);
+			DepartEntity tsdepart = this.systemService.getById(DepartEntity.class, departid);
 			orgCode = tsdepart.getOrgCode();
 		}
 		
@@ -546,7 +546,7 @@ public class UserController extends BaseController {
             if (o instanceof UserEntity) {
 				UserEntity cfe = (UserEntity) o;
                 if (cfe.getId() != null && !"".equals(cfe.getId())) {
-                    List<RoleUserEntity> roleUser = systemService.findByProperty(RoleUserEntity.class, "TSUser.id", cfe.getId());
+                    List<RoleUserEntity> roleUser = systemService.findListByProperty(RoleUserEntity.class, "TSUser.id", cfe.getId());
                     if (roleUser.size() > 0) {
                         String roleName = "";
                         for (RoleUserEntity ru : roleUser) {
@@ -607,12 +607,12 @@ public class UserController extends BaseController {
 			j.setMsg(message);
 			return j;
 		}
-		user = systemService.getEntity(UserEntity.class, user.getId());
+		user = systemService.getById(UserEntity.class, user.getId());
 //		List<RoleUserEntity> roleUser = systemService.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
 		if (!user.getStatus().equals(Globals.User_ADMIN)) {
 
 			user.setDeleteFlag(Globals.Delete_Forbidden);
-			userService.updateEntitie(user);
+			userService.update(user);
 			message = "用户：" + user.getUserName() + "删除成功";
 			logger.info("["+IpUtil.getIpAddr(req)+"][逻辑删除用户]"+message);
 
@@ -656,7 +656,7 @@ public class UserController extends BaseController {
 			j.setMsg(message);
 			return j;
 		}
-		user = systemService.getEntity(UserEntity.class, user.getId());
+		user = systemService.getById(UserEntity.class, user.getId());
 
 		/*List<RoleUserEntity> roleUser = systemService.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
 		if (!user.getStatus().equals(Globals.User_ADMIN)) {
@@ -709,7 +709,7 @@ public class UserController extends BaseController {
 		ValidForm v = new ValidForm();
 		String userName=oConvertUtils.getString(request.getParameter("param"));
 		String code=oConvertUtils.getString(request.getParameter("code"));
-		List<UserEntity> roles=systemService.findByProperty(UserEntity.class,"userName",userName);
+		List<UserEntity> roles=systemService.findListByProperty(UserEntity.class,"userName",userName);
 		if(roles.size()>0&&!code.equals(userName))
 		{
 			v.setInfo("用户名已存在");
@@ -729,7 +729,7 @@ public class UserController extends BaseController {
 		ValidForm validForm = new ValidForm();
 		String email=oConvertUtils.getString(request.getParameter("param"));
 		String code=oConvertUtils.getString(request.getParameter("code"));
-		List<UserEntity> userList=systemService.findByProperty(UserEntity.class,"email",email);
+		List<UserEntity> userList=systemService.findListByProperty(UserEntity.class,"email",email);
 		if(userList.size()>0&&!code.equals(email))
 		{
 			validForm.setInfo("邮箱已绑定相关用户信息");
@@ -757,7 +757,7 @@ public class UserController extends BaseController {
 		String roleid = oConvertUtils.getString(req.getParameter("roleid"));
 		String orgid=oConvertUtils.getString(req.getParameter("orgIds"));
 		if (StringUtil.isNotEmpty(user.getId())) {
-			UserEntity users = systemService.getEntity(UserEntity.class, user.getId());
+			UserEntity users = systemService.getById(UserEntity.class, user.getId());
 			users.setEmail(user.getEmail());
 			users.setOfficePhone(user.getOfficePhone());
 			users.setMobilePhone(user.getMobilePhone());
@@ -768,7 +768,7 @@ public class UserController extends BaseController {
 			this.userService.saveOrUpdate(users, orgid.split(","), roleid.split(","));
 			message = "用户: " + users.getUserName() + "更新成功";
 		} else {
-			UserEntity users = systemService.findUniqueByProperty(UserEntity.class, "userName",user.getUserName());
+			UserEntity users = systemService.getByProperty(UserEntity.class, "userName",user.getUserName());
 			if (users != null) {
 				message = "用户: " + users.getUserName() + "已经存在";
 			} else {
@@ -810,7 +810,7 @@ public class UserController extends BaseController {
             userOrgList.add(userOrg);
         }
         if (!userOrgList.isEmpty()) {
-            systemService.batchSave(userOrgList);
+            systemService.batchAdd(userOrgList);
         }
     }
 
@@ -819,10 +819,10 @@ public class UserController extends BaseController {
 		String[] roleids = roleidstr.split(",");
 		for (int i = 0; i < roleids.length; i++) {
 			RoleUserEntity rUser = new RoleUserEntity();
-			RoleEntity role = systemService.getEntity(RoleEntity.class, roleids[i]);
+			RoleEntity role = systemService.getById(RoleEntity.class, roleids[i]);
 			rUser.setTSRole(role);
 			rUser.setTSUser(user);
-			systemService.save(rUser);
+			systemService.add(rUser);
 
 		}
 	}
@@ -883,7 +883,7 @@ public class UserController extends BaseController {
         List<String> orgIdList = new ArrayList<String>();
 		DepartEntity tsDepart = new DepartEntity();
 		if (StringUtil.isNotEmpty(user.getId())) {
-			user = systemService.getEntity(UserEntity.class, user.getId());
+			user = systemService.getById(UserEntity.class, user.getId());
 			
 			req.setAttribute("user", user);
 			idandname(req, user);
@@ -893,7 +893,7 @@ public class UserController extends BaseController {
 			//组织机构关联用户录入
 			String departid = oConvertUtils.getString(req.getParameter("departid"));
 			if(StringUtils.isNotEmpty(departid)){
-				DepartEntity depart = systemService.getEntity(DepartEntity.class,departid);
+				DepartEntity depart = systemService.getById(DepartEntity.class,departid);
 				if(depart!=null){
 					req.setAttribute("orgIds", depart.getId()+",");
 					req.setAttribute("departname", depart.getDepartname()+",");
@@ -902,7 +902,7 @@ public class UserController extends BaseController {
 			//角色管理关联用户录入
 			String roleId = oConvertUtils.getString(req.getParameter("roleId"));
 			if(StringUtils.isNotEmpty(roleId)){
-				RoleEntity tsRole = systemService.getEntity(RoleEntity.class,roleId);
+				RoleEntity tsRole = systemService.getById(RoleEntity.class,roleId);
 				if(tsRole!=null){
 					req.setAttribute("id", roleId);
 					req.setAttribute("roleName", tsRole.getRoleName());
@@ -929,13 +929,13 @@ public class UserController extends BaseController {
 	public ModelAndView addorupdateInterfaceUser(UserEntity user, HttpServletRequest req) {
 
 		if (StringUtil.isNotEmpty(user.getId())) {
-			user = systemService.getEntity(UserEntity.class, user.getId());
+			user = systemService.getById(UserEntity.class, user.getId());
 			req.setAttribute("user", user);
 			interfaceroleidandname(req, user);
 		}else{
 			String roleId = req.getParameter("roleId");
 			if(StringUtils.isNotBlank(roleId)) {
-				InterroleEntity role = systemService.getEntity(InterroleEntity.class, roleId);
+				InterroleEntity role = systemService.getById(InterroleEntity.class, roleId);
 				req.setAttribute("roleId", roleId);
 				req.setAttribute("roleName", role.getRoleName());
 			}
@@ -945,7 +945,7 @@ public class UserController extends BaseController {
 	}
 	
 	public void interfaceroleidandname(HttpServletRequest req, UserEntity user) {
-		List<InterroleUserEntity> roleUsers = systemService.findByProperty(InterroleUserEntity.class, "TSUser.id", user.getId());
+		List<InterroleUserEntity> roleUsers = systemService.findListByProperty(InterroleUserEntity.class, "TSUser.id", user.getId());
 		String roleId = "";
 		String roleName = "";
 		if (roleUsers.size() > 0) {
@@ -975,7 +975,7 @@ public class UserController extends BaseController {
 		String roleid = oConvertUtils.getString(req.getParameter("roleid"));
 		String password = oConvertUtils.getString(req.getParameter("password"));
 		if (StringUtil.isNotEmpty(user.getId())) {
-			UserEntity users = systemService.getEntity(UserEntity.class, user.getId());
+			UserEntity users = systemService.getById(UserEntity.class, user.getId());
 			users.setEmail(user.getEmail());
 			users.setOfficePhone(user.getOfficePhone());
 			users.setMobilePhone(user.getMobilePhone());
@@ -1002,16 +1002,16 @@ public class UserController extends BaseController {
 			users.setPost(user.getPost());
 			users.setMemo(user.getMemo());
 			
-			systemService.updateEntitie(users);
-			List<RoleUserEntity> ru = systemService.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
-			systemService.deleteAllEntitie(ru);//TODO ?
+			systemService.update(users);
+			List<RoleUserEntity> ru = systemService.findListByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
+			systemService.deleteByCollection(ru);//TODO ?
 			message = "用户: " + users.getUserName() + "更新成功";
 //			if (StringUtil.isNotEmpty(roleid)) {
 //				saveInterfaceRoleUser(users, roleid);
 //			}
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} else {
-			UserEntity users = systemService.findUniqueByProperty(UserEntity.class, "userName",user.getUserName());
+			UserEntity users = systemService.getByProperty(UserEntity.class, "userName",user.getUserName());
 			if (users != null) {
 				message = "用户: " + users.getUserName() + "已经存在";
 			} else {
@@ -1021,7 +1021,7 @@ public class UserController extends BaseController {
 //				}
 				user.setStatus(Globals.User_Normal);
 				user.setDeleteFlag(Globals.Delete_Normal);
-				systemService.save(user);
+				systemService.add(user);
                 // todo zhanggm 保存多个组织机构
 //                saveUserOrgList(req, user);
 				message = "用户: " + user.getUserName() + "添加成功";
@@ -1041,10 +1041,10 @@ public class UserController extends BaseController {
 		String[] roleids = roleidstr.split(",");
 		for (int i = 0; i < roleids.length; i++) {
 			InterroleUserEntity rUser = new InterroleUserEntity();
-			InterroleEntity role = systemService.getEntity(InterroleEntity.class, roleids[i]);
+			InterroleEntity role = systemService.getById(InterroleEntity.class, roleids[i]);
 			rUser.setInterroleEntity(role);
 			rUser.setTSUser(user);
-			systemService.save(rUser);
+			systemService.add(rUser);
 		}
 	}
 
@@ -1065,7 +1065,7 @@ public class UserController extends BaseController {
         }
         request.setAttribute("orgList", orgList);
 
-		UserEntity user = systemService.getEntity(UserEntity.class, userId);
+		UserEntity user = systemService.getById(UserEntity.class, userId);
         request.setAttribute("user", user);
 
 		return new ModelAndView("system/user/userOrgSelect");
@@ -1073,7 +1073,7 @@ public class UserController extends BaseController {
 
 
 	public void idandname(HttpServletRequest req, UserEntity user) {
-		List<RoleUserEntity> roleUsers = systemService.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
+		List<RoleUserEntity> roleUsers = systemService.findListByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
 		String roleId = "";
 		String roleName = "";
 		if (roleUsers.size() > 0) {
@@ -1088,7 +1088,7 @@ public class UserController extends BaseController {
 	}
 	
 	public void getOrgInfos(HttpServletRequest req, UserEntity user) {
-		List<UserOrgEntity> tSUserOrgs = systemService.findByProperty(UserOrgEntity.class, "tsUser.id", user.getId());
+		List<UserOrgEntity> tSUserOrgs = systemService.findListByProperty(UserOrgEntity.class, "tsUser.id", user.getId());
 		String orgIds = "";
 		String departname = "";
 		if (tSUserOrgs.size() > 0) {
@@ -1107,7 +1107,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(params = "choose")
 	public String choose(HttpServletRequest request) {
-		List<RoleEntity> roles = systemService.loadAll(RoleEntity.class);
+		List<RoleEntity> roles = systemService.findList(RoleEntity.class);
 		request.setAttribute("roleList", roles);
 		return "system/membership/checkuser";
 	}
@@ -1145,7 +1145,7 @@ public class UserController extends BaseController {
 		}
 		String userid = "";
 		if (roleid.length() > 0) {
-			List<RoleUserEntity> roleUsers = systemService.findByProperty(RoleUserEntity.class, "TRole.roleid", oConvertUtils.getInt(roleid, 0));
+			List<RoleUserEntity> roleUsers = systemService.findListByProperty(RoleUserEntity.class, "TRole.roleid", oConvertUtils.getInt(roleid, 0));
 			if (roleUsers.size() > 0) {
 				for (RoleUserEntity tRoleUser : roleUsers) {
 					userid += tRoleUser.getTSUser().getId() + ",";
@@ -1163,7 +1163,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(params = "roleDepart")
 	public String roleDepart(HttpServletRequest request) {
-		List<RoleEntity> roles = systemService.loadAll(RoleEntity.class);
+		List<RoleEntity> roles = systemService.findList(RoleEntity.class);
 		request.setAttribute("roleList", roles);
 		return "system/membership/roledepart";
 	}
@@ -1278,7 +1278,7 @@ public class UserController extends BaseController {
 		String message = null;
 		UploadFile uploadFile = new UploadFile(req);
 		String id = uploadFile.get("id");
-		UserEntity user = systemService.getEntity(UserEntity.class, id);
+		UserEntity user = systemService.getById(UserEntity.class, id);
 		uploadFile.setRealPath("signatureFile");
 		uploadFile.setCusPath("signature");
 		uploadFile.setByteField("signature");
@@ -1499,7 +1499,7 @@ public class UserController extends BaseController {
 					tsUser.setUserType(Globals.USER_TYPE_SYSTEM);//导入用户 在用户管理列表不显示
 
 					if((roleCodes==null||roleCodes.equals(""))||(deptCodes==null||deptCodes.equals(""))){
-						List<UserEntity> users = systemService.findByProperty(UserEntity.class,"userName",username);
+						List<UserEntity> users = systemService.findListByProperty(UserEntity.class,"userName",username);
 						if(users.size()!=0){
 							//用户存在更新
 							UserEntity user = users.get(0);
@@ -1508,7 +1508,7 @@ public class UserController extends BaseController {
 							systemService.saveOrUpdate(user);
 						}else{
 							tsUser.setDepartid(null);
-							systemService.save(tsUser);
+							systemService.add(tsUser);
 						}
 					}else{
 						String[] roles = roleCodes.split(",");
@@ -1516,14 +1516,14 @@ public class UserController extends BaseController {
 						boolean flag = true;
 						//判断组织机构编码和角色编码是否存在，如果不存在，也不能导入
 						for(String roleCode:roles){
-							List<RoleEntity> roleList = systemService.findByProperty(RoleEntity.class,"roleCode",roleCode);
+							List<RoleEntity> roleList = systemService.findListByProperty(RoleEntity.class,"roleCode",roleCode);
 							if(roleList.size()==0){
 								flag = false;
 							}
 						}
 
 						for(String deptCode:depts){
-							List<DepartEntity> departList = systemService.findByProperty(DepartEntity.class,"orgCode",deptCode);
+							List<DepartEntity> departList = systemService.findListByProperty(DepartEntity.class,"orgCode",deptCode);
 							if(departList.size()==0){
 								flag = false;
 							}
@@ -1531,7 +1531,7 @@ public class UserController extends BaseController {
 
 						if(flag){
 							//判断用户是否存在
-							List<UserEntity> users = systemService.findByProperty(UserEntity.class,"userName",username);
+							List<UserEntity> users = systemService.findListByProperty(UserEntity.class,"userName",username);
 							if(users.size()!=0){
 								//用户存在更新
 								UserEntity user = users.get(0);
@@ -1543,43 +1543,43 @@ public class UserController extends BaseController {
 								systemService.executeSql("delete from t_s_role_user where userid = ?",id);
 								for(String roleCode:roles){
 									//根据角色编码得到roleid
-									List<RoleEntity> roleList = systemService.findByProperty(RoleEntity.class,"roleCode",roleCode);
+									List<RoleEntity> roleList = systemService.findListByProperty(RoleEntity.class,"roleCode",roleCode);
 									RoleUserEntity tsRoleUser = new RoleUserEntity();
 									tsRoleUser.setTSUser(user);
 									tsRoleUser.setTSRole(roleList.get(0));
-									systemService.save(tsRoleUser);
+									systemService.add(tsRoleUser);
 								}
 
 								systemService.executeSql("delete from t_s_user_org where user_id = ?",id);
 								for(String orgCode:depts){
 									//根据角色编码得到roleid
-									List<DepartEntity> departList = systemService.findByProperty(DepartEntity.class,"orgCode",orgCode);
+									List<DepartEntity> departList = systemService.findListByProperty(DepartEntity.class,"orgCode",orgCode);
 									UserOrgEntity tsUserOrg = new UserOrgEntity();
 									tsUserOrg.setTsDepart(departList.get(0));
 									tsUserOrg.setTsUser(user);
-									systemService.save(tsUserOrg);
+									systemService.add(tsUserOrg);
 								}
 							}else{
 								//不存在则保存
 								//TSUser user = users.get(0);
 								tsUser.setDepartid(null);
-								systemService.save(tsUser);
+								systemService.add(tsUser);
 								for(String roleCode:roles){
 									//根据角色编码得到roleid
-									List<RoleEntity> roleList = systemService.findByProperty(RoleEntity.class,"roleCode",roleCode);
+									List<RoleEntity> roleList = systemService.findListByProperty(RoleEntity.class,"roleCode",roleCode);
 									RoleUserEntity tsRoleUser = new RoleUserEntity();
 									tsRoleUser.setTSUser(tsUser);
 									tsRoleUser.setTSRole(roleList.get(0));
-									systemService.save(tsRoleUser);
+									systemService.add(tsRoleUser);
 								}
 
 								for(String orgCode:depts){
 									//根据角色编码得到roleid
-									List<DepartEntity> departList = systemService.findByProperty(DepartEntity.class,"orgCode",orgCode);
+									List<DepartEntity> departList = systemService.findListByProperty(DepartEntity.class,"orgCode",orgCode);
 									UserOrgEntity tsUserOrg = new UserOrgEntity();
 									tsUserOrg.setTsDepart(departList.get(0));
 									tsUserOrg.setTsUser(tsUser);
-									systemService.save(tsUserOrg);
+									systemService.add(tsUserOrg);
 								}
 							}
 							j.setMsg("文件导入成功！");
@@ -1626,14 +1626,14 @@ public class UserController extends BaseController {
         List<String> orgIdList = new ArrayList<String>();
 		DepartEntity tsDepart = new DepartEntity();
 		if (StringUtil.isNotEmpty(user.getId())) {
-			user = systemService.getEntity(UserEntity.class, user.getId());
+			user = systemService.getById(UserEntity.class, user.getId());
 			
 			req.setAttribute("user", user);
 			idandname(req, user);
 			getOrgInfos(req, user);
 		}else{
 			String departid = oConvertUtils.getString(req.getParameter("departid"));
-			DepartEntity org = systemService.getEntity(DepartEntity.class,departid);
+			DepartEntity org = systemService.getById(DepartEntity.class,departid);
 			req.setAttribute("orgIds", departid);
 			req.setAttribute("departname", org.getDepartname());
 		}

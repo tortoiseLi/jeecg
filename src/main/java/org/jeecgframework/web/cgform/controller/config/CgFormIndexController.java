@@ -118,7 +118,7 @@ public class CgFormIndexController extends BaseController {
 	public AjaxJson doDel(CgFormIndexEntity cgFormIndex, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		cgFormIndex = systemService.getEntity(CgFormIndexEntity.class, cgFormIndex.getId());
+		cgFormIndex = systemService.getById(CgFormIndexEntity.class, cgFormIndex.getId());
 		message = "索引表删除成功";
 		try{
 			cgFormIndexService.delete(cgFormIndex);
@@ -145,7 +145,7 @@ public class CgFormIndexController extends BaseController {
 		message = "索引表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				CgFormIndexEntity cgFormIndex = systemService.getEntity(CgFormIndexEntity.class, 
+				CgFormIndexEntity cgFormIndex = systemService.getById(CgFormIndexEntity.class,
 				id
 				);
 				cgFormIndexService.delete(cgFormIndex);
@@ -197,7 +197,7 @@ public class CgFormIndexController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "索引表更新成功";
-		CgFormIndexEntity t = cgFormIndexService.get(CgFormIndexEntity.class, cgFormIndex.getId());
+		CgFormIndexEntity t = cgFormIndexService.getById(CgFormIndexEntity.class, cgFormIndex.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(cgFormIndex, t);
 			cgFormIndexService.saveOrUpdate(t);
@@ -220,7 +220,7 @@ public class CgFormIndexController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(CgFormIndexEntity cgFormIndex, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgFormIndex.getId())) {
-			cgFormIndex = cgFormIndexService.getEntity(CgFormIndexEntity.class, cgFormIndex.getId());
+			cgFormIndex = cgFormIndexService.getById(CgFormIndexEntity.class, cgFormIndex.getId());
 			req.setAttribute("cgFormIndexPage", cgFormIndex);
 		}
 		return new ModelAndView("com/jeecg/index/cgFormIndex-add");
@@ -233,7 +233,7 @@ public class CgFormIndexController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(CgFormIndexEntity cgFormIndex, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgFormIndex.getId())) {
-			cgFormIndex = cgFormIndexService.getEntity(CgFormIndexEntity.class, cgFormIndex.getId());
+			cgFormIndex = cgFormIndexService.getById(CgFormIndexEntity.class, cgFormIndex.getId());
 			req.setAttribute("cgFormIndexPage", cgFormIndex);
 		}
 		return new ModelAndView("com/jeecg/index/cgFormIndex-update");
@@ -323,14 +323,14 @@ public class CgFormIndexController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public List<CgFormIndexEntity> list() {
-		List<CgFormIndexEntity> listCgFormIndexs=cgFormIndexService.getList(CgFormIndexEntity.class);
+		List<CgFormIndexEntity> listCgFormIndexs=cgFormIndexService.findList(CgFormIndexEntity.class);
 		return listCgFormIndexs;
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> get(@PathVariable("id") String id) {
-		CgFormIndexEntity task = cgFormIndexService.get(CgFormIndexEntity.class, id);
+		CgFormIndexEntity task = cgFormIndexService.getById(CgFormIndexEntity.class, id);
 		if (task == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
@@ -376,7 +376,7 @@ public class CgFormIndexController extends BaseController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable("id") String id) {
-		cgFormIndexService.deleteEntityById(CgFormIndexEntity.class, id);
+		cgFormIndexService.deleteById(CgFormIndexEntity.class, id);
 	}
 	
 	/**

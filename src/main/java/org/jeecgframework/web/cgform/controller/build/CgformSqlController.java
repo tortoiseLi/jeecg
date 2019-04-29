@@ -15,6 +15,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.jeecgframework.core.common.model.common.DbTable;
 import org.jeecgframework.web.cgform.dao.config.CgFormVersionDao;
 import org.jeecgframework.web.cgform.entity.config.CgFormHeadEntity;
 import org.jeecgframework.web.cgform.pojo.config.CgFormHeadPojo;
@@ -22,7 +24,6 @@ import org.jeecgframework.web.cgform.service.migrate.MigrateForm;
 
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.common.controller.BaseController;
-import org.jeecgframework.core.common.model.common.DBTable;
 import org.jeecgframework.core.common.model.common.UploadFile;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.util.IpUtil;
@@ -92,7 +93,7 @@ public class CgformSqlController extends BaseController {
 		try {
 			//listSQL = MigrateForm.createSQL(ids, jdbcTemplate);// 创建查询语句
 			//MigrateForm.executeSQL(listSQL, jdbcTemplate);// 生成sql并拼装
-			List<DBTable> dbTables = MigrateForm.buildExportDbTableList(ids, jdbcTemplate);  //创建导出的数据对象
+			List<DbTable> dbTables = MigrateForm.buildExportDbTableList(ids, jdbcTemplate);  //创建导出的数据对象
 			//MigrateForm.generateXmlDataOutFlieContent(ids, jdbcDao);
 			//update by duanqilu 2013-12-05 增加多表单导出功能
 			String ls_id="";
@@ -213,11 +214,11 @@ public class CgformSqlController extends BaseController {
 					}
 				}*/
 				XStream xStream = new XStream();
-				xStream.processAnnotations(DBTable.class);
+				xStream.processAnnotations(DbTable.class);
 				@SuppressWarnings("unchecked")
-				List<DBTable> dbTables = (List<DBTable>) xStream.fromXML(new File(sqlfilename));
+				List<DbTable> dbTables = (List<DbTable>) xStream.fromXML(new File(sqlfilename));
 				if(!dbTables.isEmpty() && dbTables.size()>0){
-					for (DBTable dbTable : dbTables) {
+					for (DbTable dbTable : dbTables) {
 						mergeMigrateInComponent(dbTable);
 					}
 				}
@@ -236,7 +237,7 @@ public class CgformSqlController extends BaseController {
 		return j;
 	}
 
-	private <T> void mergeMigrateInComponent(DBTable<T> dbTable) {
+	private <T> void mergeMigrateInComponent(DbTable<T> dbTable) {
 		Class<T> clazz = dbTable.getClass1();
 		if(null != clazz){
 			List<T> dataList = dbTable.getTableData();

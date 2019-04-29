@@ -122,7 +122,7 @@ public class TsBlackListController extends BaseController {
 	public AjaxJson doDel(TsBlackListEntity tsBlackList, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tsBlackList = systemService.getEntity(TsBlackListEntity.class, tsBlackList.getId());
+		tsBlackList = systemService.getById(TsBlackListEntity.class, tsBlackList.getId());
 		message = "黑名单删除成功";
 		try{
 			tsBlackListService.delete(tsBlackList);
@@ -149,7 +149,7 @@ public class TsBlackListController extends BaseController {
 		message = "黑名单删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TsBlackListEntity tsBlackList = systemService.getEntity(TsBlackListEntity.class, 
+				TsBlackListEntity tsBlackList = systemService.getById(TsBlackListEntity.class,
 				id
 				);
 				tsBlackListService.delete(tsBlackList);
@@ -206,7 +206,7 @@ public class TsBlackListController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "黑名单更新成功";
-		TsBlackListEntity t = tsBlackListService.get(TsBlackListEntity.class, tsBlackList.getId());
+		TsBlackListEntity t = tsBlackListService.getById(TsBlackListEntity.class, tsBlackList.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tsBlackList, t);
 			tsBlackListService.saveOrUpdate(t);
@@ -234,7 +234,7 @@ public class TsBlackListController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(TsBlackListEntity tsBlackList, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tsBlackList.getId())) {
-			tsBlackList = tsBlackListService.getEntity(TsBlackListEntity.class, tsBlackList.getId());
+			tsBlackList = tsBlackListService.getById(TsBlackListEntity.class, tsBlackList.getId());
 			req.setAttribute("tsBlackListPage", tsBlackList);
 		}
 		return new ModelAndView("jeecg/black/tsBlackList-add");
@@ -247,7 +247,7 @@ public class TsBlackListController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(TsBlackListEntity tsBlackList, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tsBlackList.getId())) {
-			tsBlackList = tsBlackListService.getEntity(TsBlackListEntity.class, tsBlackList.getId());
+			tsBlackList = tsBlackListService.getById(TsBlackListEntity.class, tsBlackList.getId());
 			req.setAttribute("tsBlackListPage", tsBlackList);
 		}
 		return new ModelAndView("jeecg/black/tsBlackList-update");
@@ -362,7 +362,7 @@ public class TsBlackListController extends BaseController {
 		if (StringUtils.isEmpty(id)) {
 			return Result.error("ID不能为空");
 		}
-		TsBlackListEntity task = tsBlackListService.get(TsBlackListEntity.class, id);
+		TsBlackListEntity task = tsBlackListService.getById(TsBlackListEntity.class, id);
 		return Result.success(task);
 	}
 
@@ -439,7 +439,7 @@ public class TsBlackListController extends BaseController {
 			return Result.error("ID不能为空");
 		}
 		try {
-			tsBlackListService.deleteEntityById(TsBlackListEntity.class, id);
+			tsBlackListService.deleteById(TsBlackListEntity.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Result.error("黑名单删除失败");

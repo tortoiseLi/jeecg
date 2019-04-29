@@ -76,7 +76,7 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 	
 	public List<String> queryCgReportParam(String reportId){
 		List<String> list = null;
-		CgreportConfigHeadEntity cgreportConfigHead = this.findUniqueByProperty(CgreportConfigHeadEntity.class, "code", reportId);
+		CgreportConfigHeadEntity cgreportConfigHead = this.getByProperty(CgreportConfigHeadEntity.class, "code", reportId);
     	String hql0 = "from CgreportConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
     	List<CgreportConfigParamEntity> cgreportConfigParamList = this.findHql(hql0,cgreportConfigHead.getId());
     	if(cgreportConfigParamList!=null&cgreportConfigParamList.size()>0){

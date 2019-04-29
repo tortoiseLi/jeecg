@@ -18,30 +18,33 @@ import java.util.UUID;
 @Transactional
 public class JformGraphreportHeadServiceImpl extends CommonServiceImpl implements JformGraphreportHeadServiceI {
 	
- 	public <T> void delete(T entity) {
+ 	@Override
+	public <T> void delete(T entity) {
  		super.delete(entity);
  		//执行删除操作配置的sql增强
 		this.doDelSql((JformGraphreportHeadEntity)entity);
  	}
 	
+	@Override
 	public void addMain(JformGraphreportHeadEntity jformGraphreportHead,
-	        List<JformGraphreportItemEntity> jformGraphreportItemList){
+						List<JformGraphreportItemEntity> jformGraphreportItemList){
 			//保存主信息
-			this.save(jformGraphreportHead);
+			this.add(jformGraphreportHead);
 		
 			/**保存-子表*/
 			for(JformGraphreportItemEntity jformGraphreportItem:jformGraphreportItemList){
 				//外键设置
 				jformGraphreportItem.setCgreportHeadId(jformGraphreportHead.getId());
-				this.save(jformGraphreportItem);
+				this.add(jformGraphreportItem);
 			}
 			//执行新增操作配置的sql增强
  			this.doAddSql(jformGraphreportHead);
 	}
 
 	
+	@Override
 	public void updateMain(JformGraphreportHeadEntity jformGraphreportHead,
-	        List<JformGraphreportItemEntity> jformGraphreportItemList) {
+						   List<JformGraphreportItemEntity> jformGraphreportItemList) {
 		//保存主表信息
 		this.saveOrUpdate(jformGraphreportHead);
 		//===================================================================================
@@ -81,7 +84,7 @@ public class JformGraphreportHeadServiceImpl extends CommonServiceImpl implement
 				if(oConvertUtils.isEmpty(jformGraphreportItem.getId())){
 					//外键设置
 					jformGraphreportItem.setCgreportHeadId(jformGraphreportHead.getId());
-					this.save(jformGraphreportItem);
+					this.add(jformGraphreportItem);
 				}
 			}
 		//执行更新操作配置的sql增强
@@ -101,7 +104,7 @@ public class JformGraphreportHeadServiceImpl extends CommonServiceImpl implement
 	    String hql0 = "from JformGraphreportItemEntity where 1 = 1 AND cgreportHeadId = ? ";
 
 	    List<JformGraphreportItemEntity> jformGraphreportItemOldList = this.findHql(hql0,id0);
-		this.deleteAllEntitie(jformGraphreportItemOldList);
+		this.deleteByCollection(jformGraphreportItemOldList);
 	}
 	
  	
@@ -110,7 +113,8 @@ public class JformGraphreportHeadServiceImpl extends CommonServiceImpl implement
 	 * @param
 	 * @return
 	 */
- 	public boolean doAddSql(JformGraphreportHeadEntity t){
+ 	@Override
+	public boolean doAddSql(JformGraphreportHeadEntity t){
 	 	return true;
  	}
  	/**
@@ -118,7 +122,8 @@ public class JformGraphreportHeadServiceImpl extends CommonServiceImpl implement
 	 * @param
 	 * @return
 	 */
- 	public boolean doUpdateSql(JformGraphreportHeadEntity t){
+ 	@Override
+	public boolean doUpdateSql(JformGraphreportHeadEntity t){
 	 	return true;
  	}
  	/**
@@ -126,7 +131,8 @@ public class JformGraphreportHeadServiceImpl extends CommonServiceImpl implement
 	 * @param
 	 * @return
 	 */
- 	public boolean doDelSql(JformGraphreportHeadEntity t){
+ 	@Override
+	public boolean doDelSql(JformGraphreportHeadEntity t){
 	 	return true;
  	}
  	

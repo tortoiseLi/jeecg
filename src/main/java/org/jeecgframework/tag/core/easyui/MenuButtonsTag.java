@@ -212,7 +212,7 @@ public class MenuButtonsTag extends TagSupport{
 			for (String operationCodeId : operationCodeIds) {
 				if (oConvertUtils.isEmpty(operationCodeId))
 					continue;
-				OperationEntity operation = systemService.getEntity(OperationEntity.class, operationCodeId);
+				OperationEntity operation = systemService.getById(OperationEntity.class, operationCodeId);
 				if(operation!=null){
 					list.add(operation.getOperationcode());
 				}

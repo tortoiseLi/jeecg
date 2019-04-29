@@ -22,6 +22,7 @@ public class DataBaseSchedulerFactoryBean extends SchedulerFactoryBean {
 	/**
 	 * 读取数据库判断是否开始定时任务
 	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
 
@@ -31,7 +32,7 @@ public class DataBaseSchedulerFactoryBean extends SchedulerFactoryBean {
 		TimeTaskEntity task;
 		
 		for (String trigerrName : trigerrNames) {
-			task = timeTaskService.findUniqueByProperty(TimeTaskEntity.class,"taskId",trigerrName);
+			task = timeTaskService.getByProperty(TimeTaskEntity.class,"taskId",trigerrName);
 			//数据库查询不到的定时任务或者定时任务的运行状态不为1时，都停止
 			//TASK #327 定时器任务默认未启动 
 			if(task==null || !"1".equals(task.getIsStart())){

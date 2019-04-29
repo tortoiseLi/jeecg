@@ -181,7 +181,7 @@ public class OrganzationController extends BaseController {
 		ModelAndView mv = new ModelAndView();
 		String viewName = "";
 		if (StringUtil.isNotEmpty(depart.getId())) {
-			depart = systemService.getEntity(DepartEntity.class, depart.getId());
+			depart = systemService.getById(DepartEntity.class, depart.getId());
 			req.setAttribute("depart", depart);
 			if("1".equals(depart.getOrgType())){
 				viewName = "system/organzation/subcompany-edit";
@@ -207,7 +207,7 @@ public class OrganzationController extends BaseController {
 		ModelAndView mv = new ModelAndView();
 		String viewName = "";
 		if (StringUtil.isNotEmpty(depart.getId())) {
-			depart = systemService.getEntity(DepartEntity.class, depart.getId());
+			depart = systemService.getById(DepartEntity.class, depart.getId());
 			req.setAttribute("depart", depart);
 			if("1".equals(depart.getOrgType())){
 				viewName = "system/organzation/subcompany-detail";
@@ -249,7 +249,7 @@ public class OrganzationController extends BaseController {
 					for (Map<String, Object> map : listMaps) {
 						if(oConvertUtils.isNotEmpty(map.get("id").toString())) {
 							//删除角色用户关联记录
-							this.systemService.deleteEntityById(RoleUserEntity.class, map.get("id").toString());
+							this.systemService.deleteById(RoleUserEntity.class, map.get("id").toString());
 						}
 					}
 				}
@@ -265,7 +265,7 @@ public class OrganzationController extends BaseController {
 					for (Map<String, Object> map : userPositions) {
 						if(oConvertUtils.isNotEmpty(map.get("id").toString())) {
 							//删除用户职位关联记录
-							this.systemService.deleteEntityById(UserPositionRelEntity.class, map.get("id").toString());
+							this.systemService.deleteById(UserPositionRelEntity.class, map.get("id").toString());
 						}
 					}
 				}
@@ -304,7 +304,7 @@ public class OrganzationController extends BaseController {
 	public AjaxJson del(DepartEntity depart, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		depart = systemService.getEntity(DepartEntity.class, depart.getId());
+		depart = systemService.getById(DepartEntity.class, depart.getId());
         message = MutiLangUtil.paramDelSuccess("common.department");
         if (depart.getTSDeparts().size() == 0) {
 
@@ -329,7 +329,7 @@ public class OrganzationController extends BaseController {
 
 
 	public void upEntity(DepartEntity depart) {
-		List<UserEntity> users = systemService.findByProperty(UserEntity.class, "TSDepart.id", depart.getId());
+		List<UserEntity> users = systemService.findListByProperty(UserEntity.class, "TSDepart.id", depart.getId());
 		if (users.size() > 0) {
 			for (UserEntity tsUser : users) {
 				//tsUser.setTSDepart(null);
@@ -361,7 +361,7 @@ public class OrganzationController extends BaseController {
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} else {
             message = MutiLangUtil.paramAddSuccess("common.department");
-			userService.save(depart);
+			userService.add(depart);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
 
@@ -370,7 +370,7 @@ public class OrganzationController extends BaseController {
 	}
 	@RequestMapping(params = "add")
 	public ModelAndView add(DepartEntity depart, HttpServletRequest req) {
-		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
+		List<DepartEntity> departList = systemService.findList(DepartEntity.class);
 		req.setAttribute("departList", departList);
 //        这个if代码段没有用吧，注释之
 //		if (StringUtil.isNotEmpty(depart.getId())) {
@@ -392,10 +392,10 @@ public class OrganzationController extends BaseController {
 	 */
 	@RequestMapping(params = "update")
 	public ModelAndView update(DepartEntity depart, HttpServletRequest req) {
-		List<DepartEntity> departList = systemService.getList(DepartEntity.class);
+		List<DepartEntity> departList = systemService.findList(DepartEntity.class);
 		req.setAttribute("departList", departList);
 		if (StringUtil.isNotEmpty(depart.getId())) {
-			depart = systemService.getEntity(DepartEntity.class, depart.getId());
+			depart = systemService.getById(DepartEntity.class, depart.getId());
 			req.setAttribute("depart", depart);
 		}
 		return new ModelAndView("system/organzation/depart");
@@ -612,7 +612,7 @@ public class OrganzationController extends BaseController {
     public List<ComboTree> getOrgTree(HttpServletRequest request) {
 //        findHql不能处理is null条件
 //        List<TSDepart> departsList = systemService.findHql("from TSPDepart where TSPDepart.id is null");
-        List<DepartEntity> departsList = systemService.findByQueryString("from DepartEntity where TSPDepart.id is null");
+        List<DepartEntity> departsList = systemService.findListByHql("from DepartEntity where TSPDepart.id is null");
         List<ComboTree> comboTrees = new ArrayList<ComboTree>();
         ComboTreeModel comboTreeModel = new ComboTreeModel("id", "departname", "TSDeparts");
         comboTrees = systemService.ComboTree(departsList, comboTreeModel, null, true);
@@ -711,7 +711,7 @@ public class OrganzationController extends BaseController {
     public AjaxJson doAddUserToOrg(HttpServletRequest req) {
     	String message = null;
         AjaxJson j = new AjaxJson();
-		DepartEntity depart = systemService.getEntity(DepartEntity.class, req.getParameter("orgId"));
+		DepartEntity depart = systemService.getById(DepartEntity.class, req.getParameter("orgId"));
         saveOrgUserList(req, depart);
         message =  MutiLangUtil.paramAddSuccess("common.user");
 //      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
@@ -740,7 +740,7 @@ public class OrganzationController extends BaseController {
             userOrgList.add(userOrg);
         }
         if (!userOrgList.isEmpty()) {
-            systemService.batchSave(userOrgList);
+            systemService.batchAdd(userOrgList);
         }
     }
 
@@ -877,7 +877,7 @@ public class OrganzationController extends BaseController {
 				List<DepartEntity> tsDeparts = ExcelImportUtil.importExcel(file.getInputStream(),DepartEntity.class,params);
 				for (DepartEntity tsDepart : tsDeparts) {
 					String orgCode = tsDepart.getOrgCode();
-					List<DepartEntity> departs = systemService.findByProperty(DepartEntity.class,"orgCode",orgCode);
+					List<DepartEntity> departs = systemService.findListByProperty(DepartEntity.class,"orgCode",orgCode);
 					if(departs.size()!=0){
 						DepartEntity depart = departs.get(0);
 						MyBeanUtils.copyBeanNotNull2Bean(tsDepart,depart);
@@ -917,7 +917,7 @@ public class OrganzationController extends BaseController {
 						}
 						tsDepart.setDepartOrder("0");
 
-						systemService.save(tsDepart);
+						systemService.add(tsDepart);
 					}
 				}
 				j.setMsg("文件导入成功！");
@@ -953,10 +953,10 @@ public class OrganzationController extends BaseController {
 		
 		List<DepartEntity> tSDeparts = new ArrayList<DepartEntity>();
 		
-		StringBuffer hql = new StringBuffer(" from TSDepart t where 1=1 ");
+		StringBuffer hql = new StringBuffer(" from DepartEntity t where 1=1 ");
 		if(StringUtils.isNotBlank(parentid)){
 
-			DepartEntity dePart = this.systemService.getEntity(DepartEntity.class, parentid);
+			DepartEntity dePart = this.systemService.getById(DepartEntity.class, parentid);
 			
 			hql.append(" and TSPDepart = ?");
 			tSDeparts = this.systemService.findHql(hql.toString(), dePart);
@@ -1027,7 +1027,7 @@ public class OrganzationController extends BaseController {
 		StringBuffer hql = new StringBuffer(" from DepartEntity t where 1=1 ");
 		if(StringUtils.isNotBlank(parentid)){
 
-			DepartEntity dePart = this.systemService.getEntity(DepartEntity.class, parentid);
+			DepartEntity dePart = this.systemService.getById(DepartEntity.class, parentid);
 			
 			hql.append(" and TSPDepart = ?");
 			tSDeparts = this.systemService.findHql(hql.toString(), dePart);
@@ -1254,7 +1254,7 @@ public class OrganzationController extends BaseController {
 	}
 	
 	private String getCompanyId(String departid){
-		DepartEntity depart= this.systemService.findUniqueByProperty(DepartEntity.class, "id", departid);
+		DepartEntity depart= this.systemService.getByProperty(DepartEntity.class, "id", departid);
 		if(depart!=null&&("1".equals(depart.getOrgType())||"4".equals(depart.getOrgType()))){
 			return depart.getId();
 		}else{

@@ -33,7 +33,7 @@ public class TSInterfaceServiceImpl extends CommonServiceImpl implements Interfa
 	}
 
 	public Serializable save(InterfaceEntity entity) throws Exception{
-		Serializable t = super.save(entity);
+		Serializable t = super.add(entity);
 		//执行新增操作增强业务
 		this.doAddBus(entity);
 		return t;
@@ -151,7 +151,7 @@ public class TSInterfaceServiceImpl extends CommonServiceImpl implements Interfa
 				String hql = "from InterfaceDdataRuleEntity where id in (:ids)";
 				ruleList = commonDao.getSession().createQuery(hql).setParameterList("ids", dataRuleIdArr).list();
 			}else if(StringUtils.isNotEmpty(id)){
-				ruleList=this.findByProperty(InterfaceDdataRuleEntity.class, "TSInterface.id", id);
+				ruleList=this.findListByProperty(InterfaceDdataRuleEntity.class, "TSInterface.id", id);
 			}
 			interfaceRuleDto.setInterfaceDataRule(ruleList);
 		}

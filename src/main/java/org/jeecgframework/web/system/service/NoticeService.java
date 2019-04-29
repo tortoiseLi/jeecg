@@ -40,7 +40,6 @@ public interface NoticeService extends CommonService{
 @Override
 public <T> void delete(T entity);
  	
- 	@Override
 	public <T> Serializable save(T entity);
  	
  	@Override

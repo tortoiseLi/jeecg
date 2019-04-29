@@ -144,7 +144,7 @@ public class NoticeController extends BaseController{
 	@RequestMapping(params = "goNotice")
 	public ModelAndView noticeInfo(NoticeEntity notice,HttpServletRequest request) {
 		if (StringUtil.isNotEmpty(notice.getId())) {
-			notice = this.systemService.getEntity(NoticeEntity.class, notice.getId());
+			notice = this.systemService.getById(NoticeEntity.class, notice.getId());
 			request.setAttribute("notice", notice);
 			UserEntity user = ResourceUtil.getSessionUser();
 			String hql = "from NoticeReadUserEntity where noticeId = ? and userId = ?";
@@ -276,7 +276,7 @@ public class NoticeController extends BaseController{
 	public AjaxJson doDel(NoticeEntity tSNotice, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tSNotice = systemService.getEntity(NoticeEntity.class, tSNotice.getId());
+		tSNotice = systemService.getById(NoticeEntity.class, tSNotice.getId());
 		message = "通知公告删除成功";
 		try{
 			if("2".equals(tSNotice.getNoticeLevel())){
@@ -312,7 +312,7 @@ public class NoticeController extends BaseController{
 		message = "通知公告删除成功";
 		try{
 			for(String id:ids.split(",")){
-				NoticeEntity tSNotice = systemService.getEntity(NoticeEntity.class,id);
+				NoticeEntity tSNotice = systemService.getById(NoticeEntity.class,id);
 				noticeService.delete(tSNotice);
 				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 			}
@@ -355,12 +355,12 @@ public class NoticeController extends BaseController{
 								readUser.setCreateTime(new Date());
 								readUser.setNoticeId(noticeId);
 								readUser.setUserId(user.getId());
-								systemService.save(readUser);
+								systemService.add(readUser);
 							}else{
 								for (NoticeReadUserEntity readUser : noticeReadList) {
 									if(readUser.getDelFlag() == 1){
 										readUser.setDelFlag(0);
-										systemService.updateEntitie(readUser);
+										systemService.update(readUser);
 									}
 								}
 							}
@@ -414,7 +414,7 @@ public class NoticeController extends BaseController{
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "通知公告更新成功";
-		NoticeEntity t = noticeService.get(NoticeEntity.class, tSNotice.getId());
+		NoticeEntity t = noticeService.getById(NoticeEntity.class, tSNotice.getId());
 		
 		try {
 			if("1".equals(tSNotice.getNoticeLevel()) && !t.getNoticeLevel().equals(tSNotice.getNoticeLevel())){
@@ -435,12 +435,12 @@ public class NoticeController extends BaseController{
 								readUser.setCreateTime(new Date());
 								readUser.setNoticeId(noticeId);
 								readUser.setUserId(user.getId());
-								systemService.save(readUser);
+								systemService.add(readUser);
 							}else{
 								for (NoticeReadUserEntity readUser : noticeReadList) {
 									if(readUser.getDelFlag() == 1){
 										readUser.setDelFlag(0);
-										systemService.updateEntitie(readUser);
+										systemService.update(readUser);
 									}
 								}
 							}
@@ -520,7 +520,7 @@ public class NoticeController extends BaseController{
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(NoticeEntity tSNotice, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSNotice.getId())) {
-			tSNotice = noticeService.getEntity(NoticeEntity.class, tSNotice.getId());
+			tSNotice = noticeService.getById(NoticeEntity.class, tSNotice.getId());
 			req.setAttribute("tSNoticePage", tSNotice);
 		}
 		return new ModelAndView("system/notice/tSNotice-add");
@@ -533,7 +533,7 @@ public class NoticeController extends BaseController{
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(NoticeEntity tSNotice, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSNotice.getId())) {
-			tSNotice = noticeService.getEntity(NoticeEntity.class, tSNotice.getId());
+			tSNotice = noticeService.getById(NoticeEntity.class, tSNotice.getId());
 			if(tSNotice.getNoticeTerm()==null){
 				tSNotice.setNoticeTerm(new Date());
 			}
