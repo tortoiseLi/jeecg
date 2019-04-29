@@ -27,7 +27,7 @@ import org.jeecgframework.web.system.manager.ClientManager;
 import org.jeecgframework.web.system.pojo.base.Client;
 import org.jeecgframework.web.system.pojo.base.DataRuleEntity;
 import org.jeecgframework.web.system.pojo.base.OperationEntity;
-import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.user.entity.UserEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

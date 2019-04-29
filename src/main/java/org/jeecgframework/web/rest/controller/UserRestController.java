@@ -8,8 +8,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 import org.jeecgframework.core.beanvalidator.BeanValidators;
-import org.jeecgframework.web.system.pojo.base.UserEntity;
-import org.jeecgframework.web.system.service.UserService;
+import org.jeecgframework.web.system.user.entity.UserEntity;
+import org.jeecgframework.web.system.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

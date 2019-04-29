@@ -1,5 +1,8 @@
 package org.jeecgframework.web.system.pojo.base;
 
+import org.jeecgframework.web.system.function.entity.FunctionEntity;
+import org.jeecgframework.web.system.user.entity.UserEntity;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;

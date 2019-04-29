@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jeecgframework.web.system.pojo.base.FunctionEntity;
+import org.jeecgframework.web.system.function.entity.FunctionEntity;
 import org.jeecgframework.web.system.pojo.base.IconEntity;
 import org.jeecgframework.web.system.pojo.base.OperationEntity;
 import org.jeecgframework.web.system.service.MenuInitService;

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.enums.SysACEIconEnum;
-import org.jeecgframework.web.system.pojo.base.FunctionEntity;
+import org.jeecgframework.web.system.function.entity.FunctionEntity;
 
 
 /**

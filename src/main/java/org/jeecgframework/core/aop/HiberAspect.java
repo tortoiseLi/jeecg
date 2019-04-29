@@ -6,7 +6,7 @@ import org.hibernate.type.Type;
 import org.jeecgframework.core.constant.DataBaseConstant;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.user.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;

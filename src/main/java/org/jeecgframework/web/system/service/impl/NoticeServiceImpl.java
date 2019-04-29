@@ -9,7 +9,7 @@ import org.jeecgframework.web.system.pojo.base.NoticeEntity;
 import org.jeecgframework.web.system.pojo.base.NoticeAuthorityRoleEntity;
 import org.jeecgframework.web.system.pojo.base.NoticeAuthorityUserEntity;
 import org.jeecgframework.web.system.pojo.base.NoticeReadUserEntity;
-import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.user.entity.UserEntity;
 import org.jeecgframework.web.system.service.NoticeService;
 import org.springframework.stereotype.Service;
 

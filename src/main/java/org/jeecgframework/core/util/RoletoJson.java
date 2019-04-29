@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jeecgframework.web.system.pojo.base.RoleEntity;
+import org.jeecgframework.web.system.role.entity.RoleEntity;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.web.system.pojo.base.FunctionEntity;
+import org.jeecgframework.web.system.function.entity.FunctionEntity;
 import org.jeecgframework.web.system.pojo.base.IconEntity;
 import org.jeecgframework.web.system.pojo.base.OperationEntity;
 import org.jeecgframework.web.system.service.SystemService;

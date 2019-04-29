@@ -7,7 +7,7 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 
 import org.jeecgframework.tag.core.JeecgTag;
-import org.jeecgframework.web.system.pojo.base.FunctionEntity;
+import org.jeecgframework.web.system.function.entity.FunctionEntity;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.ListtoMenu;
 import org.jeecgframework.core.util.SysThemesUtil;

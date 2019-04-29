@@ -46,7 +46,7 @@ import org.jeecgframework.web.superquery.service.SuperQueryMainServiceI;
 import org.jeecgframework.web.superquery.util.SuperQueryUtil;
 import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.service.SystemService;
-import org.jeecgframework.web.system.service.UserService;
+import org.jeecgframework.web.system.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

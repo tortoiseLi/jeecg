@@ -2,6 +2,7 @@ package org.jeecgframework.web.system.pojo.base;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.jeecgframework.core.common.entity.IdEntity;
+import org.jeecgframework.web.system.depart.entity.DepartEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;

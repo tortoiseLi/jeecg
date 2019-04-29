@@ -2,7 +2,7 @@ package org.jeecgframework.core.util;
 
 import java.util.List;
 
-import org.jeecgframework.web.system.pojo.base.FunctionEntity;
+import org.jeecgframework.web.system.function.entity.FunctionEntity;
 
 
 public class ListtoJson {

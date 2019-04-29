@@ -1,7 +1,7 @@
 package org.jeecgframework.jwt.service;
 
 import org.jeecgframework.jwt.model.TokenModel;
-import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.user.entity.UserEntity;
 
 /**
  * 对token进行操作的接口

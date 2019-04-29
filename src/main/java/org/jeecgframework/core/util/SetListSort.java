@@ -2,7 +2,7 @@ package org.jeecgframework.core.util;
 
 import java.util.Comparator;
 
-import org.jeecgframework.web.system.pojo.base.FunctionEntity;
+import org.jeecgframework.web.system.function.entity.FunctionEntity;
 
 
 /**

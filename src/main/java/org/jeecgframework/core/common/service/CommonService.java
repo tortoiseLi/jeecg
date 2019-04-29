@@ -14,7 +14,7 @@ import org.jeecgframework.tag.vo.datatable.DataTableReturn;
 import org.jeecgframework.tag.vo.easyui.Autocomplete;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
-import org.jeecgframework.web.system.pojo.base.DepartEntity;
+import org.jeecgframework.web.system.depart.entity.DepartEntity;
 import org.springframework.dao.DataAccessException;
 
 import javax.servlet.http.HttpServletResponse;

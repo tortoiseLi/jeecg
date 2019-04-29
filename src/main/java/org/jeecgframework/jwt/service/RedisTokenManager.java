@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.jeecgframework.jwt.def.JwtConstants;
 import org.jeecgframework.jwt.model.TokenModel;
-import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.user.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;

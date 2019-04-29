@@ -17,6 +17,7 @@ import org.jeecgframework.web.cgform.common.CgAutoListConstant;
 import org.jeecgframework.web.system.manager.ClientManager;
 import org.jeecgframework.web.system.pojo.base.*;
 import org.jeecgframework.web.system.service.CacheService;
+import org.jeecgframework.web.system.user.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

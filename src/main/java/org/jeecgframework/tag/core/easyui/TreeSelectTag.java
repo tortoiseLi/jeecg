@@ -10,9 +10,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.web.system.pojo.base.CategoryEntity;
+import org.jeecgframework.web.system.category.entity.CategoryEntity;
 import org.jeecgframework.web.system.service.SystemService;
-import org.openxmlformats.schemas.drawingml.x2006.chart.impl.STScatterStyleImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

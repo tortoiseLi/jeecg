@@ -3,6 +3,7 @@ package org.jeecgframework.web.system.pojo.base;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.jeecgframework.web.system.function.entity.FunctionEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
