@@ -1,4 +1,5 @@
 package org.jeecgframework.web.system.controller.core;
+import com.sun.javaws.Globals;
 import io.swagger.annotations.ApiParam;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.ResourceUtil;
@@ -131,7 +132,7 @@ public class TSCompanyPositionController extends BaseController {
 		message = "职务管理删除成功";
 		try{
 			tSCompanyPositionService.delete(tSCompanyPosition);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "职务管理删除失败";
@@ -158,7 +159,7 @@ public class TSCompanyPositionController extends BaseController {
 				id
 				);
 				tSCompanyPositionService.delete(tSCompanyPosition);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -184,7 +185,7 @@ public class TSCompanyPositionController extends BaseController {
 		message = "职务管理添加成功";
 		try{
 			tSCompanyPositionService.save(tSCompanyPosition);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "职务管理添加失败";
@@ -210,7 +211,7 @@ public class TSCompanyPositionController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSCompanyPosition, t);
 			tSCompanyPositionService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "职务管理更新失败";

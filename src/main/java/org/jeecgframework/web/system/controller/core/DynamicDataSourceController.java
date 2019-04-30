@@ -17,7 +17,7 @@ import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.ComboBox;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.enums.SysDatabaseEnum;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
@@ -108,7 +108,7 @@ public class DynamicDataSourceController extends BaseController {
 		message = MutiLangUtil.paramDelSuccess("common.datasource.manage");
 
 		systemService.delete(dbSource);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 
 		j.setMsg(message);
 		return j;
@@ -135,7 +135,7 @@ public class DynamicDataSourceController extends BaseController {
 
 				systemService.saveOrUpdate(t);
 				dynamicDataSourceService.refleshCache();
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 				message = MutiLangUtil.paramUpdFail("common.datasource.manage");
@@ -151,7 +151,7 @@ public class DynamicDataSourceController extends BaseController {
 
 			systemService.add(dbSource);
 			dynamicDataSourceService.refleshCache();
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;

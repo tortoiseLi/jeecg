@@ -12,9 +12,8 @@ import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.ResourceUtil;
-import org.jeecgframework.web.system.pojo.base.TypeEntity;
-import org.jeecgframework.web.system.pojo.base.TypeGroupEntity;
-import org.jeecgframework.web.system.pojo.base.TypeGroupEntity;
+import org.jeecgframework.web.system.dict.entity.TypeEntity;
+import org.jeecgframework.web.system.dict.entity.TypeGroupEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 

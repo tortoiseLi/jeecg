@@ -14,7 +14,7 @@ import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.StringUtil;
@@ -109,7 +109,7 @@ public class JformGraphreportHeadController extends BaseController {
 		String message = "图表配置删除成功";
 		try{
 			jformGraphreportHeadService.delMain(jformGraphreportHead);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(request)+"][online图表删除]["+jformGraphreportHead.getCode()+"]"+message);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -136,7 +136,7 @@ public class JformGraphreportHeadController extends BaseController {
 				id
 				);
 				jformGraphreportHeadService.delMain(jformGraphreportHead);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 				logger.info("["+IpUtil.getIpAddr(request)+"][online图表批量删除]["+jformGraphreportHead.getCode()+"]"+message);
 			}
 		}catch(Exception e){
@@ -162,7 +162,7 @@ public class JformGraphreportHeadController extends BaseController {
 		String message = "添加成功";
 		try{
 			jformGraphreportHeadService.addMain(jformGraphreportHead, jformGraphreportItemList);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(request)+"][online图表录入]["+jformGraphreportHead.getCode()+"]"+message);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -186,7 +186,7 @@ public class JformGraphreportHeadController extends BaseController {
 		String message = "更新成功";
 		try{
 			jformGraphreportHeadService.updateMain(jformGraphreportHead, jformGraphreportItemList);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(request)+"][online图表更新]["+jformGraphreportHead.getCode()+"]"+message);
 		}catch(Exception e){
 			e.printStackTrace();

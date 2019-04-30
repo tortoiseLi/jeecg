@@ -1,6 +1,7 @@
-package org.jeecgframework.web.system.pojo.base;
+package org.jeecgframework.web.system.dict.entity;
 
 import org.jeecgframework.core.common.entity.IdEntity;
+import org.jeecgframework.web.system.dict.entity.TypeEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;

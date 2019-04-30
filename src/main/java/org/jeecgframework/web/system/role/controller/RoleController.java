@@ -28,7 +28,7 @@ import org.jeecgframework.core.common.model.json.ComboTree;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.TreeGrid;
 import org.jeecgframework.core.common.model.json.ValidForm;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
@@ -190,8 +190,8 @@ public class RoleController extends BaseController {
             role = systemService.getById(RoleEntity.class, role.getId());
 			userService.delete(role);
 			message = "角色: " + role.getRoleName() + "被删除成功";
-			systemService.addLog(message, Globals.Log_Type_DEL,
-					Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE,
+					GlobalConstants.LOG_LEVEL_INFO);
 		} else {
 			message = "角色: 仍被用户使用，请先删除关联关系";
 		}
@@ -260,15 +260,15 @@ public class RoleController extends BaseController {
 			role.setRoleType(OrgConstants.SYSTEM_ROLE_TYPE);
 
 			userService.saveOrUpdate(role);
-			systemService.addLog(message, Globals.Log_Type_UPDATE,Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE,GlobalConstants.LOG_LEVEL_INFO);
 		} else {
 			message = "角色: " + role.getRoleName() + "被添加成功";
 
 			role.setRoleType(OrgConstants.SYSTEM_ROLE_TYPE);//默认系统角色
 
 			userService.add(role);
-			systemService.addLog(message, Globals.Log_Type_INSERT,
-					Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT,
+					GlobalConstants.LOG_LEVEL_INFO);
 		}
 		logger.info(message);
 		return j;
@@ -336,7 +336,7 @@ public class RoleController extends BaseController {
 			cc =Restrictions.eq("id", "-1");
 		}
 		cq.add(cc);
-        cq.eq("deleteFlag", Globals.Delete_Normal);
+        cq.eq("deleteFlag", GlobalConstants.DELETE_NORMAL);
 		cq.add();
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, user);
 		this.systemService.getDataGridReturn(cq, true);
@@ -955,8 +955,8 @@ public class RoleController extends BaseController {
         
         cq.add(Property.forName("id").notIn(subCq.getDetachedCriteria()));
 
-        cq.eq("deleteFlag", Globals.Delete_Normal);//删除状态，不删除
-        cq.eq("userType",Globals.USER_TYPE_SYSTEM);//系统用户
+        cq.eq("deleteFlag", GlobalConstants.DELETE_NORMAL);//删除状态，不删除
+        cq.eq("userType",GlobalConstants.USER_TYPE_SYSTEM);//系统用户
 
         cq.add();
 
@@ -976,7 +976,7 @@ public class RoleController extends BaseController {
 		RoleEntity role = systemService.getById(RoleEntity.class, req.getParameter("roleId"));
         saveRoleUserList(req, role);
         message =  MutiLangUtil.paramAddSuccess("common.user");
-//      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+//      systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
         j.setMsg(message);
 
         return j;

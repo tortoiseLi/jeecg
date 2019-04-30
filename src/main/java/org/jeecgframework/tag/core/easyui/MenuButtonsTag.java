@@ -10,7 +10,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-import org.jeecgframework.core.constant.Globals;
+
+import com.sun.javaws.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.enums.MenuButtonsEnum;
 import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.ApplicationContextUtil;
@@ -53,10 +55,12 @@ public class MenuButtonsTag extends TagSupport{
 	
 	private SystemService systemService;
 	
+	@Override
 	public int doStartTag() throws JspException {
 		return super.doStartTag();
 	}
 	
+	@Override
 	public int doEndTag() throws JspTagException {
 		JspWriter out = null;
 		try {
@@ -85,7 +89,7 @@ public class MenuButtonsTag extends TagSupport{
 		StringBuffer sb = new StringBuffer();
 		List<String> optcodes = null;
 		boolean flag = false;
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !GlobalConstants.BUTTON_AUTHORITY_CHECK){
 			flag = true;
 		}else{
 			optcodes= getOperationcodes();
@@ -206,12 +210,14 @@ public class MenuButtonsTag extends TagSupport{
 	private List<String> getOperationcodes(){
 		//权限判断
 		List<String> list = new ArrayList<String>();
-		Set<String> operationCodeIds = (Set<String>) super.pageContext.getRequest().getAttribute(Globals.OPERATIONCODES);
+		Set<String> operationCodeIds = (Set<String>) super.pageContext.getRequest().getAttribute(GlobalConstants.OPERATION_CODES);
 		systemService = ApplicationContextUtil.getContext().getBean(SystemService.class);
 		if (null!=operationCodeIds) {
 			for (String operationCodeId : operationCodeIds) {
-				if (oConvertUtils.isEmpty(operationCodeId))
+				if (oConvertUtils.isEmpty(operationCodeId)) {
 					continue;
+				}
+
 				OperationEntity operation = systemService.getById(OperationEntity.class, operationCodeId);
 				if(operation!=null){
 					list.add(operation.getOperationcode());

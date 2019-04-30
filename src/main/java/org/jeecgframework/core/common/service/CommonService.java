@@ -209,14 +209,6 @@ public interface CommonService {
 
 
 
-    /**
-     * 通过属性称获取实体带排序
-     * @param <T>
-     * @param clas
-     * @return
-     */
-    <T> List<T> findByPropertyisOrder(Class<T> entityClass, String propertyName, Object value, boolean isAsc);
-
 
 
 
@@ -245,21 +237,6 @@ public interface CommonService {
     void getDataGridReturn(CriteriaQuery cq, final boolean isOffset);
 
 
-    /**
-     * hqlQuery方式分页
-     * @param cq
-     * @param isOffset
-     * @return
-     */
-    PageList getPageList(final HqlQuery hqlQuery, final boolean needParameter);
-
-    /**
-     * sqlQuery方式分页
-     * @param cq
-     * @param isOffset
-     * @return
-     */
-    PageList getPageListBySql(final HqlQuery hqlQuery, final boolean isToEntity);
 
     Session getSession();
 

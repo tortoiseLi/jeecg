@@ -5,7 +5,8 @@ import java.util.Set;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.jeecgframework.core.constant.Globals;
+import com.sun.javaws.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.oConvertUtils;
@@ -37,11 +38,11 @@ public class HasPermissionTag extends TagSupport{
 	}
 	
 	public boolean showTagBody(String code) {
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !GlobalConstants.BUTTON_AUTHORITY_CHECK){
 			return false;
 		}else{
 			//权限判断；
-			Set<String> operationCodeIds = (Set<String>) super.pageContext.getRequest().getAttribute(Globals.OPERATIONCODES);
+			Set<String> operationCodeIds = (Set<String>) super.pageContext.getRequest().getAttribute(GlobalConstants.OPERATION_CODES);
 			systemService = ApplicationContextUtil.getContext().getBean(SystemService.class);
 			if (null!=operationCodeIds) {
 				for (String operationCodeId : operationCodeIds) {

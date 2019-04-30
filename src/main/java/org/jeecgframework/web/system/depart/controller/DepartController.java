@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.javaws.Globals;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.DetachedCriteria;
@@ -22,7 +23,7 @@ import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.ComboTree;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.TreeGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
@@ -174,7 +175,7 @@ public class DepartController extends BaseController {
                 systemService.executeSql("delete from t_s_role_org where org_id=?", depart.getId());
                 systemService.delete(depart);
 
-                systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+                systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
             }else{
 
             	message = MutiLangUtil.getLang("common.department.hasuser");
@@ -221,11 +222,11 @@ public class DepartController extends BaseController {
 		if (StringUtil.isNotEmpty(depart.getId())) {
             message = MutiLangUtil.paramUpdSuccess("common.department");
 			userService.saveOrUpdate(depart);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		} else {
             message = MutiLangUtil.paramAddSuccess("common.department");
 			userService.add(depart);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}
 
         j.setMsg(message);
@@ -406,11 +407,11 @@ public class DepartController extends BaseController {
 //            dcDepart.add(Restrictions.eq("userOrg.tsDepart.id", departid));
 
 		}
-		Short[] userstate = new Short[] { Globals.User_Normal, Globals.User_ADMIN };
+		Short[] userstate = new Short[] { GlobalConstants.USER_NORMAL, GlobalConstants.USER_ADMIN };
 		cq.in("status", userstate);
 
-        //cq.eq("deleteFlag", Globals.Delete_Normal);//删除状态，不删除
-        //cq.eq("userType",Globals.USER_TYPE_SYSTEM);//系统用户
+        //cq.eq("deleteFlag", GlobalConstants.DELETE_NORMAL);//删除状态，不删除
+        //cq.eq("userType",GlobalConstants.USER_TYPE_SYSTEM);//系统用户
 
 		cq.add();
 		this.systemService.getDataGridReturn(cq, true);
@@ -493,8 +494,8 @@ public class DepartController extends BaseController {
 
         cq.add(Property.forName("id").notIn(subCq.getDetachedCriteria()));
 
-        cq.eq("deleteFlag", Globals.Delete_Normal);//删除状态，不删除
-        cq.eq("userType",Globals.USER_TYPE_SYSTEM);//系统用户
+        cq.eq("deleteFlag", GlobalConstants.DELETE_NORMAL);//删除状态，不删除
+        cq.eq("userType",GlobalConstants.USER_TYPE_SYSTEM);//系统用户
 
         cq.add();
 
@@ -514,7 +515,7 @@ public class DepartController extends BaseController {
 		DepartEntity depart = systemService.getById(DepartEntity.class, req.getParameter("orgId"));
         saveOrgUserList(req, depart);
         message =  MutiLangUtil.paramAddSuccess("common.user");
-//      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+//      systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
         j.setMsg(message);
 
         return j;

@@ -42,40 +42,68 @@ import java.util.*;
 
 
 /**
- *
- * 类描述： DAO层泛型基类
- *
- * 张代浩
- * @date： 日期：2012-12-7 时间：上午10:16:48
- * @param <T>
- * @param <PK>
- * @version 1.0
+ * DAO层泛型基类接口
+ * @author DELL
+ * @date 2019-04-28
+ * @version V1.0
  */
-@SuppressWarnings("hiding")
-public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao {
-	/**
-	 * 初始化Log4j的一个实例
-	 */
+public abstract class BaseDaoImpl<T> implements BaseDao {
+
 	private static final Logger logger = Logger.getLogger(BaseDaoImpl.class);
-	/**
-	 * 注入一个sessionFactory属性,并注入到父类(HibernateDaoSupport)
-	 * **/
+
 	@Autowired
 	@Qualifier("sessionFactory")
 	private SessionFactory sessionFactory;
 
 	@Override
 	public Session getSession() {
-		// 事务必须是开启的(Required)，否则获取不到
 		return sessionFactory.getCurrentSession();
 	}
 
-	/**
-	 * 获得该类的属性和类型
-	 *
-	 * @param entityName
-	 *            注解的实体类
-	 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	private <T> void getProperty(Class entityName) {
 		ClassMetadata cm = sessionFactory.getClassMetadata(entityName);
 		String[] str = cm.getPropertyNames(); // 获得该类所有的属性名称
@@ -86,11 +114,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		}
 	}
 
-	/**
-	 * 获取所有数据表
-	 *
-	 * @return
-	 */
+
 	@Override
 	public List<DbTable> findDbTableList() {
 		List<DbTable> resultList = new ArrayList<DbTable>();
@@ -115,11 +139,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return resultList;
 	}
 
-	/**
-	 * 获取所有数据表
-	 *
-	 * @return
-	 */
+
 	@Override
 	public Integer getDbTableSize() {
 		SessionFactory factory = getSession().getSessionFactory();
@@ -127,13 +147,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return metaMap.size();
 	}
 
-	/**
-	 * 根据实体名字获取唯一记录
-	 *
-	 * @param propertyName
-	 * @param value
-	 * @return
-	 */
+
 	@Override
 	public <T> T getByProperty(Class<T> entityClass, String propertyName, Object value) {
 		Assert.hasText(propertyName);
@@ -141,9 +155,6 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 				Restrictions.eq(propertyName, value)).uniqueResult();
 	}
 
-	/**
-	 * 按属性查找对象列表.
-	 */
 	@Override
 	public <T> List<T> findListByProperty(Class<T> entityClass,
 									  String propertyName, Object value) {
@@ -152,9 +163,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 				Restrictions.eq(propertyName, value)).list();
 	}
 
-	/**
-	 * 根据传入的实体持久化对象
-	 */
+
 	@Override
 	public <T> Serializable insert(T entity) {
 		try {
@@ -171,13 +180,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 
 	}
 
-	/**
-	 * 批量保存数据
-	 *
-	 * @param <T>
-	 * @param entitys
-	 *            要持久化的临时实体对象集合
-	 */
+
 	@Override
 	public <T> void batchInsert(List<T> entitys) {
 		for (int i = 0; i < entitys.size(); i++) {
@@ -193,13 +196,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		getSession().clear();
 	}
 
-	/**
-	 * 根据传入的实体添加或更新对象
-	 *
-	 * @param <T>
-	 *
-	 * @param entity
-	 */
+
 
 	@Override
 	public <T> void saveOrUpdate(T entity) {
@@ -215,9 +212,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		}
 	}
 
-	/**
-	 * 根据传入的实体删除对象
-	 */
+
 	@Override
 	public <T> void delete(T entity) {
 		try {
@@ -232,24 +227,14 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		}
 	}
 
-	/**
-	 * 根据主键删除指定的实体
-	 *
-	 * @param <T>
-	 */
+
 	@Override
-	public <T> void deleteById(Class entityName, Serializable id) {
+	public void deleteById(Class entityName, Serializable id) {
 		delete(getById(entityName, id));
 		//getSession().flush();
 	}
 
-	/**
-	 * 删除全部的实体
-	 *
-	 * @param <T>
-	 *
-	 * @param collection
-	 */
+
 	@Override
 	public <T> void deleteByCollection(Collection<T> collection) {
 		for (Object entity : collection) {
@@ -258,9 +243,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		}
 	}
 
-	/**
-	 * 根据Id获取对象。
-	 */
+
 	@Override
 	public <T> T getById(Class<T> entityClass, final Serializable id) {
 
@@ -269,53 +252,31 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 	}
 
 
-	/**
-	 * 更新指定的实体
-	 *
-	 * @param <T>
-	 * @param entity
-	 */
+
 	@Override
 	public <T> void update(T entity) {
 		getSession().update(entity);
 		//getSession().flush();
 	}
 
-	/**
-	 * 更新指定的实体
-	 *
-	 * @param <T>
-	 */
+
 	public <T> void updateEntitie(String className, Object id) {
 		getSession().update(className, id);
 		//getSession().flush();
 	}
 
 
-	/**
-	 * 通过hql 查询语句查找对象
-	 *
-	 * @param hql
-	 * @return
-	 */
+
 	@Override
 	public List<T> findListByHql(final String hql) {
 
 		Query queryObject = getSession().createQuery(hql);
 		List<T> list = queryObject.list();
-//		if (list.size() > 0) {
-			//getSession().flush();
-//		}
+
 		return list;
 
 	}
 
-	/**
-	 * 通过hql查询唯一对象
-	 *
-	 * @param <T>
-	 * @return
-	 */
 	@Override
 	public <T> T getByHql(String hql) {
 		T t = null;
@@ -330,11 +291,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return t;
 	}
 
-	/**
-	 * 通过hql 查询语句查找HashMap对象
-	 *
-	 * @return
-	 */
+
 	@Override
 	public Map<Object, Object> getHashMapbyQuery(String hql) {
 
@@ -349,12 +306,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 
 	}
 
-	/**
-	 * 通过sql更新记录
-	 *
-	 * @param sql
-	 * @return
-	 */
+
 	@Override
 	public int updateBySql(final String sql) {
 
@@ -362,26 +314,12 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return querys.executeUpdate();
 	}
 
-	/**
-	 * 通过sql查询语句查找对象
-	 *
-	 * @return
-	 */
 	@Override
 	public List<T> findListBySql(final String sql) {
 		Query querys = getSession().createSQLQuery(sql);
 		return querys.list();
 	}
 
-	/**
-	 * 创建Criteria对象，有排序功能。
-	 *
-	 * @param <T>
-	 * @param entityClass
-	 * @param isAsc
-	 * @param criterions
-	 * @return
-	 */
 	private <T> Criteria createCriteria(Class<T> entityClass, boolean isAsc, Criterion... criterions) {
 		Criteria criteria = createCriteria(entityClass, criterions);
 		if (isAsc) {
@@ -392,14 +330,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return criteria;
 	}
 
-	/**
-	 * 创建Criteria对象带属性比较
-	 *
-	 * @param <T>
-	 * @param entityClass
-	 * @param criterions
-	 * @return
-	 */
+
 	private <T> Criteria createCriteria(Class<T> entityClass,
 			Criterion... criterions) {
 		Criteria criteria = getSession().createCriteria(entityClass);
@@ -415,39 +346,12 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return criteria.list();
 	}
 
-	/**
-	 * 创建单一Criteria对象
-	 *
-	 * @param <T>
-	 * @param entityClass
-	 * @return
-	 */
 	private <T> Criteria createCriteria(Class<T> entityClass) {
 		Criteria criteria = getSession().createCriteria(entityClass);
 		return criteria;
 	}
 
-	/**
-	 * 根据属性名和属性值查询. 有排序
-	 *
-	 * @param <T>
-	 * @param entityClass
-	 * @param propertyName
-	 * @param value
-	 * @param isAsc
-	 * @return
-	 */
-	@Override
-	public <T> List<T> findByPropertyisOrder(Class<T> entityClass, String propertyName, Object value, boolean isAsc) {
-		Assert.hasText(propertyName);
-		return createCriteria(entityClass, isAsc, Restrictions.eq(propertyName, value)).list();
-	}
 
-	/**
-	 * 根据属性名和属性值 查询 且要求对象唯一.
-	 *
-	 * @return 符合条件的唯一对象.
-	 */
 	public <T> T findUniqueBy(Class<T> entityClass, String propertyName,
 			Object value) {
 		Assert.hasText(propertyName);
@@ -455,17 +359,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 				Restrictions.eq(propertyName, value)).uniqueResult();
 	}
 
-	/**
-	 * 根据查询条件与参数列表创建Query对象
-	 *
-	 * @param session
-	 *            Hibernate会话
-	 * @param hql
-	 *            HQL语句
-	 * @param objects
-	 *            参数列表
-	 * @return Query对象
-	 */
+
 	public Query createQuery(Session session, String hql, Object... objects) {
 		Query query = session.createQuery(hql);
 		if (objects != null) {
@@ -476,11 +370,6 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return query;
 	}
 
-	/**
-	 * 批量插入实体
-	 *
-	 * @return
-	 */
 	public <T> int batchInsertsEntitie(List<T> entityList) {
 		int num = 0;
 		for (int i = 0; i < entityList.size(); i++) {
@@ -490,21 +379,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return num;
 	}
 
-	/**
-	 * 根据实体名返回全部对象
-	 *
-	 * @param <T>
-	 * @param hql
-	 * @param size
-	 * @return
-	 */
-	/**
-	 * 使用占位符的方式填充值 请注意：like对应的值格式："%"+username+"%" Hibernate Query
-	 *
-	 * @param hql
-	 *            占位符号?对应的值，顺序必须一一对应 可以为空对象数组，但是不能为null
-	 * @return 2008-07-19 add by liuyang
-	 */
+
 	public List<T> executeQuery(final String hql, final Object[] values) {
 		Query query = getSession().createQuery(hql);
 		// query.setCacheable(true);
@@ -516,13 +391,6 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 
 	}
 
-	/**
-	 * 根据实体模版查找
-	 *
-	 * @param entityName
-	 * @param exampleEntity
-	 * @return
-	 */
 
 	@Override
 	public List findByExample(final String entityName,
@@ -541,18 +409,9 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 				.setProjection(Projections.rowCount())).uniqueResult(), 0);
 	}
 
-	/**
-	 * 调用存储过程
-	 */
 	public void callableStatementByName(String proc) {
 	}
 
-	/**
-	 * 查询指定实体的总记录数
-	 *
-	 * @param clazz
-	 * @return
-	 */
 	public int getCount(Class<T> clazz) {
 
 		int count = DataAccessUtils.intResult(getSession().createQuery(
@@ -560,17 +419,8 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return count;
 	}
 
-	/**
-	 * 获取分页记录CriteriaQuery 老方法final int allCounts =
-	 * oConvertUtils.getInt(criteria
-	 * .setProjection(Projections.rowCount()).uniqueResult(), 0);
-	 *
-	 * @param cq
-	 * @param isOffset
-	 * @return
-	 */
 	@Override
-	public PageList getPageList(final CriteriaQuery cq, final boolean isOffset) {
+	public PageList findPageByCriteriaQuery(final CriteriaQuery cq, final boolean isOffset) {
 
 		Criteria criteria = cq.getDetachedCriteria().getExecutableCriteria(
 				getSession());
@@ -610,9 +460,6 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 				allCounts);
 	}
 
-	/**
-	 * 返回JQUERY datatables DataTableReturn模型对象
-	 */
 	@Override
 	public DataTableReturn getDataTableReturn(final CriteriaQuery cq,
 											  final boolean isOffset) {
@@ -649,10 +496,6 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		
 		return new DataTableReturn(allCounts, allCounts, cq.getDataTables().getEcho(), criteria.list());
 	}
-
-	/**
-	 * 返回easyui datagrid DataGridReturn模型对象
-	 */
 
 	@Override
 	public void getDataGridReturn(CriteriaQuery cq, final boolean isOffset) {
@@ -734,79 +577,17 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 
 	}
 
-	/**
-	 * 获取分页记录SqlQuery
-	 *
-	 * @return
-	 */
+
+
 	@Override
-	@SuppressWarnings("unchecked")
-	public PageList getPageListBySql(final HqlQuery hqlQuery,
-			final boolean isToEntity) {
-
-		Query query = getSession().createSQLQuery(hqlQuery.getQueryString());
-
-		// query.setParameters(hqlQuery.getParam(), (Type[])
-		// hqlQuery.getTypes());
-		int allCounts = query.list().size();
-		int curPageNO = hqlQuery.getCurPage();
-		int offset = PagerUtil.getOffset(allCounts, curPageNO,
-				hqlQuery.getPageSize());
-		query.setFirstResult(offset);
-		query.setMaxResults(hqlQuery.getPageSize());
-		List list = null;
-		if (isToEntity) {
-			list = ToEntityUtil.toEntityList(query.list(),
-					hqlQuery.getClass1(), hqlQuery.getDataGrid().getField()
-							.split(","));
-		} else {
-			list = query.list();
-		}
-		return new PageList(hqlQuery, list, offset, curPageNO, allCounts);
-	}
-
-	/**
-	 * 获取分页记录HqlQuery
-	 *
-	 * @return
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public PageList getPageList(final HqlQuery hqlQuery,
-			final boolean needParameter) {
-
-		Query query = getSession().createQuery(hqlQuery.getQueryString());
-		if (needParameter) {
-			query.setParameters(hqlQuery.getParam(),
-					(Type[]) hqlQuery.getTypes());
-		}
-		int allCounts = query.list().size();
-		int curPageNO = hqlQuery.getCurPage();
-		int offset = PagerUtil.getOffset(allCounts, curPageNO,
-				hqlQuery.getPageSize());
-		String toolBar = PagerUtil.getBar(hqlQuery.getMyaction(), allCounts,
-				curPageNO, hqlQuery.getPageSize(), hqlQuery.getMap());
-		query.setFirstResult(offset);
-		query.setMaxResults(hqlQuery.getPageSize());
-		return new PageList(query.list(), toolBar, offset, curPageNO, allCounts);
-	}
-
-	/**
-	 * 根据CriteriaQuery获取List
-	 *
-	 * @param cq
-	 * @return
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<T> getListByCriteriaQuery(final CriteriaQuery cq, Boolean ispage) {
+	public List<T> findListByCriteriaQuery(final CriteriaQuery cq, Boolean isPage) {
 		Criteria criteria = cq.getDetachedCriteria().getExecutableCriteria(
 				getSession());
 		// 判断是否有排序字段
 		if (cq.getOrdermap() != null) {
 			cq.setOrder(cq.getOrdermap());
 		}
-		if (ispage){
+		if (isPage){
 			criteria.setFirstResult((cq.getCurPage()-1)*cq.getPageSize());
 			criteria.setMaxResults(cq.getPageSize());
 		}
@@ -822,9 +603,6 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 	@Qualifier("namedParameterJdbcTemplate")
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	/**
-	 * 使用指定的检索标准检索数据并分页返回数据
-	 */
 	@Override
 	public List<Map<String, Object>> findForJdbc(String sql, int page, int rows) {
 		// 封装分页SQL
@@ -832,12 +610,6 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return this.jdbcTemplate.queryForList(sql);
 	}
 
-	/**
-	 * 使用指定的检索标准检索数据并分页返回数据
-	 *
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 */
 	@Override
 	public <T> List<T> findObjForJdbc(String sql, int page, int rows,
 									  Class<T> clazz) {
@@ -859,13 +631,6 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return rsList;
 	}
 
-	/**
-	 * 使用指定的检索标准检索数据并分页返回数据-采用预处理方式
-	 *
-
-	 * @return
-	 * @throws DataAccessException
-	 */
 	@Override
 	public List<Map<String, Object>> findForJdbcParam(String sql, int page,
 													  int rows, Object... objs) {
@@ -874,24 +639,14 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		return this.jdbcTemplate.queryForList(sql, objs);
 	}
 
-	/**
-	 * 使用指定的检索标准检索数据并分页返回数据For JDBC
-	 */
 	@Override
 	public Long getCountForJdbc(String sql) {
 		return this.jdbcTemplate.queryForObject(sql,Long.class);
 	}
 
-	/**
-	 * 使用指定的检索标准检索数据并分页返回数据For JDBC-采用预处理方式
-	 *
-	 */
 	@Override
 	public Long getCountForJdbcParam(String sql, Object[] objs) {
-
 		return this.jdbcTemplate.queryForObject(sql, objs,Long.class);
-
-
 	}
 
 	@Override

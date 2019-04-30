@@ -6,6 +6,7 @@ import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.FileUtils;
 import org.jeecgframework.core.util.oConvertUtils;
+import org.jeecgframework.web.system.attachment.entity.AttachmentEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,13 @@ import com.alibaba.fastjson.JSONObject;
 import org.jeecgframework.web.cgform.dao.upload.CgFormUploadDao;
 import org.jeecgframework.web.cgform.entity.upload.CgUploadEntity;
 import org.jeecgframework.web.cgform.service.upload.CgUploadServiceI;
-import org.jeecgframework.web.system.pojo.base.AttachmentEntity;
 @Service("cgUploadService")
 @Transactional
 public class CgUploadServiceImpl extends CommonServiceImpl implements CgUploadServiceI {
 	@Autowired
 	private CgFormUploadDao cgFormUploadDao;
 	
+	@Override
 	public void deleteFile(CgUploadEntity file) {
 		//step.1 删除附件
 		String sql = "select * from t_s_attachment where id = ?";
@@ -39,7 +40,8 @@ public class CgUploadServiceImpl extends CommonServiceImpl implements CgUploadSe
 	}
 
 	
-	public void writeBack(String cgFormId,String cgFormName,String cgFormField,String fileId,String fileUrl) {
+	@Override
+	public void writeBack(String cgFormId, String cgFormName, String cgFormField, String fileId, String fileUrl) {
 		try{
 			cgFormUploadDao.updateBackFileInfo(cgFormId, cgFormName, cgFormField, fileId, fileUrl);
 		}catch (Exception e) {

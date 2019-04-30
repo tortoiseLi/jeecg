@@ -1,7 +1,5 @@
 package org.jeecgframework.web.system.user.entity;
 
-import org.jeecgframework.web.system.pojo.base.BaseUserEntity;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;

@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.annotation.Ehcache;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.SqlInjectionUtil;
@@ -582,7 +582,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		Map<String, Object> field = new HashMap<String, Object>();
 
 		//处理一遍权限问题
-		Set<String> operationCodes = (Set<String>) ContextHolderUtils.getRequest().getAttribute(Globals.OPERATIONCODES);
+		Set<String> operationCodes = (Set<String>) ContextHolderUtils.getRequest().getAttribute(GlobalConstants.OPERATION_CODES);
 		Map<String,OperationEntity> operationCodesMap = new HashMap<String, OperationEntity>();
 		if(operationCodes != null){
 			OperationEntity tsOperation;

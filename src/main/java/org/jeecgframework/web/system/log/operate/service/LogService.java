@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.jeecgframework.web.system.service;
+package org.jeecgframework.web.system.log.operate.service;
 
 import org.jeecgframework.core.common.service.CommonService;
 

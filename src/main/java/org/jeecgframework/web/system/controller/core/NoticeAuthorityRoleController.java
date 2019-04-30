@@ -5,13 +5,14 @@ import java.util.concurrent.Executors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.javaws.Globals;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
@@ -95,7 +96,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 		message = "通知公告角色授权删除成功";
 		try{
 			noticeAuthorityRoleService.doDelTSNoticeAuthorityRole(noticeAuthorityRole);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "通知公告角色授权删除失败";
@@ -122,7 +123,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 				id
 				);
 				noticeAuthorityRoleService.delete(noticeAuthorityRole);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -148,7 +149,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 		message = "通知公告角色授权添加成功";
 		try{
 			noticeAuthorityRoleService.save(noticeAuthorityRole);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "通知公告角色授权添加失败";
@@ -174,7 +175,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(noticeAuthorityRole, t);
 			noticeAuthorityRoleService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "通知公告角色授权更新失败";
@@ -236,7 +237,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 		message = "通知公告角色授权保存成功";
 		try{
 			this.noticeAuthorityRoleService.saveTSNoticeAuthorityRole(noticeAuthorityRole);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}catch(BusinessException e){
 			e.printStackTrace();
 			message = e.getMessage();

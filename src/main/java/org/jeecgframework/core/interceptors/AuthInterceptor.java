@@ -12,10 +12,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.javaws.Globals;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.annotation.JAuth;
 import org.jeecgframework.core.common.model.json.AjaxJson;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.enums.Permission;
 import org.jeecgframework.core.extend.hqlsearch.SysContextSqlConvert;
 import org.jeecgframework.core.util.ContextHolderUtils;
@@ -61,6 +62,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	/**
 	 * 在controller前拦截
 	 */
+	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
 		HandlerMethod handlerMethod=(HandlerMethod)object;
 		JAuth jauthType =handlerMethod.getBean().getClass().getAnnotation(JAuth.class);
@@ -139,13 +141,13 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 					List<OperationEntity> operations = systemService.getLoginOperationsByUserId(loginUserId, functionId, orgId);
 
-					request.setAttribute(Globals.NOAUTO_OPERATIONCODES, operations);
+					request.setAttribute(GlobalConstants.NO_AUTO_OPERATION_CODES, operations);
 					if(operations!=null){
 						Set<String> operationCodes = new HashSet<String>();
 						for (OperationEntity operation : operations) {
 							operationCodes.add(operation.getId());
 						}
-						request.setAttribute(Globals.OPERATIONCODES, operationCodes);
+						request.setAttribute(GlobalConstants.OPERATION_CODES, operationCodes);
 					}
 					
 					 //Step.2  【数据权限】第二部分处理列表数据级权限 (菜单数据规则集合)

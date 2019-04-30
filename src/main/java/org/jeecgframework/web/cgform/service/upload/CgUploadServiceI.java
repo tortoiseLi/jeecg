@@ -3,7 +3,8 @@ package org.jeecgframework.web.cgform.service.upload;
 import org.jeecgframework.core.common.service.CommonService;
 
 import org.jeecgframework.web.cgform.entity.upload.CgUploadEntity;
-import org.jeecgframework.web.system.pojo.base.AttachmentEntity;
+import org.jeecgframework.web.system.attachment.entity.AttachmentEntity;
+
 /**
  * 
  * @Title:CgUploadServiceI

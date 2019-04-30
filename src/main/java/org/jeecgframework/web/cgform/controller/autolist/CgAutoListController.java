@@ -13,11 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.sun.javaws.Globals;
 import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.enums.SysThemesEnum;
 import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.ContextHolderUtils;
@@ -43,7 +44,7 @@ import org.jeecgframework.web.cgform.util.QueryParamUtil;
 import org.jeecgframework.web.cgform.util.TemplateUtil;
 import org.jeecgframework.web.system.pojo.base.DictEntity;
 import org.jeecgframework.web.system.pojo.base.OperationEntity;
-import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.dict.entity.TypeEntity;
 import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.slf4j.Logger;
@@ -192,7 +193,7 @@ public class CgAutoListController extends BaseController{
 	@RequestMapping(params = "datagrid")
 	public void datagrid(String configId,String page,String field,String rows,String sort,String order, HttpServletRequest request,
 			HttpServletResponse response, DataGrid dataGrid) throws Exception {
-		Object dataRuleSql =JeecgDataAutorUtils.loadDataSearchConditonSQLString(); //request.getAttribute(Globals.MENU_DATA_AUTHOR_RULE_SQL);
+		Object dataRuleSql =JeecgDataAutorUtils.loadDataSearchConditonSQLString(); //request.getAttribute(GlobalConstants.MENU_DATA_AUTHOR_RULE_SQL);
 		long start = System.currentTimeMillis();
 		//step.1 获取动态配置
 		String jversion = cgFormFieldService.getCgFormVersionByTableName(configId);
@@ -401,8 +402,8 @@ public class CgAutoListController extends BaseController{
 
 			cgTableService.delete(table, id);
 			log.info("["+IpUtil.getIpAddr(request)+"][online表单数据删除]"+message+"表名："+configId);
-			systemService.addLog(message, Globals.Log_Type_DEL,
-					Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE,
+					GlobalConstants.LOG_LEVEL_INFO);
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			message = e.getMessage();
@@ -437,8 +438,8 @@ public class CgAutoListController extends BaseController{
 		} catch (Exception e) {
 			message = e.getMessage();
 		}
-		systemService.addLog(message, Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE,
+				GlobalConstants.LOG_LEVEL_INFO);
 		log.info("["+IpUtil.getIpAddr(request)+"][online表单数据批量删除]"+message+"表名："+configId);
 		j.setMsg(message);
 		return j;
@@ -459,7 +460,7 @@ public class CgAutoListController extends BaseController{
 		StringBuilder fileds = new StringBuilder();
 		StringBuilder initQuery = new StringBuilder();
 
-		Set<String> operationCodes = (Set<String>) request.getAttribute(Globals.OPERATIONCODES);
+		Set<String> operationCodes = (Set<String>) request.getAttribute(GlobalConstants.OPERATION_CODES);
 		Map<String,OperationEntity> operationCodesMap = new HashMap<String, OperationEntity>();
 		if(operationCodes != null){
 			OperationEntity tsOperation;
@@ -590,8 +591,8 @@ public class CgAutoListController extends BaseController{
 	 * @param request
 	 */
 	private void loadAuth(Map<String, Object> paras, HttpServletRequest request) {
-		List<OperationEntity>  nolist = (List<OperationEntity>) request.getAttribute(Globals.NOAUTO_OPERATIONCODES);
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		List<OperationEntity>  nolist = (List<OperationEntity>) request.getAttribute(GlobalConstants.NO_AUTO_OPERATION_CODES);
+		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !GlobalConstants.BUTTON_AUTHORITY_CHECK){
 			nolist = null;
 		}
 		List<String> list = new ArrayList<String>();

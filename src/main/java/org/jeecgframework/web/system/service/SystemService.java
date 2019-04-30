@@ -3,6 +3,8 @@ package org.jeecgframework.web.system.service;
 import java.util.List;
 import java.util.Set;
 
+import org.jeecgframework.web.system.dict.entity.TypeEntity;
+import org.jeecgframework.web.system.dict.entity.TypeGroupEntity;
 import org.jeecgframework.web.system.function.entity.FunctionEntity;
 import org.jeecgframework.web.system.pojo.base.*;
 import org.jeecgframework.core.common.service.CommonService;

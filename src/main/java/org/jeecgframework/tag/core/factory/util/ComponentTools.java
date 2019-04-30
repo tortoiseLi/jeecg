@@ -17,8 +17,7 @@ import org.jeecgframework.tag.vo.easyui.ColumnValue;
 import org.jeecgframework.tag.vo.easyui.DataGridColumn;
 import org.jeecgframework.tag.vo.easyui.DataGridUrl;
 import org.jeecgframework.tag.vo.easyui.OptTypeDirection;
-import org.jeecgframework.web.system.pojo.base.TypeEntity;
-import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.dict.entity.TypeEntity;
 import org.jeecgframework.web.system.service.SystemService;
 
 public class ComponentTools {

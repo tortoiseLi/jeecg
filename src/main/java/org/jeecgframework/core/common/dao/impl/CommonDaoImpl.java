@@ -80,7 +80,7 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao, BaseDao {
 	@Override
 	public UserEntity findUserByAccountAndPassword(String username, String inpassword) {
 		String password = PasswordUtil.encrypt(username, inpassword, PasswordUtil.getStaticSalt());
-		String query = "from TSUser u where u.userName = :username and u.password=:passowrd";
+		String query = "from UserEntity u where u.userName = :username and u.password=:passowrd";
 		Query queryObject = getSession().createQuery(query);
 		queryObject.setParameter("username", username);
 		queryObject.setParameter("passowrd", password);
@@ -97,7 +97,7 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao, BaseDao {
 	 */
 	@Override
 	public void pwdInit(UserEntity user, String newPwd){
-		String query ="from TSUser u where u.userName = :username ";
+		String query ="from UserEntity u where u.userName = :username ";
 		Query queryObject = getSession().createQuery(query);
 		queryObject.setParameter("username", user.getUserName());
 		List<UserEntity> users =  queryObject.list();

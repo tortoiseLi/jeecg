@@ -11,7 +11,7 @@ import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
@@ -88,7 +88,7 @@ public class CgformEnhanceJsController extends BaseController {
 		cgformenhanceJs = systemService.getById(CgformEnhanceJsEntity.class, cgformenhanceJs.getId());
 		message = "删除成功";
 		cgformenhanceJsService.delete(cgformenhanceJs);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		
 		j.setMsg(message);
 		return j;
@@ -130,14 +130,14 @@ public class CgformEnhanceJsController extends BaseController {
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformenhanceJs, t);
 				cgformenhanceJsService.saveOrUpdate(t);
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			message = "添加成功";
 			cgformenhanceJsService.add(cgformenhanceJs);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;

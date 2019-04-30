@@ -1,7 +1,7 @@
-package org.jeecgframework.web.system.service.impl;
+package org.jeecgframework.web.system.log.operate.service.impl;
 
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
-import org.jeecgframework.web.system.service.LogService;
+import org.jeecgframework.web.system.log.operate.service.LogService;
 import org.springframework.stereotype.Service;
 
 /**

@@ -1,11 +1,11 @@
 package org.jeecgframework.web.cgform.entity.upload;
 
+import org.jeecgframework.web.system.attachment.entity.AttachmentEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-
-import org.jeecgframework.web.system.pojo.base.AttachmentEntity;
 
 /**
  * 

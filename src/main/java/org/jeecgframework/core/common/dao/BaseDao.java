@@ -49,7 +49,7 @@ public interface BaseDao {
 	 * @param entityName
 	 * @param id
 	 */
-	<T> void deleteById(Class entityName, Serializable id);
+	void deleteById(Class entityName, Serializable id);
 
 	/**
 	 * 删除实体集合
@@ -71,7 +71,6 @@ public interface BaseDao {
 	 * @return
 	 */
 	int updateBySql(String sql);
-
 
 	/**
 	 * 新增或修改
@@ -150,101 +149,24 @@ public interface BaseDao {
 	<T> List<T> findListByProperty(Class<T> entityClass, String propertyName, Object value);
 
 	/**
-	 * 获取所有数据库表
-	 * @return
-	 */
-	List<DbTable> findDbTableList();
-
-	/**
-	 * 获取与表结构对应的所有实体数量
-	 * @return
-	 */
-	Integer getDbTableSize();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/**
-	 * 通过属性称获取实体带排序
-	 *
+	 * 通过CQ查询list
+	 * @param cq
+	 * @param isPage
 	 * @param <T>
-	 * @param clas
 	 * @return
 	 */
-	<T> List<T> findByPropertyisOrder(Class<T> entityClass,
-                                      String propertyName, Object value, boolean isAsc);
+	<T> List<T> findListByCriteriaQuery(final CriteriaQuery cq, Boolean isPage);
 
 	/**
-	 *
-	 * cq方式分页
-	 *
+	 * 通过CQ查询Page
 	 * @param cq
-	 * @param isOffset
+	 * @param isOffset 是否分页
 	 * @return
 	 */
-	PageList getPageList(final CriteriaQuery cq, final boolean isOffset);
+	PageList findPageByCriteriaQuery(final CriteriaQuery cq, final boolean isOffset);
 
-	/**
-	 * 通过cq获取全部实体
-	 *
-	 * @param <T>
-	 * @param cq
-	 * @return
-	 */
-	<T> List<T> getListByCriteriaQuery(final CriteriaQuery cq,
-                                       Boolean ispage);
 
-	/**
-	 *
-	 * hqlQuery方式分页
-	 *
-	 * @param cq
-	 * @param isOffset
-	 * @return
-	 */
-	PageList getPageList(final HqlQuery hqlQuery,
-                         final boolean needParameter);
-
-	/**
-	 *
-	 * sqlQuery方式分页
-	 *
-	 * @param cq
-	 * @param isOffset
-	 * @return
-	 */
-	PageList getPageListBySql(final HqlQuery hqlQuery,
-                              final boolean needParameter);
-
-	Session getSession();
-
-	List findByExample(final String entityName,
-                       final Object exampleEntity);
+	List findByExample(final String entityName, final Object exampleEntity);
 
 	/**
 	 * 通过hql 查询语句查找HashMap对象
@@ -263,7 +185,7 @@ public interface BaseDao {
 	 * @return
 	 */
 	DataTableReturn getDataTableReturn(final CriteriaQuery cq,
-                                       final boolean isOffset);
+									   final boolean isOffset);
 
 	/**
 	 * 返回easyui datagrid模型
@@ -274,7 +196,7 @@ public interface BaseDao {
 	 */
 
 	void getDataGridReturn(CriteriaQuery cq,
-                           final boolean isOffset);
+						   final boolean isOffset);
 
 
 	/**
@@ -314,7 +236,7 @@ public interface BaseDao {
 	 * 通过JDBC查找对象集合,带分页 使用指定的检索标准检索数据并分页返回数据
 	 */
 	<T> List<T> findObjForJdbc(String sql, int page, int rows,
-                               Class<T> clazz);
+							   Class<T> clazz);
 
 	/**
 	 * 使用指定的检索标准检索数据并分页返回数据-采用预处理方式
@@ -326,7 +248,7 @@ public interface BaseDao {
 	 * @throws DataAccessException
 	 */
 	List<Map<String, Object>> findForJdbcParam(String sql, int page,
-                                               int rows, Object... objs);
+											   int rows, Object... objs);
 
 	/**
 	 * 使用指定的检索标准检索数据并分页返回数据For JDBC
@@ -357,7 +279,7 @@ public interface BaseDao {
 	Integer executeHql(String hql);
 
 	<T> List<T> pageList(DetachedCriteria dc, int firstResult,
-                         int maxResult);
+						 int maxResult);
 
 	<T> List<T> findByDetached(DetachedCriteria dc);
 
@@ -366,5 +288,23 @@ public interface BaseDao {
 	 * @param execute
 	 */
 	<T> List<T> executeProcedure(String procedureSql, Object... params);
+
+	/**
+	 * 获取所有数据库表
+	 * @return
+	 */
+	List<DbTable> findDbTableList();
+
+	/**
+	 * 获取与表结构对应的所有实体数量
+	 * @return
+	 */
+	Integer getDbTableSize();
+
+	/**
+	 * 获取hibernate session
+	 * @return
+	 */
+	Session getSession();
 
 }

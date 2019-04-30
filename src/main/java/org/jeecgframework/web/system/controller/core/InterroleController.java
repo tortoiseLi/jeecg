@@ -1,5 +1,6 @@
 package org.jeecgframework.web.system.controller.core;
 
+import com.sun.javaws.Globals;
 import io.swagger.annotations.Api;
 
 import java.io.UnsupportedEncodingException;
@@ -29,7 +30,7 @@ import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.ComboTree;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.ValidForm;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
@@ -141,11 +142,11 @@ public class InterroleController extends BaseController {
 			if (StringUtil.isNotEmpty(role.getId())) {
 				message = "角色: " + role.getRoleName() + "被更新成功";
 				interroleService.saveOrUpdate(role);
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 			} else {
 				message = "角色: " + role.getRoleName() + "被添加成功";
 				interroleService.save(role);
-				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -196,7 +197,7 @@ public class InterroleController extends BaseController {
 		// userService.delete(role);
 		// message = "角色: " + role.getRoleName() + "被删除成功";
 		// systemService.addLog(message,
-		// Globals.Log_Type_DEL,Globals.Log_Leavel_INFO);
+		// GlobalConstants.LOG_TYPE_DELETE,GlobalConstants.LOG_LEVEL_INFO);
 		// } else {
 		// message = "角色: 仍被用户使用，请先删除关联关系";
 		// }
@@ -215,7 +216,7 @@ public class InterroleController extends BaseController {
 		} else {
 			userService.delete(role);
 			message = "接口角色: " + role.getRoleName() + "被删除成功";
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		}
 
 		j.setMsg(message);
@@ -570,7 +571,7 @@ public class InterroleController extends BaseController {
 			cc = Restrictions.eq("id", "-1");
 		}
 		cq.add(cc);
-		cq.eq("deleteFlag", Globals.Delete_Normal);
+		cq.eq("deleteFlag", GlobalConstants.DELETE_NORMAL);
 		cq.add();
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, user);
 		this.systemService.getDataGridReturn(cq, true);
@@ -632,7 +633,7 @@ public class InterroleController extends BaseController {
 		InterroleEntity role = systemService.getById(InterroleEntity.class, req.getParameter("roleId"));
 		saveInterRoleUserList(req, role);
 		message = MutiLangUtil.paramAddSuccess("common.user");
-		systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		j.setMsg(message);
 
 		return j;

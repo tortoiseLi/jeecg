@@ -18,11 +18,12 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import com.sun.javaws.Globals;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.ContextHolderUtils;
@@ -43,7 +44,7 @@ import org.jeecgframework.web.cgform.entity.config.CgSubTableVO;
 import org.jeecgframework.web.cgform.service.config.CgFormFieldServiceI;
 import org.jeecgframework.web.cgform.util.PublicUtil;
 import org.jeecgframework.web.system.pojo.base.OperationEntity;
-import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.dict.entity.TypeEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -541,7 +542,7 @@ public class DataGridTag extends TagSupport {
 
 		dataGridColumn.setAjaxDict(isAjaxDict);
 		columnList.add(dataGridColumn);
-		Set<String> operationCodes = (Set<String>) super.pageContext.getRequest().getAttribute(Globals.OPERATIONCODES);
+		Set<String> operationCodes = (Set<String>) super.pageContext.getRequest().getAttribute(GlobalConstants.OPERATION_CODES);
 		if (null!=operationCodes) {
 			for (String MyoperationCode : operationCodes) {
 				if (oConvertUtils.isEmpty(MyoperationCode))
@@ -3269,9 +3270,9 @@ public class DataGridTag extends TagSupport {
   
 	public String getNoAuthOperButton(){
 		StringBuffer sb = new StringBuffer();
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !GlobalConstants.BUTTON_AUTHORITY_CHECK){
 		}else{
-			Set<String> operationCodes = (Set<String>) super.pageContext.getRequest().getAttribute(Globals.OPERATIONCODES);
+			Set<String> operationCodes = (Set<String>) super.pageContext.getRequest().getAttribute(GlobalConstants.OPERATION_CODES);
 			if (null!=operationCodes) {
 				for (String MyoperationCode : operationCodes) {
 					if (oConvertUtils.isEmpty(MyoperationCode))
@@ -3280,7 +3281,7 @@ public class DataGridTag extends TagSupport {
 								SystemService.class);
 					OperationEntity operation = systemService.getById(OperationEntity.class, MyoperationCode);
 					if (operation.getOperationcode().startsWith(".") || operation.getOperationcode().startsWith("#")){
-						if (operation.getOperationType().intValue()==Globals.OPERATION_TYPE_HIDE){
+						if (operation.getOperationType().intValue()==GlobalConstants.OPERATION_TYPE_HIDE){
 							//out.append("$(\""+name+"\").find(\"#"+operation.getOperationcode().replaceAll(" ", "")+"\").hide();");
 							sb.append("$(\""+operation.getOperationcode().replaceAll(" ", "")+"\").hide();");
 						}else {
@@ -3305,10 +3306,10 @@ public class DataGridTag extends TagSupport {
 	 * @version 1.0
 	 */
 	private void installOperationCode(DataGridUrl dataGridUrl,String operationCode,List optList){
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !GlobalConstants.BUTTON_AUTHORITY_CHECK){
 			optList.add(dataGridUrl);
 		}else if(!oConvertUtils.isEmpty(operationCode)){
-			Set<String> operationCodes = (Set<String>) super.pageContext.getRequest().getAttribute(Globals.OPERATIONCODES);
+			Set<String> operationCodes = (Set<String>) super.pageContext.getRequest().getAttribute(GlobalConstants.OPERATION_CODES);
 			if (null!=operationCodes) {
 				List<String> operationCodesStr = new ArrayList<String>();
 				for (String MyoperationCode : operationCodes) {

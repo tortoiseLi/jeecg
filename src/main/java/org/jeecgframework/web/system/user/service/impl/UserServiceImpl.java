@@ -13,13 +13,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.sun.javaws.Globals;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.BrowserUtils;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.DateUtils;
@@ -32,7 +33,7 @@ import org.jeecgframework.web.system.depart.entity.DepartEntity;
 import org.jeecgframework.web.system.manager.ClientManager;
 import org.jeecgframework.web.system.pojo.base.Client;
 import org.jeecgframework.web.system.function.entity.FunctionEntity;
-import org.jeecgframework.web.system.pojo.base.LogEntity;
+import org.jeecgframework.web.system.log.operate.entity.LogEntity;
 import org.jeecgframework.web.system.role.entity.RoleEntity;
 import org.jeecgframework.web.system.pojo.base.RoleUserEntity;
 import org.jeecgframework.web.system.user.entity.UserEntity;
@@ -91,14 +92,14 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	public String trueDel(UserEntity user) {
 		String message = "";
 		List<RoleUserEntity> roleUser = this.commonDao.findListByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
-		if (!user.getStatus().equals(Globals.User_ADMIN)) {
+		if (!user.getStatus().equals(GlobalConstants.USER_ADMIN)) {
 			if (roleUser.size()>0) {
 				// 删除用户时先删除用户和角色关系表
 				delRoleUser(user);
 				this.commonDao.executeSql("delete from t_s_user_org where user_id=?", user.getId()); // 删除 用户-机构 数据
                 this.commonDao.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
-				this.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				this.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 			} else {
 				this.commonDao.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
@@ -250,7 +251,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 				Collection<FunctionEntity> allFunctions = loginFunctionslist.values();
 				for (FunctionEntity function : allFunctions) {
 				    //权限类型菜单不在首页加载
-		            if(Globals.Function_TYPE_FROM.intValue() == function.getFunctionType().intValue()){
+		            if(GlobalConstants.FUNCTION_TYPE_FROM.intValue() == function.getFunctionType().intValue()){
 						continue;
 					}
 		            //菜单层级
@@ -329,7 +330,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 		}
         
         // 添加登陆日志
-        this.addLog(message, Globals.Log_Type_LOGIN, Globals.Log_Leavel_INFO);
+        this.addLog(message, GlobalConstants.LOG_TYPE_LOGIN, GlobalConstants.LOG_LEVEL_INFO);
     }
     
 	/**

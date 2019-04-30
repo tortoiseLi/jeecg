@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.jeecgframework.core.annotation.Ehcache;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.BrowserUtils;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.IpUtil;
@@ -22,9 +22,12 @@ import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.dao.JeecgDictDao;
+import org.jeecgframework.web.system.dict.entity.TypeGroupEntity;
 import org.jeecgframework.web.system.function.entity.FunctionEntity;
+import org.jeecgframework.web.system.log.data.entity.DataLogEntity;
+import org.jeecgframework.web.system.log.operate.entity.LogEntity;
 import org.jeecgframework.web.system.pojo.base.*;
-import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.dict.entity.TypeEntity;
 import org.jeecgframework.web.system.role.entity.RoleEntity;
 import org.jeecgframework.web.system.service.CacheService;
 import org.jeecgframework.web.system.service.SystemService;
@@ -268,18 +271,18 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		StringBuilder out = new StringBuilder();
 		out.append("<script type=\"text/javascript\">");
 		out.append("$(document).ready(function(){");
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !GlobalConstants.BUTTON_AUTHORITY_CHECK){
 			return "";
 		}else{
 			HttpServletRequest request = ContextHolderUtils.getRequest();
-			Set<String> operationCodes = (Set<String>) request.getAttribute(Globals.OPERATIONCODES);
+			Set<String> operationCodes = (Set<String>) request.getAttribute(GlobalConstants.OPERATION_CODES);
 			if (null!=operationCodes) {
 				for (String MyoperationCode : operationCodes) {
 					if (oConvertUtils.isEmpty(MyoperationCode))
 						break;
 					OperationEntity operation = this.getById(OperationEntity.class, MyoperationCode);
 					if (operation.getOperationcode().startsWith(".") || operation.getOperationcode().startsWith("#")){
-						if (operation.getOperationType().intValue()==Globals.OPERATION_TYPE_HIDE){
+						if (operation.getOperationType().intValue()==GlobalConstants.OPERATION_TYPE_HIDE){
 							//out.append("$(\""+name+"\").find(\"#"+operation.getOperationcode().replaceAll(" ", "")+"\").hide();");
 							out.append("$(\""+operation.getOperationcode().replaceAll(" ", "")+"\").hide();");
 						}else {

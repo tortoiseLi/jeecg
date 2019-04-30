@@ -1,4 +1,4 @@
-package org.jeecgframework.web.system.pojo.base;
+package org.jeecgframework.web.system.notice.entity;
 
 import org.jeecgframework.core.common.entity.IdEntity;
 

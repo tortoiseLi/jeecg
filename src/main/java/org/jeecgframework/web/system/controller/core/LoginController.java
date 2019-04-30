@@ -19,7 +19,7 @@ import net.sf.json.JSONArray;
 import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.model.json.AjaxJson;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.enums.SysThemesEnum;
 import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.ContextHolderUtils;
@@ -305,7 +305,7 @@ public class LoginController extends BaseController{
 		HttpSession session = ContextHolderUtils.getSession();
 		UserEntity user = ResourceUtil.getSessionUser();
 		try {
-			systemService.addLog("用户" + user!=null?user.getUserName():"" + "已退出",Globals.Log_Type_EXIT, Globals.Log_Leavel_INFO);
+			systemService.addLog("用户" + user!=null?user.getUserName():"" + "已退出", GlobalConstants.LOG_TYPE_EXIT, GlobalConstants.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			LogUtil.error(e.toString());
 		}
@@ -327,7 +327,7 @@ public class LoginController extends BaseController{
         ModelAndView modelAndView = new ModelAndView();
 		// 登陆者的权限
 		if (user.getId() == null) {
-			session.removeAttribute(Globals.USER_SESSION);
+			session.removeAttribute(GlobalConstants.USER_SESSION);
             modelAndView.setView(new RedirectView("loginController.do?login"));
 		}else{
             modelAndView.setViewName("main/left");
@@ -616,7 +616,7 @@ public class LoginController extends BaseController{
 		HttpSession session = ContextHolderUtils.getSession();
 		// 登陆者的权限
 		if (user.getId() == null) {
-			session.removeAttribute(Globals.USER_SESSION);
+			session.removeAttribute(GlobalConstants.USER_SESSION);
 			return new ModelAndView(
 					new RedirectView("loginController.do?login"));
 		}
@@ -638,7 +638,7 @@ public class LoginController extends BaseController{
 		HttpSession session = ContextHolderUtils.getSession();
 		// 登陆者的权限
 		if (user.getId() == null) {
-			session.removeAttribute(Globals.USER_SESSION);
+			session.removeAttribute(GlobalConstants.USER_SESSION);
 			return new ModelAndView(
 					new RedirectView("loginController.do?login"));
 		}

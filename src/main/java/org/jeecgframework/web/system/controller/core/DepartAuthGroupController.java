@@ -23,7 +23,7 @@ import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.ComboTree;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.NumberComparator;
@@ -1037,9 +1037,9 @@ public class DepartAuthGroupController extends BaseController {
 		CriteriaQuery cq = new CriteriaQuery(UserEntity.class, dataGrid);
 		// 查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, user);
-		Short[] userstate = new Short[] { Globals.User_Normal, Globals.User_ADMIN, Globals.User_Forbidden };
+		Short[] userstate = new Short[] { GlobalConstants.USER_NORMAL, GlobalConstants.USER_ADMIN, GlobalConstants.USER_FORBIDDEN };
 		cq.in("status", userstate);
-		cq.eq("deleteFlag", Globals.Delete_Normal);
+		cq.eq("deleteFlag", GlobalConstants.DELETE_NORMAL);
 		List<String> userLists = new ArrayList<String>();
 		String groupId = request.getParameter("groupId");
 		DepartAuthGroupEntity departAuthGroup = systemService.getById(DepartAuthGroupEntity.class, groupId);

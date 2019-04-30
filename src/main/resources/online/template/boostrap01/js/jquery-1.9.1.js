@@ -7736,7 +7736,7 @@ jQuery.extend({
 			timeoutTimer,
 
 			// To know if global events are to be dispatched
-			fireGlobals,
+            fireGlobals,
 
 			transport,
 			// Response headers
@@ -7872,7 +7872,7 @@ jQuery.extend({
 		}
 
 		// We can fire global events as of now if asked to
-		fireGlobals = s.global;
+        fireGlobals = s.global;
 
 		// Watch for a new set of requests
 		if ( fireGlobals && jQuery.active++ === 0 ) {

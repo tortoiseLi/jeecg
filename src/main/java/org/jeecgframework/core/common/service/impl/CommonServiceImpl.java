@@ -28,27 +28,128 @@ import org.jeecgframework.web.system.depart.entity.DepartEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 通用Service
+ * @author DELL
+ * @version V1.0
+ * @date 2019-04-29
+ */
 @Service("commonService")
-@Transactional
 public class CommonServiceImpl implements CommonService {
+
 	public CommonDao commonDao = null;
 
-	/**
-	 * 获取所有数据库表
-	 * 
-	 * @return
-	 */
 	@Override
-	@Transactional(readOnly = true)
+	public <T> Serializable add(T entity) {
+		return commonDao.insert(entity);
+	}
+
+	@Override
+	public <T> void batchAdd(List<T> entityList) {
+		this.commonDao.batchInsert(entityList);
+	}
+
+	@Override
+	public <T> void delete(T entity) {
+		commonDao.delete(entity);
+	}
+
+	@Override
+	public void deleteById(Class entityName, Serializable id) {
+		commonDao.deleteById(entityName, id);
+	}
+
+	@Override
+	public <T> void deleteByCollection(Collection<T> collection) {
+		commonDao.deleteByCollection(collection);
+	}
+
+	@Override
+	public <T> void update(T entity) {
+		commonDao.update(entity);
+	}
+
+	@Override
+	public int updateBySql(String sql) {
+		return commonDao.updateBySql(sql);
+	}
+
+	@Override
+	public <T> void saveOrUpdate(T entity) {
+		commonDao.saveOrUpdate(entity);
+	}
+
+	@Override
+	public <T> T getById(Class<T> entityClass, Serializable id) {
+		return commonDao.getById(entityClass, id);
+	}
+
+	@Override
+	public <T> T getByProperty(Class<T> entityClass, String propertyName, Object value) {
+		return commonDao.getByProperty(entityClass, propertyName, value);
+	}
+
+	@Override
+	public <T> T getBySql(String sql) {
+		return null;
+	}
+
+	@Override
+	public <T> T getByHql(String hql) {
+		return commonDao.getByHql(hql);
+	}
+
+	@Override
+	public <T> List<T> findList(Class<T> entityClass) {
+		return commonDao.findList(entityClass);
+	}
+
+	@Override
+	public <T> List<T> findListBySql(String sql) {
+		return commonDao.findListBySql(sql);
+	}
+
+	@Override
+	public <T> List<T> findListByHql(String hql) {
+		return commonDao.findListByHql(hql);
+	}
+
+	@Override
+	public <T> List<T> findListByProperty(Class<T> entityClass, String propertyName, Object value) {
+		return commonDao.findListByProperty(entityClass, propertyName, value);
+	}
+
+	@Override
 	public List<DbTable> findDbTableList() {
 		return commonDao.findDbTableList();
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public Integer getDbTableSize() {
 		return commonDao.getDbTableSize();
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	@Resource
 	public void setCommonDao(CommonDao commonDao) {
@@ -56,24 +157,13 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	
-	@Override
-	public <T> Serializable add(T entity) {
-		return commonDao.insert(entity);
-	}
+
 
 	
-	@Override
-	public <T> void saveOrUpdate(T entity) {
-		commonDao.saveOrUpdate(entity);
 
-	}
 
 	
-	@Override
-	public <T> void delete(T entity) {
-		commonDao.delete(entity);
 
-	}
 
 	/**
 	 * 删除实体集合
@@ -81,19 +171,12 @@ public class CommonServiceImpl implements CommonService {
 	 * @param <T>
 	 * @param collection
 	 */
-	@Override
-	public <T> void deleteByCollection(Collection<T> collection) {
-		commonDao.deleteByCollection(collection);
-	}
+
 
 	/**
 	 * 根据实体名获取对象
 	 */
-	@Override
-	@Transactional(readOnly = true)
-	public <T> T getById(Class<T> entityClass, Serializable id) {
-		return commonDao.getById(entityClass, id);
-	}
+
 
 	/**
 	 * 根据实体名称和字段名称和字段值获取唯一记录
@@ -104,23 +187,12 @@ public class CommonServiceImpl implements CommonService {
 	 * @param value
 	 * @return
 	 */
-    @Override
-	@Transactional(readOnly = true)
-	public <T> T getByProperty(Class<T> entityClass,
-			String propertyName, Object value) {
-		return commonDao.getByProperty(entityClass, propertyName, value);
-	}
+
 
 	/**
 	 * 按属性查找对象列表.
 	 */
-    @Override
-	@Transactional(readOnly = true)
-	public <T> List<T> findListByProperty(Class<T> entityClass,
-			String propertyName, Object value) {
 
-		return commonDao.findListByProperty(entityClass, propertyName, value);
-	}
 
 	/**
 	 * 加载全部实体
@@ -129,32 +201,18 @@ public class CommonServiceImpl implements CommonService {
 	 * @param entityClass
 	 * @return
 	 */
-    @Override
-	@Transactional(readOnly = true)
-	public <T> List<T> findList(Class<T> entityClass) {
-		return commonDao.findList(entityClass);
-	}
 
-    @Override
-	@Transactional(readOnly = true)
-	public <T> T getByHql(String hql) {
-		return commonDao.getByHql(hql);
-	}
 
-	@Override
-	public <T> T getBySql(String sql) {
-		return null;
-	}
+
+
+
 
 	/**
 	 * 删除实体主键ID删除对象
 	 * 
 
 	 */
-	@Override
-	public void deleteById(Class entityName, Serializable id) {
-		commonDao.deleteById(entityName, id);
-	}
+
 
 	/**
 	 * 更新指定的实体
@@ -162,11 +220,7 @@ public class CommonServiceImpl implements CommonService {
 	 * @param <T>
 	 * @param pojo
 	 */
-	@Override
-	public <T> void update(T pojo) {
-		commonDao.update(pojo);
 
-	}
 
 	/**
 	 * 通过hql 查询语句查找对象
@@ -175,11 +229,7 @@ public class CommonServiceImpl implements CommonService {
 	 * @param hql
 	 * @return
 	 */
-	@Override
-	@Transactional(readOnly = true)
-	public <T> List<T> findListByHql(String hql) {
-		return commonDao.findListByHql(hql);
-	}
+
 
 	/**
 	 * 根据sql更新
@@ -187,10 +237,7 @@ public class CommonServiceImpl implements CommonService {
 	 * @param sql
 	 * @return
 	 */
-	@Override
-	public int updateBySql(String sql) {
-		return commonDao.updateBySql(sql);
-	}
+
 
 	/**
 	 * 根据sql查找List
@@ -199,23 +246,8 @@ public class CommonServiceImpl implements CommonService {
 	 * @param sql
 	 * @return
 	 */
-	@Override
-	@Transactional(readOnly = true)
-	public <T> List<T> findListBySql(String sql) {
-		return commonDao.findListBySql(sql);
-	}
 
-	/**
-	 * 通过属性称获取实体带排序
-	 * 
-	 * @param <T>
-	 * @return
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public <T> List<T> findByPropertyisOrder(Class<T> entityClass, String propertyName, Object value, boolean isAsc) {
-		return commonDao.findByPropertyisOrder(entityClass, propertyName, value, isAsc);
-	}
+
 
 	/**
 	 * 
@@ -228,7 +260,7 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	@Transactional(readOnly = true)
 	public PageList getPageList(final CriteriaQuery cq, final boolean isOffset) {
-		return commonDao.getPageList(cq, isOffset);
+		return commonDao.findPageByCriteriaQuery(cq, isOffset);
 	}
 
 	/**
@@ -261,32 +293,8 @@ public class CommonServiceImpl implements CommonService {
 
 	}
 
-	/**
-	 * 
-	 * hqlQuery方式分页
-	 * 
 
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public PageList getPageList(final HqlQuery hqlQuery,
-			final boolean needParameter) {
-		return commonDao.getPageList(hqlQuery, needParameter);
-	}
 
-	/**
-	 * 
-	 * sqlQuery方式分页
-	 * 
-
-	 * @return
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public PageList getPageListBySql(final HqlQuery hqlQuery,
-			final boolean isToEntity) {
-		return commonDao.getPageListBySql(hqlQuery, isToEntity);
-	}
 
 	@Override
 	public Session getSession()
@@ -313,7 +321,7 @@ public class CommonServiceImpl implements CommonService {
 	@Transactional(readOnly = true)
 	public <T> List<T> getListByCriteriaQuery(final CriteriaQuery cq,
 			Boolean ispage) {
-		return commonDao.getListByCriteriaQuery(cq, ispage);
+		return commonDao.findListByCriteriaQuery(cq, ispage);
 	}
 
 	/**
@@ -458,10 +466,7 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	
-	@Override
-	public <T> void batchAdd(List<T> entitys) {
-		this.commonDao.batchInsert(entitys);
-	}
+
 
 	/**
 	 * 通过hql 查询语句查找对象

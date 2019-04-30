@@ -5,6 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.javaws.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.web.cgform.entity.button.CgformButtonEntity;
 import org.jeecgframework.web.cgform.entity.button.CgformButtonSqlEntity;
 import org.jeecgframework.web.cgform.service.button.CgformButtonServiceI;
@@ -16,13 +18,11 @@ import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -100,7 +100,7 @@ public class CgformButtonSqlController extends BaseController {
 		cgformButtonSql = systemService.getById(CgformButtonSqlEntity.class, cgformButtonSql.getId());
 		message = "删除成功";
 		cgformButtonSqlService.delete(cgformButtonSql);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单sql增强删除]"+message);
 		j.setMsg(message);
 		return j;
@@ -149,14 +149,14 @@ public class CgformButtonSqlController extends BaseController {
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformButtonSql, t);
 				cgformButtonSqlService.saveOrUpdate(t);
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			message = "添加成功";
 			cgformButtonSqlService.add(cgformButtonSql);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单sql增强添加更新]"+message);
 		j.setMsg(message);

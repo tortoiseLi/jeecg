@@ -24,7 +24,7 @@ import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.ComboBox;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.ValidForm;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.enums.SysThemesEnum;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.IpUtil;
@@ -182,10 +182,10 @@ public class UserController extends BaseController {
         CriteriaQuery cq = new CriteriaQuery(UserEntity.class, dataGrid);
         //查询条件组装器
         org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, user);
-        Short[] userstate = new Short[]{Globals.User_Normal, Globals.User_ADMIN, Globals.User_Forbidden};
+        Short[] userstate = new Short[]{GlobalConstants.USER_NORMAL, GlobalConstants.USER_ADMIN, GlobalConstants.USER_FORBIDDEN};
         cq.in("status", userstate);
-        cq.eq("deleteFlag", Globals.Delete_Normal);
-        cq.eq("userType", Globals.USER_TYPE_INTERFACE);
+        cq.eq("deleteFlag", GlobalConstants.DELETE_NORMAL);
+        cq.eq("userType", GlobalConstants.USER_TYPE_INTERFACE);
         cq.add();
         this.systemService.getDataGridReturn(cq, true);
         List<UserEntity> cfeList = new ArrayList<UserEntity>();
@@ -361,11 +361,11 @@ public class UserController extends BaseController {
 			
 			//System.out.println(users.getUserName());
 			users.setPassword(PasswordUtil.encrypt(users.getUserName(), password, PasswordUtil.getStaticSalt()));
-			users.setStatus(Globals.User_Normal);
+			users.setStatus(GlobalConstants.USER_NORMAL);
 			users.setActivitiSync(users.getActivitiSync());
 			systemService.update(users);
 			message = "用户: " + users.getUserName() + "密码重置成功";
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(req)+"][重置密码]"+message);
 		} 
 		
@@ -400,7 +400,7 @@ public class UserController extends BaseController {
 		}else if("1".equals(lockValue)){
 			message = "用户：" + user.getUserName() + "激活成功!";
 		}
-		systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		logger.info("["+IpUtil.getIpAddr(req)+"][锁定账户]"+message);
 		}catch(Exception e){
 			message = "操作失败!";
@@ -522,10 +522,10 @@ public class UserController extends BaseController {
         //查询条件组装器
         org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, user);
 
-        Short[] userstate = new Short[]{Globals.User_Normal, Globals.User_ADMIN, Globals.User_Forbidden};
+        Short[] userstate = new Short[]{GlobalConstants.USER_NORMAL, GlobalConstants.USER_ADMIN, GlobalConstants.USER_FORBIDDEN};
         cq.in("status", userstate);
-        cq.eq("deleteFlag", Globals.Delete_Normal);
-        cq.eq("userType", Globals.USER_TYPE_SYSTEM);//用户列表不显示接口类型的用户
+        cq.eq("deleteFlag", GlobalConstants.DELETE_NORMAL);
+        cq.eq("userType", GlobalConstants.USER_TYPE_SYSTEM);//用户列表不显示接口类型的用户
         
         String orgIds = request.getParameter("orgIds");
         List<String> orgIdList = extractIdListByComma(orgIds);
@@ -609,9 +609,9 @@ public class UserController extends BaseController {
 		}
 		user = systemService.getById(UserEntity.class, user.getId());
 //		List<RoleUserEntity> roleUser = systemService.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
-		if (!user.getStatus().equals(Globals.User_ADMIN)) {
+		if (!user.getStatus().equals(GlobalConstants.USER_ADMIN)) {
 
-			user.setDeleteFlag(Globals.Delete_Forbidden);
+			user.setDeleteFlag(GlobalConstants.DELETE_FORBIDDEN);
 			userService.update(user);
 			message = "用户：" + user.getUserName() + "删除成功";
 			logger.info("["+IpUtil.getIpAddr(req)+"][逻辑删除用户]"+message);
@@ -626,7 +626,7 @@ public class UserController extends BaseController {
 
                 userService.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 			} else {
 				userService.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
@@ -659,14 +659,14 @@ public class UserController extends BaseController {
 		user = systemService.getById(UserEntity.class, user.getId());
 
 		/*List<RoleUserEntity> roleUser = systemService.findByProperty(RoleUserEntity.class, "TSUser.id", user.getId());
-		if (!user.getStatus().equals(Globals.User_ADMIN)) {
+		if (!user.getStatus().equals(GlobalConstants.USER_ADMIN)) {
 			if (roleUser.size()>0) {
 				// 删除用户时先删除用户和角色关系表
 				delRoleUser(user);
                 systemService.executeSql("delete from t_s_user_org where user_id=?", user.getId()); // 删除 用户-机构 数据
                 userService.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 			} else {
 				userService.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
@@ -752,7 +752,7 @@ public class UserController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 
-		Short logType=Globals.Log_Type_UPDATE;
+		Short logType=GlobalConstants.LOG_TYPE_UPDATE;
 		// 得到用户的角色
 		String roleid = oConvertUtils.getString(req.getParameter("roleid"));
 		String orgid=oConvertUtils.getString(req.getParameter("orgIds"));
@@ -763,7 +763,7 @@ public class UserController extends BaseController {
 			users.setMobilePhone(user.getMobilePhone());
 			users.setDevFlag(user.getDevFlag());
 			users.setRealName(user.getRealName());
-			users.setStatus(Globals.User_Normal);
+			users.setStatus(GlobalConstants.USER_NORMAL);
 			users.setActivitiSync(user.getActivitiSync());
 			this.userService.saveOrUpdate(users, orgid.split(","), roleid.split(","));
 			message = "用户: " + users.getUserName() + "更新成功";
@@ -773,16 +773,16 @@ public class UserController extends BaseController {
 				message = "用户: " + users.getUserName() + "已经存在";
 			} else {
 				user.setPassword(PasswordUtil.encrypt(user.getUserName(), oConvertUtils.getString(req.getParameter("password")), PasswordUtil.getStaticSalt()));
-				user.setStatus(Globals.User_Normal);
-				user.setDeleteFlag(Globals.Delete_Normal);
+				user.setStatus(GlobalConstants.USER_NORMAL);
+				user.setDeleteFlag(GlobalConstants.DELETE_NORMAL);
 				//默认添加为系统用户
-				user.setUserType(Globals.USER_TYPE_SYSTEM);
+				user.setUserType(GlobalConstants.USER_TYPE_SYSTEM);
 				this.userService.saveOrUpdate(user, orgid.split(","), roleid.split(","));				
 				message = "用户: " + user.getUserName() + "添加成功";
-				logType=Globals.Log_Type_INSERT;
+				logType=GlobalConstants.LOG_TYPE_INSERT;
 			}
 		}
-		systemService.addLog(message, logType, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, logType, GlobalConstants.LOG_LEVEL_INFO);
 		j.setMsg(message);
 		logger.info("["+IpUtil.getIpAddr(req)+"][添加编辑用户]"+message);
 		return j;
@@ -988,7 +988,7 @@ public class UserController extends BaseController {
 //            users.setTSDepart(user.getTSDepart());
 
 			users.setRealName(user.getRealName());
-			users.setStatus(Globals.User_Normal);
+			users.setStatus(GlobalConstants.USER_NORMAL);
 			users.setActivitiSync(user.getActivitiSync());
 			
 			users.setUserNameEn(user.getUserNameEn());
@@ -1009,7 +1009,7 @@ public class UserController extends BaseController {
 //			if (StringUtil.isNotEmpty(roleid)) {
 //				saveInterfaceRoleUser(users, roleid);
 //			}
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		} else {
 			UserEntity users = systemService.getByProperty(UserEntity.class, "userName",user.getUserName());
 			if (users != null) {
@@ -1019,8 +1019,8 @@ public class UserController extends BaseController {
 //				if (user.getTSDepart().equals("")) {
 //					user.setTSDepart(null);
 //				}
-				user.setStatus(Globals.User_Normal);
-				user.setDeleteFlag(Globals.Delete_Normal);
+				user.setStatus(GlobalConstants.USER_NORMAL);
+				user.setDeleteFlag(GlobalConstants.DELETE_NORMAL);
 				systemService.add(user);
                 // todo zhanggm 保存多个组织机构
 //                saveUserOrgList(req, user);
@@ -1028,7 +1028,7 @@ public class UserController extends BaseController {
 				if (StringUtil.isNotEmpty(roleid)) {
 					saveInterfaceRoleUser(user, roleid);
 				}
-				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 			}
 
 		}
@@ -1288,7 +1288,7 @@ public class UserController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		message = user.getUserName() + "设置签名成功";
 		systemService.uploadFile(uploadFile);
-		systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		j.setMsg(message);
 
 		return j;
@@ -1496,7 +1496,7 @@ public class UserController extends BaseController {
 					String deptCodes = tsUser.getDepartid();
 
 					tsUser.setPassword(PasswordUtil.encrypt(username, "123456", PasswordUtil.getStaticSalt()));
-					tsUser.setUserType(Globals.USER_TYPE_SYSTEM);//导入用户 在用户管理列表不显示
+					tsUser.setUserType(GlobalConstants.USER_TYPE_SYSTEM);//导入用户 在用户管理列表不显示
 
 					if((roleCodes==null||roleCodes.equals(""))||(deptCodes==null||deptCodes.equals(""))){
 						List<UserEntity> users = systemService.findListByProperty(UserEntity.class,"userName",username);

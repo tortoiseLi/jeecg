@@ -436,8 +436,8 @@ public class GraphReportController extends BaseController {
 			fOut = response.getOutputStream();
 			workbook.write(fOut);
 			//TODO 增加操作日志
-			//systemService.addLog(MsgUtil.getOperationLogMsg("导出成功", title, params), Globals.Log_Type_EXPORT,
-			//		Globals.Log_Leavel_INFO);
+			//systemService.addLog(MsgUtil.getOperationLogMsg("导出成功", title, params), GlobalConstants.Log_Type_EXPORT,
+			//		GlobalConstants.LOG_LEVEL_INFO);
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		} catch (Exception e) {

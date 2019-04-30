@@ -7,12 +7,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.javaws.Globals;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
@@ -110,7 +111,7 @@ public class TSDictTableConfigController extends BaseController {
 		try{
 			cacheService.clean(dictCacheKey);
 			tSDictTableConfigService.delete(tSDictTableConfig);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "字典表授权配置删除失败";
@@ -138,7 +139,7 @@ public class TSDictTableConfigController extends BaseController {
 				id
 				);
 				tSDictTableConfigService.delete(tSDictTableConfig);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -165,7 +166,7 @@ public class TSDictTableConfigController extends BaseController {
 		try{
 			cacheService.clean(dictCacheKey);
 			tSDictTableConfigService.save(tSDictTableConfig);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "字典表授权配置添加失败";
@@ -192,7 +193,7 @@ public class TSDictTableConfigController extends BaseController {
 			cacheService.clean(dictCacheKey);
 			MyBeanUtils.copyBeanNotNull2Bean(tSDictTableConfig, t);
 			tSDictTableConfigService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "字典表授权配置更新失败";

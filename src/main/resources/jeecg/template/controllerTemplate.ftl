@@ -15,7 +15,7 @@ import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.web.system.pojo.base.DepartEntity;
@@ -111,7 +111,7 @@ public class ${entityName}Controller extends BaseController {
 		${entityName?uncap_first} = systemService.getEntity(${entityName}Entity.class, ${entityName?uncap_first}.getId());
 		message = "${ftl_description}删除成功";
 		${entityName?uncap_first}Service.delete(${entityName?uncap_first});
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		
 		j.setMsg(message);
 		return j;
@@ -135,7 +135,7 @@ public class ${entityName}Controller extends BaseController {
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(${entityName?uncap_first}, t);
 				${entityName?uncap_first}Service.saveOrUpdate(t);
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 				message = "${ftl_description}更新失败";
@@ -143,7 +143,7 @@ public class ${entityName}Controller extends BaseController {
 		} else {
 			message = "${ftl_description}添加成功";
 			${entityName?uncap_first}Service.save(${entityName?uncap_first});
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;
@@ -168,8 +168,8 @@ public class ${entityName}Controller extends BaseController {
 	@RequestMapping(value="/list/{pageNo}/{pageSize}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<${entityName}Entity> list(@PathVariable("pageNo") int pageNo, @PathVariable("pageSize") int pageSize, HttpServletRequest request) {
-		if(pageSize > Globals.MAX_PAGESIZE){
-			return Result.error("每页请求不能超过" + Globals.MAX_PAGESIZE + "条");
+		if(pageSize > GlobalConstants.MAX_PAGE_SIZE){
+			return Result.error("每页请求不能超过" + GlobalConstants.MAX_PAGE_SIZE + "条");
 		}
 		CriteriaQuery query = new CriteriaQuery(${entityName}Entity.class);
 		query.setCurPage(pageNo<=0?1:pageNo);

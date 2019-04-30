@@ -15,7 +15,7 @@ import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.ComboTree;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.TreeGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
@@ -152,7 +152,7 @@ public class FunctionController extends BaseController {
 	@ResponseBody
 	public AjaxJson del(FunctionEntity function, HttpServletRequest request) {
 		AjaxJson j = functionService.delFunction(function.getId());
-		systemService.addLog(j.getMsg(), Globals.Log_Type_DEL,Globals.Log_Leavel_INFO);
+		systemService.addLog(j.getMsg(), GlobalConstants.LOG_TYPE_DELETE,GlobalConstants.LOG_LEVEL_INFO);
 		return j;
 	}
 
@@ -185,8 +185,8 @@ public class FunctionController extends BaseController {
 		}
 
 
-		systemService.addLog(message, Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE,
+				GlobalConstants.LOG_LEVEL_INFO);
 
 		j.setMsg(message);
 
@@ -248,7 +248,7 @@ public class FunctionController extends BaseController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			systemService.addLog(message, Globals.Log_Type_UPDATE,Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE,GlobalConstants.LOG_LEVEL_INFO);
 
 			List<FunctionEntity> subFunction = systemService.findListByProperty(FunctionEntity.class, "TSFunction.id", function.getId());
 			updateSubFunction(subFunction,function);
@@ -257,24 +257,24 @@ public class FunctionController extends BaseController {
 			systemService.flushRoleFunciton(function.getId(), function);
 
 		} else {
-			if (function.getFunctionLevel().equals(Globals.Function_Leave_ONE)) {
+			if (function.getFunctionLevel().equals(GlobalConstants.FUNCTION_LEVEL_ONE)) {
 				List<FunctionEntity> functionList = systemService.findListByProperty(
 						FunctionEntity.class, "functionLevel",
-						Globals.Function_Leave_ONE);
+						GlobalConstants.FUNCTION_LEVEL_ONE);
 				// int ordre=functionList.size()+1;
-				// function.setFunctionOrder(Globals.Function_Order_ONE+ordre);
+				// function.setFunctionOrder(GlobalConstants.Function_Order_ONE+ordre);
 				function.setFunctionOrder(function.getFunctionOrder());
 			} else {
 				List<FunctionEntity> functionList = systemService.findListByProperty(
 						FunctionEntity.class, "functionLevel",
-						Globals.Function_Leave_TWO);
+						GlobalConstants.FUNCTION_LEVEL_TWO);
 				// int ordre=functionList.size()+1;
-				// function.setFunctionOrder(Globals.Function_Order_TWO+ordre);
+				// function.setFunctionOrder(GlobalConstants.Function_Order_TWO+ordre);
 				function.setFunctionOrder(function.getFunctionOrder());
 			}
 			message = MutiLangUtil.paramAddSuccess("common.menu");
 			systemService.add(function);
-			systemService.addLog(message, Globals.Log_Type_INSERT,Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT,GlobalConstants.LOG_LEVEL_INFO);
 		}
 
 		j.setMsg(message);
@@ -299,13 +299,13 @@ public class FunctionController extends BaseController {
 		if (StringUtil.isNotEmpty(operation.getId())) {
 			message = MutiLangUtil.paramUpdSuccess("common.operation");
 			userService.saveOrUpdate(operation);
-			systemService.addLog(message, Globals.Log_Type_UPDATE,
-					Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE,
+					GlobalConstants.LOG_LEVEL_INFO);
 		} else {
 			message = MutiLangUtil.paramAddSuccess("common.operation");
 			userService.add(operation);
-			systemService.addLog(message, Globals.Log_Type_INSERT,
-					Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT,
+					GlobalConstants.LOG_LEVEL_INFO);
 		}
 
 		j.setMsg(message);
@@ -615,8 +615,8 @@ public class FunctionController extends BaseController {
 				.getById(DataRuleEntity.class, operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
-		systemService.addLog(message, Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE,
+				GlobalConstants.LOG_LEVEL_INFO);
 
 		j.setMsg(message);
 
@@ -643,14 +643,14 @@ public class FunctionController extends BaseController {
 		if (StringUtil.isNotEmpty(operation.getId())) {
 			message = MutiLangUtil.paramUpdSuccess("common.operation");
 			userService.saveOrUpdate(operation);
-			systemService.addLog(message, Globals.Log_Type_UPDATE,
-					Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE,
+					GlobalConstants.LOG_LEVEL_INFO);
 		} else {
 			if (justHaveDataRule(operation) == 0) {
 				message = MutiLangUtil.paramAddSuccess("common.operation");
 				userService.add(operation);
-				systemService.addLog(message, Globals.Log_Type_INSERT,
-						Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT,
+						GlobalConstants.LOG_LEVEL_INFO);
 			} else {
 
 				message = "操作 字段规则已存在";

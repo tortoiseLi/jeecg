@@ -15,7 +15,7 @@ import org.jeecgframework.core.common.model.common.UploadFile;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.ImportFile;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.FileUtils;
 import org.jeecgframework.core.util.JSONHelper;
 import org.jeecgframework.core.util.MyClassLoader;
@@ -24,7 +24,7 @@ import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.easyui.Autocomplete;
-import org.jeecgframework.web.system.pojo.base.AttachmentEntity;
+import org.jeecgframework.web.system.attachment.entity.AttachmentEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.service.DictTableConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -269,7 +269,7 @@ public class CommonController extends BaseController {
 		Object objfile = systemService.getById(MyClassLoader.getClassByScn(subclassname), attachment.getId());// 子类对象
 		message = "" + attachment.getAttachmenttitle() + "删除成功";
 		systemService.delete(objfile);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		logger.info("--删除附件---delObjFile----"+message);
 		
 		j.setMsg(message);

@@ -418,7 +418,7 @@ public class HqlGenerateUtil {
 	private static Map<String, DataRuleEntity> getRuleMap() {
 		Map<String, DataRuleEntity> ruleMap = new HashMap<String, DataRuleEntity>();
 		List<DataRuleEntity> list =JeecgDataAutorUtils.loadDataSearchConditonSQL(); //(List<DataRuleEntity>) ContextHolderUtils
-			//	.getRequest().getAttribute(Globals.MENU_DATA_AUTHOR_RULES);
+			//	.getRequest().getAttribute(GlobalConstants.MENU_DATA_AUTHOR_RULES);
 		if(list != null&&list.size()>0){
 			if(list.get(0)==null){
 				return ruleMap;

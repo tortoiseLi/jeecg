@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.web.system.pojo.base.DataRuleEntity;
 import org.springframework.util.StringUtils;
 
@@ -34,7 +34,7 @@ public class JeecgDataAutorUtils {
 		for (DataRuleEntity tsDataRule : MENU_DATA_AUTHOR_RULES) {
 			list.add(tsDataRule);
 		}
-		request.setAttribute(Globals.MENU_DATA_AUTHOR_RULES, list); // 3.往list里面增量存指
+		request.setAttribute(GlobalConstants.MENU_DATA_AUTHOR_RULES, list); // 3.往list里面增量存指
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class JeecgDataAutorUtils {
 	@SuppressWarnings("unchecked")
 	public static synchronized List<DataRuleEntity> loadDataSearchConditonSQL() {
 		return (List<DataRuleEntity>) ContextHolderUtils.getRequest().getAttribute(
-				Globals.MENU_DATA_AUTHOR_RULES);
+				GlobalConstants.MENU_DATA_AUTHOR_RULES);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class JeecgDataAutorUtils {
 	 */
 	public static synchronized String loadDataSearchConditonSQLString() {
 		return (String) ContextHolderUtils.getRequest().getAttribute(
-				Globals.MENU_DATA_AUTHOR_RULE_SQL);
+				GlobalConstants.MENU_DATA_AUTHOR_RULE_SQL);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class JeecgDataAutorUtils {
 		if (!StringUtils.hasText(ruleSql)) {
 			ruleSql += MENU_DATA_AUTHOR_RULE_SQL; // 2.如果不存在，则new一个sql串
 		}
-		request.setAttribute(Globals.MENU_DATA_AUTHOR_RULE_SQL,
+		request.setAttribute(GlobalConstants.MENU_DATA_AUTHOR_RULE_SQL,
 				MENU_DATA_AUTHOR_RULE_SQL);// 3.往sql串里面增量拼新的条件
 
 	}

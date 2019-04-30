@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.web.cgform.entity.button.CgformButtonEntity;
 import org.jeecgframework.web.cgform.service.button.CgformButtonServiceI;
 import org.jeecgframework.web.system.service.SystemService;
@@ -13,7 +14,6 @@ import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
@@ -33,7 +33,6 @@ import org.springframework.web.servlet.ModelAndView;
  * @version V1.0   
  *
  */
-//@Scope("prototype")
 @Controller
 @RequestMapping("/cgformButtonController")
 public class CgformButtonController extends BaseController {
@@ -95,7 +94,7 @@ public class CgformButtonController extends BaseController {
 		cgformButton = systemService.getById(CgformButtonEntity.class, cgformButton.getId());
 		message = "删除成功";
 		cgformButtonService.delete(cgformButton);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单自定义按钮删除]"+message);
 		j.setMsg(message);
 		return j;
@@ -132,14 +131,14 @@ public class CgformButtonController extends BaseController {
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformButton, t);
 				cgformButtonService.saveOrUpdate(t);
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			message = "添加成功";
 			cgformButtonService.add(cgformButton);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单自定义按钮添加编辑]"+message);
 		j.setMsg(message);

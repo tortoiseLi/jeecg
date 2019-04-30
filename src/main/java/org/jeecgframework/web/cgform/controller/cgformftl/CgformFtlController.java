@@ -17,7 +17,7 @@ import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.common.UploadFile;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.DateUtils;
 import org.jeecgframework.core.util.FileUtils;
@@ -172,8 +172,8 @@ public class CgformFtlController extends BaseController {
 				cgformFtl.getId());
 		message = "删除成功";
 		cgformFtlService.delete(cgformFtl);
-		systemService.addLog(message, Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE,
+				GlobalConstants.LOG_LEVEL_INFO);
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单模板删除]"+message);
 		j.setMsg(message);
 		return j;
@@ -200,7 +200,7 @@ public class CgformFtlController extends BaseController {
 				templetContext.removeTemplateFromCache(po.getTableName()+"_"+TemplateUtil.TemplateType.ADD.getName());
 				templetContext.removeTemplateFromCache(po.getTableName()+"_"+TemplateUtil.TemplateType.DETAIL.getName());
 				templetContext.removeTemplateFromCache(po.getTableName()+"_"+TemplateUtil.TemplateType.UPDATE.getName());
-				systemService.addLog(message, Globals.Log_Type_UPDATE,Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE,GlobalConstants.LOG_LEVEL_INFO);
 				logger.info("["+IpUtil.getIpAddr(request)+"][online表单模板激活]"+message+"表名："+po.getTableName());
 				j.setSuccess(true);
 				j.setMsg(message);
@@ -239,8 +239,8 @@ public class CgformFtlController extends BaseController {
 			cgformFtlService.saveOrUpdate(cgformFtl);
 			message = "取消激活成功";
 			logger.info("["+IpUtil.getIpAddr(request)+"][online表单模板取消激活]"+message+"表名："+po.getTableName());
-			systemService.addLog(message, Globals.Log_Type_UPDATE,
-					Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE,
+					GlobalConstants.LOG_LEVEL_INFO);
 			j.setSuccess(true);
 			j.setMsg(message);
 		} catch (Exception e) {
@@ -270,16 +270,16 @@ public class CgformFtlController extends BaseController {
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformFtl, t);
 				cgformFtlService.saveOrUpdate(t);
-				systemService.addLog(message, Globals.Log_Type_UPDATE,
-						Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE,
+						GlobalConstants.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			message = "添加成功";
 			cgformFtlService.add(cgformFtl);
-			systemService.addLog(message, Globals.Log_Type_INSERT,
-					Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT,
+					GlobalConstants.LOG_LEVEL_INFO);
 		}
 
 		return j;

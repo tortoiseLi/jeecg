@@ -14,9 +14,11 @@ import java.util.Map;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.sun.javaws.Globals;
 import org.jeecgframework.web.cgform.entity.upload.CgUploadEntity;
 import org.jeecgframework.web.cgform.service.upload.CgUploadServiceI;
-import org.jeecgframework.web.system.pojo.base.AttachmentEntity;
+import org.jeecgframework.web.system.attachment.entity.AttachmentEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -24,7 +26,7 @@ import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.common.UploadFile;
 import org.jeecgframework.core.common.model.json.AjaxJson;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.extend.swftools.SwfToolsUtil;
 import org.jeecgframework.core.util.DateUtils;
 import org.jeecgframework.core.util.FileUtils;
@@ -157,7 +159,7 @@ public class CgUploadController extends BaseController {
 
 		message = "" + file.getAttachmenttitle() + "被删除成功";
 		cgUploadService.deleteFile(file);
-		systemService.addLog(message, Globals.Log_Type_DEL,Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE,GlobalConstants.LOG_LEVEL_INFO);
 		j.setSuccess(true);
 		j.setMsg(message);
 		return j;

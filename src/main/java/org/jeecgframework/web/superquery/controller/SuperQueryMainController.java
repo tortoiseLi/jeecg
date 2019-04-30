@@ -23,7 +23,7 @@ import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
@@ -151,7 +151,7 @@ public class SuperQueryMainController extends BaseController {
 		String message = "高级查询删除成功";
 		try{
 			superQueryMainService.delMain(superQueryMain);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "高级查询删除失败";
@@ -177,7 +177,7 @@ public class SuperQueryMainController extends BaseController {
 				id
 				);
 				superQueryMainService.delMain(superQueryMain);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -203,7 +203,7 @@ public class SuperQueryMainController extends BaseController {
 		String message = "添加成功";
 		try{
 			superQueryMainService.addMain(superQueryMain, superQueryTableList,superQueryFieldList);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "高级查询添加失败";
@@ -227,7 +227,7 @@ public class SuperQueryMainController extends BaseController {
 		String message = "更新成功";
 		try{
 			superQueryMainService.updateMain(superQueryMain, superQueryTableList,superQueryFieldList);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "更新高级查询失败";

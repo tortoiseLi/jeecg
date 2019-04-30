@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.javaws.Globals;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -36,7 +37,7 @@ import org.jeecgframework.core.common.model.json.ComboTree;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.TreeGrid;
 import org.jeecgframework.core.common.model.json.ValidForm;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.enums.StoreUploadFilePathEnum;
 import org.jeecgframework.core.extend.hqlsearch.parse.ObjectParseUtil;
 import org.jeecgframework.core.extend.hqlsearch.parse.PageValueConvertRuleEnum;
@@ -60,11 +61,13 @@ import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
 import org.jeecgframework.web.cgform.exception.BusinessException;
 import org.jeecgframework.web.system.depart.entity.DepartEntity;
+import org.jeecgframework.web.system.dict.entity.TypeGroupEntity;
 import org.jeecgframework.web.system.function.entity.FunctionEntity;
+import org.jeecgframework.web.system.log.data.entity.DataLogEntity;
 import org.jeecgframework.web.system.manager.ClientManager;
 import org.jeecgframework.web.system.manager.ClientSort;
 import org.jeecgframework.web.system.pojo.base.*;
-import org.jeecgframework.web.system.pojo.base.TypeEntity;
+import org.jeecgframework.web.system.dict.entity.TypeEntity;
 import org.jeecgframework.web.system.role.entity.RoleEntity;
 import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.service.SystemService;
@@ -447,7 +450,7 @@ public class SystemController extends BaseController {
 			message = "数据字典类型: " + mutiLangService.getLang(type.getTypename()) + "被删除 成功";
 			systemService.delete(type);
 		}
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		//刷新缓存
 		systemService.refleshTypeGroupCach();
 		j.setMsg(message);
@@ -469,7 +472,7 @@ public class SystemController extends BaseController {
 		message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + " 被删除 成功";
         if (ListUtils.isNullOrEmpty(typegroup.getTSTypes())) {
             systemService.delete(typegroup);
-            systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+            systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
             //刷新缓存
             systemService.refleshTypeGroupCach();
         } else {
@@ -495,7 +498,7 @@ public class SystemController extends BaseController {
 		systemService.delete(type);
 		//刷新缓存
 		systemService.refleshTypesCach(type);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		j.setMsg(message);
 		return j;
 	}
@@ -557,11 +560,11 @@ public class SystemController extends BaseController {
 		if (StringUtil.isNotEmpty(typegroup.getId())) {
 			message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + "被更新成功";
 			userService.saveOrUpdate(typegroup);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		} else {
 			message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + "被添加成功";
 			userService.add(typegroup);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}
 		//刷新缓存
 		systemService.refleshTypeGroupCach();
@@ -610,11 +613,11 @@ public class SystemController extends BaseController {
 		if (StringUtil.isNotEmpty(type.getId())) {
 			message = "类型: " + mutiLangService.getLang(type.getTypename()) + "被更新成功";
 			userService.saveOrUpdate(type);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		} else {
 			message = "类型: " + mutiLangService.getLang(type.getTypename()) + "被添加成功";
 			userService.add(type);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}
 		//刷新缓存
 		systemService.refleshTypesCach(type);
@@ -703,7 +706,7 @@ public class SystemController extends BaseController {
 		depart = systemService.getById(DepartEntity.class, depart.getId());
 		message = "部门: " + depart.getDepartname() + "被删除 成功";
 		systemService.delete(depart);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 
 		return j;
 	}
@@ -727,7 +730,7 @@ public class SystemController extends BaseController {
 		if (StringUtil.isNotEmpty(depart.getId())) {
 			userService.saveOrUpdate(depart);
             message = MutiLangUtil.paramUpdSuccess("common.department");
-            systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+            systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 
 		} else {
 
@@ -744,7 +747,7 @@ public class SystemController extends BaseController {
 
 			userService.add(depart);
             message = MutiLangUtil.paramAddSuccess("common.department");
-            systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+            systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 
         }
 		j.setMsg(message);
@@ -865,7 +868,7 @@ public class SystemController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		role = systemService.getById(RoleEntity.class, role.getId());
 		userService.delete(role);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
 		j.setMsg(message);
 		return j;
 	}
@@ -884,11 +887,11 @@ public class SystemController extends BaseController {
 		if (role.getId() != null) {
 			message = "角色: " + role.getRoleName() + "被更新成功";
 			userService.saveOrUpdate(role);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		} else {
 			message = "角色: " + role.getRoleName() + "被添加成功";
 			userService.saveOrUpdate(role);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;
@@ -1169,7 +1172,7 @@ public class SystemController extends BaseController {
     }
 
     @RequestMapping(params = "datagridDataLog")
-    public void dataLogDatagrid(DataLogEntity datalogEntity,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid){
+    public void dataLogDatagrid(DataLogEntity datalogEntity, HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid){
     	CriteriaQuery cq = new CriteriaQuery(DataLogEntity.class, dataGrid);
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, datalogEntity, request.getParameterMap());

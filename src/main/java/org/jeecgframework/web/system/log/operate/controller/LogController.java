@@ -1,9 +1,8 @@
-package org.jeecgframework.web.system.controller.core;
+package org.jeecgframework.web.system.log.operate.controller;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,8 +29,9 @@ import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.pojo.base.LogEntity;
-import org.jeecgframework.web.system.service.LogService;
+import org.jeecgframework.web.system.controller.core.LoginController;
+import org.jeecgframework.web.system.log.operate.entity.LogEntity;
+import org.jeecgframework.web.system.log.operate.service.LogService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
