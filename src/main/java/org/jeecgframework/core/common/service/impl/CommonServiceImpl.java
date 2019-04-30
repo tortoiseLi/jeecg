@@ -307,7 +307,7 @@ public class CommonServiceImpl implements CommonService {
 	@Transactional(readOnly = true)
 	public List findByExample(final String entityName,
 			final Object exampleEntity) {
-		return commonDao.findByExample(entityName, exampleEntity);
+		return commonDao.findListByEntity(entityName, exampleEntity);
 	}
 
 	/**
@@ -424,34 +424,34 @@ public class CommonServiceImpl implements CommonService {
 		return commonDao.executeSqlReturnKey(sql, param);
 	}
 	
+	@Override
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> findForJdbc(String sql, int page, int rows) {
-		return commonDao.findListForJdbc(sql, page, rows);
+		return commonDao.findListMapBySql(sql, page, rows);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> findForJdbc(String sql, Object... objs) {
-		return commonDao.findListForJdbc(sql, objs);
-	}
-
-	@Transactional(readOnly = true)
-	public List<Map<String, Object>> findForJdbcParam(String sql, int page,
-			int rows, Object... objs) {
-		return commonDao.findForJdbcParam(sql, page, rows, objs);
+		return commonDao.findListMapBySql(sql);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public <T> List<T> findObjForJdbc(String sql, int page, int rows,
-			Class<T> clazz) {
-		return commonDao.findListForJdbc(sql, page, rows, clazz);
+	public List<Map<String, Object>> findForJdbcParam(String sql, int page, int rows, Object... objs) {
+		return commonDao.findListMapBySql(sql, page, rows);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public <T> List<T> findObjForJdbc(String sql, int page, int rows, Class<T> clazz) {
+		return commonDao.findListBySql(sql, page, rows, clazz);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Map<String, Object> findOneForJdbc(String sql, Object... objs) {
-		return commonDao.getBySql(sql, objs);
+		return commonDao.getBySql(sql);
 	}
 
 	@Override

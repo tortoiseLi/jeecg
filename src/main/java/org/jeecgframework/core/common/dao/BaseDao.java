@@ -3,11 +3,9 @@ package org.jeecgframework.core.common.dao;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
-import org.jeecgframework.core.common.hibernate.qbc.HqlQuery;
 import org.jeecgframework.core.common.hibernate.qbc.PageList;
 import org.jeecgframework.core.common.model.common.DbTable;
 import org.jeecgframework.tag.vo.datatable.DataTableReturn;
-import org.springframework.dao.DataAccessException;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -99,12 +97,20 @@ public interface BaseDao {
 	<T> T getByProperty(Class<T> entityClass, String propertyName, Object value);
 
 	/**
-	 * 根据sql查询唯一记录
+	 * 通过jdbc查询唯一记录
 	 * @param sql
+	 * @return
+	 */
+	Map<String, Object> getBySql(String sql, Object...params);
+
+	/**
+	 * 通过jdbc查询唯一记录
+	 * @param sql
+	 * @param entityClass
 	 * @param <T>
 	 * @return
 	 */
-	<T> T getBySql(String sql);
+	/*<T> T getBySql(String sql, Class<T> entityClass);*/
 
 	/**
 	 * 根据hql查询唯一记录
@@ -112,15 +118,7 @@ public interface BaseDao {
 	 * @param <T>
 	 * @return
 	 */
-	<T> T getByHql(String hql);
-
-	/**
-	 * 通过jdbc查询唯一记录
-	 * @param sql
-	 * @param params
-	 * @return
-	 */
-	Map<String, Object> getBySql(String sql, Object... params);
+	<T> T getByHql(String hql, Object...params);
 
 	/**
 	 * 查询全部实体
@@ -132,28 +130,31 @@ public interface BaseDao {
 
 	/**
 	 * 根据sql查找list
-	 * @param <T>
 	 * @param sql
+	 * @param <T>
 	 * @return
 	 */
 	<T> List<T> findListBySql(String sql);
 
 	/**
-	 * 根据sql查询list
+	 * 通过jdbc查询list
 	 * @param sql
-	 * @param params
+	 * @param entityClass
 	 * @param <T>
 	 * @return
 	 */
-	<T> List<T> findListBySql(String sql, Object... params);
+	<T> List<T> findListBySql(String sql, Class<T> entityClass);
 
 	/**
-	 * 通过hql查询list
+	 * 通过jdbc查询list
+	 * @param sql
+	 * @param curPage
+	 * @param pageSize
+	 * @param entityClass
 	 * @param <T>
-	 * @param hql
 	 * @return
 	 */
-	<T> List<T> findListByHql(String hql);
+	<T> List<T> findListBySql(String sql, int curPage, int pageSize, Class<T> entityClass);
 
 	/**
 	 * 通过hql查询list
@@ -184,41 +185,29 @@ public interface BaseDao {
 	<T> List<T> findListByCriteriaQuery(final CriteriaQuery cq, Boolean isPage);
 
 	/**
+	 * 根据实体查询list
+	 * @param entityName
+	 * @param exampleEntity
+	 * @return
+	 */
+	List findListByEntity(final String entityName, final Object exampleEntity);
+
+	/**
 	 * 通过jdbc查询list
 	 * @param sql
+	 * @return
+	 */
+	List<Map<String, Object>> findListMapBySql(String sql);
+
+	/**
+	 * 通过jdbc查询list
+	 * @param sql
+	 * @param curPage
+	 * @param pageSize
 	 * @param params
 	 * @return
 	 */
-	List<Map<String, Object>> findListForJdbc(String sql, Object... params);
-
-	/**
-	 * 通过jdbc查询list
-	 * @param sql
-	 * @param page
-	 * @param rows
-	 * @return
-	 */
-	List<Map<String, Object>> findListForJdbc(String sql, int page, int rows);
-
-	/**
-	 * 通过jdbc查询list
-	 * @param sql
-	 * @param clazz
-	 * @param <T>
-	 * @return
-	 */
-	<T> List<T> findListForJdbc(String sql, Class<T> clazz);
-
-	/**
-	 * 通过jdbc查询list
-	 * @param sql
-	 * @param page
-	 * @param rows
-	 * @param clazz
-	 * @param <T>
-	 * @return
-	 */
-	<T> List<T> findListForJdbc(String sql, int page, int rows, Class<T> clazz);
+	List<Map<String, Object>> findListMapBySql(String sql, int curPage, int pageSize, Object...params);
 
 	/**
 	 * 通过CQ查询Page
@@ -227,18 +216,6 @@ public interface BaseDao {
 	 * @return
 	 */
 	PageList findPageByCriteriaQuery(final CriteriaQuery cq, final boolean isOffset);
-
-
-	List findByExample(final String entityName, final Object exampleEntity);
-
-	/**
-	 * 通过hql 查询语句查找HashMap对象
-	 *
-	 * @param <T>
-	 * @param query
-	 * @return
-	 */
-	Map<Object, Object> getHashMapbyQuery(String query);
 
 	/**
 	 * 返回jquery datatables模型
@@ -250,11 +227,9 @@ public interface BaseDao {
 	DataTableReturn getDataTableReturn(final CriteriaQuery cq, final boolean isOffset);
 
 	/**
-	 * 返回easyui datagrid模型
-	 *
+	 * 返回easyUI dataGrid模型
 	 * @param cq
 	 * @param isOffset
-	 * @return
 	 */
 	void getDataGridReturn(CriteriaQuery cq, final boolean isOffset);
 
@@ -307,32 +282,27 @@ public interface BaseDao {
 	/**
 	 * 统计数量
 	 * @param sql
-	 * @return
-	 */
-	Long getCountForJdbc(String sql);
-
-	/**
-	 * 统计数量
-	 * @param sql
 	 * @param params
 	 * @return
 	 */
-	Long getCountForJdbc(String sql, Object[] params);
-
+	Long getCountBySql(String sql, Object...params);
 
 	/**
-	 * 使用指定的检索标准检索数据并分页返回数据-采用预处理方式
 	 *
-	 * @param criteria
+	 * @param dc
 	 * @param firstResult
-	 * @param maxResults
+	 * @param maxResult
+	 * @param <T>
 	 * @return
-	 * @throws DataAccessException
 	 */
-	List<Map<String, Object>> findForJdbcParam(String sql, int page, int rows, Object... objs);
-
 	<T> List<T> pageList(DetachedCriteria dc, int firstResult, int maxResult);
 
+	/**
+	 *
+	 * @param dc
+	 * @param <T>
+	 * @return
+	 */
 	<T> List<T> findByDetached(DetachedCriteria dc);
 
 	/**

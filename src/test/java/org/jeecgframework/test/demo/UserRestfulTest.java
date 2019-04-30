@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import org.jeecgframework.AbstractUnitTest;
 import org.jeecgframework.core.util.PasswordUtil;
-import org.jeecgframework.web.system.pojo.base.UserEntity;
-import org.jeecgframework.web.system.service.UserService;
+import org.jeecgframework.web.system.user.entity.UserEntity;
+import org.jeecgframework.web.system.user.service.UserService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

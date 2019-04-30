@@ -696,8 +696,4 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao, BaseDao {
 		return treegrid;
 	}
 
-	@Override
-	public T getBySql(String sql) {
-		return null;
-	}
 }

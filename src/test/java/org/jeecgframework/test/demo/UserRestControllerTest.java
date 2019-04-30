@@ -9,12 +9,12 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import java.util.HashMap;
 import org.hamcrest.Matchers;
 import org.jeecgframework.AbstractUnitTest;
-import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.PasswordUtil;
 import org.jeecgframework.core.util.StringUtil;
+import org.jeecgframework.web.system.depart.entity.DepartEntity;
 import org.jeecgframework.web.system.pojo.base.Client;
-import org.jeecgframework.web.system.pojo.base.DepartEntity;
-import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.user.entity.UserEntity;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -111,7 +111,7 @@ public class UserRestControllerTest  extends AbstractUnitTest{
 		map.put("devFlag", "1");
 		map.put("mobilePhone", "mobilePhone");
 		map.put("realName", "realName");
-		map.put("status", Globals.User_Normal+"");
+		map.put("status", GlobalConstants.USER_NORMAL+"");
 		map.put("activitiSync", "1");
 		map.put("userName", "testRestMockMvc");
 		map.put("password", PasswordUtil.encrypt("testRestMockMvc", "123456", PasswordUtil.getStaticSalt()));
@@ -144,7 +144,7 @@ public class UserRestControllerTest  extends AbstractUnitTest{
 		map.put("devFlag", "1");
 		map.put("mobilePhone", "mobilePhone");
 		map.put("realName", "realName");
-		map.put("status", Globals.User_Normal+"");
+		map.put("status", GlobalConstants.USER_NORMAL+"");
 		map.put("activitiSync", "1");
 		map.put("userName", "testRestMockMvc");
 		map.put("password", PasswordUtil.encrypt("testRestMockMvc", "123456", PasswordUtil.getStaticSalt()));

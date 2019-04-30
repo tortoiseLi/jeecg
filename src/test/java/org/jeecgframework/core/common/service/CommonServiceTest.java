@@ -2,7 +2,7 @@ package org.jeecgframework.core.common.service;
 
 import org.jeecgframework.AbstractUnitTest;
 import org.jeecgframework.core.common.model.common.DbTable;
-import org.jeecgframework.web.system.pojo.base.UserEntity;
+import org.jeecgframework.web.system.user.entity.UserEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
