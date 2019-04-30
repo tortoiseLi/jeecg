@@ -320,6 +320,14 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 		return querys.list();
 	}
 
+	@Override
+	public List<T> findListBySql(final String sql, Object...params) {
+		/*Query querys = getSession().createSQLQuery(sql);
+		return querys.list();*/
+
+		return null;
+	}
+
 	private <T> Criteria createCriteria(Class<T> entityClass, boolean isAsc, Criterion... criterions) {
 		Criteria criteria = createCriteria(entityClass, criterions);
 		if (isAsc) {
@@ -491,7 +499,6 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 			pageSize = allCounts;
 		}
 
-		//DetachedCriteriaUtil.selectColumn(cq.getDetachedCriteria(), cq.getField().split(","), cq.getEntityClass(), false);
 
 		
 		return new DataTableReturn(allCounts, allCounts, cq.getDataTables().getEcho(), criteria.list());
@@ -505,7 +512,6 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 		// 先把Projection和OrderBy条件取出来,清空两者来执行Count操作
 		Projection projection = impl.getProjection();
 
-//		final int allCounts = ((Long) criteria.setProjection(Projections.rowCount()).uniqueResult()).intValue();
 		Object allCountsObj = criteria.setProjection(Projections.rowCount()).uniqueResult();
 		final int allCounts;
 		if(allCountsObj==null){
@@ -551,10 +557,6 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 		}
 
 
-		// 判断是否有排序字段
-//		if (!cq.getOrdermap().isEmpty()) {
-//			cq.setOrder(cq.getOrdermap());
-//		}
 		int pageSize = cq.getPageSize();// 每页显示数
 		int curPageNO = PagerUtil.getcurPageNo(allCounts, cq.getCurPage(),pageSize);// 当前页
 		int offset = PagerUtil.getOffset(allCounts, curPageNO, pageSize);
@@ -604,14 +606,33 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Override
-	public List<Map<String, Object>> findForJdbc(String sql, int page, int rows) {
+	public List<Map<String, Object>> findListForJdbc(String sql, int page, int rows) {
 		// 封装分页SQL
 		sql = JdbcDao.jeecgCreatePageSql(sql, page, rows);
 		return this.jdbcTemplate.queryForList(sql);
 	}
 
 	@Override
-	public <T> List<T> findObjForJdbc(String sql, int page, int rows,
+	public <T> List<T> findListForJdbc(String sql, Class<T> clazz) {
+		List<T> rsList = new ArrayList<T>();
+		// 封装分页SQL
+		List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
+
+		T po = null;
+		for (Map<String, Object> m : mapList) {
+			try {
+				po = clazz.newInstance();
+				MyBeanUtils.copyMap2Bean_Nobig(po, m);
+				rsList.add(po);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return rsList;
+	}
+
+	@Override
+	public <T> List<T> findListForJdbc(String sql, int page, int rows,
 									  Class<T> clazz) {
 		List<T> rsList = new ArrayList<T>();
 		// 封装分页SQL
@@ -645,13 +666,13 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 	}
 
 	@Override
-	public Long getCountForJdbcParam(String sql, Object[] objs) {
-		return this.jdbcTemplate.queryForObject(sql, objs,Long.class);
+	public Long getCountForJdbc(String sql, Object[] params) {
+		return this.jdbcTemplate.queryForObject(sql, params,Long.class);
 	}
 
 	@Override
-	public List<Map<String, Object>> findForJdbc(String sql, Object... objs) {
-		return this.jdbcTemplate.queryForList(sql, objs);
+	public List<Map<String, Object>> findListForJdbc(String sql, Object... params) {
+		return this.jdbcTemplate.queryForList(sql, params);
 	}
 
 	@Override
@@ -697,7 +718,7 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 	}
 
 	@Override
-	public Map<String, Object> findOneForJdbc(String sql, Object... objs) {
+	public Map<String, Object> getBySql(String sql, Object... objs) {
 		try {
 			return this.jdbcTemplate.queryForMap(sql, objs);
 		} catch (EmptyResultDataAccessException e) {
@@ -712,7 +733,7 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 	 * @return
 	 */
 	@Override
-	public <T> List<T> findHql(String hql, Object... param) {
+	public <T> List<T> findListByHql(String hql, Object... param) {
 		Query q = getSession().createQuery(hql);
 		if (param != null && param.length > 0) {
 			for (int i = 0; i < param.length; i++) {
@@ -731,6 +752,23 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 	@Override
 	public Integer executeHql(String hql) {
 		Query q = getSession().createQuery(hql);
+		return q.executeUpdate();
+	}
+
+	/**
+	 * 执行HQL语句操作更新
+	 *
+	 * @param hql
+	 * @return
+	 */
+	@Override
+	public Integer executeHql(String hql, Object...params) {
+		Query q = getSession().createQuery(hql);
+		if (params != null && params.length > 0) {
+			for (int i = 0; i < params.length; i++) {
+				q.setParameter(i, params[i]);
+			}
+		}
 		return q.executeUpdate();
 	}
 

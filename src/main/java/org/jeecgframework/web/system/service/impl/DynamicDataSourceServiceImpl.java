@@ -59,7 +59,7 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceService {
 	@Override
 	@Transactional(readOnly = true)
 	public DynamicDataSourceEntity getDynamicDataSourceEntityForDbKey(String dbKey){
-		List<DynamicDataSourceEntity> dynamicDataSourceEntitys = commonDao.findHql("from DynamicDataSourceEntity where dbKey = ?", dbKey);
+		List<DynamicDataSourceEntity> dynamicDataSourceEntitys = commonDao.findListByHql("from DynamicDataSourceEntity where dbKey = ?", dbKey);
 		if(dynamicDataSourceEntitys.size()>0)
 			return dynamicDataSourceEntitys.get(0);
 		return null;

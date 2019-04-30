@@ -113,7 +113,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	@Transactional(readOnly = true)
 	public TypeEntity getType(String typecode, String typename, TypeGroupEntity tsTypegroup) {
 		//TSType actType = commonDao.findUniqueByProperty(TSType.class, "typecode", typecode,tsTypegroup.getId());
-		List<TypeEntity> ls = commonDao.findHql("from TypeEntity where typecode = ? and typegroupid = ?",typecode,tsTypegroup.getId());
+		List<TypeEntity> ls = commonDao.findListByHql("from TypeEntity where typecode = ? and typegroupid = ?",typecode,tsTypegroup.getId());
 		TypeEntity actType = null;
 		if (ls == null || ls.size()==0) {
 			actType = new TypeEntity();
@@ -161,7 +161,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		for (TypeGroupEntity tsTypegroup : typeGroups) {
 			tsTypegroup.setTSTypes(null);
 			typeGroupsList.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
-			List<TypeEntity> types = this.commonDao.findHql("from TypeEntity where TSTypegroup.id = ? order by orderNum" , tsTypegroup.getId());
+			List<TypeEntity> types = this.commonDao.findListByHql("from TypeEntity where TSTypegroup.id = ? order by orderNum" , tsTypegroup.getId());
 			for(TypeEntity t:types){
 				t.setTSType(null);
 				t.setTSTypegroup(null);
@@ -190,7 +190,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		TypeGroupEntity tsTypegroup = type.getTSTypegroup();
 		TypeGroupEntity typeGroupEntity = this.commonDao.getById(TypeGroupEntity.class, tsTypegroup.getId());
 
-		List<TypeEntity> tempList = this.commonDao.findHql("from TypeEntity where TSTypegroup.id = ? order by orderNum" , tsTypegroup.getId());
+		List<TypeEntity> tempList = this.commonDao.findListByHql("from TypeEntity where TSTypegroup.id = ? order by orderNum" , tsTypegroup.getId());
 		List<TypeEntity> types = new ArrayList<TypeEntity>();
 		for(TypeEntity t:tempList){
 			TypeEntity tt = new TypeEntity();
@@ -334,7 +334,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
         String  newOrgCode = "";
         if(!StringUtils.hasText(pid)) { // 第一级编码
             String sql = "select max(t.org_code) orgCode from t_s_depart t where t.parentdepartid is null";
-            Map<String, Object> pOrgCodeMap = commonDao.findOneForJdbc(sql);
+            Map<String, Object> pOrgCodeMap = commonDao.getBySql(sql);
             if(pOrgCodeMap.get("orgCode") != null) {
                 String curOrgCode = pOrgCodeMap.get("orgCode").toString();
                 newOrgCode = String.format("%0" + orgCodeLength + "d", Integer.valueOf(curOrgCode) + 1);
@@ -343,7 +343,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
             }
         } else { // 下级编码
             String sql = "select max(t.org_code) orgCode from t_s_depart t where t.parentdepartid = ?";
-            Map<String, Object> orgCodeMap = commonDao.findOneForJdbc(sql, pid);
+            Map<String, Object> orgCodeMap = commonDao.getBySql(sql, pid);
             if(orgCodeMap.get("orgCode") != null) { // 当前基本有编码时
                 String curOrgCode = orgCodeMap.get("orgCode").toString();
                 String pOrgCode = curOrgCode.substring(0, curOrgCode.length() - orgCodeLength);
@@ -351,7 +351,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
                 newOrgCode = pOrgCode + String.format("%0" + orgCodeLength + "d", Integer.valueOf(subOrgCode) + 1);
             } else { // 当前级别没有编码时
                 String pOrgCodeSql = "select max(t.org_code) orgCode from t_s_depart t where t.id = ?";
-                Map<String, Object> pOrgCodeMap = commonDao.findOneForJdbc(pOrgCodeSql, pid);
+                Map<String, Object> pOrgCodeMap = commonDao.getBySql(pOrgCodeSql, pid);
                 String curOrgCode = pOrgCodeMap.get("orgCode").toString();
                 newOrgCode = curOrgCode + String.format("%0" + orgCodeLength + "d", 1);
             }
@@ -418,7 +418,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 
 		Integer integer = null;
 		String sql = "select max(VERSION_NUMBER) as mvn from t_s_data_log where TABLE_NAME = ? and DATA_ID = ?";
-		Map<String,Object> maxVersion = commonDao.findOneForJdbc(sql, tableName ,dataId);
+		Map<String,Object> maxVersion = commonDao.getBySql(sql, tableName ,dataId);
 		if(maxVersion.get("mvn")!=null){
 			integer = Integer.parseInt(maxVersion.get("mvn").toString());
 		}

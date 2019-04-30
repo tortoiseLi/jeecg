@@ -126,7 +126,7 @@ public class NoticeAuthorityUserServiceImpl extends CommonServiceImpl implements
 		if(noticeAuthorityUser != null){
 			//删除授权关系的时候，判断是否已被阅读，如果已被阅读过，通过标记逻辑删除，否则直接删除数据
 			String hql = "from NoticeReadUserEntity where noticeId = ? and userId = ?";
-			List<NoticeReadUserEntity> noticeReadList = this.commonDao.findHql(hql,noticeAuthorityUser.getNoticeId(),noticeAuthorityUser.getUser().getId());
+			List<NoticeReadUserEntity> noticeReadList = this.commonDao.findListByHql(hql,noticeAuthorityUser.getNoticeId(),noticeAuthorityUser.getUser().getId());
 			if(noticeReadList != null && !noticeReadList.isEmpty()){
 				for (NoticeReadUserEntity noticeReadUser : noticeReadList) {
 					if(noticeReadUser.getIsRead() == 1){

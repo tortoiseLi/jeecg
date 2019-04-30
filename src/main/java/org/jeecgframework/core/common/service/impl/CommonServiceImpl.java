@@ -426,13 +426,13 @@ public class CommonServiceImpl implements CommonService {
 	
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> findForJdbc(String sql, int page, int rows) {
-		return commonDao.findForJdbc(sql, page, rows);
+		return commonDao.findListForJdbc(sql, page, rows);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> findForJdbc(String sql, Object... objs) {
-		return commonDao.findForJdbc(sql, objs);
+		return commonDao.findListForJdbc(sql, objs);
 	}
 
 	@Transactional(readOnly = true)
@@ -445,13 +445,13 @@ public class CommonServiceImpl implements CommonService {
 	@Transactional(readOnly = true)
 	public <T> List<T> findObjForJdbc(String sql, int page, int rows,
 			Class<T> clazz) {
-		return commonDao.findObjForJdbc(sql, page, rows, clazz);
+		return commonDao.findListForJdbc(sql, page, rows, clazz);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Map<String, Object> findOneForJdbc(String sql, Object... objs) {
-		return commonDao.findOneForJdbc(sql, objs);
+		return commonDao.getBySql(sql, objs);
 	}
 
 	@Override
@@ -462,7 +462,7 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	@Transactional(readOnly = true)
 	public Long getCountForJdbcParam(String sql, Object... objs) {
-		return commonDao.getCountForJdbcParam(sql,objs);
+		return commonDao.getCountForJdbc(sql,objs);
 	}
 
 	
@@ -477,7 +477,7 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	@Transactional(readOnly = true)
 	public <T> List<T> findHql(String hql, Object... param) {
-		return this.commonDao.findHql(hql, param);
+		return this.commonDao.findListByHql(hql, param);
 	}
 
 	@Override

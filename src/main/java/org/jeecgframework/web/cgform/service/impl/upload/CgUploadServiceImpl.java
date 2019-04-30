@@ -25,7 +25,7 @@ public class CgUploadServiceImpl extends CommonServiceImpl implements CgUploadSe
 	public void deleteFile(CgUploadEntity file) {
 		//step.1 删除附件
 		String sql = "select * from t_s_attachment where id = ?";
-		Map<String, Object> attachmentMap = commonDao.findOneForJdbc(sql, file.getId());
+		Map<String, Object> attachmentMap = commonDao.getBySql(sql, file.getId());
 		//附件相对路径
 		String realpath = (String) attachmentMap.get("realpath");
 		String fileName = FileUtils.getFilePrefix2(realpath);

@@ -282,7 +282,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 		StringBuffer sqlBuffer = new StringBuffer();
 		sqlBuffer.append("select * from ").append(tableName);
 		sqlBuffer.append(" where id= ? ");
-		Map<String, Object> map = commonDao.findOneForJdbc(sqlBuffer.toString(), id);
+		Map<String, Object> map = commonDao.getBySql(sqlBuffer.toString(), id);
 		return map;
 	}
 	/**

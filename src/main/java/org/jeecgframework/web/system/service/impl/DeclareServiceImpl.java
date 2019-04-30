@@ -19,7 +19,7 @@ public class DeclareServiceImpl extends CommonServiceImpl implements DeclareServ
 	{
 
 		String hql="from AttachmentEntity t where t.businessKey= ? and t.description = ?";
-		return commonDao.findHql(hql,businessKey,description);
+		return commonDao.findListByHql(hql,businessKey,description);
 
 	}
 	

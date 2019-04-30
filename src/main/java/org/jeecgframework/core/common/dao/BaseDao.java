@@ -115,6 +115,14 @@ public interface BaseDao {
 	<T> T getByHql(String hql);
 
 	/**
+	 * 通过jdbc查询唯一记录
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	Map<String, Object> getBySql(String sql, Object... params);
+
+	/**
 	 * 查询全部实体
 	 * @param <T>
 	 * @param entityClass
@@ -131,12 +139,30 @@ public interface BaseDao {
 	<T> List<T> findListBySql(String sql);
 
 	/**
+	 * 根据sql查询list
+	 * @param sql
+	 * @param params
+	 * @param <T>
+	 * @return
+	 */
+	<T> List<T> findListBySql(String sql, Object... params);
+
+	/**
 	 * 通过hql查询list
 	 * @param <T>
 	 * @param hql
 	 * @return
 	 */
 	<T> List<T> findListByHql(String hql);
+
+	/**
+	 * 通过hql查询list
+	 * @param hql
+	 * @param param
+	 * @param <T>
+	 * @return
+	 */
+	<T> List<T> findListByHql(String hql, Object... param);
 
 	/**
 	 * 通过属性查询list
@@ -156,6 +182,43 @@ public interface BaseDao {
 	 * @return
 	 */
 	<T> List<T> findListByCriteriaQuery(final CriteriaQuery cq, Boolean isPage);
+
+	/**
+	 * 通过jdbc查询list
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	List<Map<String, Object>> findListForJdbc(String sql, Object... params);
+
+	/**
+	 * 通过jdbc查询list
+	 * @param sql
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	List<Map<String, Object>> findListForJdbc(String sql, int page, int rows);
+
+	/**
+	 * 通过jdbc查询list
+	 * @param sql
+	 * @param clazz
+	 * @param <T>
+	 * @return
+	 */
+	<T> List<T> findListForJdbc(String sql, Class<T> clazz);
+
+	/**
+	 * 通过jdbc查询list
+	 * @param sql
+	 * @param page
+	 * @param rows
+	 * @param clazz
+	 * @param <T>
+	 * @return
+	 */
+	<T> List<T> findListForJdbc(String sql, int page, int rows, Class<T> clazz);
 
 	/**
 	 * 通过CQ查询Page
@@ -184,8 +247,7 @@ public interface BaseDao {
 	 * @param isOffset
 	 * @return
 	 */
-	DataTableReturn getDataTableReturn(final CriteriaQuery cq,
-									   final boolean isOffset);
+	DataTableReturn getDataTableReturn(final CriteriaQuery cq, final boolean isOffset);
 
 	/**
 	 * 返回easyui datagrid模型
@@ -194,49 +256,69 @@ public interface BaseDao {
 	 * @param isOffset
 	 * @return
 	 */
-
-	void getDataGridReturn(CriteriaQuery cq,
-						   final boolean isOffset);
-
+	void getDataGridReturn(CriteriaQuery cq, final boolean isOffset);
 
 	/**
-	 * 执行SQL
+	 * 执行sql
+	 * @param sql
+	 * @param paramList
+	 * @return
 	 */
-	Integer executeSql(String sql, List<Object> param);
+	Integer executeSql(String sql, List<Object> paramList);
 
 	/**
-	 * 执行SQL
+	 * 执行sql
+	 * @param sql
+	 * @param params
+	 * @return
 	 */
-	Integer executeSql(String sql, Object... param);
+	Integer executeSql(String sql, Object... params);
 
 	/**
-	 * 执行SQL 使用:name占位符
+	 * 执行sql
+	 * @param sql
+	 * @param paramMap
+	 * @return
 	 */
-	Integer executeSql(String sql, Map<String, Object> param);
-	/**
-	 * 执行SQL 使用:name占位符,并返回插入的主键值
-	 */
-	Object executeSqlReturnKey(String sql, Map<String, Object> param);
-	/**
-	 * 通过JDBC查找对象集合 使用指定的检索标准检索数据返回数据
-	 */
-	List<Map<String, Object>> findForJdbc(String sql, Object... objs);
+	Integer executeSql(String sql, Map<String, Object> paramMap);
 
 	/**
-	 * 通过JDBC查找对象集合 使用指定的检索标准检索数据返回数据
+	 * 执行sql,并返回插入的主键值
+	 * @param sql
+	 * @param paramMap
+	 * @return
 	 */
-	Map<String, Object> findOneForJdbc(String sql, Object... objs);
+	Object executeSqlReturnKey(String sql, Map<String, Object> paramMap);
 
 	/**
-	 * 通过JDBC查找对象集合,带分页 使用指定的检索标准检索数据并分页返回数据
+	 * 执行hql
+	 * @param hql
+	 * @return
 	 */
-	List<Map<String, Object>> findForJdbc(String sql, int page, int rows);
+	Integer executeHql(String hql);
 
 	/**
-	 * 通过JDBC查找对象集合,带分页 使用指定的检索标准检索数据并分页返回数据
+	 * 执行hql
+	 * @param hql
+	 * @return
 	 */
-	<T> List<T> findObjForJdbc(String sql, int page, int rows,
-							   Class<T> clazz);
+	Integer executeHql(String hql, Object...params);
+
+	/**
+	 * 统计数量
+	 * @param sql
+	 * @return
+	 */
+	Long getCountForJdbc(String sql);
+
+	/**
+	 * 统计数量
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	Long getCountForJdbc(String sql, Object[] params);
+
 
 	/**
 	 * 使用指定的检索标准检索数据并分页返回数据-采用预处理方式
@@ -247,45 +329,18 @@ public interface BaseDao {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	List<Map<String, Object>> findForJdbcParam(String sql, int page,
-											   int rows, Object... objs);
+	List<Map<String, Object>> findForJdbcParam(String sql, int page, int rows, Object... objs);
 
-	/**
-	 * 使用指定的检索标准检索数据并分页返回数据For JDBC
-	 */
-	Long getCountForJdbc(String sql);
-
-	/**
-	 * 使用指定的检索标准检索数据并分页返回数据For JDBC-采用预处理方式
-	 *
-	 */
-	Long getCountForJdbcParam(String sql, Object[] objs);
-
-	/**
-	 * 通过hql 查询语句查找对象
-	 *
-	 * @param <T>
-	 * @param query
-	 * @return
-	 */
-	<T> List<T> findHql(String hql, Object... param);
-
-	/**
-	 * 执行HQL语句操作更新
-	 *
-	 * @param hql
-	 * @return
-	 */
-	Integer executeHql(String hql);
-
-	<T> List<T> pageList(DetachedCriteria dc, int firstResult,
-						 int maxResult);
+	<T> List<T> pageList(DetachedCriteria dc, int firstResult, int maxResult);
 
 	<T> List<T> findByDetached(DetachedCriteria dc);
 
 	/**
 	 * 执行存储过程
-	 * @param execute
+	 * @param procedureSql
+	 * @param params
+	 * @param <T>
+	 * @return
 	 */
 	<T> List<T> executeProcedure(String procedureSql, Object... params);
 
