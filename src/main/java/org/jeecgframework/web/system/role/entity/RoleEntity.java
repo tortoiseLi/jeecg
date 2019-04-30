@@ -5,6 +5,7 @@ import org.jeecgframework.core.common.entity.IdEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * 角色表
@@ -54,7 +55,7 @@ public class RoleEntity extends IdEntity implements java.io.Serializable {
     /**
      * 修改时间
      */
-    private java.util.Date updateDate;
+    private Date updateDate;
 
     /**
      * 修改人
