@@ -339,7 +339,7 @@ public class NoticeController extends BaseController {
                 executor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        List<UserEntity> userList = systemService.findHql("from TSUser");
+                        List<UserEntity> userList = systemService.findHql("from UserEntity");
                         for (UserEntity user : userList) {
                             String hql = "from NoticeReadUserEntity where noticeId = ? and userId = ?";
                             List<NoticeReadUserEntity> noticeReadList = systemService.findHql(hql, noticeId, user.getId());
