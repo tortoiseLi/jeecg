@@ -564,7 +564,7 @@ public class InterroleController extends BaseController {
 				if (i == 0) {
 					cc = Restrictions.eq("id", interRoleUser.get(i).getTSUser().getId());
 				} else {
-					cc = cq.getor(cc, Restrictions.eq("id", interRoleUser.get(i).getTSUser().getId()));
+					cc = cq.getOr(cc, Restrictions.eq("id", interRoleUser.get(i).getTSUser().getId()));
 				}
 			}
 		} else {

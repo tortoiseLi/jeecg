@@ -278,97 +278,112 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 	}
 
 	@Override
-	public <T> List<T> findListByProperty(Class<T> entityClass,
-										  String propertyName, Object value) {
-		Assert.hasText(propertyName);
-		return (List<T>) createCriteria(entityClass,
-				Restrictions.eq(propertyName, value)).list();
+	public <T> List<T> findListByProperty(Class<T> entityClass, String propertyName, Object value) {
+		try {
+			Assert.hasText(propertyName);
+			return (List<T>) createCriteria(entityClass, Restrictions.eq(propertyName, value)).list();
+		} catch (RuntimeException e) {
+			logger.error("根据属性查询实体列表异常", e);
+			throw e;
+		}
 	}
 
 	@Override
 	public List<T> findListByCriteriaQuery(final CriteriaQuery cq, Boolean isPage) {
-		Criteria criteria = cq.getDetachedCriteria().getExecutableCriteria(
-				getSession());
-		// 判断是否有排序字段
-		if (cq.getOrdermap() != null) {
-			cq.setOrder(cq.getOrdermap());
-		}
-		if (isPage){
-			criteria.setFirstResult((cq.getCurPage()-1)*cq.getPageSize());
-			criteria.setMaxResults(cq.getPageSize());
-		}
-		return criteria.list();
+		try {
+			Criteria criteria = cq.getDetachedCriteria().getExecutableCriteria(getSession());
 
+			// 判断是否有排序字段
+			if (null != cq.getOrderMap()) {
+				cq.setOrder(cq.getOrderMap());
+			}
+
+			// 判断是否分页
+			if (isPage){
+				criteria.setFirstResult((cq.getCurPage()-1)*cq.getPageSize());
+				criteria.setMaxResults(cq.getPageSize());
+			}
+
+			return criteria.list();
+		} catch (RuntimeException e) {
+			logger.error("跟胡CriteriaQuery查询实体列表异常", e);
+			throw e;
+		}
 	}
 
 	@Override
-	public List findListByEntity(final String entityName,
-								 final Object exampleEntity) {
-		Assert.notNull(exampleEntity, "Example entity must not be null");
-		Criteria executableCriteria = (entityName != null ? getSession()
-				.createCriteria(entityName) : getSession().createCriteria(
-				exampleEntity.getClass()));
-		executableCriteria.add(Example.create(exampleEntity));
-		return executableCriteria.list();
+	public List findListByEntity(final String entityName, final Object exampleEntity) {
+		try {
+			Assert.notNull(exampleEntity, "Example entity must not be null");
+			Criteria executableCriteria = (entityName != null ? getSession().createCriteria(entityName) : getSession().createCriteria(exampleEntity.getClass()));
+			executableCriteria.add(Example.create(exampleEntity));
+			return executableCriteria.list();
+		} catch (RuntimeException e) {
+			logger.error("根据实体查询实体列表异常", e);
+			throw e;
+		}
 	}
 
 	@Override
 	public List<Map<String, Object>> findListMapBySql(String sql) {
-		return this.jdbcTemplate.queryForList(sql);
+		try {
+			return this.jdbcTemplate.queryForList(sql);
+		} catch (RuntimeException e) {
+			logger.error("根据SQL查询实体列表异常", e);
+			throw e;
+		}
 	}
 
 	@Override
-	public List<Map<String, Object>> findListMapBySql(String sql, int page,
-													  int rows, Object... objs) {
+	public List<Map<String, Object>> findListMapBySql(String sql, int curPage, int pageSize, Object...params) {
 		// 封装分页SQL
-		sql = JdbcDao.jeecgCreatePageSql(sql, page, rows);
-		return this.jdbcTemplate.queryForList(sql, objs);
+		sql = JdbcDao.jeecgCreatePageSql(sql, curPage, pageSize);
+		return this.jdbcTemplate.queryForList(sql, params);
 	}
 
 	@Override
 	public PageList findPageByCriteriaQuery(final CriteriaQuery cq, final boolean isOffset) {
-
-		Criteria criteria = cq.getDetachedCriteria().getExecutableCriteria(
-				getSession());
+		Criteria criteria = cq.getDetachedCriteria().getExecutableCriteria(getSession());
 		CriteriaImpl impl = (CriteriaImpl) criteria;
+
 		// 先把Projection和OrderBy条件取出来,清空两者来执行Count操作
 		Projection projection = impl.getProjection();
-		final int allCounts = ((Long) criteria.setProjection(
-				Projections.rowCount()).uniqueResult()).intValue();
+		final int allCounts = ((Long) criteria.setProjection(Projections.rowCount()).uniqueResult()).intValue();
 		criteria.setProjection(projection);
-		if (projection == null) {
+		if (null == projection) {
 			criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		}
 
 		// 判断是否有排序字段
-		if (cq.getOrdermap() != null) {
-			cq.setOrder(cq.getOrdermap());
+		if (null != cq.getOrderMap()) {
+			cq.setOrder(cq.getOrderMap());
 		}
-		int pageSize = cq.getPageSize();// 每页显示数
-		int curPageNO = PagerUtil.getcurPageNo(allCounts, cq.getCurPage(),
-				pageSize);// 当前页
-		int offset = PagerUtil.getOffset(allCounts, curPageNO, pageSize);
+
+		// 每页显示数
+		int pageSize = cq.getPageSize();
+
+		// 当前页
+		int curPage = PagerUtil.getcurPageNo(allCounts, cq.getCurPage(), pageSize);
+		int offset = PagerUtil.getOffset(allCounts, curPage, pageSize);
 		String toolBar = "";
-		if (isOffset) {// 是否分页
+
+		// 判断是否分页
+		if (isOffset) {
 			criteria.setFirstResult(offset);
 			criteria.setMaxResults(cq.getPageSize());
-			if (cq.getIsUseimage() == 1) {
-				toolBar = PagerUtil.getBar(cq.getMyAction(), cq.getMyForm(),
-						allCounts, curPageNO, pageSize, cq.getMap());
+			if (cq.getIsUseImage() == 1) {
+				toolBar = PagerUtil.getBar(cq.getMyAction(), cq.getMyForm(), allCounts, curPage, pageSize, cq.getMap());
 			} else {
-				toolBar = PagerUtil.getBar(cq.getMyAction(), allCounts,
-						curPageNO, pageSize, cq.getMap());
+				toolBar = PagerUtil.getBar(cq.getMyAction(), allCounts, curPage, pageSize, cq.getMap());
 			}
 		} else {
 			pageSize = allCounts;
 		}
-		return new PageList(criteria.list(), toolBar, offset, curPageNO,
-				allCounts);
+		return new PageList(criteria.list(), toolBar, offset, curPage, allCounts);
 	}
 
 	@Override
-	public DataTableReturn getDataTableReturn(final CriteriaQuery cq,
-											  final boolean isOffset) {
+	public DataTableReturn getDataTableReturn(final CriteriaQuery cq, final boolean isOffset) {
 
 		Criteria criteria = cq.getDetachedCriteria().getExecutableCriteria(
 				getSession());
@@ -383,8 +398,8 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 		}
 
 		// 判断是否有排序字段
-		if (cq.getOrdermap() != null) {
-			cq.setOrder(cq.getOrdermap());
+		if (cq.getOrderMap() != null) {
+			cq.setOrder(cq.getOrderMap());
 		}
 		int pageSize = cq.getPageSize();// 每页显示数
 		int curPageNO = PagerUtil.getcurPageNo(allCounts, cq.getCurPage(),
@@ -423,7 +438,7 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 			criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		}
 
-		Map<String, Object> ordermap = cq.getOrdermap();
+		Map<String, Object> ordermap = cq.getOrderMap();
 		if(ordermap==null){
 			ordermap = new LinkedHashMap<String, Object>();
 		}

@@ -172,7 +172,6 @@ public class RoleController extends BaseController {
 	/**
 	 * 删除角色
 	 * 
-	 * @param ids
 	 * @return
 	 */
 	@RequestMapping(params = "delRole")
@@ -329,7 +328,7 @@ public class RoleController extends BaseController {
 				if(i == 0){
 					cc = Restrictions.eq("id", roleUser.get(i).getTSUser().getId());
 				}else{
-					cc = cq.getor(cc, Restrictions.eq("id", roleUser.get(i).getTSUser().getId()));
+					cc = cq.getOr(cc, Restrictions.eq("id", roleUser.get(i).getTSUser().getId()));
 				}
 			}
 		}else {
@@ -348,8 +347,6 @@ public class RoleController extends BaseController {
 	 * 
 	 * @param user
 	 * @param request
-	 * @param response
-	 * @param dataGrid
 	 * @return
 	 */
 	@RequestMapping(params = "getUserList")
@@ -984,7 +981,6 @@ public class RoleController extends BaseController {
     /**
      * 保存 角色-用户 关系信息
      * @param request request
-     * @param depart depart
      */
     private void saveRoleUserList(HttpServletRequest request, RoleEntity role) {
         String userIds = oConvertUtils.getString(request.getParameter("userIds"));
