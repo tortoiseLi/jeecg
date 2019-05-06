@@ -240,9 +240,9 @@
                     <#elseif po.show_type=='radio'>
                         <@DictData name="${po.dict_field?if_exists?html}" text="${po.dict_text?if_exists?html}" tablename="${po.dict_table?if_exists?html}" var="dataList">
                             <#list dataList as dictdata>
-                                <input value="${dictdata.code?if_exists?html}" ${po.extend_json?if_exists} name="${po.field_name}" type="radio" class="i-checks"
+                                <input value="${dictdata.typecode?if_exists?html}" ${po.extend_json?if_exists} name="${po.field_name}" type="radio" class="i-checks"
                                        <#if dictdata_index==0&&po.is_null != 'Y'>datatype="*"</#if>
-                                    <#if dictdata.code?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}"> checked="true" </#if>>
+                                    <#if dictdata.typecode?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}"> checked="true" </#if>>
                             ${dictdata.typename?if_exists?html}
                             &nbsp;&nbsp;
                             </#list>
@@ -253,10 +253,10 @@
                         <#assign checkboxlist=checkboxstr?split(",")>
                         <@DictData name="${po.dict_field?if_exists?html}" text="${po.dict_text?if_exists?html}" tablename="${po.dict_table?if_exists?html}" var="dataList">
                             <#list dataList as dictdata>
-                                <input value="${dictdata.code?if_exists?html}" ${po.extend_json?if_exists} name="${po.field_name}" type="checkbox" class="i-checks"
+                                <input value="${dictdata.typecode?if_exists?html}" ${po.extend_json?if_exists} name="${po.field_name}" type="checkbox" class="i-checks"
                                        <#if dictdata_index==0&&po.is_null != 'Y'>datatype="*"</#if>
                                     <#list checkboxlist as x >
-                                        <#if dictdata.code?if_exists?html=="${x?if_exists?html}"> checked="true" </#if></#list>>
+                                        <#if dictdata.typecode?if_exists?html=="${x?if_exists?html}"> checked="true" </#if></#list>>
                             ${dictdata.typename?if_exists?html}
                             </#list>
                             &nbsp;&nbsp;
@@ -274,8 +274,8 @@
 								<#-- update--end--author:zhangjiaqiang Date:20170417 for:增加校验必填项 -->
 								 <#if po.is_null != 'Y'>datatype="*"</#if>>
                                 <#list dataList as dictdata>
-                                    <option value="${dictdata.code?if_exists?html}"
-                                        <#if dictdata.code?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}"> selected="selected" </#if>>
+                                    <option value="${dictdata.typecode?if_exists?html}"
+                                        <#if dictdata.typecode?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}"> selected="selected" </#if>>
                                     ${dictdata.typename?if_exists?html}
                                     </option>
                                 </#list>

@@ -27,7 +27,7 @@ import org.jeecgframework.poi.excel.annotation.Excel;
  *
  */
 @Entity
-@Table(name = "jform_graphreport_item")
+@Table(name = "jform_graphreport_item", schema = "")
 @SuppressWarnings("serial")
 public class JformGraphreportItemEntity implements java.io.Serializable {
 	/**id*/

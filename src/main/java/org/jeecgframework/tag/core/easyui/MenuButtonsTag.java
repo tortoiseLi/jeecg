@@ -2,19 +2,21 @@ package org.jeecgframework.tag.core.easyui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.enums.MenuButtonsEnum;
+import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.core.OperationEntity;
+import org.jeecgframework.web.system.pojo.base.TSOperation;
 import org.jeecgframework.web.system.service.SystemService;
 /**
  * 
@@ -51,12 +53,10 @@ public class MenuButtonsTag extends TagSupport{
 	
 	private SystemService systemService;
 	
-	@Override
 	public int doStartTag() throws JspException {
 		return super.doStartTag();
 	}
 	
-	@Override
 	public int doEndTag() throws JspTagException {
 		JspWriter out = null;
 		try {
@@ -85,7 +85,7 @@ public class MenuButtonsTag extends TagSupport{
 		StringBuffer sb = new StringBuffer();
 		List<String> optcodes = null;
 		boolean flag = false;
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !GlobalConstants.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
 			flag = true;
 		}else{
 			optcodes= getOperationcodes();
@@ -206,15 +206,13 @@ public class MenuButtonsTag extends TagSupport{
 	private List<String> getOperationcodes(){
 		//权限判断
 		List<String> list = new ArrayList<String>();
-		Set<String> operationCodeIds = (Set<String>) super.pageContext.getRequest().getAttribute(GlobalConstants.OPERATION_CODES);
+		Set<String> operationCodeIds = (Set<String>) super.pageContext.getRequest().getAttribute(Globals.OPERATIONCODES);
 		systemService = ApplicationContextUtil.getContext().getBean(SystemService.class);
 		if (null!=operationCodeIds) {
 			for (String operationCodeId : operationCodeIds) {
-				if (oConvertUtils.isEmpty(operationCodeId)) {
+				if (oConvertUtils.isEmpty(operationCodeId))
 					continue;
-				}
-
-				OperationEntity operation = systemService.getById(OperationEntity.class, operationCodeId);
+				TSOperation operation = systemService.getEntity(TSOperation.class, operationCodeId);
 				if(operation!=null){
 					list.add(operation.getOperationcode());
 				}

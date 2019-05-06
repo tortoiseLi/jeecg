@@ -3,8 +3,7 @@ package org.jeecgframework.web.cgform.service.upload;
 import org.jeecgframework.core.common.service.CommonService;
 
 import org.jeecgframework.web.cgform.entity.upload.CgUploadEntity;
-import org.jeecgframework.web.system.attachment.entity.AttachmentEntity;
-
+import org.jeecgframework.web.system.pojo.base.TSAttachment;
 /**
  * 
  * @Title:CgUploadServiceI
@@ -32,7 +31,7 @@ public interface CgUploadServiceI extends CommonService{
 	 * @author taoYan
 	 * @since 2018年9月3日
 	 */
-	public void deleteAttachment(AttachmentEntity attachment);
+	public void deleteAttachment(TSAttachment attachment);
 	
 	/**
 	 * 更新附件信息

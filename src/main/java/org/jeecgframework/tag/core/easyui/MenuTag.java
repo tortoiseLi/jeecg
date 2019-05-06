@@ -7,7 +7,7 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 
 import org.jeecgframework.tag.core.JeecgTag;
-import org.jeecgframework.web.system.function.entity.FunctionEntity;
+import org.jeecgframework.web.system.pojo.base.TSFunction;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.ListtoMenu;
 import org.jeecgframework.core.util.SysThemesUtil;
@@ -24,16 +24,16 @@ import org.jeecgframework.core.util.SysThemesUtil;
 public class MenuTag extends JeecgTag {
 	private static final long serialVersionUID = 1L;
 	protected String style="easyui";//菜单样式
-	protected List<FunctionEntity> parentFun;//一级菜单
-	protected List<FunctionEntity> childFun;//二级菜单
-	protected Map<Integer, List<FunctionEntity>> menuFun;//菜单Map
-
-
-	public void setParentFun(List<FunctionEntity> parentFun) {
+	protected List<TSFunction> parentFun;//一级菜单
+	protected List<TSFunction> childFun;//二级菜单
+	protected Map<Integer, List<TSFunction>> menuFun;//菜单Map
+	
+	
+	public void setParentFun(List<TSFunction> parentFun) {
 		this.parentFun = parentFun;
 	}
 
-	public void setChildFun(List<FunctionEntity> childFun) {
+	public void setChildFun(List<TSFunction> childFun) {
 		this.childFun = childFun;
 	}
 
@@ -79,7 +79,7 @@ public class MenuTag extends JeecgTag {
 		return EVAL_PAGE;
 	}
 
-	public StringBuffer end() {
+	public StringBuffer end() {	
 
 		StringBuffer sb = this.getTagCache();
 		if(sb != null){
@@ -141,7 +141,7 @@ public class MenuTag extends JeecgTag {
 		this.style = style;
 	}
 
-	public void setMenuFun(Map<Integer, List<FunctionEntity>> menuFun) {
+	public void setMenuFun(Map<Integer, List<TSFunction>> menuFun) {
 		this.menuFun = menuFun;
 	}
 

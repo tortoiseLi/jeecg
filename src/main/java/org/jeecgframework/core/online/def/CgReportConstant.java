@@ -29,7 +29,7 @@ public class CgReportConstant {
 	/**系统字典表*/
 	public static final String SYS_DIC="t_s_type";
 	/**系统字典分组表*/
-	public static final String SYS_DICGROUP="t_s_type_group";
+	public static final String SYS_DICGROUP="t_s_typegroup";
 	/** 抬头配置-查询SQL*/
 	public static final String CONFIG_SQL=  "cgreport_sql";
 	/** 字典编码*/

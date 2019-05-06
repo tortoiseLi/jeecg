@@ -24,7 +24,7 @@ import org.jeecgframework.web.cgreport.dao.core.CgReportDao;
 import org.jeecgframework.web.cgreport.entity.core.CgreportConfigHeadEntity;
 import org.jeecgframework.web.cgreport.entity.core.CgreportConfigParamEntity;
 import org.jeecgframework.web.cgreport.service.core.CgReportServiceI;
-import org.jeecgframework.web.system.dict.entity.TypeEntity;
+import org.jeecgframework.web.system.pojo.base.TSType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +75,7 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 	
 	public List<String> queryCgReportParam(String reportId){
 		List<String> list = null;
-		CgreportConfigHeadEntity cgreportConfigHead = this.getByProperty(CgreportConfigHeadEntity.class, "code", reportId);
+		CgreportConfigHeadEntity cgreportConfigHead = this.findUniqueByProperty(CgreportConfigHeadEntity.class, "code", reportId);
     	String hql0 = "from CgreportConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
     	List<CgreportConfigParamEntity> cgreportConfigParamList = this.findHql(hql0,cgreportConfigHead.getId());
     	if(cgreportConfigParamList!=null&cgreportConfigParamList.size()>0){
@@ -247,7 +247,7 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 		dictCodeOrSQL = dictCodeOrSQL.trim();
 		if(dictCodeOrSQL.toLowerCase().startsWith("select ")) {
 
-			dictCodeOrSQL = dictCodeOrSQL.replaceAll("'[kK][eE][yY]'", "code").replaceAll("'[vV][aA][lL][uU][eE]'", "typename");
+			dictCodeOrSQL = dictCodeOrSQL.replaceAll("'[kK][eE][yY]'", "typecode").replaceAll("'[vV][aA][lL][uU][eE]'", "typename");
 
 			dicDatas = this.findForJdbc(dictCodeOrSQL);
 		}else {
@@ -265,13 +265,20 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 	private List<Map<String, Object>> queryDic(String diccode) {
 
 		List<Map<String, Object>> dicDatas = new ArrayList<Map<String, Object>>();
-		List<TypeEntity> tstypes = ResourceUtil.getCacheTypes(diccode.toLowerCase());
-		for(TypeEntity t:tstypes){
+		List<TSType> tstypes = ResourceUtil.getCacheTypes(diccode.toLowerCase());
+		for(TSType t:tstypes){
 			Map<String,Object> mp = new HashMap<String,Object>();
-			mp.put("code",t.getCode());
-			mp.put("typename",MutiLangUtil.doMutiLang(t.getName(), null));
+			mp.put("typecode",t.getTypecode());
+			mp.put("typename",MutiLangUtil.doMutiLang(t.getTypename(), null));
 			dicDatas.add(mp);
 		}
+//		StringBuilder dicSql = new StringBuilder();
+//		dicSql.append(" SELECT TYPECODE,TYPENAME FROM");
+//		dicSql.append(" "+CgReportConstant.SYS_DIC);
+//		dicSql.append(" "+"WHERE TYPEGROUPID = ");
+//		dicSql.append(" "+"(SELECT ID FROM "+CgReportConstant.SYS_DICGROUP+" WHERE TYPEGROUPCODE = ? )");
+//		List<Map<String, Object>> dicDatas = cgReportService.findForJdbc(dicSql.toString(),diccode);
+
 		return dicDatas;
 	}
 	
@@ -329,10 +336,10 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 					for(Map r:result){
 						String value = String.valueOf(r.get(field_name));
 						for(Map m:dicDatas){
-							String code = String.valueOf(m.get("code"));
-							String name = String.valueOf(m.get("name"));
-							if(value.equalsIgnoreCase(code)){
-								r.put(bean.get(CgReportConstant.ITEM_FIELDNAME),name);
+							String typecode = String.valueOf(m.get("typecode"));
+							String typename = String.valueOf(m.get("typename"));
+							if(value.equalsIgnoreCase(typecode)){
+								r.put(bean.get(CgReportConstant.ITEM_FIELDNAME),typename);
 							}
 						}
 					}

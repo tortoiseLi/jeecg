@@ -1,17 +1,20 @@
 package org.jeecgframework.core.timer;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.HttpRequest;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.MyClassLoader;
 import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.web.system.core.TimeTaskEntity;
+import org.jeecgframework.web.system.pojo.base.TSTimeTaskEntity;
 import org.jeecgframework.web.system.service.SystemService;
-import org.jeecgframework.web.system.service.TimeTaskService;
+import org.jeecgframework.web.system.service.TimeTaskServiceI;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobBuilder;
@@ -42,7 +45,7 @@ public class DynamicTask {
 	private Scheduler schedulerFactory;
 
 	@Autowired(required=false)
-	private TimeTaskService timeTaskService;
+	private TimeTaskServiceI timeTaskService;
 	
 	@Autowired(required=false)
 	private SystemService systemService;
@@ -52,7 +55,7 @@ public class DynamicTask {
 	 * 启动定时任务
 	 * @param task
 	 */
-	private boolean startTask(TimeTaskEntity task){
+	private boolean startTask(TSTimeTaskEntity task){
 		try {
 
 			//quartz 1.6
@@ -78,7 +81,7 @@ public class DynamicTask {
 	 * @param task
 	 * @throws SchedulerException
 	 */
-	private boolean endTask(TimeTaskEntity task){
+	private boolean endTask(TSTimeTaskEntity task){
 		
 		try{
 
@@ -109,15 +112,15 @@ public class DynamicTask {
 	 * @return
 	 * @throws SchedulerException 
 	 */
-	public boolean startOrStop(TimeTaskEntity task, boolean start){
+	public boolean startOrStop(TSTimeTaskEntity task, boolean start){
 		boolean isSuccess = start ? startTask(task) : endTask(task);
 		if(isSuccess){
 			task.setIsStart(start?"1":"0");
 
 			task.setIsEffect("1");
 
-			timeTaskService.update(task);
-			systemService.addLog((start?"开启任务":"停止任务")+task.getTaskId(), GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+			timeTaskService.updateEntitie(task);
+			systemService.addLog((start?"开启任务":"停止任务")+task.getTaskId(), Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 			logger.info((start?"开启任务":"停止任务")+"-------TaskId:"+task.getTaskId()+"-------Describe:"+task.getTaskDescribe()+"-----ClassName:"+task.getClassName() );
 		}
 		return isSuccess;
@@ -128,10 +131,10 @@ public class DynamicTask {
 	 * @param task
 	 * @return
 	 */
-	public boolean updateCronExpression(TimeTaskEntity task) {
+	public boolean updateCronExpression(TSTimeTaskEntity task) {
 		try {
 			String newExpression = task.getCronExpression();
-			task = timeTaskService.getById(TimeTaskEntity.class, task.getId());
+			task = timeTaskService.get(TSTimeTaskEntity.class, task.getId());
 			
 			//任务运行中
 			if("1".equals(task.getIsStart())){
@@ -176,11 +179,11 @@ public class DynamicTask {
 					/*task.setIsEffect("1");
 					task.setIsStart("1");
 					timeTaskService.updateEntitie(task);*/
-					systemService.addLog(("立即生效开启任务成功，任务ID:") + task.getTaskId(), GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+					systemService.addLog(("立即生效开启任务成功，任务ID:") + task.getTaskId(), Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 					logger.info(("立即生效开启任务成功，任务ID:") + "-------TaskId:" + task.getTaskId() + "-------Describe:" + task.getTaskDescribe() + "-----ClassName:" + task.getClassName() );
 					return true;
 				}else{
-					systemService.addLog(("立即生效开启任务失败，任务ID:") + task.getTaskId(), GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+					systemService.addLog(("立即生效开启任务失败，任务ID:") + task.getTaskId(), Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 					logger.info(("立即生效开启任务失败，任务ID:") + "-------TaskId:" + task.getTaskId() + "-------Describe:" + task.getTaskDescribe() + "-----ClassName:" + task.getClassName() );
 					return false;
 				}
@@ -197,11 +200,11 @@ public class DynamicTask {
 	 * @param task
 	 * @return
 	 */
-	/*public boolean updateCronExpression(TimeTaskEntity task) {
+	/*public boolean updateCronExpression(TSTimeTaskEntity task) {		
 		
 		try {
 			String newExpression = task.getCronExpression();		
-			task = timeTaskService.get(TimeTaskEntity.class, task.getId());
+			task = timeTaskService.get(TSTimeTaskEntity.class, task.getId());		
 
 			//任务运行中
 			if("1".equals(task.getIsStart())){
@@ -218,7 +221,7 @@ public class DynamicTask {
 				task.setIsEffect("1");
 				task.setIsStart("1");
 				timeTaskService.updateEntitie(task);
-				systemService.addLog(("立即生效开启任务")+task.getTaskId(), GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+				systemService.addLog(("立即生效开启任务")+task.getTaskId(), Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 				logger.info(("立即生效开启任务")+"-------TaskId:"+task.getTaskId()+"-------Describe:"+task.getTaskDescribe()+"-----ClassName:"+task.getClassName() );
 			}
 
@@ -242,13 +245,13 @@ public class DynamicTask {
 
 		//String serverIp = InetAddress.getLocalHost().getHostAddress();
 		List<String> ipList = IpUtil.getLocalIPList();
-		TimeTaskEntity timTask = new TimeTaskEntity();
+		TSTimeTaskEntity timTask = new TSTimeTaskEntity();
 		timTask.setIsEffect("1");
 		timTask.setIsStart("1");
-		List<TimeTaskEntity> tasks = (List<TimeTaskEntity>)timeTaskService.findByExample(TimeTaskEntity.class.getName(), timTask);
+		List<TSTimeTaskEntity> tasks = (List<TSTimeTaskEntity>)timeTaskService.findByExample(TSTimeTaskEntity.class.getName(), timTask);	
 		logger.info(" register time task class num is ["+tasks.size()+"] ");
 		if(tasks.size() > 0){
-			for (TimeTaskEntity task : tasks) {
+			for (TSTimeTaskEntity task : tasks) {
 				//startTask(task);
 				try {
 
@@ -280,7 +283,7 @@ public class DynamicTask {
 	 * @param task 定时任务对象
 	 * @throws SchedulerException
 	 */
-	private void scheduleJob(TimeTaskEntity task) throws SchedulerException {
+	private void scheduleJob(TSTimeTaskEntity task) throws SchedulerException {
 		//build 要执行的任务
 		JobDetail jobDetail = JobBuilder.newJob(MyClassLoader.getClassByScn(task.getClassName()))
 				.withIdentity(task.getId())

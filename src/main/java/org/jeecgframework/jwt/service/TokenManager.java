@@ -1,7 +1,7 @@
 package org.jeecgframework.jwt.service;
 
 import org.jeecgframework.jwt.model.TokenModel;
-import org.jeecgframework.web.system.user.entity.UserEntity;
+import org.jeecgframework.web.system.pojo.base.TSUser;
 
 /**
  * 对token进行操作的接口
@@ -16,7 +16,7 @@ public interface TokenManager {
      * @param userpaswd 用户密码
      * @return 生成的token
      */
-    public String createToken(UserEntity user);
+    public String createToken(TSUser user);
 
     /**
      * 检查token是否有效

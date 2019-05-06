@@ -6,7 +6,9 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.jeecgframework.core.util.ApplicationContextUtil;
-import org.jeecgframework.web.system.service.MutiLangService;
+import org.jeecgframework.web.system.service.MutiLangServiceI;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.jeecgframework.core.util.StringUtil;
 
 
 /**
@@ -45,7 +47,7 @@ public class MutiLangTag extends TagSupport {
 
 	public String end() {
 
-		MutiLangService mutiLangService = ApplicationContextUtil.getContext().getBean(MutiLangService.class);
+		MutiLangServiceI mutiLangService = ApplicationContextUtil.getContext().getBean(MutiLangServiceI.class);	
 
 		String lang_context = mutiLangService.getLang(langKey, langArg);
 		return lang_context;

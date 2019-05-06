@@ -225,9 +225,10 @@ public class FormHtmlUtil {
   	      }
   	      html.append(" var=\"dictDataList\">");
   	      html.append("<#list dictDataList as dictdata>");
-  	      html.append(" <input type=\"radio\" value=\"\\${dictdata.code?if_exists?html}\" name=\""+cgFormFieldEntity.getFieldName()+"\" ");
+  	      html.append(" <input type=\"radio\" value=\"\\${dictdata.typecode?if_exists?html}\" name=\""+cgFormFieldEntity.getFieldName()+"\" ");
 
-  	      html.append("<#if dictdata.code==\"\\${data\\['"+cgFormFieldEntity.getTable().getTableName()+"'\\]\\['").append(cgFormFieldEntity.getFieldName()).append("'\\]?if_exists?html}\">");
+//  	      html.append("<#if dictdata.typecode=='\\${").append(cgFormFieldEntity.getFieldName()).append("?if_exists?html}'>");
+  	      html.append("<#if dictdata.typecode==\"\\${data\\['"+cgFormFieldEntity.getTable().getTableName()+"'\\]\\['").append(cgFormFieldEntity.getFieldName()).append("'\\]?if_exists?html}\">");
 
   	      html.append(" checked=\"true\" ");
   	      html.append("</#if> ");
@@ -261,9 +262,9 @@ public class FormHtmlUtil {
       	      }
       	      html.append(" var=\"dictDataList\">");
     	      html.append("<#list dictDataList as dictdata>");
-    	      html.append(" <input type=\"checkbox\" value=\"\\${dictdata.code?if_exists?html}\" name=\""+cgFormFieldEntity.getFieldName()+"\" ");
+    	      html.append(" <input type=\"checkbox\" value=\"\\${dictdata.typecode?if_exists?html}\" name=\""+cgFormFieldEntity.getFieldName()+"\" ");
     	      html.append("<#list checkboxlist as x >");
-    	      html.append("<#if dictdata.code=='\\${x?if_exists?html}'>");
+    	      html.append("<#if dictdata.typecode=='\\${x?if_exists?html}'>");
     	      html.append(" checked=\"true\" ");
     	      html.append("</#if> ");
     	      html.append("</#list> ");
@@ -295,9 +296,10 @@ public class FormHtmlUtil {
   	      html.append(" var=\"dictDataList\">");
 	      html.append("<select name=\""+cgFormFieldEntity.getFieldName()+"\" id=\""+cgFormFieldEntity.getFieldName()+"\"> ");
 	      html.append("<#list dictDataList as dictdata>");
-	      html.append(" <option value=\"\\${dictdata.code?if_exists?html}\" ");
+	      html.append(" <option value=\"\\${dictdata.typecode?if_exists?html}\" ");
 
-	      html.append("<#if dictdata.code==\"\\${data\\['"+cgFormFieldEntity.getTable().getTableName()+"'\\]\\['").append(cgFormFieldEntity.getFieldName()).append("'\\]?if_exists?html}\">");
+//	      html.append("<#if dictdata.typecode=='\\${").append(cgFormFieldEntity.getFieldName()).append("?if_exists?html}'>");
+	      html.append("<#if dictdata.typecode==\"\\${data\\['"+cgFormFieldEntity.getTable().getTableName()+"'\\]\\['").append(cgFormFieldEntity.getFieldName()).append("'\\]?if_exists?html}\">");
 
 	      html.append("</#if> ");
 	      html.append(">");

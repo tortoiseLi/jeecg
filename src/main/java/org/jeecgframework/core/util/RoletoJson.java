@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jeecgframework.web.system.role.entity.RoleEntity;
+import org.jeecgframework.web.system.pojo.base.TSRole;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
@@ -20,13 +20,13 @@ public class RoletoJson {
 	/**
 	 * 手工拼接JSON
 	 */
-	public static String getComboBoxJson(List<RoleEntity> list, List<RoleEntity> roles) {
+	public static String getComboBoxJson(List<TSRole> list, List<TSRole> roles) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("[");
-		for (RoleEntity node : list) {
+		for (TSRole node : list) {
 			if (roles.size() > 0) {
 				buffer.append("{\"id\":" + node.getId() + ",\"text\":\"" + node.getRoleName() + "\"");
-				for (RoleEntity node1 : roles) {
+				for (TSRole node1 : roles) {
 					if (node.getId() == node1.getId()) {
 						buffer.append(",\"selected\":true");
 					}
@@ -49,16 +49,16 @@ public class RoletoJson {
 	/**
 	 * 根据模型生成JSON
 	 */
-	public static List<ComboBox> getComboBox(List<RoleEntity> list, List<RoleEntity> roles) {
+	public static List<ComboBox> getComboBox(List<TSRole> list, List<TSRole> roles) {
 		StringBuffer buffer = new StringBuffer();
 		List<ComboBox> comboxBoxs = new ArrayList<ComboBox>();
 		buffer.append("[");
-		for (RoleEntity node : list) {
+		for (TSRole node : list) {
 			ComboBox box = new ComboBox();
 			box.setId(node.getId().toString());
 			box.setText(node.getRoleName());
 			if (roles.size() > 0) {
-				for (RoleEntity node1 : roles) {
+				for (TSRole node1 : roles) {
 					if (node.getId() == node1.getId()) {
 						box.setSelected(true);
 					}

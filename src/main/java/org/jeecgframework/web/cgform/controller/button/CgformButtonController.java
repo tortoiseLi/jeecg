@@ -4,7 +4,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.web.cgform.entity.button.CgformButtonEntity;
 import org.jeecgframework.web.cgform.service.button.CgformButtonServiceI;
 import org.jeecgframework.web.system.service.SystemService;
@@ -14,6 +13,7 @@ import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
@@ -33,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @version V1.0   
  *
  */
+//@Scope("prototype")
 @Controller
 @RequestMapping("/cgformButtonController")
 public class CgformButtonController extends BaseController {
@@ -91,10 +92,10 @@ public class CgformButtonController extends BaseController {
 	public AjaxJson del(CgformButtonEntity cgformButton, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		cgformButton = systemService.getById(CgformButtonEntity.class, cgformButton.getId());
+		cgformButton = systemService.getEntity(CgformButtonEntity.class, cgformButton.getId());
 		message = "删除成功";
 		cgformButtonService.delete(cgformButton);
-		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单自定义按钮删除]"+message);
 		j.setMsg(message);
 		return j;
@@ -127,18 +128,18 @@ public class CgformButtonController extends BaseController {
 		}
 		if (StringUtil.isNotEmpty(cgformButton.getId())) {
 			message = "更新成功";
-			CgformButtonEntity t = cgformButtonService.getById(CgformButtonEntity.class, cgformButton.getId());
+			CgformButtonEntity t = cgformButtonService.get(CgformButtonEntity.class, cgformButton.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformButton, t);
 				cgformButtonService.saveOrUpdate(t);
-				systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			message = "添加成功";
-			cgformButtonService.add(cgformButton);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
+			cgformButtonService.save(cgformButton);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单自定义按钮添加编辑]"+message);
 		j.setMsg(message);
@@ -153,7 +154,7 @@ public class CgformButtonController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(CgformButtonEntity cgformButton, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgformButton.getId())) {
-			cgformButton = cgformButtonService.getById(CgformButtonEntity.class, cgformButton.getId());
+			cgformButton = cgformButtonService.getEntity(CgformButtonEntity.class, cgformButton.getId());
 		}
 		req.setAttribute("cgformButtonPage", cgformButton);
 		return new ModelAndView("jeecg/cgform/button/cgformButton");

@@ -18,12 +18,6 @@ public class TSSmsSqlServiceImpl extends CommonServiceImpl implements TSSmsSqlSe
 
 	@Resource
 	private JdbcTemplate jdbcTemplate;
-
-	@Override
-	public <T> Serializable save(T entity) {
-		return null;
-	}
-
 	@Override
 	public boolean doAddSql(TSSmsSqlEntity t) {
 		// TODO Auto-generated method stub

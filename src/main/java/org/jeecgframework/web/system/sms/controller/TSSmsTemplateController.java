@@ -12,7 +12,7 @@ import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.JSONHelper;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
@@ -100,11 +100,11 @@ public class TSSmsTemplateController extends BaseController {
 	public AjaxJson doDel(TSSmsTemplateEntity tSSmsTemplate, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tSSmsTemplate = systemService.getById(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
+		tSSmsTemplate = systemService.getEntity(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
 		message = "消息模本表删除成功";
 		try{
 			tSSmsTemplateService.delete(tSSmsTemplate);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "消息模本表删除失败";
@@ -127,11 +127,11 @@ public class TSSmsTemplateController extends BaseController {
 		message = "消息模本表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSSmsTemplateEntity tSSmsTemplate = systemService.getById(TSSmsTemplateEntity.class,
+				TSSmsTemplateEntity tSSmsTemplate = systemService.getEntity(TSSmsTemplateEntity.class, 
 				id
 				);
 				tSSmsTemplateService.delete(tSSmsTemplate);
-				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -157,7 +157,7 @@ public class TSSmsTemplateController extends BaseController {
 		message = "消息模本表添加成功";
 		try{
 			tSSmsTemplateService.save(tSSmsTemplate);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "消息模本表添加失败";
@@ -179,11 +179,11 @@ public class TSSmsTemplateController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "消息模本表更新成功";
-		TSSmsTemplateEntity t = tSSmsTemplateService.getById(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
+		TSSmsTemplateEntity t = tSSmsTemplateService.get(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSSmsTemplate, t);
 			tSSmsTemplateService.saveOrUpdate(t);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "消息模本表更新失败";
@@ -202,7 +202,7 @@ public class TSSmsTemplateController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(TSSmsTemplateEntity tSSmsTemplate, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSmsTemplate.getId())) {
-			tSSmsTemplate = tSSmsTemplateService.getById(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
+			tSSmsTemplate = tSSmsTemplateService.getEntity(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
 			req.setAttribute("tSSmsTemplatePage", tSSmsTemplate);
 		}
 		return new ModelAndView("system/sms/tSSmsTemplate-add");
@@ -215,7 +215,7 @@ public class TSSmsTemplateController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(TSSmsTemplateEntity tSSmsTemplate, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSmsTemplate.getId())) {
-			tSSmsTemplate = tSSmsTemplateService.getById(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
+			tSSmsTemplate = tSSmsTemplateService.getEntity(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
 			req.setAttribute("tSSmsTemplatePage", tSSmsTemplate);
 		}
 		return new ModelAndView("system/sms/tSSmsTemplate-update");
@@ -372,7 +372,7 @@ public class TSSmsTemplateController extends BaseController {
 				j.setSuccess(false);
 				j.setMsg("模板CODE不能为空");
 			}else {
-				tSSmsTemplate = tSSmsTemplateService.getByProperty(TSSmsTemplateEntity.class, "templateCode", tSSmsTemplate.getTemplateCode());
+				tSSmsTemplate = tSSmsTemplateService.findUniqueByProperty(TSSmsTemplateEntity.class, "templateCode", tSSmsTemplate.getTemplateCode());
 				Map<String,Object> data = new HashMap<String,Object>();
 				String json = tSSmsTemplate.getTemplateTestJson();
 				if(StringUtils.isEmpty(json)){

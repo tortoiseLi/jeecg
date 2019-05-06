@@ -14,11 +14,9 @@ import java.util.Map;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.sun.javaws.Globals;
 import org.jeecgframework.web.cgform.entity.upload.CgUploadEntity;
 import org.jeecgframework.web.cgform.service.upload.CgUploadServiceI;
-import org.jeecgframework.web.system.attachment.entity.AttachmentEntity;
+import org.jeecgframework.web.system.pojo.base.TSAttachment;
 import org.jeecgframework.web.system.service.SystemService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -26,7 +24,7 @@ import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.common.UploadFile;
 import org.jeecgframework.core.common.model.json.AjaxJson;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.extend.swftools.SwfToolsUtil;
 import org.jeecgframework.core.util.DateUtils;
 import org.jeecgframework.core.util.FileUtils;
@@ -91,7 +89,7 @@ public class CgUploadController extends BaseController {
 		}
 		if (StringUtil.isNotEmpty(fileKey)) {
 			cgUploadEntity.setId(fileKey);
-			cgUploadEntity = systemService.getById(CgUploadEntity.class, fileKey);
+			cgUploadEntity = systemService.getEntity(CgUploadEntity.class, fileKey);
 		}
 		UploadFile uploadFile = new UploadFile(request, cgUploadEntity);
 		uploadFile.setCusPath("files");
@@ -127,10 +125,10 @@ public class CgUploadController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		String id  = request.getParameter("id");
-		CgUploadEntity file = systemService.getById(CgUploadEntity.class, id);
+		CgUploadEntity file = systemService.getEntity(CgUploadEntity.class, id);
 
 		String sql  = "select " + file.getCgformField() + " from " + file.getCgformName() + " where id = '" + file.getCgformId() + "'";
-		List<Object> cgformFieldResult = systemService.findListBySql(sql);
+		List<Object> cgformFieldResult = systemService.findListbySql(sql);
 		if(cgformFieldResult != null && !cgformFieldResult.isEmpty() && cgformFieldResult.get(0) != null){
 			String path = cgformFieldResult.get(0).toString();
 			String realPath = file.getRealpath();
@@ -159,7 +157,7 @@ public class CgUploadController extends BaseController {
 
 		message = "" + file.getAttachmenttitle() + "被删除成功";
 		cgUploadService.deleteFile(file);
-		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE,GlobalConstants.LOG_LEVEL_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL,Globals.Log_Leavel_INFO);
 		j.setSuccess(true);
 		j.setMsg(message);
 		return j;
@@ -196,7 +194,7 @@ public class CgUploadController extends BaseController {
 					String myfilename=noextfilename+"."+extend;//自定义文件名称
 					String savePath = realPath + myfilename;// 文件保存全路径
 					write2Disk(mf, extend, savePath);
-					AttachmentEntity attachment = new AttachmentEntity();
+					TSAttachment attachment = new TSAttachment();
 					attachment.setId(UUID.randomUUID().toString().replace("-", ""));
 					attachment.setAttachmenttitle(fileName.substring(0,fileName.lastIndexOf(".")));
 					attachment.setCreatedate(new Timestamp(new Date().getTime()));
@@ -209,7 +207,7 @@ public class CgUploadController extends BaseController {
 						SwfToolsUtil.convert2SWF(savePath);
 					}
 
-					systemService.add(attachment);
+					systemService.save(attachment);
 					attributes.put("url", path + myfilename);
 					attributes.put("name", fileName);
 					attributes.put("swfpath", attachment.getSwfpath());
@@ -291,10 +289,10 @@ public class CgUploadController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		String id  = request.getParameter("id");
 		try {
-			CgUploadEntity file = systemService.getById(CgUploadEntity.class, id);
+			CgUploadEntity file = systemService.getEntity(CgUploadEntity.class, id);
 			if(file==null){
 				//如果关系表中无数据,则表示是情景1
-				AttachmentEntity attachment = systemService.getById(AttachmentEntity.class, id);
+				TSAttachment attachment = systemService.getEntity(TSAttachment.class, id);
 				cgUploadService.deleteAttachment(attachment);
 				j.setObj(1);//情景1
 			}else{

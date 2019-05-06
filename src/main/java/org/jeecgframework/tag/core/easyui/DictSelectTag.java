@@ -12,8 +12,8 @@ import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.ResourceUtil;
-import org.jeecgframework.web.system.dict.entity.TypeEntity;
-import org.jeecgframework.web.system.dict.entity.TypeGroupEntity;
+import org.jeecgframework.web.system.pojo.base.TSType;
+import org.jeecgframework.web.system.pojo.base.TSTypegroup;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -144,8 +144,8 @@ public class DictSelectTag extends TagSupport {
 				sb.append("</select>");
 			}
 		} else {
-			TypeGroupEntity typeGroup = ResourceUtil.getCacheTypeGroup(this.typeGroupCode.toLowerCase());
-			List<TypeEntity> types = ResourceUtil.getCacheTypes(this.typeGroupCode.toLowerCase());
+			TSTypegroup typeGroup = ResourceUtil.getCacheTypeGroup(this.typeGroupCode.toLowerCase());
+			List<TSType> types = ResourceUtil.getCacheTypes(this.typeGroupCode.toLowerCase());
 			if (hasLabel) {
 				sb.append("<div class=\"" + divClass + "\">");
 				sb.append("<label class=\"" + labelClass + "\" >");
@@ -153,22 +153,22 @@ public class DictSelectTag extends TagSupport {
 			if (typeGroup != null) {
 				if (hasLabel) {
 					if (StringUtils.isBlank(this.title)) {
-						this.title = MutiLangUtil.getLang(typeGroup.getName());
+						this.title = MutiLangUtil.getLang(typeGroup.getTypegroupname());
 					}
 					sb.append(this.title + ":");
 					sb.append("</label>");
 				}
 				if ("radio".equals(type)) {
-					for (TypeEntity type : types) {
-						radio(type.getName(), type.getCode(), sb);
+					for (TSType type : types) {
+						radio(type.getTypename(), type.getTypecode(), sb);
 					}
 				} else if ("checkbox".equals(type)) {
-					for (TypeEntity type : types) {
-						checkbox(type.getName(), type.getCode(), sb);
+					for (TSType type : types) {
+						checkbox(type.getTypename(), type.getTypecode(), sb);
 					}
 				}else if ("text".equals(type)) {
-					for (TypeEntity type : types) {
-						text(type.getName(), type.getCode(), sb);
+					for (TSType type : types) {
+						text(type.getTypename(), type.getTypecode(), sb);
 					}
 				} else {
 					sb.append("<select name=\"" + field + "\"");
@@ -186,8 +186,8 @@ public class DictSelectTag extends TagSupport {
 					this.datatype(sb);
 					sb.append(">");
 					select("common.please.select", "", sb);
-					for (TypeEntity type : types) {
-						select(type.getName(), type.getCode(), sb);
+					for (TSType type : types) {
+						select(type.getTypename(), type.getTypecode(), sb);
 					}
 					sb.append("</select>");
 				}

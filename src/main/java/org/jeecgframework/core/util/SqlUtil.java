@@ -1,10 +1,11 @@
 package org.jeecgframework.core.util;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jeecgframework.web.system.data.source.entity.DynamicDataSourceEntity;
+import org.jeecgframework.web.system.pojo.base.DynamicDataSourceEntity;
 
 /**
  * Created by 张忠亮 on 2015/6/8.

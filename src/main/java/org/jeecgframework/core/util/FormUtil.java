@@ -12,7 +12,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
-import org.jeecgframework.web.system.core.manager.ClientManager;
+import org.jeecgframework.web.system.manager.ClientManager;
 
 /**
  * 处理雷劈表单编辑器html解析内容

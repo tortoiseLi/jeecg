@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.web.system.core.common.JeecgDictDao;
-import org.jeecgframework.web.system.dict.entity.DictEntity;
-import org.jeecgframework.web.system.service.MutiLangService;
+import org.jeecgframework.web.system.dao.JeecgDictDao;
+import org.jeecgframework.web.system.pojo.base.DictEntity;
+import org.jeecgframework.web.system.service.MutiLangServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class EasypoiDictService implements EasypoiDictServiceI {
 	@Autowired
 	private JeecgDictDao jeecgDictDao;
 	@Autowired
-	private MutiLangService mutiLangService;
+	private MutiLangServiceI mutiLangService;
 	
 	/**
 	 * 通过字典查询easypoi，所需字典文本
@@ -33,8 +33,7 @@ public class EasypoiDictService implements EasypoiDictServiceI {
 	 * @author：qinfeng
 	 * @since：2017-4-12 下午06:10:22
 	 */
-	@Override
-	public String[] queryDict(String dicTable, String dicCode, String dicText){
+	public String[] queryDict(String dicTable, String dicCode,String dicText){
 		List<String> dictReplace = new ArrayList<String>();;
 		List<DictEntity> dictList = null;
 		//step.1 如果没有字典表则使用系统字典表
@@ -49,7 +48,7 @@ public class EasypoiDictService implements EasypoiDictServiceI {
 			}
 		}
 		for(DictEntity t:dictList){
-			dictReplace.add(mutiLangService.getLang(t.getTypename())+"_"+t.getCode());
+			dictReplace.add(mutiLangService.getLang(t.getTypename())+"_"+t.getTypecode());
 		}
 		if(dictReplace!=null && dictReplace.size()!=0){
 			return dictReplace.toArray(new String[dictReplace.size()]);

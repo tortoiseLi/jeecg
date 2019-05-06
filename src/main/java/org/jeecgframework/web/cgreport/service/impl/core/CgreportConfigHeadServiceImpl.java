@@ -29,20 +29,20 @@ public class CgreportConfigHeadServiceImpl extends CommonServiceImpl implements 
 	public void addMain(CgreportConfigHeadEntity cgreportConfigHead,
 	        List<CgreportConfigItemEntity> cgreportConfigItemList,List<CgreportConfigParamEntity> cgreportConfigParamList){
 			//保存主信息
-			this.add(cgreportConfigHead);
+			this.save(cgreportConfigHead);
 		
 			/**保存-动态报表配置明细*/
 			for(CgreportConfigItemEntity cgreportConfigItem:cgreportConfigItemList){
 				//外键设置
 				cgreportConfigItem.setCgrheadId(cgreportConfigHead.getId());
-				this.add(cgreportConfigItem);
+				this.save(cgreportConfigItem);
 			}
 			
 			/**保存-动态报表参数*/
 			for(CgreportConfigParamEntity cgreportConfigParam:cgreportConfigParamList){
 				//外键设置
 				cgreportConfigParam.setCgrheadId(cgreportConfigHead.getId());
-				this.add(cgreportConfigParam);
+				this.save(cgreportConfigParam);
 			}
 			
 			//执行新增操作配置的sql增强
@@ -89,7 +89,7 @@ public class CgreportConfigHeadServiceImpl extends CommonServiceImpl implements 
 			if(StringUtil.isEmpty(cgreportConfigItem.getId())){
 				//外键设置
 				cgreportConfigItem.setCgrheadId(cgreportConfigHead.getId());
-				this.add(cgreportConfigItem);
+				this.save(cgreportConfigItem);
 			}
 		}
 		
@@ -125,7 +125,7 @@ public class CgreportConfigHeadServiceImpl extends CommonServiceImpl implements 
 			if(StringUtil.isEmpty(cgreportConfigParam.getId())){
 				//外键设置
 				cgreportConfigParam.setCgrheadId(cgreportConfigHead.getId());
-				this.add(cgreportConfigParam);
+				this.save(cgreportConfigParam);
 			}
 		}
 		//执行更新操作配置的sql增强
@@ -143,11 +143,11 @@ public class CgreportConfigHeadServiceImpl extends CommonServiceImpl implements 
 		//删除-动态报表配置明细
 	    String hql0 = "from CgreportConfigItemEntity where 1 = 1 AND cgrheadId = ? ";
 	    List<CgreportConfigItemEntity> cgreportConfigItemOldList = this.findHql(hql0,id0);
-		this.deleteByCollection(cgreportConfigItemOldList);
+		this.deleteAllEntitie(cgreportConfigItemOldList);
 		//删除-动态报表参数
 		String hql1 = "from CgreportConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
 		List<CgreportConfigParamEntity> cgreportConfigParamOldList = this.findHql(hql1,id0);
-		this.deleteByCollection(cgreportConfigParamOldList);
+		this.deleteAllEntitie(cgreportConfigParamOldList);
 	}
 	
  	

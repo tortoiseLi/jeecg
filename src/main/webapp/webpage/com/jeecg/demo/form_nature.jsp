@@ -240,7 +240,7 @@ $(function() {
             labelField: "userName",
             valueField: "userName",
             searchField: "userName",
-            entityName: "UserEntity",
+            entityName: "TSUser",
             trem: getTremValueuserName
         },
         parse: function(data) {

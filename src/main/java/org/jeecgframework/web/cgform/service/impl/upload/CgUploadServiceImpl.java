@@ -6,7 +6,6 @@ import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.FileUtils;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.attachment.entity.AttachmentEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,17 +14,17 @@ import com.alibaba.fastjson.JSONObject;
 import org.jeecgframework.web.cgform.dao.upload.CgFormUploadDao;
 import org.jeecgframework.web.cgform.entity.upload.CgUploadEntity;
 import org.jeecgframework.web.cgform.service.upload.CgUploadServiceI;
+import org.jeecgframework.web.system.pojo.base.TSAttachment;
 @Service("cgUploadService")
 @Transactional
 public class CgUploadServiceImpl extends CommonServiceImpl implements CgUploadServiceI {
 	@Autowired
 	private CgFormUploadDao cgFormUploadDao;
 	
-	@Override
 	public void deleteFile(CgUploadEntity file) {
 		//step.1 删除附件
 		String sql = "select * from t_s_attachment where id = ?";
-		Map<String, Object> attachmentMap = commonDao.getBySql(sql, file.getId());
+		Map<String, Object> attachmentMap = commonDao.findOneForJdbc(sql, file.getId());
 		//附件相对路径
 		String realpath = (String) attachmentMap.get("realpath");
 		String fileName = FileUtils.getFilePrefix2(realpath);
@@ -40,8 +39,7 @@ public class CgUploadServiceImpl extends CommonServiceImpl implements CgUploadSe
 	}
 
 	
-	@Override
-	public void writeBack(String cgFormId, String cgFormName, String cgFormField, String fileId, String fileUrl) {
+	public void writeBack(String cgFormId,String cgFormName,String cgFormField,String fileId,String fileUrl) {
 		try{
 			cgFormUploadDao.updateBackFileInfo(cgFormId, cgFormName, cgFormField, fileId, fileUrl);
 		}catch (Exception e) {
@@ -51,7 +49,7 @@ public class CgUploadServiceImpl extends CommonServiceImpl implements CgUploadSe
 	}
 
 	@Override
-	public void deleteAttachment(AttachmentEntity attachment) {
+	public void deleteAttachment(TSAttachment attachment) {
 		String realpath = attachment.getRealpath();//附件相对路径
 		String pathNosuffix = FileUtils.getFilePrefix2(realpath);
 		//获取部署项目绝对地址
@@ -86,7 +84,7 @@ public class CgUploadServiceImpl extends CommonServiceImpl implements CgUploadSe
 							//删除cgform_uploadfiles
 							commonDao.executeSql(delSql,metaId);
 							//删除附件表同时删除文件
-							AttachmentEntity attachment = this.getById(AttachmentEntity.class,metaId);
+							TSAttachment attachment = this.getEntity(TSAttachment.class,metaId);
 							deleteAttachment(attachment);
 						}else if(a.endsWith("_O")){
 							//String metaId = a.substring(0,a.length()-2);//获取原始ID

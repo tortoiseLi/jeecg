@@ -32,6 +32,10 @@ public class BaseController {
 	 */
 	@InitBinder
 	public void initBinder(ServletRequestDataBinder binder) {
+//		SimpleDateFormat dateFormat = new SimpleDateFormat(
+//				"yyyy-MM-dd hh:mm:ss");
+//		binder.registerCustomEditor(Date.class, new CustomDateEditor(
+//				dateFormat, true));
 		binder.registerCustomEditor(Date.class, new DateConvertEditor());
 	}
 

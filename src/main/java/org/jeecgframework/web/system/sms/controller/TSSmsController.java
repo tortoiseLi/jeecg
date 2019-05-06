@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.javaws.Globals;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -19,17 +18,21 @@ import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.datatable.SortDirection;
+import org.jeecgframework.web.system.pojo.base.TSNotice;
+import org.jeecgframework.web.system.pojo.base.TSNoticeReadUser;
+import org.jeecgframework.web.system.pojo.base.TSUser;
 import org.jeecgframework.web.system.sms.entity.TSSmsEntity;
 import org.jeecgframework.web.system.sms.service.TSSmsServiceI;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -104,11 +107,11 @@ public class TSSmsController extends BaseController {
 	public AjaxJson doDel(TSSmsEntity tSSms, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tSSms = systemService.getById(TSSmsEntity.class, tSSms.getId());
+		tSSms = systemService.getEntity(TSSmsEntity.class, tSSms.getId());
 		message = "消息发送记录表删除成功";
 		try{
 			tSSmsService.delete(tSSms);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "消息发送记录表删除失败";
@@ -131,11 +134,11 @@ public class TSSmsController extends BaseController {
 		message = "消息发送记录表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSSmsEntity tSSms = systemService.getById(TSSmsEntity.class,
+				TSSmsEntity tSSms = systemService.getEntity(TSSmsEntity.class, 
 				id
 				);
 				tSSmsService.delete(tSSms);
-				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -161,7 +164,7 @@ public class TSSmsController extends BaseController {
 		message = "消息发送记录表添加成功";
 		try{
 			tSSmsService.save(tSSms);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "消息发送记录表添加失败";
@@ -183,11 +186,11 @@ public class TSSmsController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "消息发送记录表更新成功";
-		TSSmsEntity t = tSSmsService.getById(TSSmsEntity.class, tSSms.getId());
+		TSSmsEntity t = tSSmsService.get(TSSmsEntity.class, tSSms.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSSms, t);
 			tSSmsService.saveOrUpdate(t);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "消息发送记录表更新失败";
@@ -206,7 +209,7 @@ public class TSSmsController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(TSSmsEntity tSSms, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSms.getId())) {
-			tSSms = tSSmsService.getById(TSSmsEntity.class, tSSms.getId());
+			tSSms = tSSmsService.getEntity(TSSmsEntity.class, tSSms.getId());
 			req.setAttribute("tSSmsPage", tSSms);
 		}
 		return new ModelAndView("system/sms/tSSms-add");
@@ -219,7 +222,7 @@ public class TSSmsController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(TSSmsEntity tSSms, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSms.getId())) {
-			tSSms = tSSmsService.getById(TSSmsEntity.class, tSSms.getId());
+			tSSms = tSSmsService.getEntity(TSSmsEntity.class, tSSms.getId());
 			req.setAttribute("tSSmsPage", tSSms);
 		}
 		return new ModelAndView("system/sms/tSSms-update");
@@ -448,7 +451,7 @@ public class TSSmsController extends BaseController {
 	@RequestMapping(params = "goSmsDetail")
 	public ModelAndView goSmsDetail(TSSmsEntity tSSms,HttpServletRequest request) {
 		if (StringUtil.isNotEmpty(tSSms.getId())) {
-			tSSms = this.systemService.getById(TSSmsEntity.class, tSSms.getId());
+			tSSms = this.systemService.getEntity(TSSmsEntity.class, tSSms.getId());
 			request.setAttribute("tSSms", tSSms);
 			if(tSSms.getIsRead() == 0){
 				tSSms.setIsRead(1);
@@ -470,7 +473,7 @@ public class TSSmsController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		try {
 			if (StringUtil.isNotEmpty(tSSms.getId())) {
-				tSSms = this.systemService.getById(TSSmsEntity.class, tSSms.getId());
+				tSSms = this.systemService.getEntity(TSSmsEntity.class, tSSms.getId());
 				if(tSSms.getIsRead() == 0){
 					tSSms.setIsRead(1);
 					systemService.saveOrUpdate(tSSms);
@@ -592,7 +595,7 @@ public class TSSmsController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		try {
 			if(StringUtil.isNotEmpty(messageId)){
-				TSSmsEntity tSSmsEntity = this.systemService.getById(TSSmsEntity.class, messageId);
+				TSSmsEntity tSSmsEntity = this.systemService.get(TSSmsEntity.class, messageId);
 				if(tSSmsEntity!=null){
 					tSSmsEntity.setEsStatus("2");
 					this.tSSmsService.saveOrUpdate(tSSmsEntity);
@@ -616,7 +619,7 @@ public class TSSmsController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		try {
 			if(StringUtil.isNotEmpty(msgId)){
-				TSSmsEntity tSSmsEntity = this.systemService.getById(TSSmsEntity.class, msgId);
+				TSSmsEntity tSSmsEntity = this.systemService.get(TSSmsEntity.class, msgId);
 				Map<String,Object> attrs = new HashMap<String, Object>();
 				attrs.put("msginfo", tSSmsEntity);
 				j.setAttributes(attrs);

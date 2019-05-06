@@ -17,7 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.enums.SysThemesEnum;
 import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.ContextHolderUtils;
@@ -41,11 +41,11 @@ import org.jeecgframework.web.cgform.service.template.CgformTemplateServiceI;
 import org.jeecgframework.web.cgform.util.PublicUtil;
 import org.jeecgframework.web.cgform.util.QueryParamUtil;
 import org.jeecgframework.web.cgform.util.TemplateUtil;
-import org.jeecgframework.web.system.dict.entity.DictEntity;
-import org.jeecgframework.web.system.dict.service.DictService;
-import org.jeecgframework.web.system.core.OperationEntity;
-import org.jeecgframework.web.system.dict.entity.TypeEntity;
-import org.jeecgframework.web.system.service.MutiLangService;
+import org.jeecgframework.web.system.controller.core.LoginController;
+import org.jeecgframework.web.system.pojo.base.DictEntity;
+import org.jeecgframework.web.system.pojo.base.TSOperation;
+import org.jeecgframework.web.system.pojo.base.TSType;
+import org.jeecgframework.web.system.service.MutiLangServiceI;
 import org.jeecgframework.web.system.service.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,9 +78,7 @@ public class CgAutoListController extends BaseController{
 	@Autowired
 	private CgformTemplateServiceI cgformTemplateService;
 	@Autowired
-	private MutiLangService mutiLangService;
-	@Autowired
-	private DictService dictService;
+	private MutiLangServiceI mutiLangService;
 	/**
 	 * 动态列表展现入口
 	 * @param id 动态配置ID
@@ -195,7 +193,7 @@ public class CgAutoListController extends BaseController{
 	@RequestMapping(params = "datagrid")
 	public void datagrid(String configId,String page,String field,String rows,String sort,String order, HttpServletRequest request,
 			HttpServletResponse response, DataGrid dataGrid) throws Exception {
-		Object dataRuleSql =JeecgDataAutorUtils.loadDataSearchConditonSQLString(); //request.getAttribute(GlobalConstants.MENU_DATA_AUTHOR_RULE_SQL);
+		Object dataRuleSql =JeecgDataAutorUtils.loadDataSearchConditonSQLString(); //request.getAttribute(Globals.MENU_DATA_AUTHOR_RULE_SQL);
 		long start = System.currentTimeMillis();
 		//step.1 获取动态配置
 		String jversion = cgFormFieldService.getCgFormVersionByTableName(configId);
@@ -286,7 +284,7 @@ public class CgAutoListController extends BaseController{
 					if(arrayVal.length > 1){
 						for(String val:arrayVal){
 							for(DictEntity dictEntity:dicList){
-								if(val.equals(dictEntity.getCode())){
+								if(val.equals(dictEntity.getTypecode())){
 									sb.append(dictEntity.getTypename());
 									sb.append(",");
 								}
@@ -361,8 +359,15 @@ public class CgAutoListController extends BaseController{
 					List<DictEntity> dicDataList = queryDic(dicTable, dicCode,dicText);
 					for(Map r:result){
 						String value = String.valueOf(r.get(bean.getFieldName()));
+//						for(Map m:dicDatas){
+//							String typecode = String.valueOf(m.get("typecode"));
+//							String typename = String.valueOf(m.get("typename"));
+//							if(value.equalsIgnoreCase(typecode)){
+//								r.put(bean.getFieldName(),typename);
+//							}
+//						}
 						for(DictEntity dictEntity:dicDataList){
-							if(value.equalsIgnoreCase(dictEntity.getCode())){
+							if(value.equalsIgnoreCase(dictEntity.getTypecode())){
 								r.put(bean.getFieldName(),MutiLangUtil.getLang(dictEntity.getTypename()));
 								break;
 							}
@@ -397,8 +402,8 @@ public class CgAutoListController extends BaseController{
 
 			cgTableService.delete(table, id);
 			log.info("["+IpUtil.getIpAddr(request)+"][online表单数据删除]"+message+"表名："+configId);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE,
-					GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL,
+					Globals.Log_Leavel_INFO);
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			message = e.getMessage();
@@ -415,6 +420,7 @@ public class CgAutoListController extends BaseController{
 	/**
 	 * 删除动态表-批量
 	 * @param configId 配置id
+	 * @param id 主键
 	 * @param request
 	 * @return
 	 */
@@ -432,8 +438,8 @@ public class CgAutoListController extends BaseController{
 		} catch (Exception e) {
 			message = e.getMessage();
 		}
-		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE,
-				GlobalConstants.LOG_LEVEL_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL,
+				Globals.Log_Leavel_INFO);
 		log.info("["+IpUtil.getIpAddr(request)+"][online表单数据批量删除]"+message+"表名："+configId);
 		j.setMsg(message);
 		return j;
@@ -454,12 +460,12 @@ public class CgAutoListController extends BaseController{
 		StringBuilder fileds = new StringBuilder();
 		StringBuilder initQuery = new StringBuilder();
 
-		Set<String> operationCodes = (Set<String>) request.getAttribute(GlobalConstants.OPERATION_CODES);
-		Map<String,OperationEntity> operationCodesMap = new HashMap<String, OperationEntity>();
+		Set<String> operationCodes = (Set<String>) request.getAttribute(Globals.OPERATIONCODES);
+		Map<String,TSOperation> operationCodesMap = new HashMap<String, TSOperation>();
 		if(operationCodes != null){
-			OperationEntity tsOperation;
+			TSOperation tsOperation;
 			for (String id : operationCodes) {
-				tsOperation = systemService.getById(OperationEntity.class, id);
+				tsOperation = systemService.getEntity(TSOperation.class, id);
 				if(tsOperation != null && tsOperation.getOperationType() == 0 && tsOperation.getStatus() == 0){
 					operationCodesMap.put(tsOperation.getOperationcode(), tsOperation);
 				}
@@ -585,14 +591,14 @@ public class CgAutoListController extends BaseController{
 	 * @param request
 	 */
 	private void loadAuth(Map<String, Object> paras, HttpServletRequest request) {
-		List<OperationEntity>  nolist = (List<OperationEntity>) request.getAttribute(GlobalConstants.NO_AUTO_OPERATION_CODES);
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !GlobalConstants.BUTTON_AUTHORITY_CHECK){
+		List<TSOperation>  nolist = (List<TSOperation>) request.getAttribute(Globals.NOAUTO_OPERATIONCODES);
+		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
 			nolist = null;
 		}
 		List<String> list = new ArrayList<String>();
 		String nolistStr = "";
 		if(nolist!=null){
-			for(OperationEntity operation:nolist){
+			for(TSOperation operation:nolist){
 				nolistStr+=operation.getOperationcode();
 				nolistStr+=",";
 				list.add(operation.getOperationcode());
@@ -718,14 +724,14 @@ public class CgAutoListController extends BaseController{
 	private List<DictEntity> queryDic(String dicTable, String dicCode,String dicText) {
 
 		if(dicTable==null || dicTable.length()<=0){
-			List<TypeEntity> listt = ResourceUtil.getCacheTypes(dicCode.toLowerCase());
+			List<TSType> listt = ResourceUtil.getCacheTypes(dicCode.toLowerCase());
 			List<DictEntity> li = new ArrayList<DictEntity>();
 			if(listt!=null){
-				for (TypeEntity tsType : listt) {
+				for (TSType tsType : listt) {
 					DictEntity d = new DictEntity();
-					d.setCode(tsType.getCode());
+					d.setTypecode(tsType.getTypecode());
 
-					d.setTypename(mutiLangService.getLang(tsType.getName()));
+					d.setTypename(mutiLangService.getLang(tsType.getTypename()));
 
 					li.add(d);
 				}
@@ -733,8 +739,28 @@ public class CgAutoListController extends BaseController{
 			return li;
 		}
 
-
-		return dictService.findDictList(dicTable, dicCode, dicText);
+		
+//		StringBuilder dicSql = new StringBuilder();
+//		if(StringUtil.isEmpty(dicTable)){//step.1 如果没有字典表则使用系统字典表
+//			dicTable = CgAutoListConstant.SYS_DIC;
+//			dicSql.append(" SELECT TYPECODE,TYPENAME FROM");
+//			dicSql.append(" "+dicTable);
+//			dicSql.append(" "+"WHERE TYPEGROUPID = ");
+//			dicSql.append(" "+"(SELECT ID FROM "+CgAutoListConstant.SYS_DICGROUP+" WHERE TYPEGROUPCODE = '"+dicCode+"' )");
+//		}else{//step.2 如果给定了字典表则使用该字典表，这个功能需要在表单配置追加字段
+//			//table表查询
+//			dicSql.append("SELECT DISTINCT ").append(dicCode).append(" as typecode, ");
+//			if(dicText!=null&&dicText.length()>0){
+//				dicSql.append(dicText).append(" as typename ");
+//			}else{
+//				dicSql.append(dicCode).append(" as typename ");
+//			}
+//			dicSql.append(" FROM ").append(dicTable);
+//			dicSql.append(" ORDER BY ").append(dicCode);
+//		}
+//		//step.3 字典数据
+//		List<Map<String, Object>> dicDatas = systemService.findForJdbc(dicSql.toString());
+		return systemService.queryDict(dicTable, dicCode, dicText);
 	}
 	
 	private String getSystemValue(String sysVarName) {

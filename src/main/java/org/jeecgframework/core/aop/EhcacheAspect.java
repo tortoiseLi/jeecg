@@ -8,13 +8,14 @@ import net.sf.ehcache.Element;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.jeecgframework.core.annotation.Ehcache;
-import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.core.cache.service.CacheService;
+import org.jeecgframework.web.system.service.CacheServiceI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * 
@@ -26,8 +27,8 @@ import org.slf4j.LoggerFactory;
 //@Aspect
 public class EhcacheAspect {
 	private static final Logger logger = LoggerFactory.getLogger(EhcacheAspect.class);
-	private static Cache SYSTEM_BASE_CACHE = CacheManager.getInstance().getCache(GlobalConstants.SYSTEM_BASE_CACHE);
-	private static Cache SYS_AUTH_CACHE = CacheManager.getInstance().getCache(GlobalConstants.SYS_AUTH_CACHE);
+	private static Cache SYSTEM_BASE_CACHE = CacheManager.getInstance().getCache(CacheServiceI.SYSTEM_BASE_CACHE);
+	private static Cache SYS_AUTH_CACHE = CacheManager.getInstance().getCache(CacheServiceI.SYS_AUTH_CACHE);
 	
 	
 	@Pointcut("@annotation(org.jeecgframework.core.annotation.Ehcache)")
@@ -47,7 +48,7 @@ public class EhcacheAspect {
 		
 		Element element = null;
 		
-		if(oConvertUtils.isNotEmpty(ehcache.cacheName()) && GlobalConstants.SYS_AUTH_CACHE.equals(ehcache.cacheName())){
+		if(oConvertUtils.isNotEmpty(ehcache.cacheName()) && CacheServiceI.SYS_AUTH_CACHE.equals(ehcache.cacheName())){
 			//自定义缓存对象
 			cache = this.SYS_AUTH_CACHE;
 		}else{

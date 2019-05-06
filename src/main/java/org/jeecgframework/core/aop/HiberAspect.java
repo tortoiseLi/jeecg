@@ -6,7 +6,7 @@ import org.hibernate.type.Type;
 import org.jeecgframework.core.constant.DataBaseConstant;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.user.entity.UserEntity;
+import org.jeecgframework.web.system.pojo.base.TSUser;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -26,7 +26,7 @@ public class HiberAspect extends EmptyInterceptor {
 
 public boolean onSave(Object entity, Serializable id, Object[] state,
 		String[] propertyNames, Type[] types) {
-	UserEntity currentUser = null;
+	TSUser currentUser = null;
 	try {
 		currentUser = ResourceUtil.getSessionUser();
 	} catch (RuntimeException e) {
@@ -114,7 +114,7 @@ public boolean onSave(Object entity, Serializable id, Object[] state,
 public boolean onFlushDirty(Object entity, Serializable id,
 		Object[] currentState, Object[] previousState,
 		String[] propertyNames, Type[] types) {
-	UserEntity currentUser = null;
+	TSUser currentUser = null;
 	try {
 		currentUser = ResourceUtil.getSessionUser();
 	} catch (RuntimeException e1) {

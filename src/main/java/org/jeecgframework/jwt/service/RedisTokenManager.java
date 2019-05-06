@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.jeecgframework.jwt.def.JwtConstants;
 import org.jeecgframework.jwt.model.TokenModel;
-import org.jeecgframework.web.system.user.entity.UserEntity;
+import org.jeecgframework.web.system.pojo.base.TSUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class RedisTokenManager implements TokenManager {
     /**
      * 生成TOKEN
      */
-    public String createToken(UserEntity user) {
+    public String createToken(TSUser user) {
         //使用uuid作为源token
         String token = Jwts.builder().setId(user.getUserName()).setSubject(user.getUserName()).setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, JwtConstants.JWT_SECRET).compact();
         //存储到redis并设置过期时间

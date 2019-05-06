@@ -106,7 +106,7 @@ public class CgAutoListConstant {
 	public static final String OP_LIKE = " LIKE ";
 
 	/** 系统字典分组表 */
-	public static final String SYS_DICGROUP = "t_s_type_group";
+	public static final String SYS_DICGROUP = "t_s_typegroup";
 	/** 系统字典表 */
 	public static final String SYS_DIC = "t_s_type";
 

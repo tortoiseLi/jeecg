@@ -15,7 +15,6 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration(locations = {"classpath*:spring*.xml"})
 @Transactional
 public abstract class AbstractUnitTest {
-
 	@Autowired
 	protected WebApplicationContext wac;
 

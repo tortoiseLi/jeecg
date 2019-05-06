@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.minidao.pojo.MiniDaoPage;
-import org.jeecgframework.web.system.core.common.DepartAuthGroupDao;
+import org.jeecgframework.web.system.dao.DepartAuthGroupDao;
 import org.jeecgframework.web.system.service.DepartAuthGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

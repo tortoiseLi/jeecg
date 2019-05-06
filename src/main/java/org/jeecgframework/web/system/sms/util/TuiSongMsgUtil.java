@@ -45,7 +45,7 @@ public class TuiSongMsgUtil {
 	public static String sendMessage(String code,Map<String, Object> data, String sentFrom, String sentTo) {
 		try {
 			//根据模板那Code查询模板信息
-			TSSmsTemplateEntity tsSmsTemplateEntity= getTSSmsServiceInstance().getByProperty(TSSmsTemplateEntity.class, "templateCode", code);
+			TSSmsTemplateEntity tsSmsTemplateEntity= getTSSmsServiceInstance().findUniqueByProperty(TSSmsTemplateEntity.class, "templateCode", code);
 			TSSmsEntity tss=new TSSmsEntity();
 			tss.setEsType(tsSmsTemplateEntity.getTemplateType());
 			tss.setEsSender(sentFrom);
@@ -109,9 +109,9 @@ public class TuiSongMsgUtil {
 			String hql="from TSSmsTemplateSqlEntity as tempSql where tempSql.code=? ";
 			List<TSSmsTemplateSqlEntity> tssmsTemplateSqlList=getTssmsTemplateSqlInstance().findHql(hql, code);
 			for (TSSmsTemplateSqlEntity tsSmsTemplateSqlEntity : tssmsTemplateSqlList) {
-				TSSmsSqlEntity tsSmsSqlEntity = getTSSmsServiceInstance().getById(TSSmsSqlEntity.class, tsSmsTemplateSqlEntity.getSqlId());
+				TSSmsSqlEntity tsSmsSqlEntity = getTSSmsServiceInstance().getEntity(TSSmsSqlEntity.class, tsSmsTemplateSqlEntity.getSqlId());
 				String templateSql= tsSmsSqlEntity.getSqlContent();//获取对应业务sql表中的sql语句
-				TSSmsTemplateEntity tsSmsTemplateEntity= getTSSmsServiceInstance().getById(TSSmsTemplateEntity.class, tsSmsTemplateSqlEntity.getTemplateId());
+				TSSmsTemplateEntity tsSmsTemplateEntity= getTSSmsServiceInstance().getEntity(TSSmsTemplateEntity.class, tsSmsTemplateSqlEntity.getTemplateId());
 				if(Constants.SMS_SEND_TYPE_3.equals(tsSmsTemplateEntity.getTemplateType())){
 					tss.setEsStatus(Constants.SMS_SEND_STATUS_2);
 					tss.setEsSendtime(new Date());

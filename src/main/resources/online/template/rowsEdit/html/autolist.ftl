@@ -73,7 +73,7 @@ function createDataGrid${config_id}(comboboxDataObj){
 								if('${x['field_id']}' in comboboxDataObj){
 									var arr = comboboxDataObj['${x['field_id']}'];
 									for(var a = 0;a<arr.length;a++){
-										if(arr[a].code == value){
+										if(arr[a].typecode == value){
 											return arr[a].typename;
 										}
 									}
@@ -99,14 +99,14 @@ function createDataGrid${config_id}(comboboxDataObj){
 											 	{
 												 	type:'combobox',
 													options:{
-														valueField:'code',
+														valueField:'typecode',
 														textField:'typename',
 														data:
 														<#if  (x['field_dictlist']?size >0)>
 															[
 															<#list x['field_dictlist']  as xd>
 																{
-																"code":"${xd['code']}",
+																"typecode":"${xd['typecode']}",
 																"typename":"${xd['typename']}"
 																},
 															</#list>
@@ -121,7 +121,7 @@ function createDataGrid${config_id}(comboboxDataObj){
 											 	{
 												 	type:'combobox',
 													options:{
-														valueField:'code',
+														valueField:'typecode',
 														textField:'typename',
 														<#-- update-begin--Author:taoyan date:20181022 for：行编辑radio类型 编辑完成显示value bug -->
 														<#-- add-begin--Author:xuelin  Date:20170425 for：#1781 【online模板】online行编辑模板，非空判断-------------------- -->
@@ -132,7 +132,7 @@ function createDataGrid${config_id}(comboboxDataObj){
 															<#if  (x['field_dictlist']?size >0)>
 																<#list x['field_dictlist']  as xd>
 																	dataObj.push({
-																	"code":"${xd['code']}",
+																	"typecode":"${xd['typecode']}",
 																	"typename":"${xd['typename']}"
 																	});
 																</#list>
@@ -260,7 +260,7 @@ function createDataGrid${config_id}(comboboxDataObj){
 							 	formatter:function(value,row){
 								 	<#if  (x['field_dictlist']?size >0)>
 										<#list x['field_dictlist']  as xd>
-											if(value =='${xd['code']}'){
+											if(value =='${xd['typecode']}'){
 												return '${xd['typename']}';
 											}
 										</#list>
@@ -716,7 +716,7 @@ function createDataGrid${config_id}(comboboxDataObj){
 					<select name = "${x['field_id']}"  style="width: 120px">
 					<option value = ""></option>
 					<#list x['field_dictlist']  as xd>
-						<option value = "${xd['code']}">${xd['typename']}</option>
+						<option value = "${xd['typecode']}">${xd['typename']}</option>
 					</#list>
 					</select>
 				</#if>

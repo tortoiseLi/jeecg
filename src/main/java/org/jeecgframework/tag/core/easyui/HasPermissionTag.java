@@ -5,11 +5,11 @@ import java.util.Set;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.core.OperationEntity;
+import org.jeecgframework.web.system.pojo.base.TSOperation;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 /**
@@ -37,17 +37,17 @@ public class HasPermissionTag extends TagSupport{
 	}
 	
 	public boolean showTagBody(String code) {
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !GlobalConstants.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
 			return false;
 		}else{
 			//权限判断；
-			Set<String> operationCodeIds = (Set<String>) super.pageContext.getRequest().getAttribute(GlobalConstants.OPERATION_CODES);
+			Set<String> operationCodeIds = (Set<String>) super.pageContext.getRequest().getAttribute(Globals.OPERATIONCODES);
 			systemService = ApplicationContextUtil.getContext().getBean(SystemService.class);
 			if (null!=operationCodeIds) {
 				for (String operationCodeId : operationCodeIds) {
 					if (oConvertUtils.isEmpty(operationCodeId))
 						break;
-					OperationEntity operation = systemService.getById(OperationEntity.class, operationCodeId);
+					TSOperation operation = systemService.getEntity(TSOperation.class, operationCodeId);
 					if (operation!=null && operation.getOperationcode().equals(code)){
 						return true;
 					}

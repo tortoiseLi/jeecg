@@ -22,7 +22,7 @@ import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
 import org.jeecgframework.poi.excel.entity.vo.MapExcelConstants;
 import org.jeecgframework.web.cgreport.service.core.CgReportServiceI;
-import org.jeecgframework.web.system.dict.entity.TypeEntity;
+import org.jeecgframework.web.system.pojo.base.TSType;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.util.StringUtil;
@@ -120,9 +120,9 @@ public class CgExportExcelController extends BaseController {
 				Object dictCode=fieldList.get(i).get("dict_code");
 				if(oConvertUtils.isNotEmpty(dictCode)) {
 					dictFieldList.add(fieldList.get(i));
-					List<TypeEntity> types = ResourceUtil.getCacheTypes(dictCode.toString().toLowerCase());
-					for (TypeEntity tsType : types) {
-						dictMap.put(dictCode.toString()+"_"+tsType.getCode(), tsType.getName());
+					List<TSType> types = ResourceUtil.getCacheTypes(dictCode.toString().toLowerCase());
+					for (TSType tsType : types) {
+						dictMap.put(dictCode.toString()+"_"+tsType.getTypecode(), tsType.getTypename());
 					}
 				}
 			}

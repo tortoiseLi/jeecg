@@ -1,6 +1,7 @@
 package org.jeecgframework.tag.core.easyui;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -21,7 +23,7 @@ import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.vo.datatable.DataTableReturn;
 import org.jeecgframework.tag.vo.easyui.Autocomplete;
-import org.jeecgframework.web.system.role.entity.RoleEntity;
+import org.jeecgframework.web.system.pojo.base.TSRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -597,13 +599,13 @@ public class TagUtil {
 	/**
 	 * 手工拼接JSON
 	 */
-	public static String getComboBoxJson(List<RoleEntity> list, List<RoleEntity> roles) {
+	public static String getComboBoxJson(List<TSRole> list, List<TSRole> roles) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("[");
-		for (RoleEntity node : list) {
+		for (TSRole node : list) {
 			if (roles.size() > 0) {
 				buffer.append("{\"id\":" + node.getId() + ",\"text\":\"" + node.getRoleName() + "\"");
-				for (RoleEntity node1 : roles) {
+				for (TSRole node1 : roles) {
 					if (node.getId() == node1.getId()) {
 						buffer.append(",\"selected\":true");
 					}

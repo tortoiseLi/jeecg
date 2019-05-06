@@ -97,7 +97,7 @@ public class GenerateController extends BaseController {
 	@RequestMapping(params = "gogenerate")
 	public ModelAndView gogenerate( CgFormHeadEntity cgFormHead,HttpServletRequest request) {
 		if (StringUtil.isNotEmpty(cgFormHead.getId())) {
-			cgFormHead = cgFormFieldService.getById(
+			cgFormHead = cgFormFieldService.getEntity(
 					CgFormHeadEntity.class, cgFormHead.getId());
 		}else{
 			throw new RuntimeException("表单配置不存在");
@@ -193,7 +193,7 @@ public class GenerateController extends BaseController {
 			HttpServletRequest request,HttpServletResponse response) throws Exception {
 		//step.1 准备好智能表单的配置
 		if (StringUtil.isNotEmpty(cgFormHead.getId())) {
-			cgFormHead = cgFormFieldService.getById(
+			cgFormHead = cgFormFieldService.getEntity(
 					CgFormHeadEntity.class, cgFormHead.getId());
 			getCgformConfig(cgFormHead, generateEntity);
 		}else{
@@ -447,7 +447,7 @@ public class GenerateController extends BaseController {
 		List<CgformButtonEntity> buttons = null;
 		Map<String, String[]> buttonSqlMap = new LinkedHashMap<String, String[]>();
 		//表单配置
-		cgFormHead = cgFormFieldService.getById(CgFormHeadEntity.class, cgFormHead.getId());
+		cgFormHead = cgFormFieldService.getEntity(CgFormHeadEntity.class, cgFormHead.getId());
 		//按钮配置
 		buttons = cgformButtonService.getCgformButtonListByFormId(cgFormHead.getId());
 

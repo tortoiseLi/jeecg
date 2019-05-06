@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.annotation.Ehcache;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.SqlInjectionUtil;
@@ -38,7 +38,7 @@ import org.jeecgframework.web.cgform.service.impl.config.util.DbTableProcess;
 import org.jeecgframework.web.cgform.service.impl.config.util.DbTableUtil;
 import org.jeecgframework.web.cgform.service.impl.config.util.ExtendJsonConvert;
 import org.jeecgframework.web.cgform.util.PublicUtil;
-import org.jeecgframework.web.system.core.OperationEntity;
+import org.jeecgframework.web.system.pojo.base.TSOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.springframework.stereotype.Service;
@@ -82,9 +82,9 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 
 			if (oConvertUtils.isEmpty(column.getId())) {
 				databaseFieldIsChange = true;
-				this.add(column);
+				this.save(column);
 			} else {
-				CgFormFieldEntity c = this.getById(CgFormFieldEntity.class,column.getId());
+				CgFormFieldEntity c = this.getEntity(CgFormFieldEntity.class,column.getId());
 				if (!databaseFieldIsChange && databaseFieldIsChange(c, column)) {
 					databaseFieldIsChange = true;
 				}
@@ -149,7 +149,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 					"isNull,isShow,isShowList,isQuery,isKey,fieldMustInput");
 
 			column.setTable(cgFormHead);
-			this.add(column);
+			this.save(column);
 		}
 	}
 
@@ -170,7 +170,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 					"isNull,isShow,isShowList,isQuery,isKey,fieldMustInput");
 
 			column.setTable(cgFormHead);
-			this.add(column);
+			this.save(column);
 		}
 	}
 
@@ -582,12 +582,12 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		Map<String, Object> field = new HashMap<String, Object>();
 
 		//处理一遍权限问题
-		Set<String> operationCodes = (Set<String>) ContextHolderUtils.getRequest().getAttribute(GlobalConstants.OPERATION_CODES);
-		Map<String,OperationEntity> operationCodesMap = new HashMap<String, OperationEntity>();
+		Set<String> operationCodes = (Set<String>) ContextHolderUtils.getRequest().getAttribute(Globals.OPERATIONCODES);
+		Map<String,TSOperation> operationCodesMap = new HashMap<String, TSOperation>();
 		if(operationCodes != null){
-			OperationEntity tsOperation;
+			TSOperation tsOperation;
 			for (String id : operationCodes) {
-				tsOperation = this.getById(OperationEntity.class, id);
+				tsOperation = this.getEntity(TSOperation.class, id);
 				if(tsOperation != null && tsOperation.getStatus() == 0){
 					operationCodesMap.put(tsOperation.getOperationcode(), tsOperation);
 				}
@@ -686,7 +686,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		return data;
 	}
 
-	private List<Map<String, Object>> getFieldListFilterAuth(String tableName,List<Map<String, Object>> subTalbeFieldList,Map<String,OperationEntity> operationCodesMap) {
+	private List<Map<String, Object>> getFieldListFilterAuth(String tableName,List<Map<String, Object>> subTalbeFieldList,Map<String,TSOperation> operationCodesMap) {
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 		for(Map<String, Object> map :subTalbeFieldList){
 			String key = tableName+"."+map.get("field_name");
@@ -704,7 +704,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		return list;
 	}
 	
-	private List<Map<String, Object>> getHiddenFieldListFilterAuth(String tableName,List<Map<String, Object>> subTalbeFieldList,Map<String,OperationEntity> operationCodesMap) {
+	private List<Map<String, Object>> getHiddenFieldListFilterAuth(String tableName,List<Map<String, Object>> subTalbeFieldList,Map<String,TSOperation> operationCodesMap) {
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 		for(Map<String, Object> map :subTalbeFieldList){
 			String key = tableName+"."+map.get("field_name");

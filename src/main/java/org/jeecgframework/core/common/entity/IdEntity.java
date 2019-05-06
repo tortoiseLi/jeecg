@@ -6,11 +6,10 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.GenericGenerator;
-
-import java.io.Serializable;
-
 @MappedSuperclass
-public abstract class IdEntity implements Serializable {
+public abstract class IdEntity implements java.io.Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private String id;
 

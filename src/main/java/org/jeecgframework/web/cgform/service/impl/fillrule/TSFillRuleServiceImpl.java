@@ -25,7 +25,7 @@ public class TSFillRuleServiceImpl extends CommonServiceImpl implements TSFillRu
  	}
  	
  	public Serializable save(TSFillRuleEntity entity) throws Exception{
- 		Serializable t = super.add(entity);
+ 		Serializable t = super.save(entity);
  		//执行新增操作增强业务
  		this.doAddBus(entity);
  		return t;

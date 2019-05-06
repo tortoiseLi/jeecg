@@ -117,12 +117,12 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 				}
 			}
 //--------longjb-start--20150526 ----for:add step.3 判断是否有附件字段,进行连带删除附件及附件表---------------
-			List<CgUploadEntity> uploadBeans = cgFormFieldService.findListByProperty(CgUploadEntity.class, "cgformId", id);
+			List<CgUploadEntity> uploadBeans = cgFormFieldService.findByProperty(CgUploadEntity.class, "cgformId", id);
 			if(uploadBeans!=null){
 				for(CgUploadEntity b:uploadBeans){
 					String path = ResourceUtil.getSysPath()+File.separator+b.getRealpath();//附件路径
 					FileUtils.delete(path);					
-					cgFormFieldService.deleteById(CgUploadEntity.class, b.getId());
+					cgFormFieldService.deleteEntityById(CgUploadEntity.class, b.getId());
 				}
 			}
 
@@ -158,7 +158,7 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 			}
 		}
 
-		Object dataRuleSql = JeecgDataAutorUtils.loadDataSearchConditonSQLString();//ContextHolderUtils.getRequest().getAttribute(GlobalConstants.MENU_DATA_AUTHOR_RULE_SQL);
+		Object dataRuleSql = JeecgDataAutorUtils.loadDataSearchConditonSQLString();//ContextHolderUtils.getRequest().getAttribute(Globals.MENU_DATA_AUTHOR_RULE_SQL);
 		if(dataRuleSql != null && !dataRuleSql.equals("")){
 			if(params.size() == 0) {
 				sqlB.append(" WHERE 1=1 ");
@@ -169,7 +169,8 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 	}
 
 
-	@Override
+	@SuppressWarnings("unchecked")
+	
 	public Long getQuerySingleSize(String table, String field, Map params) {
 		StringBuilder sqlB = new StringBuilder();
 		dealQuerySql(table,"count(*) as query_size,",params,sqlB);
@@ -181,7 +182,6 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 		}
 	}
 	
-	@Override
 	public boolean deleteBatch(String table, String[] ids) {
 		try{
 			for(String id:ids){

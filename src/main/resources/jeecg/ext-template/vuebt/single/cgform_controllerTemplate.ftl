@@ -28,10 +28,10 @@ import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.common.TreeChildCount;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.pojo.base.DepartEntity;
+import org.jeecgframework.web.system.pojo.base.TSDepart;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.core.util.MyBeanUtils;
 
@@ -200,7 +200,7 @@ public class ${entityName}Controller extends BaseController {
 		message = "${ftl_description}删除成功";
 		try{
 			${entityName?uncap_first}Service.delete(${entityName?uncap_first});
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${ftl_description}删除失败";
@@ -235,7 +235,7 @@ public class ${entityName}Controller extends BaseController {
 				</#if>
 				);
 				${entityName?uncap_first}Service.delete(${entityName?uncap_first});
-				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -266,7 +266,7 @@ public class ${entityName}Controller extends BaseController {
 			}
 			</#if>
 			${entityName?uncap_first}Service.save(${entityName?uncap_first});
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${ftl_description}添加失败";
@@ -302,7 +302,7 @@ public class ${entityName}Controller extends BaseController {
 			}
 			</#if>
 			${entityName?uncap_first}Service.saveOrUpdate(t);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "${ftl_description}更新失败";
@@ -328,7 +328,7 @@ public class ${entityName}Controller extends BaseController {
 		${entityName}Entity t = ${entityName?uncap_first}Service.get(${entityName}Entity.class, ${entityName?uncap_first}.getId());
 		try{
 			${entityName?uncap_first}Service.do${btn.buttonCode?cap_first}Bus(t);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${btn.buttonName}失败";
@@ -509,8 +509,8 @@ public class ${entityName}Controller extends BaseController {
 	@ApiOperation(value="${ftl_description}列表信息",produces="application/json",httpMethod="GET")
 	<#-- update--end--author:zhangjiaqiang date:20171031 for:TASK #2397 【新功能】代码生成器模板修改，追加swagger-ui注解 -->
 	public ResponseMessage<List<${entityName}Entity>> list(@PathVariable("pageNo") int pageNo, @PathVariable("pageSize") int pageSize, HttpServletRequest request) {
-		if(pageSize > GlobalConstants.MAX_PAGE_SIZE){
-			return Result.error("每页请求不能超过" + GlobalConstants.MAX_PAGE_SIZE + "条");
+		if(pageSize > Globals.MAX_PAGESIZE){
+			return Result.error("每页请求不能超过" + Globals.MAX_PAGESIZE + "条");
 		}
 		CriteriaQuery query = new CriteriaQuery(${entityName}Entity.class);
 		query.setCurPage(pageNo<=0?1:pageNo);

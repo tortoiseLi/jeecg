@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jeecgframework.web.system.function.entity.FunctionEntity;
-import org.jeecgframework.web.system.icon.entity.IconEntity;
-import org.jeecgframework.web.system.core.OperationEntity;
+import org.jeecgframework.web.system.pojo.base.TSFunction;
+import org.jeecgframework.web.system.pojo.base.TSIcon;
+import org.jeecgframework.web.system.pojo.base.TSOperation;
 import org.jeecgframework.web.system.service.MenuInitService;
 import org.jeecgframework.web.system.util.PackagesToScanUtil;
 
@@ -42,14 +42,14 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 		// 4.循环@AutoMenuOperation方法标签，判断该菜单下是否有该操作码配置，如果存在不插入，不存在进行插入
 		// 比较规则[菜单ID-操作码 ：全匹配]
 
-		List<FunctionEntity> functionList = this.findList(FunctionEntity.class);
-		List<OperationEntity> operationList = this.findList(OperationEntity.class);
+		List<TSFunction> functionList = this.loadAll(TSFunction.class);
+		List<TSOperation> operationList = this.loadAll(TSOperation.class);
 		
-		Map<String, FunctionEntity> functionMap = new HashMap<String, FunctionEntity>();//菜单map,key为菜单匹配规则的字符串
-		Map<String, OperationEntity> operationMap = new HashMap<String, OperationEntity>();//菜单操作按钮map,key为菜单操作按钮匹配规则的字符串
+		Map<String, TSFunction> functionMap = new HashMap<String, TSFunction>();//菜单map,key为菜单匹配规则的字符串
+		Map<String, TSOperation> operationMap = new HashMap<String, TSOperation>();//菜单操作按钮map,key为菜单操作按钮匹配规则的字符串
 		
 		//设置菜单map
-		for (FunctionEntity function : functionList) {
+		for (TSFunction function : functionList) {
 			StringBuffer key = new StringBuffer();
 			key.append(function.getFunctionName() == null ? "" : function.getFunctionName());
 			key.append(KEY_SPLIT);
@@ -59,7 +59,7 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 			functionMap.put(key.toString(), function);
 		}
 		//设置菜单操作按钮map
-		for (OperationEntity operation : operationList) {
+		for (TSOperation operation : operationList) {
 			StringBuffer key = new StringBuffer();
 			key.append(operation.getTSFunction() == null ? "" : operation.getTSFunction().getId());
 			key.append(KEY_SPLIT);
@@ -82,11 +82,11 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 					menuKey.append(autoMenu.level() == null ? "" : autoMenu.level());
 					menuKey.append(KEY_SPLIT);
 					menuKey.append(autoMenu.url() == null ? "" : autoMenu.url());
-
-					FunctionEntity function = null;
+					
+					TSFunction function = null;
 					//判断菜单map的key是否包含当前key，不包含则插入一条菜单数据
 					if (!functionMap.containsKey(menuKey.toString())) {
-						function = new FunctionEntity();
+						function = new TSFunction();
 						function.setFunctionName(autoMenu.name());
 						function.setFunctionIframe(null);
 						function.setFunctionLevel(Short.valueOf(autoMenu.level()));
@@ -96,16 +96,16 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 						
 						String iconId = autoMenu.icon();
 						if (StringUtil.isNotEmpty(iconId)) {
-							Object obj = this.getById(IconEntity.class, iconId);
+							Object obj = this.get(TSIcon.class, iconId);
 							if(obj!=null){
-								function.setTSIcon((IconEntity)obj);
+								function.setTSIcon((TSIcon)obj);
 							}else{
 								function.setTSIcon(null);
 							}
 						} else {
 							function.setTSIcon(null);
 						}
-						Serializable id = this.add(function);
+						Serializable id = this.save(function);
 						function.setId(id.toString());
 					} else {
 						function = functionMap.get(menuKey.toString());
@@ -136,7 +136,7 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 								
 								//判断菜单操作按钮map的key是否包含当前key，不包含则插入一条菜单操作按钮数据
 								if (!operationMap.containsKey(menuOperationKey.toString())) {
-									OperationEntity operation = new OperationEntity();
+									TSOperation operation = new TSOperation();
 									operation.setOperationname(autoMenuOperation.name());
 									operation.setOperationcode(code);
 									operation.setOperationicon(null);
@@ -145,13 +145,13 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 									
 									String iconId = autoMenuOperation.icon();
 									if (StringUtil.isNotEmpty(iconId)) {
-										IconEntity icon = new IconEntity();
+										TSIcon icon = new TSIcon();
 										icon.setId(iconId);
 										operation.setTSIcon(icon);
 									} else {
 										operation.setTSIcon(null);
 									}
-									this.add(operation);
+									this.save(operation);
 								}
 							}
 						}

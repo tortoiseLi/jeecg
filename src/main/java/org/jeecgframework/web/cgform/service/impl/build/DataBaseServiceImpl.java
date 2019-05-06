@@ -282,7 +282,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 		StringBuffer sqlBuffer = new StringBuffer();
 		sqlBuffer.append("select * from ").append(tableName);
 		sqlBuffer.append(" where id= ? ");
-		Map<String, Object> map = commonDao.getBySql(sqlBuffer.toString(), id);
+		Map<String, Object> map = commonDao.findOneForJdbc(sqlBuffer.toString(), id);
 		return map;
 	}
 	/**
@@ -747,7 +747,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 					}
 					if(obj instanceof CgformEnhanceJavaInter){
 
-						CgFormHeadEntity head = this.getById(CgFormHeadEntity.class, formId);
+						CgFormHeadEntity head = this.get(CgFormHeadEntity.class, formId);
 						CgformEnhanceJavaInter javaInter = (CgformEnhanceJavaInter) obj;
 						javaInter.execute(head.getTableName(),data);
 
@@ -818,7 +818,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 					}
 					if(obj instanceof CgformEnhanceJavaInter){
 
-						CgFormHeadEntity head = this.getById(CgFormHeadEntity.class, formId);
+						CgFormHeadEntity head = this.get(CgFormHeadEntity.class, formId);
 						CgformEnhanceJavaInter javaInter = (CgformEnhanceJavaInter) obj;
 						javaInter.execute(head.getTableName(),data);
 

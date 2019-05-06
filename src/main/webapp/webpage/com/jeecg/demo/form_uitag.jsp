@@ -75,7 +75,7 @@
 	<table>
 		<tr>
 			<td align="center" width="100px"><label class="Validform_label">autocomplete:</label></td>
-			<td class="value"><t:autocomplete entityName="UserEntity" searchField="userName" name="userName"></t:autocomplete>
+			<td class="value"><t:autocomplete entityName="TSUser" searchField="userName" name="userName"></t:autocomplete> 
 			<span class="Validform_checktip"></span>
 			</td>
 		</tr>

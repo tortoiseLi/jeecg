@@ -911,7 +911,7 @@ function saveOption(options,i){
 						url: 'superQueryMainController.do?getSelectType',
 						success:function(type){
 							$.each(type.obj, function(index, item){
-								selectContent += "<option value='"+item.code+"' "+(item.code==v?"selected":"")+">"+item.typename+"</option>";
+								selectContent += "<option value='"+item.typecode+"' "+(item.typecode==v?"selected":"")+">"+item.typename+"</option>";
 							});
 							selectContent += "</select>";
 							spanVal.html(selectContent);
@@ -963,7 +963,7 @@ function saveOption(options,i){
 						url: 'superQueryMainController.do?getSelectType',
 						success:function(type){
 							$.each(type.obj, function(index, item){
-								selectContent += "<option value='"+item.code+"'>"+item.typename+"</option>";
+								selectContent += "<option value='"+item.typecode+"'>"+item.typename+"</option>";
 							});
 							selectContent += "</select>";
 							spanVal.html(selectContent);

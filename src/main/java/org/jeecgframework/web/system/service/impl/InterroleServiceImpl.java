@@ -16,16 +16,16 @@ import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.MyClassLoader;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.web.cgform.enhance.CgformEnhanceJavaInter;
-import org.jeecgframework.web.system.core.InterroleEntity;
-import org.jeecgframework.web.system.core.InterroleInterfaceEntity;
-import org.jeecgframework.web.system.core.RoleUserEntity;
-import org.jeecgframework.web.system.service.InterroleService;
+import org.jeecgframework.web.system.pojo.base.InterroleEntity;
+import org.jeecgframework.web.system.pojo.base.InterroleInterfaceEntity;
+import org.jeecgframework.web.system.pojo.base.TSRoleUser;
+import org.jeecgframework.web.system.service.InterroleServiceI;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("interroleService")
 @Transactional
-public class InterroleServiceImpl extends CommonServiceImpl implements InterroleService {
+public class InterroleServiceImpl extends CommonServiceImpl implements InterroleServiceI {
 	 
  	public void delete(InterroleEntity entity) throws Exception{
  		super.delete(entity);
@@ -34,7 +34,7 @@ public class InterroleServiceImpl extends CommonServiceImpl implements Interrole
  	}
  	
  	public Serializable save(InterroleEntity entity) throws Exception{
- 		Serializable t = super.add(entity);
+ 		Serializable t = super.save(entity);
  		//执行新增操作增强业务
  		this.doAddBus(entity);
  		return t;
@@ -126,7 +126,7 @@ public class InterroleServiceImpl extends CommonServiceImpl implements Interrole
 		}
  	}
  	public int getUsersOfThisRole(String id) {
-		Criteria criteria = getSession().createCriteria(RoleUserEntity.class);
+		Criteria criteria = getSession().createCriteria(TSRoleUser.class);
 		criteria.add(Restrictions.eq("InterroleEntity.id", id));
 		int allCounts = ((Long) criteria.setProjection(
 				Projections.rowCount()).uniqueResult()).intValue();
@@ -136,7 +136,7 @@ public class InterroleServiceImpl extends CommonServiceImpl implements Interrole
  	
  	public Set<String> getOperationCodesByRoleIdAndruleDataId(String roleId,String interfaceId) {
 		Set<String> operationCodes = new HashSet<String>();
-		InterroleEntity role = commonDao.getById(InterroleEntity.class, roleId);
+		InterroleEntity role = commonDao.get(InterroleEntity.class, roleId);
 		CriteriaQuery cq1 = new CriteriaQuery(InterroleInterfaceEntity.class);
 		cq1.eq("interroleEntity.id", role.getId());
 		cq1.eq("interfaceEntity.id", interfaceId);

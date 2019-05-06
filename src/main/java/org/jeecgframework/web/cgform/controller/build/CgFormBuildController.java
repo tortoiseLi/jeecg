@@ -488,7 +488,7 @@ public class CgFormBuildController extends BaseController {
 	 * @param id 表单主键，用户查找附件数据
 	 */
 	private void pushFiles(Map<String, Object> data, String id) {
-		List<CgUploadEntity> uploadBeans = cgFormFieldService.findListByProperty(CgUploadEntity.class, "cgformId", id);
+		List<CgUploadEntity> uploadBeans = cgFormFieldService.findByProperty(CgUploadEntity.class, "cgformId", id);
 		List<Map<String,Object>> files = new ArrayList<Map<String,Object>>(0);
 		for(CgUploadEntity b:uploadBeans){
 			String title = b.getAttachmenttitle();//附件名
@@ -511,7 +511,7 @@ public class CgFormBuildController extends BaseController {
 	 * @param id 表单主键,用户查找附件数据
 	 */
 	private void pushImages(Map<String, Object> data, String id) {
-		List<CgUploadEntity> uploadBeans = cgFormFieldService.findListByProperty(CgUploadEntity.class, "cgformId", id);
+		List<CgUploadEntity> uploadBeans = cgFormFieldService.findByProperty(CgUploadEntity.class, "cgformId", id);
 		List<Map<String,Object>> images = new ArrayList<Map<String,Object>>(0);
 		for(CgUploadEntity b:uploadBeans){
 			String title = b.getAttachmenttitle();//附件名

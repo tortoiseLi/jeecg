@@ -7,13 +7,11 @@ import java.util.Map;
 
 public interface TSSmsSqlServiceI extends CommonService{
 	
- 	@Override
-	public <T> void delete(T entity);
+ 	public <T> void delete(T entity);
  	
  	public <T> Serializable save(T entity);
  	
- 	@Override
-	public <T> void saveOrUpdate(T entity);
+ 	public <T> void saveOrUpdate(T entity);
  	
  	/**
 	 * 默认按钮-sql增强-新增操作

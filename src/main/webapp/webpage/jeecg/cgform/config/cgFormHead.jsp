@@ -78,7 +78,7 @@ String langurl = basePath + "/plug-in/mutiLang/" + lang +".js";
 			<td align="right"><label class="Validform_label"> <t:mutiLang langKey="form.category"/>:</label></td>
 			<td class="value"><select id="jformCategory" name="jformCategory">
 				<c:forEach items="${typeList}" var="type">
-					<option value="${type.code}" <c:if test="${type.code==cgFormHeadPage.jformCategory}">selected="selected"</c:if>>${type.typename}</option>
+					<option value="${type.typecode}" <c:if test="${type.typecode==cgFormHeadPage.jformCategory}">selected="selected"</c:if>>${type.typename}</option>
 				</c:forEach>
 			</select></td>
 			<!--add-end--Author:luobaoli  Date:20150607 for：增加表单分类下拉列表-->

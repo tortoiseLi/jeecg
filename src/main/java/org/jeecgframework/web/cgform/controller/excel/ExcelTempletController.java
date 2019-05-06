@@ -1,5 +1,7 @@
 package org.jeecgframework.web.cgform.controller.excel;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,6 +19,7 @@ import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
+import org.jeecgframework.core.constant.DataBaseConstant;
 import org.jeecgframework.core.util.DBTypeUtil;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
@@ -39,8 +42,7 @@ import org.jeecgframework.web.cgform.service.build.DataBaseService;
 import org.jeecgframework.web.cgform.service.config.CgFormFieldServiceI;
 import org.jeecgframework.web.cgform.service.impl.config.util.FieldNumComparator;
 import org.jeecgframework.web.cgform.util.QueryParamUtil;
-import org.jeecgframework.web.system.dict.entity.DictEntity;
-import org.jeecgframework.web.system.dict.service.DictService;
+import org.jeecgframework.web.system.pojo.base.DictEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
@@ -54,6 +56,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * @author huiyong
@@ -78,8 +82,6 @@ public class ExcelTempletController extends BaseController {
 	private SystemService systemService;
 	@Autowired
 	private AbstractRoutingDataSource dataSource;
-	@Autowired
-	private DictService dictService;
 
 
 	/**
@@ -242,7 +244,7 @@ public class ExcelTempletController extends BaseController {
 					if (arrayVal.length > 1) {
 						for (String val : arrayVal) {
 							for (DictEntity dictEntity : dicList) {
-								if (val.equals(dictEntity.getCode())) {
+								if (val.equals(dictEntity.getTypecode())) {
 									sb.append(dictEntity.getTypename());
 									sb.append(",");
 								}
@@ -492,7 +494,7 @@ public class ExcelTempletController extends BaseController {
 	}
 
 	private List<DictEntity> queryDic(String dicTable, String dicCode, String dicText) {
-		return this.dictService.findDictList(dicTable, dicCode, dicText);
+		return this.systemService.queryDict(dicTable, dicCode, dicText);
 	}
 
 	/**
@@ -517,7 +519,7 @@ public class ExcelTempletController extends BaseController {
 					for (Map r : result) {
 						String value = String.valueOf(r.get(bean.getFieldName()));
 						for (DictEntity dictEntity : dicDataList) {
-							if (value.equalsIgnoreCase(dictEntity.getCode())) {
+							if (value.equalsIgnoreCase(dictEntity.getTypecode())) {
 								r.put(bean.getFieldName(), MutiLangUtil.getLang(dictEntity.getTypename()));
 							}
 						}
@@ -547,7 +549,7 @@ public class ExcelTempletController extends BaseController {
 						String value = String.valueOf(result.get(bean.getFieldName()));
 						for (DictEntity dictEntity : dicDataList) {
 							if (value.equals(dictEntity.getTypename())) {
-								result.put(bean.getFieldName(), dictEntity.getCode());
+								result.put(bean.getFieldName(), dictEntity.getTypecode());
 							}
 						}
 				}

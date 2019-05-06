@@ -399,7 +399,7 @@ function createDataGrid${config_id}(){
 					<select name = "${x['field_id']}"  style="width: 104px">
 					<option value = ""></option>
 					<#list x['field_dictlist']  as xd>
-						<option value = "${xd['code']}">${xd['typename']}</option>
+						<option value = "${xd['typecode']}">${xd['typename']}</option>
 					</#list>
 					</select>
 				</#if>

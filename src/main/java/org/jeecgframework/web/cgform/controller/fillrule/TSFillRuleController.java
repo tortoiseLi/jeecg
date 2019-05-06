@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
-import com.sun.javaws.Globals;
 import org.apache.commons.lang3.StringUtils;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
@@ -19,7 +18,7 @@ import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.ResourceUtil;
@@ -120,11 +119,11 @@ public class TSFillRuleController extends BaseController {
 	public AjaxJson doDel(TSFillRuleEntity tSFillRule, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tSFillRule = systemService.getById(TSFillRuleEntity.class, tSFillRule.getId());
+		tSFillRule = systemService.getEntity(TSFillRuleEntity.class, tSFillRule.getId());
 		message = "填值规则表删除成功";
 		try{
 			tSFillRuleService.delete(tSFillRule);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "填值规则表删除失败";
@@ -147,11 +146,11 @@ public class TSFillRuleController extends BaseController {
 		message = "填值规则表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSFillRuleEntity tSFillRule = systemService.getById(TSFillRuleEntity.class,
+				TSFillRuleEntity tSFillRule = systemService.getEntity(TSFillRuleEntity.class, 
 				id
 				);
 				tSFillRuleService.delete(tSFillRule);
-				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -177,7 +176,7 @@ public class TSFillRuleController extends BaseController {
 		message = "填值规则表添加成功";
 		try{
 			tSFillRuleService.save(tSFillRule);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "填值规则表添加失败";
@@ -199,11 +198,11 @@ public class TSFillRuleController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "填值规则表更新成功";
-		TSFillRuleEntity t = tSFillRuleService.getById(TSFillRuleEntity.class, tSFillRule.getId());
+		TSFillRuleEntity t = tSFillRuleService.get(TSFillRuleEntity.class, tSFillRule.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSFillRule, t);
 			tSFillRuleService.saveOrUpdate(t);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "填值规则表更新失败";
@@ -222,7 +221,7 @@ public class TSFillRuleController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(TSFillRuleEntity tSFillRule, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSFillRule.getId())) {
-			tSFillRule = tSFillRuleService.getById(TSFillRuleEntity.class, tSFillRule.getId());
+			tSFillRule = tSFillRuleService.getEntity(TSFillRuleEntity.class, tSFillRule.getId());
 			req.setAttribute("tSFillRulePage", tSFillRule);
 		}
 		return new ModelAndView("jeecg/cgform/fillrule/tSFillRule-add");
@@ -235,7 +234,7 @@ public class TSFillRuleController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(TSFillRuleEntity tSFillRule, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSFillRule.getId())) {
-			tSFillRule = tSFillRuleService.getById(TSFillRuleEntity.class, tSFillRule.getId());
+			tSFillRule = tSFillRuleService.getEntity(TSFillRuleEntity.class, tSFillRule.getId());
 			req.setAttribute("tSFillRulePage", tSFillRule);
 		}
 		return new ModelAndView("jeecg/cgform/fillrule/tSFillRule-update");
@@ -325,14 +324,14 @@ public class TSFillRuleController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseMessage<List<TSFillRuleEntity>> list() {
-		List<TSFillRuleEntity> listTSFillRules=tSFillRuleService.findList(TSFillRuleEntity.class);
+		List<TSFillRuleEntity> listTSFillRules=tSFillRuleService.getList(TSFillRuleEntity.class);
 		return Result.success(listTSFillRules);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseMessage<?> get(@PathVariable("id") String id) {
-		TSFillRuleEntity task = tSFillRuleService.getById(TSFillRuleEntity.class, id);
+		TSFillRuleEntity task = tSFillRuleService.get(TSFillRuleEntity.class, id);
 		if (task == null) {
 			return Result.error("根据ID获取填值规则表信息为空");
 		}
@@ -388,7 +387,7 @@ public class TSFillRuleController extends BaseController {
 			return Result.error("ID不能为空");
 		}
 		try {
-			tSFillRuleService.deleteById(TSFillRuleEntity.class, id);
+			tSFillRuleService.deleteEntityById(TSFillRuleEntity.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Result.error("填值规则表删除失败");

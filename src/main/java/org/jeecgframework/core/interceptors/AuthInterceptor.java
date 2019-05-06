@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.annotation.JAuth;
 import org.jeecgframework.core.common.model.json.AjaxJson;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.enums.Permission;
 import org.jeecgframework.core.extend.hqlsearch.SysContextSqlConvert;
 import org.jeecgframework.core.util.ContextHolderUtils;
@@ -23,11 +23,11 @@ import org.jeecgframework.core.util.JSONHelper;
 import org.jeecgframework.core.util.JeecgDataAutorUtils;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.core.manager.ClientManager;
-import org.jeecgframework.web.system.core.common.entity.Client;
-import org.jeecgframework.web.system.data.rule.entity.DataRuleEntity;
-import org.jeecgframework.web.system.core.OperationEntity;
-import org.jeecgframework.web.system.user.entity.UserEntity;
+import org.jeecgframework.web.system.manager.ClientManager;
+import org.jeecgframework.web.system.pojo.base.Client;
+import org.jeecgframework.web.system.pojo.base.TSDataRule;
+import org.jeecgframework.web.system.pojo.base.TSOperation;
+import org.jeecgframework.web.system.pojo.base.TSUser;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +61,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 	/**
 	 * 在controller前拦截
 	 */
-	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
 		HandlerMethod handlerMethod=(HandlerMethod)object;
 		JAuth jauthType =handlerMethod.getBean().getClass().getAnnotation(JAuth.class);
@@ -92,7 +91,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 			return true;
 		} else {
 			Client client = clientManager.getClient(ContextHolderUtils.getSession().getId());
-			UserEntity currLoginUser = client!=null?client.getUser():null;
+			TSUser currLoginUser = client!=null?client.getUser():null;
 			if (currLoginUser!=null ) {
 				String loginUserName = currLoginUser.getUserName();
 				String loginUserId = currLoginUser.getId();
@@ -138,19 +137,19 @@ public class AuthInterceptor implements HandlerInterceptor {
 					//获取菜单对应的页面控制权限（包括表单字段和操作按钮）
 					//多个角色权限（并集问题），因为是反的控制，导致有admin的最大权限反而受小权限控制
 
-					List<OperationEntity> operations = systemService.getLoginOperationsByUserId(loginUserId, functionId, orgId);
+					List<TSOperation> operations = systemService.getLoginOperationsByUserId(loginUserId, functionId, orgId);
 
-					request.setAttribute(GlobalConstants.NO_AUTO_OPERATION_CODES, operations);
+					request.setAttribute(Globals.NOAUTO_OPERATIONCODES, operations);
 					if(operations!=null){
 						Set<String> operationCodes = new HashSet<String>();
-						for (OperationEntity operation : operations) {
+						for (TSOperation operation : operations) {
 							operationCodes.add(operation.getId());
 						}
-						request.setAttribute(GlobalConstants.OPERATION_CODES, operationCodes);
+						request.setAttribute(Globals.OPERATIONCODES, operationCodes);
 					}
 					
 					 //Step.2  【数据权限】第二部分处理列表数据级权限 (菜单数据规则集合)
-					 List<DataRuleEntity> MENU_DATA_AUTHOR_RULES = new ArrayList<DataRuleEntity>();
+					 List<TSDataRule> MENU_DATA_AUTHOR_RULES = new ArrayList<TSDataRule>(); 
 					 String MENU_DATA_AUTHOR_RULE_SQL="";
 					
 				 	//数据权限规则的查询
@@ -160,7 +159,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 					 request.setAttribute("dataRulecodes", dataRuleIds);
 					 for (String dataRuleId : dataRuleIds) {
-						 DataRuleEntity dataRule = systemService.getById(DataRuleEntity.class, dataRuleId);
+						TSDataRule dataRule = systemService.getEntity(TSDataRule.class, dataRuleId);
 					 	MENU_DATA_AUTHOR_RULES.add(dataRule);
 					 	MENU_DATA_AUTHOR_RULE_SQL += SysContextSqlConvert.setSqlModel(dataRule);
 					}

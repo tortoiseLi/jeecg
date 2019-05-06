@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.ResourceUtil;
-import org.jeecgframework.web.system.dict.entity.TypeEntity;
+import org.jeecgframework.web.system.pojo.base.TSType;
 import org.jeecgframework.web.system.service.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,6 @@ public class DictDataTag implements TemplateDirectiveModel {
 	@Autowired
 	private SystemService systemService;
 
-	@Override
 	@SuppressWarnings("unchecked")
 	public void execute(Environment env, Map params, TemplateModel[] loopVars,
 			TemplateDirectiveBody body) throws TemplateException, IOException {
@@ -58,20 +57,20 @@ public class DictDataTag implements TemplateDirectiveModel {
 
 		if (tablename == null || tablename.trim().length() <= 0) {
 			// 根据dict_field查询字典表list
-			List<TypeEntity> dataList = ResourceUtil.getCacheTypes(name.toLowerCase());
+			List<TSType> dataList = ResourceUtil.getCacheTypes(name.toLowerCase());
 			if (dataList == null) {
-				dataList = new ArrayList<TypeEntity>();
+				dataList = new ArrayList<TSType>();
 			}
-			for(TypeEntity s:dataList){
-				String names = s.getName();
-				s.setName(MutiLangUtil.getLang(names));
+			for(TSType s:dataList){
+				String names = s.getTypename();
+				s.setTypename(MutiLangUtil.getLang(names));
 			}
 			env.setGlobalVariable(var, new SimpleCollection(dataList));
 		} else {
 			// table表查询
 			StringBuilder sql = new StringBuilder("");
 			sql.append("select distinct ").append(name)
-					.append(" as code, ");
+					.append(" as typecode, ");
 			if (text == null || text.trim().length() <= 0) {
 				sql.append(name).append(" as typename ");
 			} else {

@@ -9,12 +9,12 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import java.util.HashMap;
 import org.hamcrest.Matchers;
 import org.jeecgframework.AbstractUnitTest;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.PasswordUtil;
 import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.web.system.depart.entity.DepartEntity;
 import org.jeecgframework.web.system.pojo.base.Client;
-import org.jeecgframework.web.system.user.entity.UserEntity;
+import org.jeecgframework.web.system.pojo.base.TSDepart;
+import org.jeecgframework.web.system.pojo.base.TSUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ public class UserRestControllerTest  extends AbstractUnitTest{
 		session = (MockHttpSession) request.getSession();
 
 		Client c = new Client();
-		UserEntity u = new UserEntity();
+		TSUser u = new TSUser();
 		u.setUserName("admin");
 		c.setUser(u);
 		session.setAttribute(session.getId(), c);
@@ -62,7 +62,7 @@ public class UserRestControllerTest  extends AbstractUnitTest{
 				.andDo(print())
 				.andExpect(jsonPath("$.success").value(Matchers.equalTo(true)));
 		//避免testGetAll()中admin用户的currentDepart属性循环嵌套导致json不正确
-		((Client)session.getAttribute(session.getId())).getUser().setCurrentDepart(new DepartEntity());
+		((Client)session.getAttribute(session.getId())).getUser().setCurrentDepart(new TSDepart());
 	}
 	
 	//测试get全部用户
@@ -111,7 +111,7 @@ public class UserRestControllerTest  extends AbstractUnitTest{
 		map.put("devFlag", "1");
 		map.put("mobilePhone", "mobilePhone");
 		map.put("realName", "realName");
-		map.put("status", GlobalConstants.USER_NORMAL+"");
+		map.put("status", Globals.User_Normal+"");
 		map.put("activitiSync", "1");
 		map.put("userName", "testRestMockMvc");
 		map.put("password", PasswordUtil.encrypt("testRestMockMvc", "123456", PasswordUtil.getStaticSalt()));
@@ -144,7 +144,7 @@ public class UserRestControllerTest  extends AbstractUnitTest{
 		map.put("devFlag", "1");
 		map.put("mobilePhone", "mobilePhone");
 		map.put("realName", "realName");
-		map.put("status", GlobalConstants.USER_NORMAL+"");
+		map.put("status", Globals.User_Normal+"");
 		map.put("activitiSync", "1");
 		map.put("userName", "testRestMockMvc");
 		map.put("password", PasswordUtil.encrypt("testRestMockMvc", "123456", PasswordUtil.getStaticSalt()));

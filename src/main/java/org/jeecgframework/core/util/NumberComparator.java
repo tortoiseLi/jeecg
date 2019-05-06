@@ -2,7 +2,7 @@ package org.jeecgframework.core.util;
 
 import java.util.Comparator;
 
-import org.jeecgframework.web.system.function.entity.FunctionEntity;
+import org.jeecgframework.web.system.pojo.base.TSFunction;
 
 /**
 * @ClassName: NumberComparator 
@@ -25,8 +25,8 @@ public class NumberComparator implements Comparator<Object> {
 		String o1 = "";
 		String o2 = "";
 		if (ignoreCase) {
-			FunctionEntity c1 = (FunctionEntity) obj1;
-			FunctionEntity c2 = (FunctionEntity) obj2;
+			TSFunction c1 = (TSFunction) obj1;
+			TSFunction c2 = (TSFunction) obj2;
 			o1 = c1.getFunctionOrder();
 			o2 = c2.getFunctionOrder();
 		}

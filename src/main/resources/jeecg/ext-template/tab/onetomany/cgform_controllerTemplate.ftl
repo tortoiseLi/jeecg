@@ -40,12 +40,12 @@ import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.pojo.base.DepartEntity;
+import org.jeecgframework.web.system.pojo.base.TSDepart;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
@@ -188,7 +188,7 @@ public class ${entityName}Controller extends BaseController {
 		String message = "${ftl_description}删除成功";
 		try{
 			${entityName?uncap_first}Service.delMain(${entityName?uncap_first});
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${ftl_description}删除失败";
@@ -222,7 +222,7 @@ public class ${entityName}Controller extends BaseController {
 				</#if>
 				);
 				${entityName?uncap_first}Service.delMain(${entityName?uncap_first});
-				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -249,7 +249,7 @@ public class ${entityName}Controller extends BaseController {
 		String message = "添加成功";
 		try{
 			${entityName?uncap_first}Service.addMain(${entityName?uncap_first}, <#list subTab as sub>${sub.entityName?uncap_first}List<#if sub_has_next>,</#if></#list>);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${ftl_description}添加失败";
@@ -279,7 +279,7 @@ public class ${entityName}Controller extends BaseController {
 		String message = "更新成功";
 		try{
 			${entityName?uncap_first}Service.updateMain(${entityName?uncap_first}, <#list subTab as sub>${sub.entityName?uncap_first}List<#if sub_has_next>,</#if></#list>);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "更新${ftl_description}失败";
@@ -479,7 +479,7 @@ public class ${entityName}Controller extends BaseController {
 		${entityName}Entity t = ${entityName?uncap_first}Service.get(${entityName}Entity.class, ${entityName?uncap_first}.getId());
 		try{
 			${entityName?uncap_first}Service.do${btn.buttonCode?cap_first}Sql(t);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${btn.buttonName}失败";
@@ -501,8 +501,8 @@ public class ${entityName}Controller extends BaseController {
 	<#-- update--end--author:zhangjiaqiang date:20171031 for:TASK #2397 【新功能】代码生成器模板修改，追加swagger-ui注解 -->
 	<#-- update--begin--author:zhangjiaqiang date:20171031 for:TASK #2400 【功能不足】一对多，restful接口不足，目前只返回主表的数据，应该把主子表的数据一起返回 -->
 	public ResponseMessage<List<${entityName}Page>> list(@PathVariable("pageNo") int pageNo, @PathVariable("pageSize") int pageSize, HttpServletRequest request) {
-		if(pageSize>GlobalConstants.MAX_PAGE_SIZE){
-			return Result.error("每页请求不能超过" + GlobalConstants.MAX_PAGE_SIZE + "条");
+		if(pageSize>Globals.MAX_PAGESIZE){
+			return Result.error("每页请求不能超过" + Globals.MAX_PAGESIZE + "条");
 		}
 		CriteriaQuery query = new CriteriaQuery(${entityName}Entity.class);
 		query.setCurPage(pageNo<=0?1:pageNo);

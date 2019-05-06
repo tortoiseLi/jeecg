@@ -211,7 +211,7 @@
                                                 <select name = "${x['field_id']}" class="col-sm-8 col-md-8">
                                                     <option value = ""></option>
 													<#list x['field_dictlist']  as xd>
-                                                        <option value = "${xd['code']}">${xd['typename']}</option>
+                                                        <option value = "${xd['typecode']}">${xd['typename']}</option>
 													</#list>
                                                 </select>
 											</#if>

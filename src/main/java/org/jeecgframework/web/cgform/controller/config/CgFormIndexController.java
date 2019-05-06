@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
-import com.sun.javaws.Globals;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
@@ -19,7 +18,7 @@ import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.ResourceUtil;
@@ -119,11 +118,11 @@ public class CgFormIndexController extends BaseController {
 	public AjaxJson doDel(CgFormIndexEntity cgFormIndex, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		cgFormIndex = systemService.getById(CgFormIndexEntity.class, cgFormIndex.getId());
+		cgFormIndex = systemService.getEntity(CgFormIndexEntity.class, cgFormIndex.getId());
 		message = "索引表删除成功";
 		try{
 			cgFormIndexService.delete(cgFormIndex);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "索引表删除失败";
@@ -146,11 +145,11 @@ public class CgFormIndexController extends BaseController {
 		message = "索引表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				CgFormIndexEntity cgFormIndex = systemService.getById(CgFormIndexEntity.class,
+				CgFormIndexEntity cgFormIndex = systemService.getEntity(CgFormIndexEntity.class, 
 				id
 				);
 				cgFormIndexService.delete(cgFormIndex);
-				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -176,7 +175,7 @@ public class CgFormIndexController extends BaseController {
 		message = "索引表添加成功";
 		try{
 			cgFormIndexService.save(cgFormIndex);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "索引表添加失败";
@@ -198,11 +197,11 @@ public class CgFormIndexController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "索引表更新成功";
-		CgFormIndexEntity t = cgFormIndexService.getById(CgFormIndexEntity.class, cgFormIndex.getId());
+		CgFormIndexEntity t = cgFormIndexService.get(CgFormIndexEntity.class, cgFormIndex.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(cgFormIndex, t);
 			cgFormIndexService.saveOrUpdate(t);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "索引表更新失败";
@@ -221,7 +220,7 @@ public class CgFormIndexController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(CgFormIndexEntity cgFormIndex, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgFormIndex.getId())) {
-			cgFormIndex = cgFormIndexService.getById(CgFormIndexEntity.class, cgFormIndex.getId());
+			cgFormIndex = cgFormIndexService.getEntity(CgFormIndexEntity.class, cgFormIndex.getId());
 			req.setAttribute("cgFormIndexPage", cgFormIndex);
 		}
 		return new ModelAndView("com/jeecg/index/cgFormIndex-add");
@@ -234,7 +233,7 @@ public class CgFormIndexController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(CgFormIndexEntity cgFormIndex, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgFormIndex.getId())) {
-			cgFormIndex = cgFormIndexService.getById(CgFormIndexEntity.class, cgFormIndex.getId());
+			cgFormIndex = cgFormIndexService.getEntity(CgFormIndexEntity.class, cgFormIndex.getId());
 			req.setAttribute("cgFormIndexPage", cgFormIndex);
 		}
 		return new ModelAndView("com/jeecg/index/cgFormIndex-update");
@@ -324,14 +323,14 @@ public class CgFormIndexController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public List<CgFormIndexEntity> list() {
-		List<CgFormIndexEntity> listCgFormIndexs=cgFormIndexService.findList(CgFormIndexEntity.class);
+		List<CgFormIndexEntity> listCgFormIndexs=cgFormIndexService.getList(CgFormIndexEntity.class);
 		return listCgFormIndexs;
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> get(@PathVariable("id") String id) {
-		CgFormIndexEntity task = cgFormIndexService.getById(CgFormIndexEntity.class, id);
+		CgFormIndexEntity task = cgFormIndexService.get(CgFormIndexEntity.class, id);
 		if (task == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
@@ -377,7 +376,7 @@ public class CgFormIndexController extends BaseController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable("id") String id) {
-		cgFormIndexService.deleteById(CgFormIndexEntity.class, id);
+		cgFormIndexService.deleteEntityById(CgFormIndexEntity.class, id);
 	}
 	
 	/**

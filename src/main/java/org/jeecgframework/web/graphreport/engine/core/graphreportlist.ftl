@@ -34,7 +34,7 @@ ${config_iframe}
 				                });
 				                var comboGridData = [
 					                <#list x['field_dictlist'] as xd>
-										{ key: '${xd['code']}', value: '${xd['typename']}' }
+										{ key: '${xd['typecode']}', value: '${xd['typename']}' }
 										<#if (x['field_dictlist']?size > xd_index + 1)>,</#if>
 									</#list>
 				                ];
@@ -46,7 +46,7 @@ ${config_iframe}
 						<#if  (x['field_dictlist']?size <= 10)><option value = ""></option></#if>
 						<#if  (x['field_dictlist']?size > 10)><option value = ""></option></#if>
 						<#list x['field_dictlist']  as xd>
-							<option value = "${xd['code']}">${xd['typename']}</option>
+							<option value = "${xd['typecode']}">${xd['typename']}</option>
 						</#list>
 						</select>
 					</#if>

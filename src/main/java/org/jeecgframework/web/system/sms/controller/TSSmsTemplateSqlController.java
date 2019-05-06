@@ -5,7 +5,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.javaws.Globals;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.common.controller.BaseController;
@@ -13,7 +12,7 @@ import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.GlobalConstants;
+import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
@@ -130,11 +129,11 @@ public class TSSmsTemplateSqlController extends BaseController {
 	@ResponseBody
 	public AjaxJson doDel(TSSmsTemplateSqlEntity tSSmsTemplateSql, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		tSSmsTemplateSql = systemService.getById(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
+		tSSmsTemplateSql = systemService.getEntity(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
 		message = "消息模板_业务SQL配置表删除成功";
 		try{
 			tSSmsTemplateSqlService.delete(tSSmsTemplateSql);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "消息模板_业务SQL配置表删除失败";
@@ -156,11 +155,11 @@ public class TSSmsTemplateSqlController extends BaseController {
 		message = "消息模板_业务SQL配置表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSSmsTemplateSqlEntity tSSmsTemplateSql = systemService.getById(TSSmsTemplateSqlEntity.class,
+				TSSmsTemplateSqlEntity tSSmsTemplateSql = systemService.getEntity(TSSmsTemplateSqlEntity.class, 
 				id
 				);
 				tSSmsTemplateSqlService.delete(tSSmsTemplateSql);
-				systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -185,7 +184,7 @@ public class TSSmsTemplateSqlController extends BaseController {
 		message = "消息模板_业务SQL配置表添加成功";
 		try{
 			tSSmsTemplateSqlService.save(tSSmsTemplateSql);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "消息模板_业务SQL配置表添加失败";
@@ -206,11 +205,11 @@ public class TSSmsTemplateSqlController extends BaseController {
 	public AjaxJson doUpdate(TSSmsTemplateSqlEntity tSSmsTemplateSql, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		message = "消息模板_业务SQL配置表更新成功";
-		TSSmsTemplateSqlEntity t = tSSmsTemplateSqlService.getById(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
+		TSSmsTemplateSqlEntity t = tSSmsTemplateSqlService.get(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSSmsTemplateSql, t);
 			tSSmsTemplateSqlService.saveOrUpdate(t);
-			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "消息模板_业务SQL配置表更新失败";
@@ -229,7 +228,7 @@ public class TSSmsTemplateSqlController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(TSSmsTemplateSqlEntity tSSmsTemplateSql, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSmsTemplateSql.getId())) {
-			tSSmsTemplateSql = tSSmsTemplateSqlService.getById(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
+			tSSmsTemplateSql = tSSmsTemplateSqlService.getEntity(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
 			req.setAttribute("tSSmsTemplateSqlPage", tSSmsTemplateSql);
 		}
 		return new ModelAndView("system/sms/tSSmsTemplateSql-add");
@@ -242,7 +241,7 @@ public class TSSmsTemplateSqlController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(TSSmsTemplateSqlEntity tSSmsTemplateSql, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSmsTemplateSql.getId())) {
-			tSSmsTemplateSql = tSSmsTemplateSqlService.getById(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
+			tSSmsTemplateSql = tSSmsTemplateSqlService.getEntity(TSSmsTemplateSqlEntity.class, tSSmsTemplateSql.getId());
 			req.setAttribute("tSSmsTemplateSqlPage", tSSmsTemplateSql);
 		}
 		return new ModelAndView("system/sms/tSSmsTemplateSql-update");

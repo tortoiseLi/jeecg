@@ -5,7 +5,7 @@ import java.io.Writer;
 import java.util.Map;
 
 import org.jeecgframework.core.util.ApplicationContextUtil;
-import org.jeecgframework.web.system.service.MutiLangService;
+import org.jeecgframework.web.system.service.MutiLangServiceI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -41,7 +41,7 @@ public class MutiLangTag implements TemplateDirectiveModel {
 		
 		String langArg = getAttribute(params, "langArg");
 
-		MutiLangService mutiLangService = ApplicationContextUtil.getContext().getBean(MutiLangService.class);
+		MutiLangServiceI mutiLangService = ApplicationContextUtil.getContext().getBean(MutiLangServiceI.class);	
 
 		String lang_context = mutiLangService.getLang(langKey, langArg);
 		
