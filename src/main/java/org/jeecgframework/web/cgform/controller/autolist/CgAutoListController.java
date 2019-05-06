@@ -286,7 +286,7 @@ public class CgAutoListController extends BaseController{
 					if(arrayVal.length > 1){
 						for(String val:arrayVal){
 							for(DictEntity dictEntity:dicList){
-								if(val.equals(dictEntity.getTypecode())){
+								if(val.equals(dictEntity.getCode())){
 									sb.append(dictEntity.getTypename());
 									sb.append(",");
 								}
@@ -361,15 +361,8 @@ public class CgAutoListController extends BaseController{
 					List<DictEntity> dicDataList = queryDic(dicTable, dicCode,dicText);
 					for(Map r:result){
 						String value = String.valueOf(r.get(bean.getFieldName()));
-//						for(Map m:dicDatas){
-//							String typecode = String.valueOf(m.get("typecode"));
-//							String typename = String.valueOf(m.get("typename"));
-//							if(value.equalsIgnoreCase(typecode)){
-//								r.put(bean.getFieldName(),typename);
-//							}
-//						}
 						for(DictEntity dictEntity:dicDataList){
-							if(value.equalsIgnoreCase(dictEntity.getTypecode())){
+							if(value.equalsIgnoreCase(dictEntity.getCode())){
 								r.put(bean.getFieldName(),MutiLangUtil.getLang(dictEntity.getTypename()));
 								break;
 							}
@@ -730,9 +723,9 @@ public class CgAutoListController extends BaseController{
 			if(listt!=null){
 				for (TypeEntity tsType : listt) {
 					DictEntity d = new DictEntity();
-					d.setTypecode(tsType.getTypecode());
+					d.setCode(tsType.getCode());
 
-					d.setTypename(mutiLangService.getLang(tsType.getTypename()));
+					d.setTypename(mutiLangService.getLang(tsType.getName()));
 
 					li.add(d);
 				}

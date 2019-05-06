@@ -49,7 +49,7 @@ public class EasypoiDictService implements EasypoiDictServiceI {
 			}
 		}
 		for(DictEntity t:dictList){
-			dictReplace.add(mutiLangService.getLang(t.getTypename())+"_"+t.getTypecode());
+			dictReplace.add(mutiLangService.getLang(t.getTypename())+"_"+t.getCode());
 		}
 		if(dictReplace!=null && dictReplace.size()!=0){
 			return dictReplace.toArray(new String[dictReplace.size()]);

@@ -176,9 +176,9 @@ public class FormHtmlUtilWord {
   	      }
   	      html.append(" var=\"dictDataList\">");
   	      html.append("<#list dictDataList as dictdata>");
-  	      html.append(" <input type=\"radio\" value=\"\\${dictdata.typecode?if_exists?html}\" name=\""+cgFormFieldEntity.getFieldName()+"\" ");
+  	      html.append(" <input type=\"radio\" value=\"\\${dictdata.code?if_exists?html}\" name=\""+cgFormFieldEntity.getFieldName()+"\" ");
   	      
-  	      html.append("<c:if test=\"@@@{onlineCodeGenereateEntityKey."+cgFormFieldEntity.getFieldName()+"=='\\${dictdata.typecode?if_exists?html}'}\" >");
+  	      html.append("<c:if test=\"@@@{onlineCodeGenereateEntityKey."+cgFormFieldEntity.getFieldName()+"=='\\${dictdata.code?if_exists?html}'}\" >");
   	      html.append(" checked=\"true\" ");
   	      html.append("</c:if>");
   	      
@@ -208,13 +208,13 @@ public class FormHtmlUtilWord {
       	      }
       	      html.append(" var=\"dictDataList\">");
     	      html.append("<#list dictDataList as dictdata>");
-    	      html.append(" <input type=\"checkbox\" value=\"\\${dictdata.typecode?if_exists?html}\" name=\""+cgFormFieldEntity.getFieldName()+"\" ");
+    	      html.append(" <input type=\"checkbox\" value=\"\\${dictdata.code?if_exists?html}\" name=\""+cgFormFieldEntity.getFieldName()+"\" ");
 
-    	      html.append("<c:if test=\"@@@{onlineCodeGenereateEntityKey."+cgFormFieldEntity.getFieldName()+"=='\\${dictdata.typecode?if_exists?html}'}\" >");
+    	      html.append("<c:if test=\"@@@{onlineCodeGenereateEntityKey."+cgFormFieldEntity.getFieldName()+"=='\\${dictdata.code?if_exists?html}'}\" >");
       	      html.append(" checked=\"true\" ");
       	      html.append("</c:if>");
       	      
-      	      html.append("<#if dictdata.typecode=='\\${").append(cgFormFieldEntity.getFieldName()).append("?if_exists?html}'>");
+      	      html.append("<#if dictdata.code=='\\${").append(cgFormFieldEntity.getFieldName()).append("?if_exists?html}'>");
     	      html.append(" checked=\"true\" ");
     	      html.append("</#if> ");
       	      
@@ -246,9 +246,9 @@ public class FormHtmlUtilWord {
   	      html.append(" var=\"dictDataList\">");
 	      html.append("<select name=\""+cgFormFieldEntity.getFieldName()+"\" id=\""+cgFormFieldEntity.getFieldName()+"\"> ");
 	      html.append("<#list dictDataList as dictdata>");
-	      html.append(" <option value=\"\\${dictdata.typecode?if_exists?html}\" ");
+	      html.append(" <option value=\"\\${dictdata.code?if_exists?html}\" ");
 	      
-	      html.append("<c:if test=\"@@@{onlineCodeGenereateEntityKey."+cgFormFieldEntity.getFieldName()+"=='\\${dictdata.typecode?if_exists?html}'}\" >");
+	      html.append("<c:if test=\"@@@{onlineCodeGenereateEntityKey."+cgFormFieldEntity.getFieldName()+"=='\\${dictdata.code?if_exists?html}'}\" >");
   	      html.append(" selected=\"selected\" ");
   	      html.append("</c:if>");
   	      

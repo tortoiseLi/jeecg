@@ -451,7 +451,7 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	@Transactional(readOnly = true)
 	public Map<String, Object> findOneForJdbc(String sql, Object... objs) {
-		return commonDao.getBySql(sql);
+		return commonDao.getBySql(sql, objs);
 	}
 
 	@Override

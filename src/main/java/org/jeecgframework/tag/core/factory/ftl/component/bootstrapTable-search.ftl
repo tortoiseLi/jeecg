@@ -43,7 +43,7 @@
 		    		<select class="form-control input-sm" id="${po.field?replace("_","\\.")}" name="${po.field?replace("_","\\.")}">
 		    		<option value ="" >${MutiLangUtil.getLang("common.please.select")}</option>
 		    			<#list ComponentTools.getDictData(po) as dict>  
-	         				<option value ="${dict.typecode}" >${MutiLangUtil.getLang(dict.typename)}</option>
+	         				<option value ="${dict.code}" >${MutiLangUtil.getLang(dict.typename)}</option>
 						</#list>  
 		    		</select>
 		    		</div>

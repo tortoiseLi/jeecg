@@ -21,22 +21,57 @@ public class TypeEntity extends IdEntity implements Serializable {
     /**
      * 类型编码
      */
-    private String typecode;
+    private String code;
 
     /**
      * 类型名称
      */
-    private String typename;
+    private String name;
+
+    /**
+     * 序号
+     */
+    private String sort;
+
+    /**
+     * 创建人账号
+     */
+    private String createAccount;
+
+    /**
+     * 创建人姓名
+     */
+    private String createName;
 
     /**
      * 创建时间
      */
-    private Date createDate;
+    private String createTime;
 
     /**
-     * 创建用户
+     * 修改人账号
      */
-    private String createName;
+    private String updateAccount;
+
+    /**
+     * 修改人姓名
+     */
+    private String updateName;
+
+    /**
+     * 修改时间
+     */
+    private String updateTime;
+
+    /**
+     * 创建人/修改人组织机构编码
+     */
+    private String orgCode;
+
+    /**
+     * 数据状态
+     */
+    private String stateFlag;
 
     /**
      * 父类型
@@ -52,11 +87,6 @@ public class TypeEntity extends IdEntity implements Serializable {
      * 子类型
      */
     private List<TypeEntity> TSTypes = new ArrayList();
-
-    /**
-     * 序号
-     */
-    private Integer orderNum;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "typegroupid")
@@ -78,34 +108,34 @@ public class TypeEntity extends IdEntity implements Serializable {
         this.TSType = TSType;
     }
 
-    @Column(name = "typename", length = 50)
-    public String getTypename() {
-        return this.typename;
+    @Column(name = "code", length = 50)
+    public String getCode() {
+        return this.code;
     }
 
-    public void setTypename(String typename) {
-        this.typename = typename;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    @Column(name = "typecode", length = 50)
-    public String getTypecode() {
-        return this.typecode;
+    @Column(name = "name", length = 50)
+    public String getName() {
+        return this.name;
     }
 
-    public void setTypecode(String typecode) {
-        this.typecode = typecode;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @Column(name = "create_date")
-    public Date getCreateDate() {
-        return createDate;
+    @Column(name = "create_account")
+    public String getCreateAccount() {
+        return createAccount;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setCreateAccount(String createAccount) {
+        this.createAccount = createAccount;
     }
 
-    @Column(name = "create_name", length = 36)
+    @Column(name = "create_name")
     public String getCreateName() {
         return createName;
     }
@@ -114,13 +144,67 @@ public class TypeEntity extends IdEntity implements Serializable {
         this.createName = createName;
     }
 
-    @Column(name = "order_num", length = 3)
-    public Integer getOrderNum() {
-        return orderNum;
+    @Column(name = "create_time")
+    public String getCreateTime() {
+        return createTime;
     }
 
-    public void setOrderNum(Integer orderNum) {
-        this.orderNum = orderNum;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    @Column(name = "update_account")
+    public String getUpdateAccount() {
+        return updateAccount;
+    }
+
+    public void setUpdateAccount(String updateAccount) {
+        this.updateAccount = updateAccount;
+    }
+
+    @Column(name = "update_name")
+    public String getUpdateName() {
+        return updateName;
+    }
+
+    public void setUpdateName(String updateName) {
+        this.updateName = updateName;
+    }
+
+    @Column(name = "update_time")
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    @Column(name = "org_code")
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
+
+    @Column(name = "state_flag")
+    public String getStateFlag() {
+        return stateFlag;
+    }
+
+    public void setStateFlag(String stateFlag) {
+        this.stateFlag = stateFlag;
+    }
+
+    @Column(name = "sort", length = 3)
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TSType")

@@ -603,8 +603,8 @@ public class DataGridTag extends TagSupport {
 				List<TypeEntity> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
 				if (typeList != null && !typeList.isEmpty()) {
 					for (TypeEntity type : typeList) {
-						text += MutiLangUtil.doMutiLang(type.getTypename(), "") + ",";
-						value += type.getTypecode() + ",";
+						text += MutiLangUtil.doMutiLang(type.getName(), "") + ",";
+						value += type.getCode() + ",";
 					}
 					setColumn(field, text, value);
 				}
@@ -940,9 +940,9 @@ public class DataGridTag extends TagSupport {
 									sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_radio\"/>");
 									for (TypeEntity type : typeList) {
 
-										sb.append(" <input type=\"radio\" value=\"" + type.getTypecode() + "\" name=\""+field+"_radio\" onclick=\"javascrpt:$('#"+ field+"_radio').val('" + type.getTypecode() + "');\" />");										
+										sb.append(" <input type=\"radio\" value=\"" + type.getCode() + "\" name=\""+field+"_radio\" onclick=\"javascrpt:$('#"+ field+"_radio').val('" + type.getCode() + "');\" />");
 
-										sb.append(MutiLangUtil.getLang(type.getTypename()));
+										sb.append(MutiLangUtil.getLang(type.getName()));
 									}
 								}
 							}
@@ -976,9 +976,9 @@ public class DataGridTag extends TagSupport {
 									String field = column.getField().replaceAll("_","\\.");
 									sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_checkbox\" value=\"\" />");									
 									for (TypeEntity type : typeList) {
-										String typeCode = type.getTypecode();
+										String typeCode = type.getCode();
 										sb.append(" <input type=\"checkbox\" onclick=\"javascript:if(this.checked)$('#"+ field +"_checkbox').val($('#"+ field +"_checkbox').val()+',"+typeCode+",');else{$('#"+ field +"_checkbox').val($('#"+ field +"_checkbox').val().replace(',"+typeCode+",',''));}\" value=\"" + typeCode + "\" name=\"" + field +"_checkbox\" class=\"" + field + "_checkbox\" />");
-										sb.append(MutiLangUtil.getLang(type.getTypename()));
+										sb.append(MutiLangUtil.getLang(type.getName()));
 									}
 								}
 							}
@@ -1015,9 +1015,9 @@ public class DataGridTag extends TagSupport {
 								if(typeList != null && !typeList.isEmpty()){
 									for (TypeEntity type : typeList) {
 										sb.append("<option value=\"");
-										sb.append(type.getTypecode());
+										sb.append(type.getCode());
 										sb.append("\">");
-										sb.append(MutiLangUtil.getLang(type.getTypename()));
+										sb.append(MutiLangUtil.getLang(type.getName()));
 										sb.append("</option>");
 									}
 								}
@@ -2316,7 +2316,7 @@ public class DataGridTag extends TagSupport {
 										String field = col.getField().replaceAll("_","\\.");
 										sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_radio\"/>");										
 										for (TypeEntity type : types) {
-											String typeCode = type.getTypecode();
+											String typeCode = type.getCode();
 
 											if(col.getDefaultVal()!=null&&col.getDefaultVal().trim().equals(typeCode)){
 												sb.append(" <input type=\"radio\" value=\"" + typeCode + "\" name=\""+field+"_radio\" onclick=\"javascrpt:#('#"+ field+"_radio').val('" + typeCode + "');\" checked=\"checked\" />");
@@ -2327,7 +2327,7 @@ public class DataGridTag extends TagSupport {
 												sb.append(" <input type=\"radio\" value=\"" + typeCode + "\" name=\""+field+"_radio\" onclick=\"javascrpt:$('#"+ field+"_radio').val('" + typeCode + "');\" />");
 											}										
 
-											sb.append(MutiLangUtil.getLang(type.getTypename()));
+											sb.append(MutiLangUtil.getLang(type.getName()));
 										}
 									}
 								}else if (null != showMode && "checkbox".equals(showMode)) {
@@ -2335,7 +2335,7 @@ public class DataGridTag extends TagSupport {
 										String field = col.getField().replaceAll("_","\\.");
 										sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_checkbox\" value=\"\" />");
 										for (TypeEntity type : types) {
-											String typeCode = type.getTypecode();
+											String typeCode = type.getCode();
 											if(col.getDefaultVal()!=null&&col.getDefaultVal().trim().equals(typeCode)){
 												sb.append(" <input type=\"checkbox\" onclick=\"javascript:if(this.checked)$('#"+ field +"_checkbox').val($('#"+ field +"_checkbox').val()+',"+typeCode+",');else{$('#"+ field +"_checkbox').val($('#"+ field +"_checkbox').val().replace(',"+typeCode+",',''));}\" value=\"" + typeCode + "\" name=\"" + field +"_checkbox\" class=\"" + field + "_checkbox\" checked=\"checked\" />");
 												sb.append(" <script type=\"text/javascript\">");
@@ -2344,7 +2344,7 @@ public class DataGridTag extends TagSupport {
 											}else{
 												sb.append(" <input type=\"checkbox\" onclick=\"javascript:if(this.checked)$('#"+ field +"_checkbox').val($('#"+ field +"_checkbox').val()+',"+typeCode+",');else{$('#"+ field +"_checkbox').val($('#"+ field +"_checkbox').val().replace(',"+typeCode+",',''));}\" value=\"" + typeCode + "\" name=\"" + field +"_checkbox\" class=\"" + field + "_checkbox\" />");
 											}										
-											sb.append(MutiLangUtil.getLang(type.getTypename()));
+											sb.append(MutiLangUtil.getLang(type.getName()));
 										}
 									}
 								}else{
@@ -2353,18 +2353,18 @@ public class DataGridTag extends TagSupport {
 									if (types != null) {
 										for (TypeEntity type : types) {
 
-											if(col.getDefaultVal()!=null&&col.getDefaultVal().trim().equals(type.getTypecode())){
+											if(col.getDefaultVal()!=null&&col.getDefaultVal().trim().equals(type.getCode())){
 												sb.append(" <option value=\""
-														+ type.getTypecode()
+														+ type.getCode()
 														+ "\" selected=\"selected\">");
 											}else{
 												sb.append(" <option value=\""
-														+ type.getTypecode()
+														+ type.getCode()
 														+ "\">");
 											}
 
 										
-											sb.append(MutiLangUtil.getLang(type.getTypename()));
+											sb.append(MutiLangUtil.getLang(type.getName()));
 											sb.append(" </option>");
 										}
 									}
@@ -3017,14 +3017,14 @@ public class DataGridTag extends TagSupport {
 							if (types != null) {
 								comboboxStr.append("editor:{type:'combobox',options:{valueField:'typecode',textField:'typename',data:[");
 								for (TypeEntity type : types) {
-									comboboxStr.append("{'typecode':'"+type.getTypecode()+"','typename':'"+MutiLangUtil.getLang(type.getTypename())+"'},");
+									comboboxStr.append("{'typecode':'"+type.getCode()+"','typename':'"+MutiLangUtil.getLang(type.getName())+"'},");
 								}
 								comboboxStr.append("],required:true}}");
 								//再增加formatter参数
 								comboboxStr.append(",formatter:function(value,row){");
 								for (TypeEntity type : types) {
-									comboboxStr.append("if(value =='"+type.getTypecode()+"'){");
-									comboboxStr.append("return '"+MutiLangUtil.getLang(type.getTypename())+"';");
+									comboboxStr.append("if(value =='"+type.getCode()+"'){");
+									comboboxStr.append("return '"+MutiLangUtil.getLang(type.getName())+"';");
 									comboboxStr.append("}");
 								}
 								comboboxStr.append("return row."+field+";");
@@ -3672,8 +3672,8 @@ public class DataGridTag extends TagSupport {
 									sb.append("<select name=\""+col.getField().replaceAll("_","\\.")+"\" WIDTH=\"100\" style=\"width: 104px\"> ");
 									sb.append(StringUtil.replaceAll("<option value =\"\" >{0}</option>", "{0}", MutiLangUtil.getLang("common.please.select")));
 									for (TypeEntity type : types) {
-										sb.append(" <option value=\""+type.getTypecode()+"\">");
-										sb.append(MutiLangUtil.getLang(type.getTypename()));
+										sb.append(" <option value=\""+type.getCode()+"\">");
+										sb.append(MutiLangUtil.getLang(type.getName()));
 										sb.append(" </option>");
 									}
 									sb.append("</select>");
@@ -4030,8 +4030,8 @@ appendLine(sb,"					}}\">关系</th>");
 		if (types != null) {
 			for (int i=0;i<types.size();i++){
 				TypeEntity type = types.get(i);
-				appendLine(sb," {'conditionId':'"+type.getTypecode()+"','conditionName':'"
-						+MutiLangUtil.getLang(type.getTypename())+"'}");
+				appendLine(sb," {'conditionId':'"+type.getCode()+"','conditionName':'"
+						+MutiLangUtil.getLang(type.getName())+"'}");
 				if(i<types.size()-1){
 					appendLine(sb,",");
 				}
@@ -4054,8 +4054,8 @@ appendLine(sb,"					}}\">关系</th>");
 		if (types != null) {
 			for (int i=0;i<types.size();i++){
 				TypeEntity type = types.get(i);
-				appendLine(sb," {'conditionId':'"+type.getTypecode()+"','conditionName':'"
-						+MutiLangUtil.getLang(type.getTypename())+"'}");
+				appendLine(sb," {'conditionId':'"+type.getCode()+"','conditionName':'"
+						+MutiLangUtil.getLang(type.getName())+"'}");
 				if(i<types.size()-1){
 					appendLine(sb,",");
 				}

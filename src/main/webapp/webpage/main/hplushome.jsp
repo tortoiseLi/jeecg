@@ -266,7 +266,7 @@
 											<li>【bug】系统管理-二级管理员模块代码中SQL语法不兼容ORACLE;</li>
 											<li>【bug】字典组名带有空格情况下，点击查看字典值，js无效问题处理;</li>
 											<li>【bug】 basepath 问题 始终是127.0.0.1的错误bug;</li>
-											<li>【bug】Excel导出问题typecode 如果 带有下划线 就不能正确的检索数据字典表;</li>
+											<li>【bug】Excel导出问题code 如果 带有下划线 就不能正确的检索数据字典表;</li>
 											<li>【bug】新版代码生成器没有处理js增强的生成 ;</li>
 											<li>【bug】新版代码生成器java增强逻辑的生成 ;</li>
 											<li>【bug】生成器生成去掉无用代码的生成，java增强，sql增强没有配置时不做生成相应代码 ;</li>

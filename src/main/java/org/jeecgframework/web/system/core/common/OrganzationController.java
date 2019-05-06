@@ -897,13 +897,6 @@ public class OrganzationController extends BaseController {
 							return j;
 						}
 
-						//TSTypegroup ts = systemService.findByProperty(TSTypegroup.class,"typegroupcode","orgtype").get(0);
-						//List<TSType> types = systemService.findByProperty(TSType.class,"id",ts.getId());
-						//int len = 3;//每级组织机构得长度
-						/*for(int i=0;i<types.size();i++){
-							String typecode = types.get(i).getTypecode();
-
-						}*/
 						String orgcode = tsDepart.getOrgCode();
 						String parentOrgCode = orgcode.substring(0,orgcode.length()-3);
 

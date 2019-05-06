@@ -143,15 +143,15 @@ public class SystemController extends BaseController {
 			if(oConvertUtils.isEmpty(dicTable)){
 				List<TypeEntity> typeList = ResourceUtil.getCacheTypes(typeGroupName.toLowerCase());
 				JSONObject headJson = new JSONObject();
-				headJson.put("typecode", "");
+				headJson.put("code", "");
 				headJson.put("typename", "");
 				typeArray.add(headJson);
 				if(typeList != null && !typeList.isEmpty()){
 					for (TypeEntity type : typeList) {
 						JSONObject typeJson = new JSONObject();
-						typeJson.put("typecode", type.getTypecode());
+						typeJson.put("code", type.getCode());
 
-						String typename = type.getTypename();
+						String typename = type.getName();
 						if(MutiLangUtil.existLangKey(typename)){
 							typename = MutiLangUtil.doMutiLang(typename,"");
 						}
@@ -166,7 +166,7 @@ public class SystemController extends BaseController {
 				if(list!=null && list.size()>0){
 					for (DictEntity type : list) {
 						JSONObject typeJson = new JSONObject();
-						typeJson.put("typecode", type.getTypecode());
+						typeJson.put("code", type.getCode());
 						String typename = type.getTypename();
 						if(MutiLangUtil.existLangKey(typename)){
 							typename = MutiLangUtil.doMutiLang(typename,"");
@@ -195,17 +195,7 @@ public class SystemController extends BaseController {
 	public ModelAndView typeGroupTabs(HttpServletRequest request) {
 		List<TypeGroupEntity> typegroupList = systemService.findList(TypeGroupEntity.class);
 		request.setAttribute("typegroupList", typegroupList);
-		return new ModelAndView("system/type/typeGroupTabs");
-	}
-
-	/**
-	 * 类型分组列表页面跳转
-	 *
-	 * @return
-	 */
-	@RequestMapping(params = "typeGroupList")
-	public ModelAndView typeGroupList(HttpServletRequest request) {
-		return new ModelAndView("system/type/typeGroupList");
+		return new ModelAndView("system/dict/typeGroupTabs");
 	}
 
 	/**
@@ -218,38 +208,10 @@ public class SystemController extends BaseController {
 		String typegroupid = request.getParameter("typegroupid");
 		TypeGroupEntity typegroup = systemService.getById(TypeGroupEntity.class, typegroupid);
 		request.setAttribute("typegroup", typegroup);
-		return new ModelAndView("system/type/typeList");
+		return new ModelAndView("system/dict/typeList");
 	}
 
-	/**
-	 * easyuiAJAX请求数据
-	 */
 
-	@RequestMapping(params = "typeGroupGrid")
-	public void typeGroupGrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid, TypeGroupEntity typegroup) {
-		CriteriaQuery cq = new CriteriaQuery(TypeGroupEntity.class, dataGrid);
-
-        String typegroupname = request.getParameter("typegroupname");
-        if(oConvertUtils.isNotEmpty(typegroupname)) {
-            typegroupname = typegroupname.trim();
-            List<String> typegroupnameKeyList = systemService.findListByHql("select typegroupname from TypeGroupEntity");
-            if(typegroupname.lastIndexOf("*")==-1){
-            	typegroupname = typegroupname + "*";
-            }
-            MutiLangSqlCriteriaUtil.assembleCondition(typegroupnameKeyList, cq, "typegroupname", typegroupname);
-        }
-        
-        String typegroupcode = request.getParameter("typegroupcode");
-        if(oConvertUtils.isNotEmpty(typegroupcode)) {
-        	 cq.eq("typegroupcode", typegroupcode);
-        	 cq.add();
-        }
-		this.systemService.getDataGridReturn(cq, true);
-        MutiLangUtil.setMutiLangValueForList(dataGrid.getResults(), "typegroupname");
-
-
-		TagUtil.datagrid(response, dataGrid);
-	}
 
 	/**
 	 *
@@ -266,12 +228,12 @@ public class SystemController extends BaseController {
 
 		for(TypeEntity tsType : ResourceUtil.getCacheTypes(typegroupCode.toLowerCase())){
 			ComboTree combotree = new ComboTree();
-			combotree.setId(tsType.getTypecode());
-			combotree.setText(tsType.getTypename());
+			combotree.setId(tsType.getCode());
+			combotree.setText(tsType.getName());
 			comboTrees.add(combotree);
 		}
-		rootCombotree.setId(group.getTypegroupcode());
-		rootCombotree.setText(group.getTypegroupname());
+		rootCombotree.setId(group.getCode());
+		rootCombotree.setText(group.getName());
 		rootCombotree.setChecked(false);
 		rootCombotree.setChildren(comboTrees);
 
@@ -315,7 +277,7 @@ public class SystemController extends BaseController {
 	public ModelAndView goTypeGrid(HttpServletRequest request) {
 		String typegroupid = request.getParameter("typegroupid");
         request.setAttribute("typegroupid", typegroupid);
-		return new ModelAndView("system/type/typeListForTypegroup");
+		return new ModelAndView("system/dict/typeListForTypegroup");
 	}
 
 //	@RequestMapping(params = "typeGroupTree")
@@ -362,37 +324,37 @@ public class SystemController extends BaseController {
 			for (TypeEntity obj : typeList) {
 				TreeGrid treeNode = new TreeGrid();
 				treeNode.setId("T"+obj.getId());
-				treeNode.setText(obj.getTypename());
-				treeNode.setCode(obj.getTypecode());
+				treeNode.setText(obj.getName());
+				treeNode.setCode(obj.getCode());
 				treeGrids.add(treeNode);
 			}
 		} else {
 			cq = new CriteriaQuery(TypeGroupEntity.class);
 
-            String typegroupcode = request.getParameter("typegroupcode");
-            if(typegroupcode != null ) {
+            String code = request.getParameter("code");
+            if(code != null ) {
 
                 HqlRuleEnum rule = PageValueConvertRuleEnum
-						.convert(typegroupcode);
+						.convert(code);
                 Object value = PageValueConvertRuleEnum.replaceValue(rule,
-                		typegroupcode);
-				ObjectParseUtil.addCriteria(cq, "typegroupcode", rule, value);
+						code);
+				ObjectParseUtil.addCriteria(cq, "code", rule, value);
 
                 cq.add();
             }
-            String typegroupname = request.getParameter("typegroupname");
-            if(typegroupname != null && typegroupname.trim().length() > 0) {
-                typegroupname = typegroupname.trim();
-                List<String> typegroupnameKeyList = systemService.findListByHql("select typegroupname from TypeGroupEntity");
-                MutiLangSqlCriteriaUtil.assembleCondition(typegroupnameKeyList, cq, "typegroupname", typegroupname);
+            String name = request.getParameter("name");
+            if(name != null && name.trim().length() > 0) {
+				name = name.trim();
+                List<String> nameKeyList = systemService.findListByHql("select name from TypeGroupEntity");
+                MutiLangSqlCriteriaUtil.assembleCondition(nameKeyList, cq, "name", name);
             }
 
             List<TypeGroupEntity> typeGroupList = systemService.getListByCriteriaQuery(cq, false);
 			for (TypeGroupEntity obj : typeGroupList) {
 				TreeGrid treeNode = new TreeGrid();
 				treeNode.setId("G"+obj.getId());
-				treeNode.setText(obj.getTypegroupname());
-				treeNode.setCode(obj.getTypegroupcode());
+				treeNode.setText(obj.getName());
+				treeNode.setCode(obj.getCode());
 				treeNode.setState("closed");
 				treeGrids.add(treeNode);
 			}
@@ -401,40 +363,6 @@ public class SystemController extends BaseController {
 		return treeGrids;
 	}
 
-//    private void assembleConditionForMutilLang(CriteriaQuery cq, String typegroupname, List<String> typegroupnameKeyList) {
-//        Map<String,String> typegroupnameMap = new HashMap<String, String>();
-//        for (String nameKey : typegroupnameKeyList) {
-//            String name = mutiLangService.getLang(nameKey);
-//            typegroupnameMap.put(nameKey, name);
-//        }
-//        List<String> tepegroupnameParamList = new ArrayList<String>();
-//        for (Map.Entry<String, String> entry : typegroupnameMap.entrySet()) {
-//            String key = entry.getKey();
-//            String value = entry.getValue();
-//            if (typegroupname.startsWith("*") && typegroupname.endsWith("*")) {
-//                if (value.contains(typegroupname)) {
-//                    tepegroupnameParamList.add(key);
-//                }
-//            } else if(typegroupname.startsWith("*")) {
-//                if (value.endsWith(typegroupname.substring(1))) {
-//                    tepegroupnameParamList.add(key);
-//                }
-//            } else if(typegroupname.endsWith("*")) {
-//                if (value.startsWith(typegroupname.substring(0, typegroupname.length() -1))) {
-//                    tepegroupnameParamList.add(key);
-//                }
-//            } else {
-//                if (value.equals(typegroupname)) {
-//                    tepegroupnameParamList.add(key);
-//                }
-//            }
-//        }
-//
-//        if (tepegroupnameParamList.size() > 0) {
-//            cq.in("typegroupname", tepegroupnameParamList.toArray());
-//            cq.add();
-//        }
-//    }
 
     /**
 	 * 删除类型分组或者类型（ID以G开头的是分组）
@@ -448,11 +376,11 @@ public class SystemController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		if (id.startsWith("G")) {//分组
 			TypeGroupEntity typegroup = systemService.getById(TypeGroupEntity.class, id.substring(1));
-			message = "数据字典分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + "被删除 成功";
+			message = "数据字典分组: " + mutiLangService.getLang(typegroup.getName()) + "被删除 成功";
 			systemService.delete(typegroup);
 		} else {
 			TypeEntity type = systemService.getById(TypeEntity.class, id.substring(1));
-			message = "数据字典类型: " + mutiLangService.getLang(type.getTypename()) + "被删除 成功";
+			message = "数据字典类型: " + mutiLangService.getLang(type.getName()) + "被删除 成功";
 			systemService.delete(type);
 		}
 		systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
@@ -462,31 +390,7 @@ public class SystemController extends BaseController {
 		return j;
 	}
 
-	/**
-	 * 删除类型分组
-	 *
-	 * @return
-	 */
-	@RequestMapping(params = "delTypeGroup")
-	@ResponseBody
-	public AjaxJson delTypeGroup(TypeGroupEntity typegroup, HttpServletRequest request) {
-		String message = null;
-		AjaxJson j = new AjaxJson();
-		typegroup = systemService.getById(TypeGroupEntity.class, typegroup.getId());
 
-		message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + " 被删除 成功";
-        if (ListUtils.isNullOrEmpty(typegroup.getTSTypes())) {
-            systemService.delete(typegroup);
-            systemService.addLog(message, GlobalConstants.LOG_TYPE_DELETE, GlobalConstants.LOG_LEVEL_INFO);
-            //刷新缓存
-            dictService.refreshTypeGroupCache();
-        } else {
-            message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + " 下有类型信息，不能删除！";
-        }
-
-		j.setMsg(message);
-		return j;
-	}
 
 	/**
 	 * 删除类型
@@ -499,7 +403,7 @@ public class SystemController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		type = systemService.getById(TypeEntity.class, type.getId());
-		message = "类型: " + mutiLangService.getLang(type.getTypename()) + "被删除 成功";
+		message = "类型: " + mutiLangService.getLang(type.getName()) + "被删除 成功";
 		systemService.delete(type);
 		//刷新缓存
 		dictService.refreshTypeCache(type);
@@ -520,7 +424,7 @@ public class SystemController extends BaseController {
 		ValidForm v = new ValidForm();
 		String typegroupcode=oConvertUtils.getString(request.getParameter("param"));
 		String code=oConvertUtils.getString(request.getParameter("code"));
-		List<TypeGroupEntity> typegroups=systemService.findListByProperty(TypeGroupEntity.class,"typegroupcode",typegroupcode);
+		List<TypeGroupEntity> typegroups=systemService.findListByProperty(TypeGroupEntity.class,"code",typegroupcode);
 		if(typegroups.size()>0&&!code.equals(typegroupcode))
 		{
 			v.setInfo("分组已存在");
@@ -529,26 +433,7 @@ public class SystemController extends BaseController {
 		return v;
 	}
 
-	/**
-	 * 刷新字典分组缓存&字典缓存
-	 *
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(params = "refreshTypeGroupAndTypes")
-	@ResponseBody
-	public AjaxJson refreshTypeGroupAndTypes(HttpServletRequest request) {
-		String message = null;
-		AjaxJson j = new AjaxJson();
-		try{
-			dictService.refreshTypeAndTypeGroupCache();
-			message = mutiLangService.getLang("common.refresh.success");
-		} catch (Exception e) {
-			message = mutiLangService.getLang("common.refresh.fail");
-		}
-		j.setMsg(message);
-		return j;
-	}
+
 
 	
 	/**
@@ -563,11 +448,11 @@ public class SystemController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(typegroup.getId())) {
-			message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + "被更新成功";
+			message = "类型分组: " + mutiLangService.getLang(typegroup.getName()) + "被更新成功";
 			userService.saveOrUpdate(typegroup);
 			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		} else {
-			message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + "被添加成功";
+			message = "类型分组: " + mutiLangService.getLang(typegroup.getName()) + "被添加成功";
 			userService.add(typegroup);
 			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}
@@ -591,9 +476,8 @@ public class SystemController extends BaseController {
 		String typeGroupCode=oConvertUtils.getString(request.getParameter("typeGroupCode"));
 		StringBuilder hql = new StringBuilder("FROM ").append(TypeEntity.class.getName()).append(" AS entity WHERE 1=1 ");
 
-		hql.append(" AND entity.TSTypegroup.typegroupcode =  ?");
-		hql.append(" AND entity.typecode =  ?");
-//		List<Object> types = this.systemService.findByQueryString(hql.toString());
+		hql.append(" AND entity.TSTypegroup.code =  ?");
+		hql.append(" AND entity.code =  ?");
 		List<Object> types = this.systemService.findHql(hql.toString(),typeGroupCode,typecode);
 
 		if(types.size()>0&&(code==null||!code.equals(typecode)))
@@ -616,11 +500,11 @@ public class SystemController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(type.getId())) {
-			message = "类型: " + mutiLangService.getLang(type.getTypename()) + "被更新成功";
+			message = "类型: " + mutiLangService.getLang(type.getName()) + "被更新成功";
 			userService.saveOrUpdate(type);
 			systemService.addLog(message, GlobalConstants.LOG_TYPE_UPDATE, GlobalConstants.LOG_LEVEL_INFO);
 		} else {
-			message = "类型: " + mutiLangService.getLang(type.getTypename()) + "被添加成功";
+			message = "类型: " + mutiLangService.getLang(type.getName()) + "被添加成功";
 			userService.add(type);
 			systemService.addLog(message, GlobalConstants.LOG_TYPE_INSERT, GlobalConstants.LOG_LEVEL_INFO);
 		}
@@ -632,19 +516,7 @@ public class SystemController extends BaseController {
 
 
 
-	/**
-	 * 类型分组列表页面跳转
-	 *
-	 * @return
-	 */
-	@RequestMapping(params = "aouTypeGroup")
-	public ModelAndView aouTypeGroup(TypeGroupEntity typegroup, HttpServletRequest req) {
-		if (typegroup.getId() != null) {
-			typegroup = systemService.getById(TypeGroupEntity.class, typegroup.getId());
-			req.setAttribute("typegroup", typegroup);
-		}
-		return new ModelAndView("system/type/typegroup");
-	}
+
 
 	/**
 	 * 类型列表页面跳转
@@ -656,16 +528,16 @@ public class SystemController extends BaseController {
 		String typegroupid = req.getParameter("typegroupid");
 		req.setAttribute("typegroupid", typegroupid);
 		TypeGroupEntity typegroup = systemService.getByProperty(TypeGroupEntity.class, "id", typegroupid);
-        String typegroupname = typegroup.getTypegroupname();
+        String name = typegroup.getName();
 
         req.setAttribute("typegroup", typegroup);
 
-        req.setAttribute("typegroupname", mutiLangService.getLang(typegroupname));
+        req.setAttribute("name", mutiLangService.getLang(name));
 		if (StringUtil.isNotEmpty(type.getId())) {
 			type = systemService.getById(TypeEntity.class, type.getId());
 			req.setAttribute("type", type);
 		}
-		return new ModelAndView("system/type/type");
+		return new ModelAndView("system/dict/type");
 	}
 
 	/*

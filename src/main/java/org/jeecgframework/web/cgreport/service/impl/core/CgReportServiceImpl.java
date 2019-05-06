@@ -247,7 +247,7 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 		dictCodeOrSQL = dictCodeOrSQL.trim();
 		if(dictCodeOrSQL.toLowerCase().startsWith("select ")) {
 
-			dictCodeOrSQL = dictCodeOrSQL.replaceAll("'[kK][eE][yY]'", "typecode").replaceAll("'[vV][aA][lL][uU][eE]'", "typename");
+			dictCodeOrSQL = dictCodeOrSQL.replaceAll("'[kK][eE][yY]'", "code").replaceAll("'[vV][aA][lL][uU][eE]'", "typename");
 
 			dicDatas = this.findForJdbc(dictCodeOrSQL);
 		}else {
@@ -268,17 +268,10 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 		List<TypeEntity> tstypes = ResourceUtil.getCacheTypes(diccode.toLowerCase());
 		for(TypeEntity t:tstypes){
 			Map<String,Object> mp = new HashMap<String,Object>();
-			mp.put("typecode",t.getTypecode());
-			mp.put("typename",MutiLangUtil.doMutiLang(t.getTypename(), null));
+			mp.put("code",t.getCode());
+			mp.put("typename",MutiLangUtil.doMutiLang(t.getName(), null));
 			dicDatas.add(mp);
 		}
-//		StringBuilder dicSql = new StringBuilder();
-//		dicSql.append(" SELECT TYPECODE,TYPENAME FROM");
-//		dicSql.append(" "+CgReportConstant.SYS_DIC);
-//		dicSql.append(" "+"WHERE TYPEGROUPID = ");
-//		dicSql.append(" "+"(SELECT ID FROM "+CgReportConstant.SYS_DICGROUP+" WHERE TYPEGROUPCODE = ? )");
-//		List<Map<String, Object>> dicDatas = cgReportService.findForJdbc(dicSql.toString(),diccode);
-
 		return dicDatas;
 	}
 	
@@ -336,10 +329,10 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 					for(Map r:result){
 						String value = String.valueOf(r.get(field_name));
 						for(Map m:dicDatas){
-							String typecode = String.valueOf(m.get("typecode"));
-							String typename = String.valueOf(m.get("typename"));
-							if(value.equalsIgnoreCase(typecode)){
-								r.put(bean.get(CgReportConstant.ITEM_FIELDNAME),typename);
+							String code = String.valueOf(m.get("code"));
+							String name = String.valueOf(m.get("name"));
+							if(value.equalsIgnoreCase(code)){
+								r.put(bean.get(CgReportConstant.ITEM_FIELDNAME),name);
 							}
 						}
 					}

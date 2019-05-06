@@ -52,13 +52,13 @@ public class ResourceUtil {
 	 * 获取字典组缓存
 	 */
 //	private static Map<String, TSTypegroup> allTypeGroups = new HashMap<String,TSTypegroup>();
-	public static TypeGroupEntity getCacheTypeGroup(String typegroupcode){
+	public static TypeGroupEntity getCacheTypeGroup(String code){
 		TypeGroupEntity result = null;
 		Object obj = cacheService.get(GlobalConstants.FOREVER_CACHE, DICT_TYPE_GROUPS_KEY);
 		if(obj!=null){
 			Map<String, TypeGroupEntity> mp = (Map<String, TypeGroupEntity>) obj;
-			result = mp.get(typegroupcode);
-			log.debug("-----------从缓存获取字典组-----typegroupcode：[{}]",typegroupcode);
+			result = mp.get(code);
+			log.debug("-----------从缓存获取字典组-----code：[{}]",code);
 			return result;
 		}
 		return null;
@@ -68,13 +68,13 @@ public class ResourceUtil {
 	 * 获取字典缓存
 	 */
 //	public static Map<String, List<TSType>> allTypes = new HashMap<String,List<TSType>>();
-	public static List<TypeEntity> getCacheTypes(String typegroupcode){
+	public static List<TypeEntity> getCacheTypes(String code){
 		List<TypeEntity> result = null;
 		Object obj = cacheService.get(GlobalConstants.FOREVER_CACHE, DICT_TYPES_KEY);
 		if(obj!=null){
 			Map<String, List<TypeEntity>> mp = (Map<String, List<TypeEntity>>) obj;
-			result = mp.get(typegroupcode);
-			log.debug("-----------从缓存获取字典-----typegroupcode：[{}]",typegroupcode);
+			result = mp.get(code);
+			log.debug("-----------从缓存获取字典-----code：[{}]",code);
 			return  result;
 		}
 		return null;

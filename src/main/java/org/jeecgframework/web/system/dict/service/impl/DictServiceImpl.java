@@ -58,12 +58,12 @@ public class DictServiceImpl extends CommonServiceImpl implements DictService {
 
 	@Override
 	public TypeEntity getType(String typeCode, String typeName, TypeGroupEntity typeGroupEntity) {
-		List<TypeEntity> ls = commonDao.findListByHql("from TypeEntity where typecode = ? and typegroupid = ?",typeCode,typeGroupEntity.getId());
+		List<TypeEntity> ls = commonDao.findListByHql("from TypeEntity where code = ? and typegroupid = ?",typeCode,typeGroupEntity.getId());
 		TypeEntity actType;
 		if (ls == null || ls.size()==0) {
 			actType = new TypeEntity();
-			actType.setTypecode(typeCode);
-			actType.setTypename(typeName);
+			actType.setCode(typeCode);
+			actType.setName(typeName);
 			actType.setTSTypegroup(typeGroupEntity);
 			commonDao.insert(actType);
 		}else{
@@ -75,12 +75,12 @@ public class DictServiceImpl extends CommonServiceImpl implements DictService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public TypeGroupEntity getTypeGroup(String typegroupcode, String typgroupename) {
-		TypeGroupEntity tsTypegroup = commonDao.getByProperty(TypeGroupEntity.class, "typegroupcode", typegroupcode);
+	public TypeGroupEntity getTypeGroup(String code, String typgroupename) {
+		TypeGroupEntity tsTypegroup = commonDao.getByProperty(TypeGroupEntity.class, "code", code);
 		if (tsTypegroup == null) {
 			tsTypegroup = new TypeGroupEntity();
-			tsTypegroup.setTypegroupcode(typegroupcode);
-			tsTypegroup.setTypegroupname(typgroupename);
+			tsTypegroup.setCode(code);
+			tsTypegroup.setName(typgroupename);
 			commonDao.insert(tsTypegroup);
 		}
 		return tsTypegroup;
@@ -88,8 +88,8 @@ public class DictServiceImpl extends CommonServiceImpl implements DictService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public TypeGroupEntity getTypeGroupByCode(String typegroupCode) {
-		TypeGroupEntity tsTypegroup = commonDao.getByProperty(TypeGroupEntity.class, "typegroupcode", typegroupCode);
+	public TypeGroupEntity getTypeGroupByCode(String code) {
+		TypeGroupEntity tsTypegroup = commonDao.getByProperty(TypeGroupEntity.class, "code", code);
 		return tsTypegroup;
 	}
 
@@ -101,14 +101,14 @@ public class DictServiceImpl extends CommonServiceImpl implements DictService {
 		Map<String, List<TypeEntity>> typesList = new HashMap<String, List<TypeEntity>>();
 		for (TypeGroupEntity tsTypegroup : typeGroups) {
 			tsTypegroup.setTSTypes(null);
-			typeGroupsList.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
-			List<TypeEntity> types = this.commonDao.findListByHql("from TypeEntity where TSTypegroup.id = ? order by orderNum" , tsTypegroup.getId());
+			typeGroupsList.put(tsTypegroup.getCode().toLowerCase(), tsTypegroup);
+			List<TypeEntity> types = this.commonDao.findListByHql("from TypeEntity where TSTypegroup.id = ? order by sort" , tsTypegroup.getId());
 			for(TypeEntity t:types){
 				t.setTSType(null);
 				t.setTSTypegroup(null);
 				t.setTSTypes(null);
 			}
-			typesList.put(tsTypegroup.getTypegroupcode().toLowerCase(), types);
+			typesList.put(tsTypegroup.getCode().toLowerCase(), types);
 		}
 		
 		cacheService.put(GlobalConstants.FOREVER_CACHE,ResourceUtil.DICT_TYPE_GROUPS_KEY,typeGroupsList);
@@ -140,15 +140,15 @@ public class DictServiceImpl extends CommonServiceImpl implements DictService {
 			tt.setTSTypegroup(null);
 			tt.setTSTypes(null);
 			tt.setId(t.getId());
-			tt.setOrderNum(t.getOrderNum());
-			tt.setTypecode(t.getTypecode());
-			tt.setTypename(t.getTypename());
+			tt.setSort(t.getSort());
+			tt.setCode(t.getCode());
+			tt.setName(t.getName());
 			types.add(tt);
 		}
 
-		typesList.put(typeGroupEntity.getTypegroupcode().toLowerCase(), types);
+		typesList.put(typeGroupEntity.getCode().toLowerCase(), types);
 		cacheService.put(GlobalConstants.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY,typesList);
-		logger.info("  ------ 重置字典缓存【系统缓存】  ----------- typegroupcode: [{}] ",typeGroupEntity.getTypegroupcode().toLowerCase());
+		logger.info("  ------ 重置字典缓存【系统缓存】  ----------- code: [{}] ",typeGroupEntity.getCode().toLowerCase());
 	}
 
 	@Override
@@ -157,7 +157,7 @@ public class DictServiceImpl extends CommonServiceImpl implements DictService {
 		Map<String, TypeGroupEntity> typeGroupsList = new HashMap<String, TypeGroupEntity>();
 		List<TypeGroupEntity> typeGroups = this.commonDao.findList(TypeGroupEntity.class);
 		for (TypeGroupEntity tsTypegroup : typeGroups) {
-			typeGroupsList.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
+			typeGroupsList.put(tsTypegroup.getCode().toLowerCase(), tsTypegroup);
 		}
 		cacheService.put(GlobalConstants.FOREVER_CACHE,ResourceUtil.DICT_TYPE_GROUPS_KEY,typeGroupsList);
 		logger.info("  ------ 重置字典分组缓存&字典缓存【系统缓存】  ------ refleshTypeGroupCach --------  ");

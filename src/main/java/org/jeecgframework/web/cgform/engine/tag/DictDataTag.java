@@ -63,15 +63,15 @@ public class DictDataTag implements TemplateDirectiveModel {
 				dataList = new ArrayList<TypeEntity>();
 			}
 			for(TypeEntity s:dataList){
-				String names = s.getTypename();
-				s.setTypename(MutiLangUtil.getLang(names));
+				String names = s.getName();
+				s.setName(MutiLangUtil.getLang(names));
 			}
 			env.setGlobalVariable(var, new SimpleCollection(dataList));
 		} else {
 			// table表查询
 			StringBuilder sql = new StringBuilder("");
 			sql.append("select distinct ").append(name)
-					.append(" as typecode, ");
+					.append(" as code, ");
 			if (text == null || text.trim().length() <= 0) {
 				sql.append(name).append(" as typename ");
 			} else {

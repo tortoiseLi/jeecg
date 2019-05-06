@@ -122,7 +122,7 @@ public class CgExportExcelController extends BaseController {
 					dictFieldList.add(fieldList.get(i));
 					List<TypeEntity> types = ResourceUtil.getCacheTypes(dictCode.toString().toLowerCase());
 					for (TypeEntity tsType : types) {
-						dictMap.put(dictCode.toString()+"_"+tsType.getTypecode(), tsType.getTypename());
+						dictMap.put(dictCode.toString()+"_"+tsType.getCode(), tsType.getName());
 					}
 				}
 			}

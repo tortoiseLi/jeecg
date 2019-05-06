@@ -41,7 +41,7 @@
 					<#elseif subTableField.show_type=='radio'>
 				        <@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
 							<#list dataList as dictdata> 
-							<input value="${dictdata.typecode?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[#index#].${subTableField.field_name}" type="radio"
+							<input value="${dictdata.code?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[#index#].${subTableField.field_name}" type="radio"
 							<#if dictdata_index==0&&subTableField.is_null != 'Y'>datatype="*"</#if> >
 								${dictdata.typename?if_exists?html}
 							</#list> 
@@ -50,7 +50,7 @@
 					<#elseif subTableField.show_type=='checkbox'>
 						<@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
 							<#list dataList as dictdata> 
-							<input value="${dictdata.typecode?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[#index#].${subTableField.field_name}" type="checkbox"
+							<input value="${dictdata.code?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[#index#].${subTableField.field_name}" type="checkbox"
 							<#if dictdata_index==0&&subTableField.is_null != 'Y'>datatype="*"</#if> >
 								${dictdata.typename?if_exists?html}
 							</#list> 
@@ -60,7 +60,7 @@
 						<@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
 							<select id="${sub}[#index#].${subTableField.field_name}" ${subTableField.extend_json?if_exists} name="${sub}[#index#].${subTableField.field_name}" <#if subTableField.is_null != 'Y'>datatype="*"</#if>>
 								<#list dataList as dictdata> 
-								<option value="${dictdata.typecode?if_exists?html}" >
+								<option value="${dictdata.code?if_exists?html}" >
 									${dictdata.typename?if_exists?html}
 								</option> 
 								</#list> 

@@ -84,11 +84,11 @@
 	</listener>
 	<listener>
 		<description>系统初始化监听器</description>
-		<listener-class>org.jeecgframework.web.system.listener.InitListener</listener-class>
+		<listener-class>org.jeecgframework.web.system.core.listener.InitListener</listener-class>
 	</listener>
 	<listener>
 		<description>在线用户监听器</description>
-		<listener-class>org.jeecgframework.web.system.listener.OnlineListener</listener-class>
+		<listener-class>org.jeecgframework.web.system.core.listener.OnlineListener</listener-class>
 	</listener>
 
 	<servlet>
@@ -152,7 +152,7 @@
 	<!-- 验证码 -->
     <servlet>
         <servlet-name>RandCodeImage</servlet-name>
-        <servlet-class>org.jeecgframework.web.system.servlet.RandCodeImageServlet</servlet-class>
+        <servlet-class>org.jeecgframework.web.system.core.servlet.RandCodeImageServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RandCodeImage</servlet-name>
@@ -162,7 +162,7 @@
     <!-- 本地磁盘图片访问API(支持浏览器缓存)： img/server/{?} -->
     <servlet>
         <servlet-name>imgServerServlet</servlet-name>
-        <servlet-class>org.jeecgframework.web.system.servlet.ImgServerServlet</servlet-class>
+        <servlet-class>org.jeecgframework.web.system.core.servlet.ImgServerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>imgServerServlet</servlet-name>

@@ -35,18 +35,18 @@ public interface DictService extends CommonService{
 
 	/**
 	 * 根据类型分组编码和名称获取TypeGroup,如果为空则创建一个
-	 * @param typeGroupCode
+	 * @param code
 	 * @param typeGroupName
 	 * @return
 	 */
-	TypeGroupEntity getTypeGroup(String typeGroupCode, String typeGroupName);
+	TypeGroupEntity getTypeGroup(String code, String typeGroupName);
 
 	/**
 	 * 根据编码获取字典组
-	 * @param typeGroupCode
+	 * @param code
 	 * @return
 	 */
-	TypeGroupEntity getTypeGroupByCode(String typeGroupCode);
+	TypeGroupEntity getTypeGroupByCode(String code);
 
 	/**
 	 * 对数据字典进行缓存

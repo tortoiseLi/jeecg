@@ -63,7 +63,7 @@
 	 		<#else>
 	 			,formatter:function(value,row,index){
 	 				<#list ComponentTools.getDictData(po) as dict>  
-	 					if(value =='${dict.typecode}'){
+	 					if(value =='${dict.code}'){
 	 						return '${MutiLangUtil.getLang(dict.typename)}';
 	 					}
 					</#list> 

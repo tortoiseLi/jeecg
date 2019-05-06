@@ -11,19 +11,19 @@ public class DictEntity {
 	/**
 	 * 数据字典编码
 	 */
-	private String typecode;
+	private String code;
 
 	/**
 	 * 数据字典名称
 	 */
 	private String typename;
 	
-	public String getTypecode() {
-		return typecode;
+	public String getCode() {
+		return code;
 	}
 
-	public void setTypecode(String typecode) {
-		this.typecode = typecode;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getTypename() {

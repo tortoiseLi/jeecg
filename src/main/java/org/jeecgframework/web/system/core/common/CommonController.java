@@ -289,7 +289,7 @@ public class CommonController extends BaseController {
 		String businessKey = oConvertUtils.getString(request.getParameter("businessKey"));// 业务主键
 		String busentityName = oConvertUtils.getString(request.getParameter("busentityName"));// 业务主键
 		String typename = oConvertUtils.getString(request.getParameter("typename"));// 类型
-		String typecode = oConvertUtils.getString(request.getParameter("typecode"));// 类型typecode
+		String code = oConvertUtils.getString(request.getParameter("code"));// 类型code
 		if (StringUtil.isNotEmpty(busentityName) && StringUtil.isNotEmpty(businessKey)) {
 			object = systemService.getById(MyClassLoader.getClassByScn(busentityName), businessKey);
 			request.setAttribute("object", object);
@@ -300,9 +300,8 @@ public class CommonController extends BaseController {
 			request.setAttribute("subclassname",attachment.getSubclassname());
 		}
 		request.setAttribute("fileKey", fileKey);
-		request.setAttribute("typecode", typecode);
+		request.setAttribute("code", code);
 		request.setAttribute("typename", typename);
-		request.setAttribute("typecode", typecode);
 		return new ModelAndView("common/objfile/objfileList");
 	}
 
@@ -314,7 +313,7 @@ public class CommonController extends BaseController {
 		String businessKey = oConvertUtils.getString(request.getParameter("businessKey"));
 		String subclassname = oConvertUtils.getString(request.getParameter("subclassname"));// 子类类名
 		String type = oConvertUtils.getString(request.getParameter("typename"));
-		String code = oConvertUtils.getString(request.getParameter("typecode"));
+		String code = oConvertUtils.getString(request.getParameter("code"));
 		String filekey = oConvertUtils.getString(request.getParameter("filekey"));
 		CriteriaQuery cq = new CriteriaQuery(MyClassLoader.getClassByScn(subclassname), dataGrid);
 		cq.eq("businessKey", businessKey);
@@ -327,7 +326,7 @@ public class CommonController extends BaseController {
 		}
 		if (StringUtil.isNotEmpty(code)) {
 			cq.createAlias("TBInfotype", "TBInfotype");
-			cq.eq("TBInfotype.typecode", code);
+			cq.eq("TBInfotype.code", code);
 		}
 		cq.add();
 		this.systemService.getDataGridReturn(cq, true);

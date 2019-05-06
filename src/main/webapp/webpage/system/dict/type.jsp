@@ -12,19 +12,19 @@
     <fieldset class="step">
         <div class="form">
             <label class="Validform_label"> <t:mutiLang langKey="lang.dictionary.type"/>: </label>
-            <input readonly="true" class="inputxt" value="${typegroupname }">
+            <input readonly="true" class="inputxt" value="${name }">
         </div>
-        <%--// add-end--Author:zhangguoming  Date:20140928 for：添加显示字段--%>
+            <%--// add-end--Author:zhangguoming  Date:20140928 for：添加显示字段--%>
         <div class="form">
             <label class="Validform_label"> <t:mutiLang langKey="dict.name"/>: </label>
             <input name="typename" class="inputxt" value="${type.typename }" datatype="/^[A-Za-z0-9\u4E00-\u9FA5\uf900-\ufa2d\.\s]{1,50}$/">
-            <span class="Validform_checktip"><t:mutiLang langKey="common.range1to50" /></span>
+            <span class="Validform_checktip"><t:mutiLang langKey="common.range1to50"/></span>
         </div>
         <div class="form">
             <label class="Validform_label"> <t:mutiLang langKey="dict.code"/>: </label>
-            <input name="typecode" class="inputxt" value="${type.typecode }" datatype="/^[A-Za-z0-9\u4E00-\u9FA5\uf900-\ufa2d\.\s]{1,50}$/"
-                   ajaxurl="systemController.do?checkType&code=${type.typecode }&typeGroupCode=${typegroup.typegroupcode}">
-            <span class="Validform_checktip"><t:mutiLang langKey="common.range1to10" /></span>
+            <input name="code" class="inputxt" value="${type.code }" datatype="/^[A-Za-z0-9\u4E00-\u9FA5\uf900-\ufa2d\.\s]{1,50}$/"
+                   ajaxurl="systemController.do?checkType&code=${type.code }&typeGroupCode=${code.code}">
+            <span class="Validform_checktip"><t:mutiLang langKey="common.range1to10"/></span>
         </div>
         <div class="form">
             <label class="Validform_label"><t:mutiLang langKey="dict.order"/>: </label>

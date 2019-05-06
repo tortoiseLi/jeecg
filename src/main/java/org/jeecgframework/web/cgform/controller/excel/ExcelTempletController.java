@@ -242,7 +242,7 @@ public class ExcelTempletController extends BaseController {
 					if (arrayVal.length > 1) {
 						for (String val : arrayVal) {
 							for (DictEntity dictEntity : dicList) {
-								if (val.equals(dictEntity.getTypecode())) {
+								if (val.equals(dictEntity.getCode())) {
 									sb.append(dictEntity.getTypename());
 									sb.append(",");
 								}
@@ -517,7 +517,7 @@ public class ExcelTempletController extends BaseController {
 					for (Map r : result) {
 						String value = String.valueOf(r.get(bean.getFieldName()));
 						for (DictEntity dictEntity : dicDataList) {
-							if (value.equalsIgnoreCase(dictEntity.getTypecode())) {
+							if (value.equalsIgnoreCase(dictEntity.getCode())) {
 								r.put(bean.getFieldName(), MutiLangUtil.getLang(dictEntity.getTypename()));
 							}
 						}
@@ -547,7 +547,7 @@ public class ExcelTempletController extends BaseController {
 						String value = String.valueOf(result.get(bean.getFieldName()));
 						for (DictEntity dictEntity : dicDataList) {
 							if (value.equals(dictEntity.getTypename())) {
-								result.put(bean.getFieldName(), dictEntity.getTypecode());
+								result.put(bean.getFieldName(), dictEntity.getCode());
 							}
 						}
 				}

@@ -153,22 +153,22 @@ public class DictSelectTag extends TagSupport {
 			if (typeGroup != null) {
 				if (hasLabel) {
 					if (StringUtils.isBlank(this.title)) {
-						this.title = MutiLangUtil.getLang(typeGroup.getTypegroupname());
+						this.title = MutiLangUtil.getLang(typeGroup.getName());
 					}
 					sb.append(this.title + ":");
 					sb.append("</label>");
 				}
 				if ("radio".equals(type)) {
 					for (TypeEntity type : types) {
-						radio(type.getTypename(), type.getTypecode(), sb);
+						radio(type.getName(), type.getCode(), sb);
 					}
 				} else if ("checkbox".equals(type)) {
 					for (TypeEntity type : types) {
-						checkbox(type.getTypename(), type.getTypecode(), sb);
+						checkbox(type.getName(), type.getCode(), sb);
 					}
 				}else if ("text".equals(type)) {
 					for (TypeEntity type : types) {
-						text(type.getTypename(), type.getTypecode(), sb);
+						text(type.getName(), type.getCode(), sb);
 					}
 				} else {
 					sb.append("<select name=\"" + field + "\"");
@@ -187,7 +187,7 @@ public class DictSelectTag extends TagSupport {
 					sb.append(">");
 					select("common.please.select", "", sb);
 					for (TypeEntity type : types) {
-						select(type.getTypename(), type.getTypecode(), sb);
+						select(type.getName(), type.getCode(), sb);
 					}
 					sb.append("</select>");
 				}
