@@ -344,11 +344,11 @@ function loadSearchFormDicts(obj,table,code,type,name){
 			if(a==0){
 				html+="<option value = '' style='display: none'> 请选择"+name+"</option>";
 			}
-			html+="<option value = '"+arr[a].typecode+"'>"+arr[a].typename+"</option>";
+			html+="<option value = '"+arr[a].code+"'>"+arr[a].typename+"</option>";
 		}else{
-			if(!arr[a].typecode){
+			if(!arr[a].code){
 			}else{
-				html+="<input name = '"+name+"' type='"+type+"' value = '"+arr[a].typecode+"'>"+arr[a].typename +"&nbsp;&nbsp;";
+				html+="<input name = '"+name+"' type='"+type+"' value = '"+arr[a].code+"'>"+arr[a].typename +"&nbsp;&nbsp;";
 			}
 		}
     }
@@ -386,7 +386,7 @@ function listDictFormat(value,code,table){
     	for (var k = 0; k < valArray.length; k++) {
            if(dicts && dicts.length>0){
         	   for(var a = 0;a < dicts.length;a++){
-                	if(dicts[a].typecode ==valArray[k]){
+                	if(dicts[a].code ==valArray[k]){
                 		showVal = showVal + dicts[a].typename + ',';
                 		 break;
                 	}
@@ -397,7 +397,7 @@ function listDictFormat(value,code,table){
     }else{
     	if(dicts && dicts.length>0){
     	   for(var a = 0;a < dicts.length;a++){
-            	if(dicts[a].typecode == value){
+            	if(dicts[a].code == value){
             		showVal =  dicts[a].typename;
             		 break;
             	}

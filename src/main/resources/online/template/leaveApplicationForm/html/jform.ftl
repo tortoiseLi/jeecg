@@ -93,9 +93,9 @@
 						<span lang="EN-US">
 							<@DictData name="sex" var="dataList">
 								<#list dataList as dictdata>
-								<input value="${dictdata.typecode?if_exists?html}" name="sex" type="radio"
+								<input value="${dictdata.code?if_exists?html}" name="sex" type="radio"
 									<#if dictdata_index==0>datatype="*"</#if> 
-									<#if dictdata.typecode?if_exists?html=="${data['${tableName}']['sex']?if_exists?html}"> checked="true" </#if>>
+									<#if dictdata.code?if_exists?html=="${data['${tableName}']['sex']?if_exists?html}"> checked="true" </#if>>
 									${dictdata.typename?if_exists?html}
 								</#list> 
 							</@DictData>

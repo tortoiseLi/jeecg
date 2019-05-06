@@ -78,13 +78,13 @@
 											<#list dataList as dictdata> 
 												<label <#if dictdata_index==0>class="first"</#if>>
 													<input 
-														value="${dictdata.typecode?if_exists?html}" 
+														value="${dictdata.code?if_exists?html}"
 														${subTableField.extend_json?if_exists} 
 														name="${sub}[${subTableData_index}].${subTableField.field_name}" 
 														type="radio" 
 														<#if dictdata_index==0&&subTableField.is_null != 'Y'>datatype="*"</#if> 
 														<#if subTableField.operationCodesReadOnly?if_exists>onclick="return false;"</#if>
-														<#if dictdata.typecode?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}"> checked="true"</#if> 
+														<#if dictdata.code?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}"> checked="true"</#if>
 													/><label></label>${dictdata.typename?if_exists?html}
 												</label>
 											</#list> 
@@ -103,14 +103,14 @@
 											<#list dataList as dictdata> 
 												<label <#if dictdata_index==0>class="first"</#if>>
 													<input 
-														value="${dictdata.typecode?if_exists?html}" 
+														value="${dictdata.code?if_exists?html}"
 														${subTableField.extend_json?if_exists} 
 														name="${sub}[${subTableData_index}].${subTableField.field_name}" 
 														type="checkbox" 
 														<#if subTableField.operationCodesReadOnly?if_exists>onclick="return false;"</#if>
 														<#if dictdata_index==0&&subTableField.is_null != 'Y'>datatype="*"</#if> 
 														<#list checkboxlist as x >
-															<#if dictdata.typecode?if_exists?html=="${x?if_exists?html}"> checked="true" </#if>
+															<#if dictdata.code?if_exists?html=="${x?if_exists?html}"> checked="true" </#if>
 														</#list>
 													/><label></label>${dictdata.typename?if_exists?html}
 												</label>
@@ -138,8 +138,8 @@
 											>
 											<#list dataList as dictdata> 
 												<option 
-													value="${dictdata.typecode?if_exists?html}" 
-													<#if dictdata.typecode?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}">
+													value="${dictdata.code?if_exists?html}"
+													<#if dictdata.code?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}">
 														selected="selected"
 													</#if>>${dictdata.typename?if_exists?html}
 												</option> 
@@ -309,7 +309,7 @@
 											<#list dataList as dictdata> 
 												<label <#if dictdata_index==0>class="first"</#if>>
 													<input 
-														value="${dictdata.typecode?if_exists?html}" 
+														value="${dictdata.code?if_exists?html}"
 														${subTableField.extend_json?if_exists} 
 														name="${sub}[0].${subTableField.field_name}" 
 														type="radio" 
@@ -331,7 +331,7 @@
 											<#list dataList as dictdata> 
 												<label <#if dictdata_index==0>class="first"</#if>>
 													<input 
-														value="${dictdata.typecode?if_exists?html}" 
+														value="${dictdata.code?if_exists?html}"
 														${subTableField.extend_json?if_exists} 
 														name="${sub}[0].${subTableField.field_name}" 
 														type="checkbox" 
@@ -360,8 +360,8 @@
 											>
 											<#list dataList as dictdata> 
 												<option 
-													value="${dictdata.typecode?if_exists?html}" 
-													<#if dictdata.typecode?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}">
+													value="${dictdata.code?if_exists?html}"
+													<#if dictdata.code?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}">
 														selected="selected"
 													</#if>>${dictdata.typename?if_exists?html}
 												</option> 

@@ -72,7 +72,7 @@
 										<#list dataList as dictdata> 
 											<label <#if dictdata_index==0>class="first"</#if>>
 												<input 
-													value="${dictdata.typecode?if_exists?html}" 
+													value="${dictdata.code?if_exists?html}"
 													${subTableField.extend_json?if_exists} 
 													name="${sub}[#index#].${subTableField.field_name}"
 													type="radio" 
@@ -94,7 +94,7 @@
 										<#list dataList as dictdata> 
 											<label <#if dictdata_index==0>class="first"</#if>>
 												<input 
-													value="${dictdata.typecode?if_exists?html}" 
+													value="${dictdata.code?if_exists?html}"
 													${subTableField.extend_json?if_exists} 
 													name="${sub}[#index#].${subTableField.field_name}" 
 													type="checkbox" 
@@ -125,7 +125,7 @@
 											class="ui-input-select province fld"
 											>
 											<#list dataList as dictdata> 
-												<option value="${dictdata.typecode?if_exists?html}" >${dictdata.typename?if_exists?html}
+												<option value="${dictdata.code?if_exists?html}" >${dictdata.typename?if_exists?html}
 												</option> 
 											</#list> 
 										</select>

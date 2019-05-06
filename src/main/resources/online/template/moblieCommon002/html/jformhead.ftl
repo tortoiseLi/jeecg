@@ -62,13 +62,13 @@
 							<#list dataList as dictdata> 
 								<label <#if dictdata_index==0>class="first"</#if>>
 									<input 
-										value="${dictdata.typecode?if_exists?html}" 
+										value="${dictdata.code?if_exists?html}"
 										${po.extend_json?if_exists} 
 										name="${po.field_name}" 
 										type="radio" 
 										<#if dictdata_index==0&&po.is_null != 'Y'>datatype="*"</#if> 
 										<#if po.operationCodesReadOnly?if_exists>onclick="return false;"</#if>
-										<#if dictdata.typecode?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}"> checked="true</#if> 
+										<#if dictdata.code?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}"> checked="true</#if>
 									/><label></label>${dictdata.typename?if_exists?html}
 								</label>
 							</#list> 
@@ -87,14 +87,14 @@
 							<#list dataList as dictdata> 
 								<label <#if dictdata_index==0>class="first"</#if>>
 									<input 
-										value="${dictdata.typecode?if_exists?html}" 
+										value="${dictdata.code?if_exists?html}"
 										${po.extend_json?if_exists} 
 										name="${po.field_name}" 
 										type="checkbox" 
 										<#if po.operationCodesReadOnly?if_exists>onclick="return false;"</#if>
 										<#if dictdata_index==0&&po.is_null != 'Y'>datatype="*"</#if> 
 										<#list checkboxlist as x >
-											<#if dictdata.typecode?if_exists?html=="${x?if_exists?html}"> checked="true" </#if>
+											<#if dictdata.code?if_exists?html=="${x?if_exists?html}"> checked="true" </#if>
 										</#list>
 									/><label></label>${dictdata.typename?if_exists?html}
 								</label>
@@ -122,8 +122,8 @@
 								>
 								<#list dataList as dictdata> 
 									<option 
-										value="${dictdata.typecode?if_exists?html}" 
-										<#if dictdata.typecode?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}">
+										value="${dictdata.code?if_exists?html}"
+										<#if dictdata.code?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}">
 											selected="selected"
 										</#if>>${dictdata.typename?if_exists?html}
 									</option> 

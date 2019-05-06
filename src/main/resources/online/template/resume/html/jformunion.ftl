@@ -55,7 +55,7 @@
 				<option value="">请选择</option>
 				<@DictData name="sex" var="dataList">
 					<#list dataList as dictdata>
-						<option value="${dictdata.typecode?if_exists?html}" <#if dictdata.typecode?if_exists?html=="${data['${tableName}']['sex']?if_exists?html}">selected</#if>>${dictdata.typename?if_exists?html}</option>
+						<option value="${dictdata.code?if_exists?html}" <#if dictdata.code?if_exists?html=="${data['${tableName}']['sex']?if_exists?html}">selected</#if>>${dictdata.typename?if_exists?html}</option>
 					</#list>
 				</@DictData>
 			</select>

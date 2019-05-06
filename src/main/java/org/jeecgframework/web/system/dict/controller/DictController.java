@@ -7,10 +7,10 @@ import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ListUtils;
-import org.jeecgframework.core.util.MutiLangSqlCriteriaUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
+import org.jeecgframework.tag.vo.datatable.SortDirection;
+import org.jeecgframework.web.system.dict.entity.TypeEntity;
 import org.jeecgframework.web.system.dict.entity.TypeGroupEntity;
 import org.jeecgframework.web.system.dict.service.DictService;
 import org.jeecgframework.web.system.service.MutiLangService;
@@ -23,7 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * 数据字典Controller
@@ -136,5 +135,36 @@ public class DictController extends BaseController {
 		}
 		j.setMsg(message);
 		return j;
+	}
+
+	/**
+	 * 跳转数据字典类型列表页面
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(params = "typeList")
+	public ModelAndView goTypeGrid(HttpServletRequest request) {
+		String typeGroupId = request.getParameter("typeGroupId");
+		request.setAttribute("typeGroupId", typeGroupId);
+		return new ModelAndView("system/dict/typeList");
+	}
+
+	/**
+	 * 获取数据字典类型列表数据
+	 * @param request
+	 * @param response
+	 * @param dataGrid
+	 */
+	@RequestMapping(params = "typeGrid")
+	public void typeGrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		String typeGroupId = request.getParameter("typeGroupId");
+		CriteriaQuery cq = new CriteriaQuery(TypeEntity.class, dataGrid);
+		cq.eq("TSTypegroup.id", typeGroupId);
+
+		cq.addOrder("sort", SortDirection.asc);
+
+		cq.add();
+		this.systemService.getDataGridReturn(cq, true);
+		TagUtil.datagrid(response, dataGrid);
 	}
 }

@@ -44,7 +44,6 @@ import org.jeecgframework.core.extend.hqlsearch.parse.vo.HqlRuleEnum;
 import org.jeecgframework.core.extend.swftools.SwfToolsUtil;
 import org.jeecgframework.core.util.FileUtils;
 import org.jeecgframework.core.util.JSONHelper;
-import org.jeecgframework.core.util.ListUtils;
 import org.jeecgframework.core.util.MutiLangSqlCriteriaUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.PropertiesUtil;
@@ -208,7 +207,7 @@ public class SystemController extends BaseController {
 		String typegroupid = request.getParameter("typegroupid");
 		TypeGroupEntity typegroup = systemService.getById(TypeGroupEntity.class, typegroupid);
 		request.setAttribute("typegroup", typegroup);
-		return new ModelAndView("system/dict/typeList");
+		return new ModelAndView("system/dict/typeList2");
 	}
 
 
@@ -241,74 +240,10 @@ public class SystemController extends BaseController {
 	}
 
 
-	/**
-	 * easyuiAJAX请求数据
-	 *
-	 * @param request
-	 * @param response
-	 * @param dataGrid
-	 */
-
-	@RequestMapping(params = "typeGrid")
-	public void typeGrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		String typegroupid = request.getParameter("typegroupid");
-		String typename = request.getParameter("typename");
-		CriteriaQuery cq = new CriteriaQuery(TypeEntity.class, dataGrid);
-		cq.eq("TSTypegroup.id", typegroupid);
-		cq.like("typename", typename);
-
-		cq.addOrder("orderNum", SortDirection.asc);
-
-		cq.add();
-		this.systemService.getDataGridReturn(cq, true);
-
-        MutiLangUtil.setMutiLangValueForList(dataGrid.getResults(), "typename");
 
 
-		TagUtil.datagrid(response, dataGrid);
-	}
 
-    /**
-     * 跳转到类型页面
-     * @param request request
-     * @return
-     */
-	@RequestMapping(params = "goTypeGrid")
-	public ModelAndView goTypeGrid(HttpServletRequest request) {
-		String typegroupid = request.getParameter("typegroupid");
-        request.setAttribute("typegroupid", typegroupid);
-		return new ModelAndView("system/dict/typeListForTypegroup");
-	}
 
-//	@RequestMapping(params = "typeGroupTree")
-//	@ResponseBody
-//	public List<ComboTree> typeGroupTree(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-//		CriteriaQuery cq = new CriteriaQuery(TSTypegroup.class);
-//		List<TSTypegroup> typeGroupList = systemService.getListByCriteriaQuery(cq, false);
-//		List<ComboTree> trees = new ArrayList<ComboTree>();
-//		for (TSTypegroup obj : typeGroupList) {
-//			ComboTree tree = new ComboTree();
-//			tree.setId(obj.getId());
-//			tree.setText(obj.getTypegroupname());
-//			List<TSType> types = obj.getTSTypes();
-//			if (types != null) {
-//				if (types.size() > 0) {
-//					//tree.setState("closed");
-//					List<ComboTree> children = new ArrayList<ComboTree>();
-//					for (TSType type : types) {
-//						ComboTree tree2 = new ComboTree();
-//						tree2.setId(type.getId());
-//						tree2.setText(type.getTypename());
-//						children.add(tree2);
-//					}
-//					tree.setChildren(children);
-//				}
-//			}
-//			//tree.setChecked(false);
-//			trees.add(tree);
-//		}
-//		return trees;
-//	}
 
 	@RequestMapping(params = "typeGridTree")
 	@ResponseBody

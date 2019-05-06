@@ -108,7 +108,7 @@
 									<#elseif subTableField.show_type=='radio'>
 								        <@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
 											<#list dataList as dictdata> 
-											<input value="${dictdata.typecode?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" type="radio"
+											<input value="${dictdata.code?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" type="radio"
 											<#if subTableField.operationCodesReadOnly?if_exists>onclick="return false;"</#if>
 											 <#-- update--begin--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 										  	<#if dictdata_index == 0>
@@ -120,7 +120,7 @@
 							                <#if subTableField.field_must_input?if_exists?html != ''><#if subTableField.field_must_input == 'Y' || subTableField.is_null != 'Y'>ignore="checked"<#else>ignore="ignore"</#if><#elseif subTableField.is_null != 'Y'> ignore="checked"<#else>ignore="ignore"</#if>
 										  	</#if>
 							                <#-- update--end--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
-											<#if dictdata.typecode?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}"> checked="true" </#if>>
+											<#if dictdata.code?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}"> checked="true" </#if>>
 												${dictdata.typename?if_exists?html}
 											</#list> 
 										</@DictData>
@@ -130,7 +130,7 @@
 										<#assign checkboxlist=checkboxstr?split(",")>
 										<@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
 											<#list dataList as dictdata> 
-											<input value="${dictdata.typecode?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" type="checkbox"
+											<input value="${dictdata.code?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[${subTableData_index}].${subTableField.field_name}" type="checkbox"
 											 <#-- update--begin--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 										  	<#if dictdata_index == 0>
 										  	 <#if subTableField.field_valid_type?if_exists?html != ''>
@@ -143,7 +143,7 @@
 							                <#-- update--end--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 											<#if subTableField.operationCodesReadOnly?if_exists>onclick="return false;"</#if>
 											<#list checkboxlist as x >
-											<#if dictdata.typecode?if_exists?html=="${x?if_exists?html}"> checked="true" </#if></#list>>
+											<#if dictdata.code?if_exists?html=="${x?if_exists?html}"> checked="true" </#if></#list>>
 												${dictdata.typename?if_exists?html}
 											</#list> 
 										</@DictData>
@@ -163,9 +163,9 @@
 							                </#if>>
 							                <#-- update--end--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 												<#list dataList as dictdata> 
-												<option value="${dictdata.typecode?if_exists?html}" 
-												<#if dictdata.typecode?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}"> selected="selected" </#if>>
-													${dictdata.typename?if_exists?html}
+												<option value="${dictdata.code?if_exists?html}"
+												<#if dictdata.code?if_exists?html=="${subTableData['${subTableField.field_name}']?if_exists?html}"> selected="selected" </#if>>
+													${dictdata.name?if_exists?html}
 												</option> 
 												</#list> 
 											</select>
@@ -313,7 +313,7 @@
 									<#elseif subTableField.show_type=='radio'>
 								        <@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
 											<#list dataList as dictdata> 
-											<input value="${dictdata.typecode?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" type="radio" 
+											<input value="${dictdata.code?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" type="radio"
 											<#if subTableField.operationCodesReadOnly?if_exists>onclick="return false;"</#if>
 												<#-- update--begin--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 										  	<#if dictdata_index == 0>
@@ -332,7 +332,7 @@
 									<#elseif subTableField.show_type=='checkbox'>
 										<@DictData name="${subTableField.dict_field?if_exists?html}" text="${subTableField.dict_text?if_exists?html}" tablename="${subTableField.dict_table?if_exists?html}" var="dataList">
 											<#list dataList as dictdata> 
-											<input value="${dictdata.typecode?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" type="checkbox" 
+											<input value="${dictdata.code?if_exists?html}" ${subTableField.extend_json?if_exists} name="${sub}[0].${subTableField.field_name}" type="checkbox"
 											<#if subTableField.operationCodesReadOnly?if_exists>onclick="return false;"</#if>
 												<#-- update--begin--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 										  	<#if dictdata_index == 0>
@@ -363,7 +363,7 @@
 								                </#if>>
 								                <#-- update--end--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 												<#list dataList as dictdata> 
-												<option value="${dictdata.typecode?if_exists?html}" >
+												<option value="${dictdata.code?if_exists?html}" >
 													${dictdata.typename?if_exists?html}
 												</option> 
 												</#list> 

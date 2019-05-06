@@ -95,13 +95,13 @@
 			<#elseif po.showType=='checkbox'>
 				<el-form-item style="margin-bottom: 8px;" prop="${po.fieldName}">
 				    <el-select v-model="filters.${po.fieldName}" multiple placeholder="请选择${po.content}">
-				      <el-option :label="option.typename" :value="option.typecode" v-for="option in ${po.dictField}Options"></el-option>
+				      <el-option :label="option.typename" :value="option.code" v-for="option in ${po.dictField}Options"></el-option>
 				    </el-select>
 				</el-form-item>
 			<#elseif po.showType=='select' || po.showType=='list' || po.showType=='radio'>
 				<el-form-item style="margin-bottom: 8px;" prop="${po.fieldName}">
 					<el-select v-model="filters.${po.fieldName}" placeholder="请选择${po.content}">
-				      <el-option :label="option.typename" :value="option.typecode" v-for="option in ${po.dictField}Options"></el-option>
+				      <el-option :label="option.typename" :value="option.code" v-for="option in ${po.dictField}Options"></el-option>
 				    </el-select>
 				</el-form-item>
 			<#else>
@@ -191,13 +191,13 @@
 				<#elseif po.showType=='checkbox'>
 					<el-form-item label="${po.content}">
 					    <el-select v-model="form.${po.fieldName}" multiple placeholder="请选择${po.content}">
-					      <el-option :label="option.typename" :value="option.typecode" v-for="option in ${po.dictField}Options"></el-option>
+					      <el-option :label="option.typename" :value="option.code" v-for="option in ${po.dictField}Options"></el-option>
 					    </el-select>
 					</el-form-item>
 				<#elseif po.showType=='select' || po.showType=='list' || po.showType=='radio'>
 					<el-form-item label="${po.content}">
 						<el-select v-model="form.${po.fieldName}" placeholder="请选择${po.content}">
-					      <el-option :label="option.typename" :value="option.typecode" v-for="option in ${po.dictField}Options"></el-option>
+					      <el-option :label="option.typename" :value="option.code" v-for="option in ${po.dictField}Options"></el-option>
 					    </el-select>
 					</el-form-item>
 				<#-- update--begin--Author:gj_shaojc  Date:20180605 for：TASK #2767 【专题任务】element-ui 代码生成器遗留问题改造(问题10)  -->
@@ -423,7 +423,7 @@
 					if(i>0)names+=",";
 					for(var j in this.${mpo.dictField}Options){
 						var option=this.${mpo.dictField}Options[j];
-						if(value==option.typecode){
+						if(value==option.code){
 							names+=option.typename;
 						}
 					}

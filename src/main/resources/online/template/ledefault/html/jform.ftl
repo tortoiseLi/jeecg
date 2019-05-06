@@ -165,7 +165,7 @@
 						<#elseif po.show_type=='radio'>
 					        <@DictData name="${po.dict_field?if_exists?html}" text="${po.dict_text?if_exists?html}" tablename="${po.dict_table?if_exists?html}" var="dataList">
 								<#list dataList as dictdata> 
-								<input value="${dictdata.typecode?if_exists?html}" ${po.extend_json?if_exists} name="${po.field_name}" type="radio"
+								<input value="${dictdata.code?if_exists?html}" ${po.extend_json?if_exists} name="${po.field_name}" type="radio"
 					           <#-- update--begin--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 							   	<#if dictdata_index==0>
 								   	<#if po.field_valid_type?if_exists?html != ''>
@@ -177,7 +177,7 @@
 				                </#if>
 				                <#-- update--end--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 								<#if po.operationCodesReadOnly?if_exists>onclick="return false;"</#if>
-								<#if dictdata.typecode?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}"> checked="true" </#if>>
+								<#if dictdata.code?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}"> checked="true" </#if>>
 									${dictdata.typename?if_exists?html}
 								</#list> 
 							</@DictData>
@@ -187,7 +187,7 @@
 							<#assign checkboxlist=checkboxstr?split(",")>
 							<@DictData name="${po.dict_field?if_exists?html}" text="${po.dict_text?if_exists?html}" tablename="${po.dict_table?if_exists?html}" var="dataList">
 								<#list dataList as dictdata> 
-								<input value="${dictdata.typecode?if_exists?html}" ${po.extend_json?if_exists} name="${po.field_name}" type="checkbox"
+								<input value="${dictdata.code?if_exists?html}" ${po.extend_json?if_exists} name="${po.field_name}" type="checkbox"
 								<#if po.operationCodesReadOnly?if_exists>onclick="return false;"</#if>
 					            <#-- update--begin--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 							   	<#if dictdata_index==0>
@@ -200,7 +200,7 @@
 				                </#if>
 				                <#-- update--end--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 								<#list checkboxlist as x >
-								<#if dictdata.typecode?if_exists?html=="${x?if_exists?html}"> checked="true" </#if></#list>>
+								<#if dictdata.code?if_exists?html=="${x?if_exists?html}"> checked="true" </#if></#list>>
 									${dictdata.typename?if_exists?html}
 								</#list> 
 							</@DictData>
@@ -221,8 +221,8 @@
 					                </#if>>
 				                <#-- update--end--author:zhangjiaqiang Date:20170512 for:TASK #1910 【Online 校验】radio\checkbox\select 存在问题，没有根据选择校验规则校验 -->
 									<#list dataList as dictdata> 
-									<option value="${dictdata.typecode?if_exists?html}" 
-									<#if dictdata.typecode?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}"> selected="selected" </#if>>
+									<option value="${dictdata.code?if_exists?html}"
+									<#if dictdata.code?if_exists?html=="${data['${tableName}']['${po.field_name}']?if_exists?html}"> selected="selected" </#if>>
 										${dictdata.typename?if_exists?html}
 									</option> 
 									</#list> 

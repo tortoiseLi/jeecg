@@ -433,7 +433,7 @@
 		    	for (var k = 0; k < valArray.length; k++) {
 		           if(dicts && dicts.length>0){
 		        	   for(var a = 0;a < dicts.length;a++){
-		                	if(dicts[a].typecode ==valArray[k]){
+		                	if(dicts[a].code ==valArray[k]){
 		                		showVal = showVal + dicts[a].typename + ',';
 		                		 break;
 		                	}
@@ -444,7 +444,7 @@
 		    }else{
 		    	if(dicts && dicts.length>0){
 		    	   for(var a = 0;a < dicts.length;a++){
-		            	if(dicts[a].typecode == value){
+		            	if(dicts[a].code == value){
 		            		showVal =  dicts[a].typename;
 		            		 break;
 		            	}
@@ -479,11 +479,11 @@
 			var html = "";
 			for(var a = 0;a < arr.length;a++){
 				if("select"== type){
-					html+="<option value = '"+arr[a].typecode+"'>"+arr[a].typename+"</option>";
+					html+="<option value = '"+arr[a].code+"'>"+arr[a].typename+"</option>";
 				}else{
-					if(!arr[a].typecode){
+					if(!arr[a].code){
 					}else{
-						html+="<input name = '"+name+"' type='"+type+"' value = '"+arr[a].typecode+"'>"+arr[a].typename +"&nbsp;&nbsp;";
+						html+="<input name = '"+name+"' type='"+type+"' value = '"+arr[a].code+"'>"+arr[a].typename +"&nbsp;&nbsp;";
 					}
 					
 				}

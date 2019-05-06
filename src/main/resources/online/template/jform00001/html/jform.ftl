@@ -195,9 +195,9 @@
 			<p align="left" class="MsoNormal"><span style="font-size: 11pt; font-family: 微软雅黑, sans-serif;">　<span lang="EN-US">
 			<@DictData name="sf_yn" var="dataList">
 				<#list dataList as dictdata> 
-				<input value="${dictdata.typecode?if_exists?html}" name="hr_pic" type="radio"
+				<input value="${dictdata.code?if_exists?html}" name="hr_pic" type="radio"
 					<#if dictdata_index==0>datatype="*"</#if> 
-					<#if dictdata.typecode?if_exists?html=="${data['${tableName}']['hr_pic']?if_exists?html}"> checked="true" </#if>>
+					<#if dictdata.code?if_exists?html=="${data['${tableName}']['hr_pic']?if_exists?html}"> checked="true" </#if>>
 					${dictdata.typename?if_exists?html}
 				</#list> 
 			</@DictData>
@@ -212,9 +212,9 @@
 			<p align="left" class="MsoNormal"><span style="font-size: 11pt; font-family: 微软雅黑, sans-serif;">　<span lang="EN-US">
 			<@DictData name="sf_yn" var="dataList">
 				<#list dataList as dictdata> 
-				<input value="${dictdata.typecode?if_exists?html}" name="hr_archives" type="radio"
+				<input value="${dictdata.code?if_exists?html}" name="hr_archives" type="radio"
 				<#if dictdata_index==0>datatype="*"</#if> 
-				<#if dictdata.typecode?if_exists?html=="${data['${tableName}']['hr_archives']?if_exists?html}"> checked="true" </#if>>
+				<#if dictdata.code?if_exists?html=="${data['${tableName}']['hr_archives']?if_exists?html}"> checked="true" </#if>>
 					${dictdata.typename?if_exists?html}
 				</#list> 
 			</@DictData>
@@ -229,9 +229,9 @@
 			<p class="MsoNormal"><span lang="EN-US">
 			<@DictData name="sf_yn" var="dataList">
 				<#list dataList as dictdata> 
-				<input value="${dictdata.typecode?if_exists?html}" name="hr_identification" type="radio"
+				<input value="${dictdata.code?if_exists?html}" name="hr_identification" type="radio"
 				<#if dictdata_index==0>datatype="*"</#if> 
-				<#if dictdata.typecode?if_exists?html=="${data['${tableName}']['hr_identification']?if_exists?html}"> checked="true" </#if>>
+				<#if dictdata.code?if_exists?html=="${data['${tableName}']['hr_identification']?if_exists?html}"> checked="true" </#if>>
 					${dictdata.typename?if_exists?html}
 				</#list> 
 			</@DictData>
@@ -248,9 +248,9 @@
 			<p align="left" class="MsoNormal"><span style="font-size: 11pt; font-family: 微软雅黑, sans-serif;">　<span lang="EN-US">
 			<@DictData name="sf_yn" var="dataList">
 				<#list dataList as dictdata> 
-				<input value="${dictdata.typecode?if_exists?html}" name="hr_degree" type="radio"
+				<input value="${dictdata.code?if_exists?html}" name="hr_degree" type="radio"
 				<#if dictdata_index==0>datatype="*"</#if> 
-				<#if dictdata.typecode?if_exists?html=="${data['${tableName}']['hr_degree']?if_exists?html}"> checked="true" </#if>>
+				<#if dictdata.code?if_exists?html=="${data['${tableName}']['hr_degree']?if_exists?html}"> checked="true" </#if>>
 					${dictdata.typename?if_exists?html}
 				</#list> 
 			</@DictData>

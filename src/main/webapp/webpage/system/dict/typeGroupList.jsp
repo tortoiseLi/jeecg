@@ -44,7 +44,7 @@
             $('#main_typegroup_list').layout('expand', 'east');
         }
         $('#main_typegroup_list').layout('panel', 'east').panel('setTitle', title);
-        $('#userListpanel').panel("refresh", "systemController.do?goTypeGrid&typegroupid=" + typegroupid);
+        $('#userListpanel').panel("refresh", "systemController.do?goTypeGrid&typeGroupId=" + typegroupid);
     }
 
     function loadSuccess() {
