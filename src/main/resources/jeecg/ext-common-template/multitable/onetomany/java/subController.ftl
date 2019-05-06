@@ -157,7 +157,7 @@ public class ${subsG['${key}'].entityName}Controller extends BaseController {
 		try{
 			if(${subsG['${key}'].entityName?uncap_first}!=null){
 				${entityName?uncap_first}Service.delete(${subsG['${key}'].entityName?uncap_first});
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -192,7 +192,7 @@ public class ${subsG['${key}'].entityName}Controller extends BaseController {
 				);
 				if(${subsG['${key}'].entityName?uncap_first}!=null){
 					${entityName?uncap_first}Service.delete(${subsG['${key}'].entityName?uncap_first});
-					systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+					systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 				}
 				
 			}
@@ -217,7 +217,7 @@ public class ${subsG['${key}'].entityName}Controller extends BaseController {
 		String message = "添加成功";
 		try{
 			${entityName?uncap_first}Service.save(${subsG['${key}'].entityName?uncap_first});
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${subsG['${key}'].ftlDescription}添加失败";
@@ -241,7 +241,7 @@ public class ${subsG['${key}'].entityName}Controller extends BaseController {
 		try{
 			MyBeanUtils.copyBeanNotNull2Bean(${subsG['${key}'].entityName?uncap_first}, t);
 			${entityName?uncap_first}Service.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${subsG['${key}'].ftlDescription}更新失败";
@@ -297,7 +297,7 @@ public class ${subsG['${key}'].entityName}Controller extends BaseController {
 					try {
 						MyBeanUtils.copyBeanNotNull2Bean(temp, t);
 						systemService.saveOrUpdate(t);
-						systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+						systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -309,7 +309,7 @@ public class ${subsG['${key}'].entityName}Controller extends BaseController {
 					    <#break>
 					    </#list>
 						systemService.save(temp);
-						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

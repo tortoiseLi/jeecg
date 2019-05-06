@@ -188,7 +188,7 @@ public class ${entityName}Controller extends BaseController {
 		String message = "${ftl_description}删除成功";
 		try{
 			${entityName?uncap_first}Service.delMain(${entityName?uncap_first});
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${ftl_description}删除失败";
@@ -222,7 +222,7 @@ public class ${entityName}Controller extends BaseController {
 				</#if>
 				);
 				${entityName?uncap_first}Service.delMain(${entityName?uncap_first});
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -249,7 +249,7 @@ public class ${entityName}Controller extends BaseController {
 		String message = "添加成功";
 		try{
 			${entityName?uncap_first}Service.addMain(${entityName?uncap_first}, <#list subTab as sub>${sub.entityName?uncap_first}List<#if sub_has_next>,</#if></#list>);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${ftl_description}添加失败";
@@ -279,7 +279,7 @@ public class ${entityName}Controller extends BaseController {
 		String message = "更新成功";
 		try{
 			${entityName?uncap_first}Service.updateMain(${entityName?uncap_first}, <#list subTab as sub>${sub.entityName?uncap_first}List<#if sub_has_next>,</#if></#list>);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "更新${ftl_description}失败";
@@ -479,7 +479,7 @@ public class ${entityName}Controller extends BaseController {
 		${entityName}Entity t = ${entityName?uncap_first}Service.get(${entityName}Entity.class, ${entityName?uncap_first}.getId());
 		try{
 			${entityName?uncap_first}Service.do${btn.buttonCode?cap_first}Sql(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${btn.buttonName}失败";

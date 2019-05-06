@@ -115,7 +115,7 @@ public class ${entityName}Controller extends BaseController {
 		${entityName?uncap_first} = systemService.getEntity(${entityName}Entity.class, ${entityName?uncap_first}.getId());
 		message = "删除成功";
 		${entityName?uncap_first}Service.delete(${entityName?uncap_first});
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		
 		j.setMsg(message);
 		return j;
@@ -139,11 +139,11 @@ public class ${entityName}Controller extends BaseController {
 		if (StringUtil.isNotEmpty(${entityName?uncap_first}.getId())) {
 			message = "更新成功";
 			${entityName?uncap_first}Service.updateMain(${entityName?uncap_first}, <#list subTab as sub>${sub.entityName?uncap_first}List<#if sub_has_next>,</#if></#list>);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} else {
 			message = "添加成功";
 			${entityName?uncap_first}Service.addMain(${entityName?uncap_first}, <#list subTab as sub>${sub.entityName?uncap_first}List<#if sub_has_next>,</#if></#list>);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;

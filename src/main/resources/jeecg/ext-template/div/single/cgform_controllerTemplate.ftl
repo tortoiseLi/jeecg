@@ -199,7 +199,7 @@ public class ${entityName}Controller extends BaseController {
 		message = "${ftl_description}删除成功";
 		try{
 			${entityName?uncap_first}Service.delete(${entityName?uncap_first});
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${ftl_description}删除失败";
@@ -234,7 +234,7 @@ public class ${entityName}Controller extends BaseController {
 				</#if>
 				);
 				${entityName?uncap_first}Service.delete(${entityName?uncap_first});
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -265,7 +265,7 @@ public class ${entityName}Controller extends BaseController {
 			}
 			</#if>
 			${entityName?uncap_first}Service.save(${entityName?uncap_first});
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${ftl_description}添加失败";
@@ -301,7 +301,7 @@ public class ${entityName}Controller extends BaseController {
 			}
 			</#if>
 			${entityName?uncap_first}Service.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "${ftl_description}更新失败";
@@ -327,7 +327,7 @@ public class ${entityName}Controller extends BaseController {
 		${entityName}Entity t = ${entityName?uncap_first}Service.get(${entityName}Entity.class, ${entityName?uncap_first}.getId());
 		try{
 			${entityName?uncap_first}Service.do${btn.buttonCode?cap_first}Bus(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "${btn.buttonName}失败";

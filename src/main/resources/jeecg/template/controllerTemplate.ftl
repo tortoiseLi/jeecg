@@ -111,7 +111,7 @@ public class ${entityName}Controller extends BaseController {
 		${entityName?uncap_first} = systemService.getEntity(${entityName}Entity.class, ${entityName?uncap_first}.getId());
 		message = "${ftl_description}删除成功";
 		${entityName?uncap_first}Service.delete(${entityName?uncap_first});
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		
 		j.setMsg(message);
 		return j;
@@ -135,7 +135,7 @@ public class ${entityName}Controller extends BaseController {
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(${entityName?uncap_first}, t);
 				${entityName?uncap_first}Service.saveOrUpdate(t);
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 				message = "${ftl_description}更新失败";
@@ -143,7 +143,7 @@ public class ${entityName}Controller extends BaseController {
 		} else {
 			message = "${ftl_description}添加成功";
 			${entityName?uncap_first}Service.save(${entityName?uncap_first});
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;
