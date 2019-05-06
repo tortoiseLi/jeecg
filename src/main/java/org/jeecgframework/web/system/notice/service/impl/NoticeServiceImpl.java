@@ -4,9 +4,9 @@ import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.web.system.notice.entity.NoticeEntity;
 import org.jeecgframework.web.system.notice.service.NoticeService;
-import org.jeecgframework.web.system.pojo.base.NoticeAuthorityRoleEntity;
-import org.jeecgframework.web.system.pojo.base.NoticeAuthorityUserEntity;
-import org.jeecgframework.web.system.pojo.base.NoticeReadUserEntity;
+import org.jeecgframework.web.system.core.NoticeAuthorityRoleEntity;
+import org.jeecgframework.web.system.core.NoticeAuthorityUserEntity;
+import org.jeecgframework.web.system.core.NoticeReadUserEntity;
 import org.jeecgframework.web.system.user.entity.UserEntity;
 import org.springframework.stereotype.Service;
 

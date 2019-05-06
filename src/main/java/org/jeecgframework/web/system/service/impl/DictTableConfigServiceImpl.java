@@ -6,7 +6,7 @@ import java.util.Map;
 import org.jeecgframework.core.annotation.Ehcache;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.web.system.pojo.base.DictTableConfigEntity;
+import org.jeecgframework.web.system.dict.entity.DictTableConfigEntity;
 import org.jeecgframework.web.system.service.DictTableConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

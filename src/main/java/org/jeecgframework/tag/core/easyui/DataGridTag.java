@@ -18,7 +18,6 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.sun.javaws.Globals;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
@@ -43,7 +42,7 @@ import org.jeecgframework.web.cgform.entity.config.CgFormHeadEntity;
 import org.jeecgframework.web.cgform.entity.config.CgSubTableVO;
 import org.jeecgframework.web.cgform.service.config.CgFormFieldServiceI;
 import org.jeecgframework.web.cgform.util.PublicUtil;
-import org.jeecgframework.web.system.pojo.base.OperationEntity;
+import org.jeecgframework.web.system.core.OperationEntity;
 import org.jeecgframework.web.system.dict.entity.TypeEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;

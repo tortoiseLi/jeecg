@@ -2,7 +2,7 @@ package org.jeecgframework.core.timer;
 
 import java.util.List;
 
-import org.jeecgframework.web.system.pojo.base.TimeTaskEntity;
+import org.jeecgframework.web.system.core.TimeTaskEntity;
 import org.jeecgframework.web.system.service.TimeTaskService;
 
 import org.quartz.Scheduler;

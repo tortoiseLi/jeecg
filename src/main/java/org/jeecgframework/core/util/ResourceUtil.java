@@ -13,12 +13,15 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.constant.DataBaseConstant;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.web.cgform.common.CgAutoListConstant;
+import org.jeecgframework.web.system.core.common.entity.Client;
+import org.jeecgframework.web.system.data.source.entity.DynamicDataSourceEntity;
 import org.jeecgframework.web.system.dict.entity.TypeEntity;
 import org.jeecgframework.web.system.dict.entity.TypeGroupEntity;
-import org.jeecgframework.web.system.manager.ClientManager;
-import org.jeecgframework.web.system.pojo.base.*;
-import org.jeecgframework.web.system.service.CacheService;
+import org.jeecgframework.web.system.icon.entity.IconEntity;
+import org.jeecgframework.web.system.core.manager.ClientManager;
+import org.jeecgframework.web.system.core.cache.service.CacheService;
 import org.jeecgframework.web.system.user.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +54,7 @@ public class ResourceUtil {
 //	private static Map<String, TSTypegroup> allTypeGroups = new HashMap<String,TSTypegroup>();
 	public static TypeGroupEntity getCacheTypeGroup(String typegroupcode){
 		TypeGroupEntity result = null;
-		Object obj = cacheService.get(CacheService.FOREVER_CACHE, DICT_TYPE_GROUPS_KEY);
+		Object obj = cacheService.get(GlobalConstants.FOREVER_CACHE, DICT_TYPE_GROUPS_KEY);
 		if(obj!=null){
 			Map<String, TypeGroupEntity> mp = (Map<String, TypeGroupEntity>) obj;
 			result = mp.get(typegroupcode);
@@ -67,7 +70,7 @@ public class ResourceUtil {
 //	public static Map<String, List<TSType>> allTypes = new HashMap<String,List<TSType>>();
 	public static List<TypeEntity> getCacheTypes(String typegroupcode){
 		List<TypeEntity> result = null;
-		Object obj = cacheService.get(CacheService.FOREVER_CACHE, DICT_TYPES_KEY);
+		Object obj = cacheService.get(GlobalConstants.FOREVER_CACHE, DICT_TYPES_KEY);
 		if(obj!=null){
 			Map<String, List<TypeEntity>> mp = (Map<String, List<TypeEntity>>) obj;
 			result = mp.get(typegroupcode);
@@ -83,7 +86,7 @@ public class ResourceUtil {
 //	public static Map<String, String> mutiLangMap = new HashMap<String, String>(); 
 	public static String getMutiLan(String key){
 		String result = null;
-		Object obj = cacheService.get(CacheService.FOREVER_CACHE, MUTI_LANG_FOREVER_CACHE_KEY);
+		Object obj = cacheService.get(GlobalConstants.FOREVER_CACHE, MUTI_LANG_FOREVER_CACHE_KEY);
 		if(obj!=null){
 			Map<String, String> ls = (Map<String, String>) obj;
 			result = ls.get(key);
@@ -98,7 +101,7 @@ public class ResourceUtil {
 	 */
 //	public static Map<String, DynamicDataSourceEntity> dynamicDataSourceMap = new HashMap<String, DynamicDataSourceEntity>();
 	public static Map<String, DynamicDataSourceEntity> getCacheAllDynamicDataSourceEntity(){
-		Object obj = cacheService.get(CacheService.FOREVER_CACHE, DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY);
+		Object obj = cacheService.get(GlobalConstants.FOREVER_CACHE, DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY);
 		if(obj!=null){
 			Map<String, DynamicDataSourceEntity> ls = (Map<String, DynamicDataSourceEntity>) obj;
 			log.debug("-----------从缓存获取动态数据源配置-------getCacheAllDynamicDataSourceEntity--------size：[{}] ",ls.size());
@@ -108,7 +111,7 @@ public class ResourceUtil {
 	}
 	public static DynamicDataSourceEntity getCacheDynamicDataSourceEntity(String dbKey){
 		DynamicDataSourceEntity result = null;
-		Object obj = cacheService.get(CacheService.FOREVER_CACHE, DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY);
+		Object obj = cacheService.get(GlobalConstants.FOREVER_CACHE, DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY);
 		if(obj!=null){
 			Map<String, DynamicDataSourceEntity> ls = (Map<String, DynamicDataSourceEntity>) obj;
 			result = ls.get(dbKey);

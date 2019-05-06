@@ -2,7 +2,7 @@ package org.jeecgframework.web.system.service;
 import java.io.Serializable;
 
 import org.jeecgframework.core.common.service.CommonService;
-import org.jeecgframework.web.system.pojo.base.NoticeAuthorityRoleEntity;
+import org.jeecgframework.web.system.core.NoticeAuthorityRoleEntity;
 
 public interface NoticeAuthorityRoleService extends CommonService{
 	

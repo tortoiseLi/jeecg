@@ -2,7 +2,7 @@ package org.jeecgframework.web.system.service;
 import java.io.Serializable;
 
 import org.jeecgframework.core.common.service.CommonService;
-import org.jeecgframework.web.system.pojo.base.DictTableConfigEntity;
+import org.jeecgframework.web.system.dict.entity.DictTableConfigEntity;
 
 /**
  * 字典表授权配置

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.sun.javaws.Globals;
 import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.model.json.AjaxJson;
@@ -42,8 +41,9 @@ import org.jeecgframework.web.cgform.service.template.CgformTemplateServiceI;
 import org.jeecgframework.web.cgform.util.PublicUtil;
 import org.jeecgframework.web.cgform.util.QueryParamUtil;
 import org.jeecgframework.web.cgform.util.TemplateUtil;
-import org.jeecgframework.web.system.pojo.base.DictEntity;
-import org.jeecgframework.web.system.pojo.base.OperationEntity;
+import org.jeecgframework.web.system.dict.entity.DictEntity;
+import org.jeecgframework.web.system.dict.service.DictService;
+import org.jeecgframework.web.system.core.OperationEntity;
 import org.jeecgframework.web.system.dict.entity.TypeEntity;
 import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.service.SystemService;
@@ -79,6 +79,8 @@ public class CgAutoListController extends BaseController{
 	private CgformTemplateServiceI cgformTemplateService;
 	@Autowired
 	private MutiLangService mutiLangService;
+	@Autowired
+	private DictService dictService;
 	/**
 	 * 动态列表展现入口
 	 * @param id 动态配置ID
@@ -420,7 +422,6 @@ public class CgAutoListController extends BaseController{
 	/**
 	 * 删除动态表-批量
 	 * @param configId 配置id
-	 * @param id 主键
 	 * @param request
 	 * @return
 	 */
@@ -739,28 +740,8 @@ public class CgAutoListController extends BaseController{
 			return li;
 		}
 
-		
-//		StringBuilder dicSql = new StringBuilder();
-//		if(StringUtil.isEmpty(dicTable)){//step.1 如果没有字典表则使用系统字典表
-//			dicTable = CgAutoListConstant.SYS_DIC;
-//			dicSql.append(" SELECT TYPECODE,TYPENAME FROM");
-//			dicSql.append(" "+dicTable);
-//			dicSql.append(" "+"WHERE TYPEGROUPID = ");
-//			dicSql.append(" "+"(SELECT ID FROM "+CgAutoListConstant.SYS_DICGROUP+" WHERE TYPEGROUPCODE = '"+dicCode+"' )");
-//		}else{//step.2 如果给定了字典表则使用该字典表，这个功能需要在表单配置追加字段
-//			//table表查询
-//			dicSql.append("SELECT DISTINCT ").append(dicCode).append(" as typecode, ");
-//			if(dicText!=null&&dicText.length()>0){
-//				dicSql.append(dicText).append(" as typename ");
-//			}else{
-//				dicSql.append(dicCode).append(" as typename ");
-//			}
-//			dicSql.append(" FROM ").append(dicTable);
-//			dicSql.append(" ORDER BY ").append(dicCode);
-//		}
-//		//step.3 字典数据
-//		List<Map<String, Object>> dicDatas = systemService.findForJdbc(dicSql.toString());
-		return systemService.queryDict(dicTable, dicCode, dicText);
+
+		return dictService.findDictList(dicTable, dicCode, dicText);
 	}
 	
 	private String getSystemValue(String sysVarName) {

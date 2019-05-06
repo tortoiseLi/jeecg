@@ -7,11 +7,12 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.PropertiesUtil;
 import org.jeecgframework.web.cgform.common.CgAutoListConstant;
 import org.jeecgframework.web.cgform.service.config.CgFormFieldServiceI;
-import org.jeecgframework.web.system.service.CacheService;
+import org.jeecgframework.web.system.core.cache.service.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +50,9 @@ public class TempletContext {
 
 	@PostConstruct
 	public void init() {
-		if (tags == null)
+		if (tags == null) {
 			return;
+		}
 		for (String key : tags.keySet()) {
 			freemarker.setSharedVariable(key, tags.get(key));
 		}
@@ -91,7 +93,7 @@ public class TempletContext {
 	
 	/**
 	 * 从缓存中读取ftl模板
-	 * @param template
+
 	 * @param encoding
 	 * @version online表配置版本号
 	 * @return
@@ -101,10 +103,10 @@ public class TempletContext {
 		try {
 			//cache的键：类名.方法名.参数名.version
 			String cacheKey = this.getClass().getSimpleName()+".getTemplateFormCache."+tableName+"."+version;;
-			Object templateObj = cacheService.get(CacheService.SYSTEM_BASE_CACHE,cacheKey);
+			Object templateObj = cacheService.get(GlobalConstants.SYSTEM_BASE_CACHE,cacheKey);
 			if(templateObj==null){
 				template = freemarker.getTemplate(tableName,freemarker.getLocale(), ENCODING);
-				cacheService.put(CacheService.SYSTEM_BASE_CACHE,cacheKey,template);
+				cacheService.put(GlobalConstants.SYSTEM_BASE_CACHE,cacheKey,template);
 				log.info("--setTemplateFromCache-------cacheKey: [{}]-------------",cacheKey);
 			}else{
 				log.info("--getTemplateFromCache-------cacheKey: [{}]-------------",cacheKey);
@@ -118,8 +120,7 @@ public class TempletContext {
 	
 	/**
 	 * 从缓存中读取ftl模板
-	 * @param template
-	 * @param encoding
+
 	 * @return
 	 */
 	public void removeTemplateFromCache(String tableName){
@@ -128,7 +129,7 @@ public class TempletContext {
 	    	String version = cgFormFieldService.getCgFormVersionByTableName(tableName);
 			//cache的键：类名.方法名.参数名
 			String cacheKey = FreemarkerHelper.class.getName()+".getTemplateFormCache."+tableName+"."+version;
-			cacheService.remove(CacheService.SYSTEM_BASE_CACHE,cacheKey);
+			cacheService.remove(GlobalConstants.SYSTEM_BASE_CACHE,cacheKey);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -153,6 +154,6 @@ public class TempletContext {
 	 * 清空online缓存
 	 */
 	public void clearCache(){
-		cacheService.clean(CacheService.SYSTEM_BASE_CACHE);
+		cacheService.clean(GlobalConstants.SYSTEM_BASE_CACHE);
 	}
 }

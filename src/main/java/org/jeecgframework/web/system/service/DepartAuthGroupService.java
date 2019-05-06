@@ -13,13 +13,13 @@ import org.jeecgframework.minidao.pojo.MiniDaoPage;
  */
 public interface DepartAuthGroupService extends CommonService {
 	
-	public MiniDaoPage<Map<String,Object>> getDepartAuthGroupList(int page,int rows);
+	MiniDaoPage<Map<String,Object>> getDepartAuthGroupList(int page, int rows);
 	
-	public List<Map<String,Object>> chkDepartAuthGroupList(String userId);
+	List<Map<String,Object>> chkDepartAuthGroupList(String userId);
 	
-	public MiniDaoPage<Map<String,Object>> getDepartAuthGroupByUserId(int page,int rows,String userId);
+	MiniDaoPage<Map<String,Object>> getDepartAuthGroupByUserId(int page, int rows, String userId);
 	
-	public MiniDaoPage<Map<String,Object>> getDepartAuthRole(int page,int rows,String userId);
+	MiniDaoPage<Map<String,Object>> getDepartAuthRole(int page, int rows, String userId);
 	
-	public List<Map<String,Object>> chkDepartAuthRole();
+	List<Map<String,Object>> chkDepartAuthRole();
 }

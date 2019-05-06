@@ -1,6 +1,6 @@
 package org.jeecgframework.web.system.util;
 
-import org.jeecgframework.web.system.pojo.base.IconEntity;
+import org.jeecgframework.web.system.icon.entity.IconEntity;
 import org.jeecgframework.core.common.model.json.DataGrid;
 
 import javax.imageio.stream.FileImageOutputStream;

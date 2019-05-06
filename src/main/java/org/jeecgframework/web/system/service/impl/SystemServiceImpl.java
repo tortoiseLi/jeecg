@@ -1,35 +1,20 @@
 package org.jeecgframework.web.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.jeecgframework.core.annotation.Ehcache;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.core.constant.GlobalConstants;
-import org.jeecgframework.core.util.BrowserUtils;
-import org.jeecgframework.core.util.ContextHolderUtils;
-import org.jeecgframework.core.util.IpUtil;
-import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.core.util.ResourceUtil;
-import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.dao.JeecgDictDao;
-import org.jeecgframework.web.system.dict.entity.TypeGroupEntity;
+import org.jeecgframework.core.util.*;
+import org.jeecgframework.web.system.core.*;
+import org.jeecgframework.web.system.core.common.JeecgDictDao;
+import org.jeecgframework.web.system.depart.entity.DepartAuthGroupEntity;
+import org.jeecgframework.web.system.depart.entity.DepartAuthgFunctionRelEntity;
 import org.jeecgframework.web.system.function.entity.FunctionEntity;
+import org.jeecgframework.web.system.icon.entity.IconEntity;
 import org.jeecgframework.web.system.log.data.entity.DataLogEntity;
 import org.jeecgframework.web.system.log.operate.entity.LogEntity;
-import org.jeecgframework.web.system.pojo.base.*;
-import org.jeecgframework.web.system.dict.entity.TypeEntity;
 import org.jeecgframework.web.system.role.entity.RoleEntity;
-import org.jeecgframework.web.system.service.CacheService;
+import org.jeecgframework.web.system.core.cache.service.CacheService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.user.entity.UserEntity;
 import org.jeecgframework.web.system.util.OrgConstants;
@@ -39,6 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 @Service("systemService")
 public class SystemServiceImpl extends CommonServiceImpl implements SystemService {
@@ -55,22 +44,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		return this.commonDao.getUserByUserIdAndUserNameExits(user);
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<DictEntity> queryDict(String dicTable, String dicCode,String dicText){
-		List<DictEntity> dictList = null;
-		//step.1 如果没有字典表则使用系统字典表
-		if(StringUtil.isEmpty(dicTable)){
-			dictList = jeecgDictDao.querySystemDict(dicCode);
-			for(DictEntity t:dictList){
-				t.setTypename(MutiLangUtil.getLang(t.getTypename()));
-			}
-		}else {
-			dicText = StringUtil.isEmpty(dicText, dicCode);
-			dictList = jeecgDictDao.queryCustomDict(dicTable, dicCode, dicText);
-		}
-		return dictList;
-	}
+
 
 	/**
 	 * 添加日志
@@ -100,135 +74,6 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		}
 
 		commonDao.insert(log);
-	}
-
-	/**
-	 * 根据类型编码和类型名称获取Type,如果为空则创建一个
-	 *
-	 * @param typecode
-	 * @param typename
-	 * @return
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public TypeEntity getType(String typecode, String typename, TypeGroupEntity tsTypegroup) {
-		//TSType actType = commonDao.findUniqueByProperty(TSType.class, "typecode", typecode,tsTypegroup.getId());
-		List<TypeEntity> ls = commonDao.findListByHql("from TypeEntity where typecode = ? and typegroupid = ?",typecode,tsTypegroup.getId());
-		TypeEntity actType = null;
-		if (ls == null || ls.size()==0) {
-			actType = new TypeEntity();
-			actType.setTypecode(typecode);
-			actType.setTypename(typename);
-			actType.setTSTypegroup(tsTypegroup);
-			commonDao.insert(actType);
-		}else{
-			actType = ls.get(0);
-		}
-		return actType;
-
-	}
-
-	/**
-	 * 根据类型分组编码和名称获取TypeGroup,如果为空则创建一个
-	 * @return
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public TypeGroupEntity getTypeGroup(String typegroupcode, String typgroupename) {
-		TypeGroupEntity tsTypegroup = commonDao.getByProperty(TypeGroupEntity.class, "typegroupcode", typegroupcode);
-		if (tsTypegroup == null) {
-			tsTypegroup = new TypeGroupEntity();
-			tsTypegroup.setTypegroupcode(typegroupcode);
-			tsTypegroup.setTypegroupname(typgroupename);
-			commonDao.insert(tsTypegroup);
-		}
-		return tsTypegroup;
-	}
-
-	@Transactional(readOnly = true)
-	public TypeGroupEntity getTypeGroupByCode(String typegroupCode) {
-		TypeGroupEntity tsTypegroup = commonDao.getByProperty(TypeGroupEntity.class, "typegroupcode", typegroupCode);
-		return tsTypegroup;
-	}
-
-
-	@Override
-	@Transactional(readOnly = true)
-	public void initAllTypeGroups() {
-		List<TypeGroupEntity> typeGroups = this.commonDao.findList(TypeGroupEntity.class);
-		Map<String, TypeGroupEntity> typeGroupsList = new HashMap<String, TypeGroupEntity>();
-		Map<String, List<TypeEntity>> typesList = new HashMap<String, List<TypeEntity>>();
-		for (TypeGroupEntity tsTypegroup : typeGroups) {
-			tsTypegroup.setTSTypes(null);
-			typeGroupsList.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
-			List<TypeEntity> types = this.commonDao.findListByHql("from TypeEntity where TSTypegroup.id = ? order by orderNum" , tsTypegroup.getId());
-			for(TypeEntity t:types){
-				t.setTSType(null);
-				t.setTSTypegroup(null);
-				t.setTSTypes(null);
-			}
-			typesList.put(tsTypegroup.getTypegroupcode().toLowerCase(), types);
-		}
-		
-		cacheService.put(CacheService.FOREVER_CACHE,ResourceUtil.DICT_TYPE_GROUPS_KEY,typeGroupsList);
-		cacheService.put(CacheService.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY,typesList);
-		
-		logger.info("  ------ 初始化字典组 【系统缓存】-----------typeGroupsList-----size: [{}]",typeGroupsList.size());
-		logger.info("  ------ 初始化字典 【系统缓存】-----------typesList-----size: [{}]",typesList.size());
-	}
-
-	@Transactional(readOnly = true)
-	public void refleshTypesCach(TypeEntity type) {
-		Map<String, List<TypeEntity>> typesList = null;
-		TypeGroupEntity result = null;
-		Object obj = cacheService.get(CacheService.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY);
-		if(obj!=null){
-			typesList = (Map<String, List<TypeEntity>>) obj;
-		}else{
-			typesList = new HashMap<String, List<TypeEntity>>();
-		}
-		TypeGroupEntity tsTypegroup = type.getTSTypegroup();
-		TypeGroupEntity typeGroupEntity = this.commonDao.getById(TypeGroupEntity.class, tsTypegroup.getId());
-
-		List<TypeEntity> tempList = this.commonDao.findListByHql("from TypeEntity where TSTypegroup.id = ? order by orderNum" , tsTypegroup.getId());
-		List<TypeEntity> types = new ArrayList<TypeEntity>();
-		for(TypeEntity t:tempList){
-			TypeEntity tt = new TypeEntity();
-			tt.setTSType(null);
-			tt.setTSTypegroup(null);
-			tt.setTSTypes(null);
-			tt.setId(t.getId());
-			tt.setOrderNum(t.getOrderNum());
-			tt.setTypecode(t.getTypecode());
-			tt.setTypename(t.getTypename());
-			types.add(tt);
-		}
-
-		typesList.put(typeGroupEntity.getTypegroupcode().toLowerCase(), types);
-		cacheService.put(CacheService.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY,typesList);
-		logger.info("  ------ 重置字典缓存【系统缓存】  ----------- typegroupcode: [{}] ",typeGroupEntity.getTypegroupcode().toLowerCase());
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public void refleshTypeGroupCach() {
-		Map<String, TypeGroupEntity> typeGroupsList = new HashMap<String, TypeGroupEntity>();
-		List<TypeGroupEntity> typeGroups = this.commonDao.findList(TypeGroupEntity.class);
-		for (TypeGroupEntity tsTypegroup : typeGroups) {
-			typeGroupsList.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
-		}
-		cacheService.put(CacheService.FOREVER_CACHE,ResourceUtil.DICT_TYPE_GROUPS_KEY,typeGroupsList);
-		logger.info("  ------ 重置字典分组缓存&字典缓存【系统缓存】  ------ refleshTypeGroupCach --------  ");
-	}
-	
-	/**
-	 * 刷新字典分组缓存&字典缓存
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public void refreshTypeGroupAndTypes() {
-		logger.info("  ------ 重置字典分组缓存&字典缓存【系统缓存】  ------ refreshTypeGroupAndTypes --------  ");
-		this.initAllTypeGroups();
 	}
 
 
@@ -278,8 +123,10 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			Set<String> operationCodes = (Set<String>) request.getAttribute(GlobalConstants.OPERATION_CODES);
 			if (null!=operationCodes) {
 				for (String MyoperationCode : operationCodes) {
-					if (oConvertUtils.isEmpty(MyoperationCode))
+					if (oConvertUtils.isEmpty(MyoperationCode)) {
 						break;
+					}
+
 					OperationEntity operation = this.getById(OperationEntity.class, MyoperationCode);
 					if (operation.getOperationcode().startsWith(".") || operation.getOperationcode().startsWith("#")){
 						if (operation.getOperationType().intValue()==GlobalConstants.OPERATION_TYPE_HIDE){
@@ -322,6 +169,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		}
 	}
 	
+	@Override
 	@Transactional(readOnly = true)
     public String generateOrgCode(String id, String pid) {
 
@@ -600,6 +448,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	/**
 	 * 【AuthInterceptor】获取登录用户数据权限IDS
 	 */
+	@Override
 	@Ehcache(cacheName="sysAuthCache")
 	@Transactional(readOnly = true)
 	public Set<String> getLoginDataRuleIdsByUserId(String userId,String functionId,String orgId) {

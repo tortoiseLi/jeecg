@@ -3,7 +3,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import org.jeecgframework.core.common.service.CommonService;
-import org.jeecgframework.web.system.pojo.base.InterroleEntity;
+import org.jeecgframework.web.system.core.InterroleEntity;
 
 public interface InterroleService extends CommonService{
 	

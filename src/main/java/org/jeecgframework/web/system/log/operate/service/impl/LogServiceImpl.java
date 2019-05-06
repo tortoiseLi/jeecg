@@ -10,6 +10,6 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service("logService")
-public class LogServiceImpl extends CommonServiceImpl implements LogService{
+public class LogServiceImpl extends CommonServiceImpl implements LogService {
 
 }

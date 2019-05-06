@@ -1,6 +1,6 @@
 package org.jeecgframework.web.system.service;
 
-import org.jeecgframework.web.system.pojo.base.MutiLangEntity;
+import org.jeecgframework.web.system.core.MutiLangEntity;
 
 public interface MutiLangService {
 

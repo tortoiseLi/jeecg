@@ -1,16 +1,14 @@
 package org.jeecgframework.core.extend.hqlsearch;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jeecgframework.core.extend.hqlsearch.parse.vo.HqlRuleEnum;
-import org.jeecgframework.core.util.DateUtils;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.pojo.base.DataRuleEntity;
+import org.jeecgframework.web.system.data.rule.entity.DataRuleEntity;
 
 /**
  * 数据库列表序列化转换sql

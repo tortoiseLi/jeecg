@@ -5,9 +5,9 @@ import java.util.List;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.web.system.pojo.base.DataRuleEntity;
+import org.jeecgframework.web.system.data.rule.entity.DataRuleEntity;
 import org.jeecgframework.web.system.function.entity.FunctionEntity;
-import org.jeecgframework.web.system.pojo.base.OperationEntity;
+import org.jeecgframework.web.system.core.OperationEntity;
 import org.jeecgframework.web.system.function.service.FunctionService;
 import org.springframework.stereotype.Service;
 

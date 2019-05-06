@@ -175,6 +175,26 @@ public final class GlobalConstants {
      */
     public static Integer MAX_PAGE_SIZE = 2000;
 
+    /**
+     * 类注解&系统缓存[临时缓存]
+     */
+    public static String SYSTEM_BASE_CACHE = "systemBaseCache";
+
+    /**
+     * UI标签[临时缓存]
+     */
+    public static String TAG_CACHE = "tagCache";
+
+    /**
+     * 字典\国际化\在线用户列表 [永久缓存]
+     */
+    public static String FOREVER_CACHE = "foreverCache";
+
+    /**
+     * 登录用户访问权限缓存[临时缓存]
+     */
+    public static String SYS_AUTH_CACHE = "sysAuthCache";
+
     static {
         String button_authority_jeecg = ResourceUtil.getSessionattachmenttitle("button.authority.jeecg");
         if ("true".equals(button_authority_jeecg)) {

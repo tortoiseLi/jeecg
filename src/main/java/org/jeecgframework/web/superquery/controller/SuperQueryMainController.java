@@ -864,7 +864,7 @@ public class SuperQueryMainController extends BaseController {
 		AjaxJson json = new AjaxJson();
 		try {
 			//step.1 根据数据字典Code查询结果
-			String sql = "select t.typecode,t.typename from t_s_type t where typegroupid = (select tg.id from t_s_typegroup tg where tg.typegroupcode=?)";
+			String sql = "select t.typecode,t.typename from t_s_type t where typegroupid = (select tg.id from t_s_type_group tg where tg.typegroupcode=?)";
 			List<Map<String, Object>> selectType = systemService.findForJdbc(sql,typegroup);
 			//step.2 根据查询的结果判断是否是国际化语言，是的话转换
 			List<Map<String, Object>> listMap = new ArrayList<Map<String,Object>>();

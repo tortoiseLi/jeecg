@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jeecgframework.web.system.function.entity.FunctionEntity;
-import org.jeecgframework.web.system.pojo.base.IconEntity;
-import org.jeecgframework.web.system.pojo.base.OperationEntity;
+import org.jeecgframework.web.system.icon.entity.IconEntity;
+import org.jeecgframework.web.system.core.OperationEntity;
 import org.jeecgframework.web.system.service.MenuInitService;
 import org.jeecgframework.web.system.util.PackagesToScanUtil;
 

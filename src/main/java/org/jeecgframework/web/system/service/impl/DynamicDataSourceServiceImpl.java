@@ -7,9 +7,10 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.jeecgframework.core.common.dao.CommonDao;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.ResourceUtil;
-import org.jeecgframework.web.system.pojo.base.DynamicDataSourceEntity;
-import org.jeecgframework.web.system.service.CacheService;
+import org.jeecgframework.web.system.data.source.entity.DynamicDataSourceEntity;
+import org.jeecgframework.web.system.core.cache.service.CacheService;
 import org.jeecgframework.web.system.service.DynamicDataSourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceService {
 			dynamicDataSourceMap.put(dynamicSourceEntity.getDbKey(), dynamicSourceEntity);
 		}
 		//缓存数据
-		cacheService.put(CacheService.FOREVER_CACHE,ResourceUtil.DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY,dynamicDataSourceMap);
+		cacheService.put(GlobalConstants.FOREVER_CACHE,ResourceUtil.DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY,dynamicDataSourceMap);
 		logger.info("  ------ 初始化动态数据源配置【系统缓存】---------size: [{}] ",dynamicDataSourceMap.size());
 		return dynamicSourceEntityList;
 	}
@@ -47,6 +48,7 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceService {
 		return dynamicDataSourceEntity;
 	}
 
+	@Override
 	public void refleshCache() {
 		logger.info("  ------ 重置 动态数据源配置 & 数据源连接池缓存【系统缓存】--------- ");
 		//1. 还原动态数据源DB配置

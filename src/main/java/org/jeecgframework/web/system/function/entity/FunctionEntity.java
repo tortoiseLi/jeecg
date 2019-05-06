@@ -1,7 +1,7 @@
 package org.jeecgframework.web.system.function.entity;
 
 import org.jeecgframework.core.common.entity.IdEntity;
-import org.jeecgframework.web.system.pojo.base.IconEntity;
+import org.jeecgframework.web.system.icon.entity.IconEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;

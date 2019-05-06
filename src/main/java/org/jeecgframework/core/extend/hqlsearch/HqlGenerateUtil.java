@@ -32,7 +32,7 @@ import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
-import org.jeecgframework.web.system.pojo.base.DataRuleEntity;
+import org.jeecgframework.web.system.data.rule.entity.DataRuleEntity;
 import org.springframework.util.NumberUtils;
 
 /**

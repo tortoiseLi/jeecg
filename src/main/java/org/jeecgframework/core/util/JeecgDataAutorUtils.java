@@ -6,7 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jeecgframework.core.constant.GlobalConstants;
-import org.jeecgframework.web.system.pojo.base.DataRuleEntity;
+import org.jeecgframework.web.system.data.rule.entity.DataRuleEntity;
 import org.springframework.util.StringUtils;
 
 /**

@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.codegenerate.database.JeecgReadTable;
+import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.PropertiesUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.cgform.common.CgAutoListConstant;
@@ -23,7 +24,7 @@ import org.jeecgframework.web.cgform.service.build.DataBaseService;
 import org.jeecgframework.web.cgform.service.cgformftl.CgformFtlServiceI;
 import org.jeecgframework.web.cgform.service.config.CgFormFieldServiceI;
 import org.jeecgframework.web.cgform.util.TemplateUtil;
-import org.jeecgframework.web.system.service.CacheService;
+import org.jeecgframework.web.system.core.cache.service.CacheService;
 import org.jeecgframework.web.system.service.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,10 +124,10 @@ public class TempletContextWord {
 		try {
 			//cache的键：类名.方法名.参数名
 			String cacheKey = this.getClass().getSimpleName()+".getTemplateFormCache."+tableName+"."+version;
-			Object templateObj = cacheService.get(CacheService.SYSTEM_BASE_CACHE,cacheKey);
+			Object templateObj = cacheService.get(GlobalConstants.SYSTEM_BASE_CACHE,cacheKey);
 			if(templateObj==null){
 				template = freemarker.getTemplate(tableName,freemarker.getLocale(), ENCODING);
-				cacheService.put(CacheService.SYSTEM_BASE_CACHE,cacheKey,template);
+				cacheService.put(GlobalConstants.SYSTEM_BASE_CACHE,cacheKey,template);
 				log.info("--setTemplateFromCache-------cacheKey: [{}]-------------",cacheKey);
 			}else{
 				template = (Template)templateObj;

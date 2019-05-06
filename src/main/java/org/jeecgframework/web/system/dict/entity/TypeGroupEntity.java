@@ -16,7 +16,7 @@ import java.util.List;
  * @date 2019-04-29
  */
 @Entity
-@Table(name = "t_s_typegroup")
+@Table(name = "t_s_type_group")
 public class TypeGroupEntity extends IdEntity implements Serializable {
 
     /**

@@ -3,7 +3,7 @@ package org.jeecgframework.web.system.category.entity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
-import org.jeecgframework.web.system.pojo.base.IconEntity;
+import org.jeecgframework.web.system.icon.entity.IconEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;

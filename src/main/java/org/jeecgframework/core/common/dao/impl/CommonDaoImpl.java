@@ -2,7 +2,6 @@ package org.jeecgframework.core.common.dao.impl;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -22,8 +21,10 @@ import org.jeecgframework.core.util.*;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
+import org.jeecgframework.web.system.core.OperationEntity;
+import org.jeecgframework.web.system.core.RoleFunctionEntity;
+import org.jeecgframework.web.system.core.RoleUserEntity;
 import org.jeecgframework.web.system.depart.entity.DepartEntity;
-import org.jeecgframework.web.system.pojo.base.*;
 import org.jeecgframework.web.system.user.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.FileCopyUtils;

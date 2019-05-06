@@ -11,9 +11,9 @@ import org.jeecgframework.core.extend.hqlsearch.parse.vo.HqlRuleEnum;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.jwt.def.JwtConstants;
-import org.jeecgframework.web.system.enums.InterfaceEnum;
-import org.jeecgframework.web.system.pojo.base.InterfaceRuleDto;
-import org.jeecgframework.web.system.pojo.base.InterfaceDdataRuleEntity;
+import org.jeecgframework.web.system.core.common.InterfaceEnum;
+import org.jeecgframework.web.system.core.InterfaceRuleDto;
+import org.jeecgframework.web.system.core.InterfaceDdataRuleEntity;
 import org.jeecgframework.web.system.service.InterfaceService;
 
 public class InterfaceUtil {

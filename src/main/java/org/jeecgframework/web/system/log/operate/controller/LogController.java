@@ -29,7 +29,7 @@ import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.controller.core.LoginController;
+import org.jeecgframework.web.system.core.common.LoginController;
 import org.jeecgframework.web.system.log.operate.entity.LogEntity;
 import org.jeecgframework.web.system.log.operate.service.LogService;
 import org.jeecgframework.web.system.service.SystemService;
@@ -56,7 +56,7 @@ public class LogController extends BaseController {
     //用户浏览器统计分析的国际化KEY
     private static final String USER_BROWSER_ANALYSIS = "user.browser.analysis";
 	private SystemService systemService;
-	
+
 	private LogService logService;
 
 	@Autowired

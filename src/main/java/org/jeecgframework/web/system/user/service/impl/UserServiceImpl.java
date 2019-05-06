@@ -13,7 +13,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.sun.javaws.Globals;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -30,14 +29,14 @@ import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.depart.entity.DepartEntity;
-import org.jeecgframework.web.system.manager.ClientManager;
-import org.jeecgframework.web.system.pojo.base.Client;
-import org.jeecgframework.web.system.function.entity.FunctionEntity;
 import org.jeecgframework.web.system.log.operate.entity.LogEntity;
+import org.jeecgframework.web.system.core.manager.ClientManager;
+import org.jeecgframework.web.system.core.common.entity.Client;
+import org.jeecgframework.web.system.function.entity.FunctionEntity;
 import org.jeecgframework.web.system.role.entity.RoleEntity;
-import org.jeecgframework.web.system.pojo.base.RoleUserEntity;
+import org.jeecgframework.web.system.core.RoleUserEntity;
 import org.jeecgframework.web.system.user.entity.UserEntity;
-import org.jeecgframework.web.system.pojo.base.UserOrgEntity;
+import org.jeecgframework.web.system.core.UserOrgEntity;
 import org.jeecgframework.web.system.service.MutiLangService;
 import org.jeecgframework.web.system.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,12 +68,14 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 		return this.commonDao.findUserByAccountAndPassword(username,password);
 	}
 	
+	@Override
 	@Transactional(readOnly = true)
 	public String getUserRole(UserEntity user){
 		return this.commonDao.getUserRole(user);
 	}
 	
-	public void pwdInit(UserEntity user,String newPwd) {
+	@Override
+	public void pwdInit(UserEntity user, String newPwd) {
 			this.commonDao.pwdInit(user,newPwd);
 	}
 	

@@ -3,14 +3,13 @@ package org.jeecgframework.core.timer;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import com.sun.javaws.Globals;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.constant.GlobalConstants;
 import org.jeecgframework.core.util.HttpRequest;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.MyClassLoader;
 import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.web.system.pojo.base.TimeTaskEntity;
+import org.jeecgframework.web.system.core.TimeTaskEntity;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.web.system.service.TimeTaskService;
 import org.quartz.CronScheduleBuilder;
