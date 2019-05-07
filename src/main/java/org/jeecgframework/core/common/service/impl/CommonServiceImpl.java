@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
-import org.jeecgframework.core.common.dao.ICommonDao;
+import org.jeecgframework.core.common.dao.CommonDao;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.hibernate.qbc.HqlQuery;
 import org.jeecgframework.core.common.hibernate.qbc.PageList;
@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("commonService")
 @Transactional
 public class CommonServiceImpl implements CommonService {
-	public ICommonDao commonDao = null;
+	public CommonDao commonDao = null;
 
 	/**
 	 * 获取所有数据库表
@@ -51,7 +51,7 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Resource
-	public void setCommonDao(ICommonDao commonDao) {
+	public void setCommonDao(CommonDao commonDao) {
 		this.commonDao = commonDao;
 	}
 
@@ -388,7 +388,7 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ComboTree> ComboTree(List all, ComboTreeModel comboTreeModel, List in, boolean recursive) {
-        return commonDao.ComboTree(all, comboTreeModel, in, recursive);
+        return commonDao.comboTree(all, comboTreeModel, in, recursive);
 	}
 
 	/**
@@ -397,7 +397,7 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<TreeGrid> treegrid(List<?> all, TreeGridModel treeGridModel) {
-		return commonDao.treegrid(all, treeGridModel);
+		return commonDao.treeGrid(all, treeGridModel);
 	}
 
 	/**

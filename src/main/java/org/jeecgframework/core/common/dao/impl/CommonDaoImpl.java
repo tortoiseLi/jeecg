@@ -9,7 +9,7 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.hibernate.Query;
 import org.jeecgframework.core.common.dao.BaseDao;
-import org.jeecgframework.core.common.dao.ICommonDao;
+import org.jeecgframework.core.common.dao.CommonDao;
 import org.jeecgframework.core.common.model.common.UploadFile;
 import org.jeecgframework.core.common.model.json.ComboTree;
 import org.jeecgframework.core.common.model.json.ImportFile;
@@ -36,17 +36,29 @@ import java.sql.Timestamp;
 import java.util.*;
 
 /**
- * 公共扩展方法
- * @author  张代浩
- *
+ * BaseDao扩展
+ * @author DELL
+ * @date 2019-05-07
+ * @version V1.0
  */
 @SuppressWarnings("unchecked")
 @Repository
-public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
+public class CommonDaoImpl extends BaseDaoImpl implements CommonDao, BaseDao {
 
-	/**
-	 * 检查用户是否存在
-	 * */
+	@Override
+	public void pwdInit(TSUser user, String newPwd){
+		String query ="from TSUser u where u.userName = :username ";
+		Query queryObject = getSession().createQuery(query);
+		queryObject.setParameter("username", user.getUserName());
+		List<TSUser> users =  queryObject.list();
+		if(null != users && users.size() > 0){
+			user = users.get(0);
+			String pwd = PasswordUtil.encrypt(user.getUserName(), newPwd, PasswordUtil.getStaticSalt());
+			user.setPassword(pwd);
+			insert(user);
+		}
+	}
+
 	@Override
 	public TSUser getUserByUserIdAndUserNameExits(TSUser user) {
 		String password = PasswordUtil.encrypt(user.getUserName(), user.getPassword(), PasswordUtil.getStaticSalt());
@@ -56,7 +68,7 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 		queryObject.setParameter("passowrd", password);
 		List<TSUser> users = queryObject.list();
 
-		if (users != null && users.size() > 0) {
+		if (null != users && users.size() > 0) {
 			return users.get(0);
 		} else {
 			queryObject = getSession().createQuery(query);
@@ -70,10 +82,7 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 
 		return null;
 	}
-	
-	/**
-	 * 检查用户是否存在
-	 * */
+
 	@Override
 	public TSUser findUserByAccountAndPassword(String username, String inpassword) {
 		String password = PasswordUtil.encrypt(username, inpassword, PasswordUtil.getStaticSalt());
@@ -88,25 +97,6 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 		}
 		return null;
 	}
-	
-	/**
-	 * admin账户初始化
-	 */
-	@Override
-	public void pwdInit(TSUser user, String newPwd){
-		String query ="from TSUser u where u.userName = :username ";
-		Query queryObject = getSession().createQuery(query);
-		queryObject.setParameter("username", user.getUserName());
-		List<TSUser> users =  queryObject.list();
-		if(null != users && users.size() > 0){
-			user = users.get(0);
-			String pwd = PasswordUtil.encrypt(user.getUserName(), newPwd, PasswordUtil.getStaticSalt());
-			user.setPassword(pwd);
-			insert(user);
-		}
-		
-	}
-	
 
 	@Override
 	public String getUserRole(TSUser user) {
@@ -118,12 +108,6 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 		return userRole;
 	}
 
-
-	/**
-	 * 文件上传
-	 * 
-	 * @throws Exception
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object uploadFile(UploadFile uploadFile) {
@@ -133,98 +117,103 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 			update(object);
 		}
 		else {
-		try {
-			uploadFile.getMultipartRequest().setCharacterEncoding("UTF-8");
-			MultipartHttpServletRequest multipartRequest = uploadFile.getMultipartRequest();
-			ReflectHelper reflectHelper = new ReflectHelper(uploadFile.getObject());
-			String uploadbasepath = uploadFile.getBasePath();// 文件上传根目录
-			if (uploadbasepath == null) {
-				uploadbasepath = ResourceUtil.getConfigByName("uploadpath");
-			}
-			Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
-			// 文件数据库保存路径
-			String path = uploadbasepath + "/";// 文件保存在硬盘的相对路径
-			String realPath = uploadFile.getMultipartRequest().getSession().getServletContext().getRealPath("/") + "/" + path;// 文件的硬盘真实路径
-			File file = new File(realPath);
-			if (!file.exists()) {
-				file.mkdirs();// 创建根目录
-			}
-			if (uploadFile.getCusPath() != null) {
-				realPath += uploadFile.getCusPath() + "/";
-				path += uploadFile.getCusPath() + "/";
-				file = new File(realPath);
+			try {
+				uploadFile.getMultipartRequest().setCharacterEncoding("UTF-8");
+				MultipartHttpServletRequest multipartRequest = uploadFile.getMultipartRequest();
+				ReflectHelper reflectHelper = new ReflectHelper(uploadFile.getObject());
+				// 文件上传根目录
+				String uploadbasepath = uploadFile.getBasePath();
+				if (uploadbasepath == null) {
+					uploadbasepath = ResourceUtil.getConfigByName("uploadpath");
+				}
+				Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+				// 文件保存在硬盘的相对路径
+				String path = uploadbasepath + "/";
+				// 文件的硬盘真实路径
+				String realPath = uploadFile.getMultipartRequest().getSession().getServletContext().getRealPath("/") + "/" + path;
+				File file = new File(realPath);
 				if (!file.exists()) {
-					file.mkdirs();// 创建文件自定义子目录
+					// 创建根目录
+					file.mkdirs();
 				}
-			}
-			else {
-				realPath += DateUtils.getDataString(DateUtils.yyyyMMdd) + "/";
-				path += DateUtils.getDataString(DateUtils.yyyyMMdd) + "/";
-				file = new File(realPath);
-				if (!file.exists()) {
-					file.mkdir();// 创建文件时间子目录
+				if (uploadFile.getCusPath() != null) {
+					realPath += uploadFile.getCusPath() + "/";
+					path += uploadFile.getCusPath() + "/";
+					file = new File(realPath);
+					if (!file.exists()) {
+						// 创建文件自定义子目录
+						file.mkdirs();
+					}
+				} else {
+					realPath += DateUtils.getDataString(DateUtils.yyyyMMdd) + "/";
+					path += DateUtils.getDataString(DateUtils.yyyyMMdd) + "/";
+					file = new File(realPath);
+					if (!file.exists()) {
+						file.mkdir();// 创建文件时间子目录
+					}
 				}
-			}
-			String entityName = uploadFile.getObject().getClass().getSimpleName();
-			// 设置文件上传路径
-			if (entityName.equals("TSTemplate")) {
-				realPath = uploadFile.getMultipartRequest().getSession().getServletContext().getRealPath("/") + ResourceUtil.getConfigByName("templatepath") + "/";
-				path = ResourceUtil.getConfigByName("templatepath") + "/";
-			} else if (entityName.equals("TSIcon")) {
-				realPath = uploadFile.getMultipartRequest().getSession().getServletContext().getRealPath("/") + uploadFile.getCusPath() + "/";
-				path = uploadFile.getCusPath() + "/";
-			}
-			String fileName = "";
-			String swfName = "";
-			for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
-				MultipartFile mf = entity.getValue();// 获取上传文件对象
-				fileName = mf.getOriginalFilename();// 获取文件名
-				swfName = PinyinUtil.getPinYinHeadChar(oConvertUtils.replaceBlank(FileUtils.getFilePrefix(fileName)));// 取文件名首字母作为SWF文件名
-				String extend = FileUtils.getExtend(fileName);// 获取文件扩展名
-				String myfilename="";
-				String noextfilename="";//不带扩展名
-				if(uploadFile.isRename())
-				{
-				   
-				   noextfilename=DateUtils.getDataString(DateUtils.yyyymmddhhmmss)+StringUtil.random(8);//自定义文件名称
-				   myfilename=noextfilename+"."+extend;//自定义文件名称
+				String entityName = uploadFile.getObject().getClass().getSimpleName();
+				// 设置文件上传路径
+				if (entityName.equals("TSTemplate")) {
+					realPath = uploadFile.getMultipartRequest().getSession().getServletContext().getRealPath("/") + ResourceUtil.getConfigByName("templatepath") + "/";
+					path = ResourceUtil.getConfigByName("templatepath") + "/";
+				} else if (entityName.equals("TSIcon")) {
+					realPath = uploadFile.getMultipartRequest().getSession().getServletContext().getRealPath("/") + uploadFile.getCusPath() + "/";
+					path = uploadFile.getCusPath() + "/";
 				}
-				else {
-				  myfilename=fileName;
-				}
-				
-				String savePath = realPath + myfilename;// 文件保存全路径
-				String fileprefixName = FileUtils.getFilePrefix(fileName);
-				if (uploadFile.getTitleField() != null) {
-					reflectHelper.setMethodValue(uploadFile.getTitleField(), fileprefixName);// 动态调用set方法给文件对象标题赋值
-				}
-				if (uploadFile.getExtend() != null) {
-					// 动态调用 set方法给文件对象内容赋值
-					reflectHelper.setMethodValue(uploadFile.getExtend(), extend);
-				}
-				if (uploadFile.getByteField() != null) {
-					// 二进制文件保存在数据库中
+				String fileName = "";
+				String swfName = "";
+				for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
+					// 获取上传文件对象
+					MultipartFile mf = entity.getValue();
+					// 获取文件名
+					fileName = mf.getOriginalFilename();
+					// 取文件名首字母作为SWF文件名
+					swfName = PinyinUtil.getPinYinHeadChar(oConvertUtils.replaceBlank(FileUtils.getFilePrefix(fileName)));
+					// 获取文件扩展名
+					String extend = FileUtils.getExtend(fileName);
+					String myfilename;
+					//不带扩展名
+					String noextfilename;
+					if(uploadFile.isRename()) {
+						// 自定义文件名称
+						noextfilename=DateUtils.getDataString(DateUtils.yyyymmddhhmmss)+StringUtil.random(8);
+						// 自定义文件名称
+						myfilename=noextfilename+"."+extend;
+					}
+					else {
+						myfilename=fileName;
+					}
 
-//					reflectHelper.setMethodValue(uploadFile.getByteField(), StreamUtils.InputStreamTOByte(mf.getInputStream()));
-
-				}
-				File savefile = new File(savePath);
-				if (uploadFile.getRealPath() != null) {
-					// 设置文件数据库的物理路径
-					reflectHelper.setMethodValue(uploadFile.getRealPath(), path + myfilename);
-				}
-				saveOrUpdate(object);
-				// 文件拷贝到指定硬盘目录
+					// 文件保存全路径
+					String savePath = realPath + myfilename;
+					String fileprefixName = FileUtils.getFilePrefix(fileName);
+					if (uploadFile.getTitleField() != null) {
+						// 动态调用set方法给文件对象标题赋值
+						reflectHelper.setMethodValue(uploadFile.getTitleField(), fileprefixName);
+					}
+					if (uploadFile.getExtend() != null) {
+						// 动态调用 set方法给文件对象内容赋值
+						reflectHelper.setMethodValue(uploadFile.getExtend(), extend);
+					}
+					if (uploadFile.getByteField() != null) {
+						// 二进制文件保存在数据库中
+						// reflectHelper.setMethodValue(uploadFile.getByteField(), StreamUtils.InputStreamTOByte(mf.getInputStream()));
+					}
+					File savefile = new File(savePath);
+					if (uploadFile.getRealPath() != null) {
+						// 设置文件数据库的物理路径
+						reflectHelper.setMethodValue(uploadFile.getRealPath(), path + myfilename);
+					}
+					saveOrUpdate(object);
+					// 文件拷贝到指定硬盘目录
 
 					if("txt".equals(extend)){
-						//利用utf-8字符集的固定首行隐藏编码原理
-						//Unicode:FF FE   UTF-8:EF BB   
+						//利用utf-8字符集的固定首行隐藏编码原理 Unicode:FF FE   UTF-8:EF BB
 						byte[] allbytes = mf.getBytes();
 						try{
 							String head1 = toHexString(allbytes[0]);
-							//System.out.println(head1);
 							String head2 = toHexString(allbytes[1]);
-							//System.out.println(head2);
 							if("ef".equals(head1) && "bb".equals(head2)){
 								//UTF-8
 								String contents = new String(mf.getBytes(),"UTF-8");
@@ -234,7 +223,6 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 									out.close();
 								}
 							}  else {
-
 								//GBK
 								String contents = new String(mf.getBytes(),"GBK");
 								OutputStream out = new FileOutputStream(savePath);
@@ -242,56 +230,34 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 								out.close();
 
 							}
-						  } catch(Exception e){
-							  String contents = new String(mf.getBytes(),"UTF-8");
-								if(StringUtils.isNotBlank(contents)){
-									OutputStream out = new FileOutputStream(savePath);
-									out.write(contents.getBytes());
-									out.close();
-								}
+						} catch(Exception e){
+							String contents = new String(mf.getBytes(),"UTF-8");
+							if(StringUtils.isNotBlank(contents)){
+								OutputStream out = new FileOutputStream(savePath);
+								out.write(contents.getBytes());
+								out.close();
+							}
 						}
-				} else {
-					FileCopyUtils.copy(mf.getBytes(), savefile);
+					} else {
+						FileCopyUtils.copy(mf.getBytes(), savefile);
+					}
+
+					//默认上传文件是否转换为swf，实现在线预览功能开关
+					String globalSwfTransformFlag = ResourceUtil.getConfigByName("swf.transform.flag");
+					if ( "true".equals(globalSwfTransformFlag) && uploadFile.getSwfpath() != null) {
+						// 转SWF
+						reflectHelper.setMethodValue(uploadFile.getSwfpath(), path + FileUtils.getFilePrefix(myfilename) + ".swf");
+						SwfToolsUtil.convert2SWF(savePath);
+					}
+
+
 				}
-
-				
-//				if (uploadFile.getSwfpath() != null) {
-//					// 转SWF
-//					reflectHelper.setMethodValue(uploadFile.getSwfpath(), path + swfName + ".swf");
-//					SwfToolsUtil.convert2SWF(savePath);
-//				}
-//				FileCopyUtils.copy(mf.getBytes(), savefile);
-
-				//默认上传文件是否转换为swf，实现在线预览功能开关
-				String globalSwfTransformFlag = ResourceUtil.getConfigByName("swf.transform.flag");
-				if ( "true".equals(globalSwfTransformFlag) && uploadFile.getSwfpath() != null) {
-					// 转SWF
-					reflectHelper.setMethodValue(uploadFile.getSwfpath(), path + FileUtils.getFilePrefix(myfilename) + ".swf");
-					SwfToolsUtil.convert2SWF(savePath);
-				}
-
-
+			} catch (Exception e1) {
 			}
-		} catch (Exception e1) {
-		}
 		}
 		return object;
 	}
-    
-	private String toHexString(int index){
-        String hexString = Integer.toHexString(index);   
-        // 1个byte变成16进制的，只需要2位就可以表示了，取后面两位，去掉前面的符号填充   
-        hexString = hexString.substring(hexString.length() -2);  
-        return hexString;
-	}
-	
-	
-	/**
-	 * 文件下载或预览
-	 * 
-	 * @throws Exception
-	 * @throws Exception
-	 */
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public HttpServletResponse viewOrDownloadFile(UploadFile uploadFile) {
@@ -302,8 +268,8 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 		HttpServletResponse response = uploadFile.getResponse();
 		HttpServletRequest request = uploadFile.getRequest();
 		String ctxPath = request.getSession().getServletContext().getRealPath("/");
-		String downLoadPath = "";
-		long fileLength = 0;
+		String downLoadPath;
+		long fileLength;
 		try {
 			if (uploadFile.getRealPath() != null&&uploadFile.getContent() == null) {
 				downLoadPath = ctxPath + uploadFile.getRealPath();
@@ -319,7 +285,7 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 				}
 				fileLength = uploadFile.getContent().length;
 			}
-		
+
 			if (!uploadFile.isView() && uploadFile.getExtend() != null) {
 				if (uploadFile.getExtend().equals("text")) {
 					response.setContentType("text/plain;");
@@ -365,9 +331,6 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 		return DataSourceMap.getDataSourceMap();
 	}
 
-	/**
-	 * 生成XML importFile 导出xml工具类
-	 */
 	@Override
 	public HttpServletResponse createXml(ImportFile importFile) {
 		HttpServletResponse response = importFile.getResponse();
@@ -416,9 +379,6 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 		return response;
 	}
 
-	/**
-	 * 解析XML文件将数据导入数据库中
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public void parserXml(String fileName) {
@@ -479,12 +439,6 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 		}
 	}
 
-	/**
-	 * 根据模型生成JSON
-	 * 
-
-	 * @return
-	 */
 	@Override
 	public List<ComboTree> comTree(List<TSDepart> all, ComboTree comboTree) {
 		List<ComboTree> trees = new ArrayList<ComboTree>();
@@ -495,31 +449,8 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	public ComboTree tree(TSDepart depart, boolean recursive) {
-		ComboTree tree = new ComboTree();
-		tree.setId(oConvertUtils.getString(depart.getId()));
-		tree.setText(depart.getDepartname());
-		List<TSDepart> departsList = findListByProperty(TSDepart.class, "TSPDepart.id", depart.getId());
-		if (departsList != null && departsList.size() > 0) {
-			tree.setState("closed");
-			tree.setChecked(false);
-			if (recursive) {// 递归查询子节点
-				List<TSDepart> departList = new ArrayList<TSDepart>(departsList);
-				//Collections.sort(departList, new SetListSort());// 排序
-				List<ComboTree> children = new ArrayList<ComboTree>();
-				for (TSDepart d : departList) {
-					ComboTree t = tree(d, true);
-					children.add(t);
-				}
-				tree.setChildren(children);
-			}
-		}
-		return tree;
-	}
-
 	@Override
-	public List<ComboTree> ComboTree(List all, ComboTreeModel comboTreeModel, List in, boolean recursive) {
+	public List<ComboTree> comboTree(List all, ComboTreeModel comboTreeModel, List in, boolean recursive) {
 		List<ComboTree> trees = new ArrayList<ComboTree>();
 		for (Object obj : all) {
 			trees.add(comboTree(obj, comboTreeModel, in, recursive));
@@ -531,65 +462,8 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 
 	}
 
-    /**
-     * 构建ComboTree
-     * @param obj
-     * @param comboTreeModel
-     * @param in
-     * @param recursive 是否递归子节点
-     * @return
-     */
-	private ComboTree comboTree(Object obj, ComboTreeModel comboTreeModel, List in, boolean recursive) {
-		ComboTree tree = new ComboTree();
-		Map<String, Object> attributes = new HashMap<String, Object>();
-		ReflectHelper reflectHelper = new ReflectHelper(obj);
-		String id = oConvertUtils.getString(reflectHelper.getMethodValue(comboTreeModel.getIdField()));
-		tree.setId(id);
-		tree.setText(oConvertUtils.getString(reflectHelper.getMethodValue(comboTreeModel.getTextField())));
-		if (comboTreeModel.getSrcField() != null) {
-			attributes.put("href", oConvertUtils.getString(reflectHelper.getMethodValue(comboTreeModel.getSrcField())));
-			tree.setAttributes(attributes);
-		}
-		if (in == null) {
-		} else {
-			if (in.size() > 0) {
-				for (Object inobj : in) {
-					ReflectHelper reflectHelper2 = new ReflectHelper(inobj);
-					String inId = oConvertUtils.getString(reflectHelper2.getMethodValue(comboTreeModel.getIdField()));
-                    if (inId.equals(id)) {
-						tree.setChecked(true);
-					}
-				}
-			}
-		}
-
-		List curChildList = (List) reflectHelper.getMethodValue(comboTreeModel.getChildField());
-		if (curChildList != null && curChildList.size() > 0) {
-			tree.setState("closed");
-			tree.setChecked(false);
-
-            if (recursive) { // 递归查询子节点
-                List<ComboTree> children = new ArrayList<ComboTree>();
-                List nextChildList = new ArrayList(curChildList);
-                for (Object childObj : nextChildList) {
-                    ComboTree t = comboTree(childObj, comboTreeModel, in, recursive);
-                    children.add(t);
-                }
-                tree.setChildren(children);
-            }
-        }
-
-		if(curChildList!=null){
-			curChildList.clear();
-		}
-
-		return tree;
-	}
-	/**
-	 * 构建树形数据表
-	 */
 	@Override
-	public List<TreeGrid> treegrid(List<?> all, TreeGridModel treeGridModel) {
+	public List<TreeGrid> treeGrid(List<?> all, TreeGridModel treeGridModel) {
 		List<TreeGrid> treegrid = new ArrayList<TreeGrid>();
 		for (Object obj : all) {
 			ReflectHelper reflectHelper = new ReflectHelper(obj);
@@ -671,25 +545,123 @@ public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 				}
 				tg.setOperations(attributes.toString());
 			}
-            if (treeGridModel.getFieldMap() != null) {
-                tg.setFieldMap(new HashMap<String, Object>());
-                for (Map.Entry<String, Object> entry : treeGridModel.getFieldMap().entrySet()) {
-                    Object fieldValue = reflectHelper.getMethodValue(entry.getValue().toString());
-                    tg.getFieldMap().put(entry.getKey(), fieldValue);
-                }
-            }
-            if (treeGridModel.getFunctionType() != null) {
-            	String functionType = oConvertUtils.getString(reflectHelper.getMethodValue(treeGridModel.getFunctionType()));
-            	tg.setFunctionType(functionType);
-            }
+			if (treeGridModel.getFieldMap() != null) {
+				tg.setFieldMap(new HashMap<String, Object>());
+				for (Map.Entry<String, Object> entry : treeGridModel.getFieldMap().entrySet()) {
+					Object fieldValue = reflectHelper.getMethodValue(entry.getValue().toString());
+					tg.getFieldMap().put(entry.getKey(), fieldValue);
+				}
+			}
+			if (treeGridModel.getFunctionType() != null) {
+				String functionType = oConvertUtils.getString(reflectHelper.getMethodValue(treeGridModel.getFunctionType()));
+				tg.setFunctionType(functionType);
+			}
 
-            if(treeGridModel.getIconStyle() != null){
-            	String iconStyle = oConvertUtils.getString(reflectHelper.getMethodValue(treeGridModel.getIconStyle()));
-            	tg.setIconStyle(iconStyle);
-            }
+			if(treeGridModel.getIconStyle() != null){
+				String iconStyle = oConvertUtils.getString(reflectHelper.getMethodValue(treeGridModel.getIconStyle()));
+				tg.setIconStyle(iconStyle);
+			}
 
 			treegrid.add(tg);
 		}
 		return treegrid;
 	}
+
+	/**
+	 * int转16进制
+	 * @param index
+	 * @return
+	 */
+	private String toHexString(int index){
+        String hexString = Integer.toHexString(index);   
+        // 1个byte变成16进制的，只需要2位就可以表示了，取后面两位，去掉前面的符号填充   
+        hexString = hexString.substring(hexString.length() -2);  
+        return hexString;
+	}
+
+	/**
+	 * 部门转化为Tree
+	 * @param depart
+	 * @param recursive
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public ComboTree tree(TSDepart depart, boolean recursive) {
+		ComboTree tree = new ComboTree();
+		tree.setId(oConvertUtils.getString(depart.getId()));
+		tree.setText(depart.getDepartname());
+		List<TSDepart> departsList = findListByProperty(TSDepart.class, "TSPDepart.id", depart.getId());
+		if (departsList != null && departsList.size() > 0) {
+			tree.setState("closed");
+			tree.setChecked(false);
+			// 递归查询子节点
+			if (recursive) {
+				List<TSDepart> departList = new ArrayList<TSDepart>(departsList);
+				List<ComboTree> children = new ArrayList<ComboTree>();
+				for (TSDepart d : departList) {
+					ComboTree t = tree(d, true);
+					children.add(t);
+				}
+				tree.setChildren(children);
+			}
+		}
+		return tree;
+	}
+
+    /**
+     * 构建ComboTree
+     * @param obj
+     * @param comboTreeModel
+     * @param in
+     * @param recursive 是否递归子节点
+     * @return
+     */
+	private ComboTree comboTree(Object obj, ComboTreeModel comboTreeModel, List in, boolean recursive) {
+		ComboTree tree = new ComboTree();
+		Map<String, Object> attributes = new HashMap<String, Object>();
+		ReflectHelper reflectHelper = new ReflectHelper(obj);
+		String id = oConvertUtils.getString(reflectHelper.getMethodValue(comboTreeModel.getIdField()));
+		tree.setId(id);
+		tree.setText(oConvertUtils.getString(reflectHelper.getMethodValue(comboTreeModel.getTextField())));
+		if (comboTreeModel.getSrcField() != null) {
+			attributes.put("href", oConvertUtils.getString(reflectHelper.getMethodValue(comboTreeModel.getSrcField())));
+			tree.setAttributes(attributes);
+		}
+		if (in == null) {
+		} else {
+			if (in.size() > 0) {
+				for (Object inobj : in) {
+					ReflectHelper reflectHelper2 = new ReflectHelper(inobj);
+					String inId = oConvertUtils.getString(reflectHelper2.getMethodValue(comboTreeModel.getIdField()));
+                    if (inId.equals(id)) {
+						tree.setChecked(true);
+					}
+				}
+			}
+		}
+
+		List curChildList = (List) reflectHelper.getMethodValue(comboTreeModel.getChildField());
+		if (curChildList != null && curChildList.size() > 0) {
+			tree.setState("closed");
+			tree.setChecked(false);
+
+			// 递归查询子节点
+            if (recursive) {
+                List<ComboTree> children = new ArrayList<ComboTree>();
+                List nextChildList = new ArrayList(curChildList);
+                for (Object childObj : nextChildList) {
+                    ComboTree t = comboTree(childObj, comboTreeModel, in, recursive);
+                    children.add(t);
+                }
+                tree.setChildren(children);
+            }
+        }
+
+		if(curChildList!=null){
+			curChildList.clear();
+		}
+
+		return tree;
+	}
+
 }
