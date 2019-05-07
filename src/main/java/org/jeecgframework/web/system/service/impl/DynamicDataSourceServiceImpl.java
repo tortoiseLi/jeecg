@@ -31,7 +31,7 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceServiceI {
 	@Transactional(readOnly = true)
 	public List<DynamicDataSourceEntity> initDynamicDataSource() {
 		Map<String, DynamicDataSourceEntity> dynamicDataSourceMap = new HashMap<String, DynamicDataSourceEntity>();
-		List<DynamicDataSourceEntity> dynamicSourceEntityList = this.commonDao.loadAll(DynamicDataSourceEntity.class);
+		List<DynamicDataSourceEntity> dynamicSourceEntityList = this.commonDao.findList(DynamicDataSourceEntity.class);
 
 		for (DynamicDataSourceEntity dynamicSourceEntity : dynamicSourceEntityList) {
 			dynamicDataSourceMap.put(dynamicSourceEntity.getDbKey(), dynamicSourceEntity);
@@ -59,7 +59,7 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceServiceI {
 	@Override
 	@Transactional(readOnly = true)
 	public DynamicDataSourceEntity getDynamicDataSourceEntityForDbKey(String dbKey){
-		List<DynamicDataSourceEntity> dynamicDataSourceEntitys = commonDao.findHql("from DynamicDataSourceEntity where dbKey = ?", dbKey);
+		List<DynamicDataSourceEntity> dynamicDataSourceEntitys = commonDao.findListByHql("from DynamicDataSourceEntity where dbKey = ?", dbKey);
 		if(dynamicDataSourceEntitys.size()>0)
 			return dynamicDataSourceEntitys.get(0);
 		return null;

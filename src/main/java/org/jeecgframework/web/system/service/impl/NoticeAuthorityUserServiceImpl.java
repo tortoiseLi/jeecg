@@ -107,32 +107,32 @@ public class NoticeAuthorityUserServiceImpl extends CommonServiceImpl implements
 				noticeRead.setNoticeId(noticeId);
 				noticeRead.setUserId(userId);
 				noticeRead.setCreateTime(new Date());
-				this.commonDao.save(noticeRead);
+				this.commonDao.insert(noticeRead);
 			}else if(noticeReadList.size() > 0){
 				for (TSNoticeReadUser noticeRead : noticeReadList) {
 					if(noticeRead.getDelFlag() == 1){
 						noticeRead.setDelFlag(0);
-						this.commonDao.updateEntitie(noticeRead);
+						this.commonDao.update(noticeRead);
 					}
 				}
 				noticeReadList.clear();
 			}
-			this.commonDao.save(noticeAuthorityUser);
+			this.commonDao.insert(noticeAuthorityUser);
 		}
 	}
 
 	@Override
 	public void doDelNoticeAuthorityUser(TSNoticeAuthorityUser noticeAuthorityUser) {
-		noticeAuthorityUser = this.commonDao.getEntity(TSNoticeAuthorityUser.class, noticeAuthorityUser.getId());
+		noticeAuthorityUser = this.commonDao.getById(TSNoticeAuthorityUser.class, noticeAuthorityUser.getId());
 		if(noticeAuthorityUser != null){
 			//删除授权关系的时候，判断是否已被阅读，如果已被阅读过，通过标记逻辑删除，否则直接删除数据
 			String hql = "from TSNoticeReadUser where noticeId = ? and userId = ?";
-			List<TSNoticeReadUser> noticeReadList = this.commonDao.findHql(hql,noticeAuthorityUser.getNoticeId(),noticeAuthorityUser.getUser().getId());
+			List<TSNoticeReadUser> noticeReadList = this.commonDao.findListByHql(hql,noticeAuthorityUser.getNoticeId(),noticeAuthorityUser.getUser().getId());
 			if(noticeReadList != null && !noticeReadList.isEmpty()){
 				for (TSNoticeReadUser noticeReadUser : noticeReadList) {
 					if(noticeReadUser.getIsRead() == 1){
 						noticeReadUser.setDelFlag(1);
-						this.commonDao.updateEntitie(noticeReadUser);
+						this.commonDao.update(noticeReadUser);
 					}else if(noticeReadUser.getIsRead() == 0){
 						this.commonDao.delete(noticeReadUser);
 					}

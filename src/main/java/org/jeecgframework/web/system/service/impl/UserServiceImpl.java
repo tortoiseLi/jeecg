@@ -87,7 +87,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	@Override
 	public String trueDel(TSUser user) {
 		String message = "";
-		List<TSRoleUser> roleUser = this.commonDao.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
+		List<TSRoleUser> roleUser = this.commonDao.findListByProperty(TSRoleUser.class, "TSUser.id", user.getId());
 		if (!user.getStatus().equals(Globals.User_ADMIN)) {
 			if (roleUser.size()>0) {
 				// 删除用户时先删除用户和角色关系表
@@ -108,7 +108,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	
 	private void delRoleUser(TSUser user) {
 		// 同步删除用户角色关联表
-		List<TSRoleUser> roleUserList = this.commonDao.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
+		List<TSRoleUser> roleUserList = this.commonDao.findListByProperty(TSRoleUser.class, "TSUser.id", user.getId());
 		if (roleUserList.size() >= 1) {
 			for (TSRoleUser tRoleUser : roleUserList) {
 				this.commonDao.delete(tRoleUser);
@@ -136,18 +136,18 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 		log.setUsername(u.getUserName());
 		log.setRealname(u.getRealName());
 		/*update-end--Author chenqian 201708031TASK #2317 【改造】系统日志表，增加两个字段，避免关联查询 [操作人账号] [操作人名字]*/
-		commonDao.save(log);
+		commonDao.insert(log);
 	}
 
 	@Override
 	public void saveOrUpdate(TSUser user, String[] orgIds, String[] roleIds) {
 		if(StringUtil.isNotEmpty(user.getId())){
 			commonDao.executeSql("delete from t_s_user_org where user_id=?", user.getId());
-			this.commonDao.updateEntitie(user);
-			List<TSRoleUser> ru = commonDao.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
-			commonDao.deleteAllEntitie(ru);
+			this.commonDao.update(user);
+			List<TSRoleUser> ru = commonDao.findListByProperty(TSRoleUser.class, "TSUser.id", user.getId());
+			commonDao.deleteCollection(ru);
 		}else{
-			this.commonDao.save(user);
+			this.commonDao.insert(user);
 		}
 		saveUserOrgList(user,orgIds);
 		saveRoleUser(user,roleIds);
@@ -173,7 +173,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
         		userOrgList.add(userOrg);
         	}
         	if (!userOrgList.isEmpty()) {
-        		commonDao.batchSave(userOrgList);
+        		commonDao.batchInsert(userOrgList);
         	}
         }
     }
@@ -188,10 +188,10 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 			for (int i = 0; i < roleIds.length; i++) {
 				if(StringUtils.isBlank(roleIds[i]))continue;
 				TSRoleUser rUser = new TSRoleUser();
-				TSRole role = commonDao.get(TSRole.class, roleIds[i]);
+				TSRole role = commonDao.getById(TSRole.class, roleIds[i]);
 				rUser.setTSRole(role);
 				rUser.setTSUser(user);
-				commonDao.save(rUser);
+				commonDao.insert(rUser);
 			}
 		}
 	}

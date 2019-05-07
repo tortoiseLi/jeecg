@@ -38,14 +38,16 @@ public class CommonServiceImpl implements CommonService {
 	 * 
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public List<DBTable> getAllDbTableName() {
-		return commonDao.getAllDbTableName();
+		return commonDao.findDbTableList();
 	}
 
-	@Transactional(readOnly = true)  
+	@Override
+	@Transactional(readOnly = true)
 	public Integer getAllDbTableSize() {
-		return commonDao.getAllDbTableSize();
+		return commonDao.getDbTableSize();
 	}
 
 	@Resource
@@ -54,17 +56,20 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	
+	@Override
 	public <T> Serializable save(T entity) {
-		return commonDao.save(entity);
+		return commonDao.insert(entity);
 	}
 
 	
+	@Override
 	public <T> void saveOrUpdate(T entity) {
 		commonDao.saveOrUpdate(entity);
 
 	}
 
 	
+	@Override
 	public <T> void delete(T entity) {
 		commonDao.delete(entity);
 
@@ -76,37 +81,39 @@ public class CommonServiceImpl implements CommonService {
 	 * @param <T>
 	 * @param entities
 	 */
+	@Override
 	public <T> void deleteAllEntitie(Collection<T> entities) {
-		commonDao.deleteAllEntitie(entities);
+		commonDao.deleteCollection(entities);
 	}
 
 	/**
 	 * 根据实体名获取对象
 	 */
-	@Transactional(readOnly = true)  
+	@Override
+	@Transactional(readOnly = true)
 	public <T> T get(Class<T> class1, Serializable id) {
-		return commonDao.get(class1, id);
+		return commonDao.getById(class1, id);
 	}
 
 	/**
 	 * 根据实体名返回全部对象
 	 * 
 	 * @param <T>
-	 * @param hql
-	 * @param size
 	 * @return
 	 */
-    @Transactional(readOnly = true)
+    @Override
+	@Transactional(readOnly = true)
 	public <T> List<T> getList(Class clas) {
-		return commonDao.loadAll(clas);
+		return commonDao.findList(clas);
 	}
 
 	/**
 	 * 根据实体名获取对象
 	 */
-    @Transactional(readOnly = true)
+    @Override
+	@Transactional(readOnly = true)
 	public <T> T getEntity(Class entityName, Serializable id) {
-		return commonDao.getEntity(entityName, id);
+		return (T) commonDao.getById(entityName, id);
 	}
 
 	/**
@@ -118,20 +125,22 @@ public class CommonServiceImpl implements CommonService {
 	 * @param value
 	 * @return
 	 */
-    @Transactional(readOnly = true)
+    @Override
+	@Transactional(readOnly = true)
 	public <T> T findUniqueByProperty(Class<T> entityClass,
 			String propertyName, Object value) {
-		return commonDao.findUniqueByProperty(entityClass, propertyName, value);
+		return commonDao.getByProperty(entityClass, propertyName, value);
 	}
 
 	/**
 	 * 按属性查找对象列表.
 	 */
-    @Transactional(readOnly = true)
+    @Override
+	@Transactional(readOnly = true)
 	public <T> List<T> findByProperty(Class<T> entityClass,
 			String propertyName, Object value) {
 
-		return commonDao.findByProperty(entityClass, propertyName, value);
+		return commonDao.findListByProperty(entityClass, propertyName, value);
 	}
 
 	/**
@@ -141,24 +150,25 @@ public class CommonServiceImpl implements CommonService {
 	 * @param entityClass
 	 * @return
 	 */
-    @Transactional(readOnly = true)
+    @Override
+	@Transactional(readOnly = true)
 	public <T> List<T> loadAll(final Class<T> entityClass) {
-		return commonDao.loadAll(entityClass);
+		return commonDao.findList(entityClass);
 	}
 
     @Transactional(readOnly = true)
 	public <T> T singleResult(String hql) {
-		return commonDao.singleResult(hql);
+		return commonDao.getByHql(hql);
 	}
 
 	/**
 	 * 删除实体主键ID删除对象
 	 * 
 	 * @param <T>
-	 * @param entities
 	 */
+	@Override
 	public <T> void deleteEntityById(Class entityName, Serializable id) {
-		commonDao.deleteEntityById(entityName, id);
+		commonDao.deleteById(entityName, id);
 	}
 
 	/**
@@ -167,8 +177,9 @@ public class CommonServiceImpl implements CommonService {
 	 * @param <T>
 	 * @param pojo
 	 */
+	@Override
 	public <T> void updateEntitie(T pojo) {
-		commonDao.updateEntitie(pojo);
+		commonDao.update(pojo);
 
 	}
 
@@ -176,22 +187,22 @@ public class CommonServiceImpl implements CommonService {
 	 * 通过hql 查询语句查找对象
 	 * 
 	 * @param <T>
-	 * @param query
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public <T> List<T> findByQueryString(String hql) {
-		return commonDao.findByQueryString(hql);
+		return commonDao.findListByHql(hql);
 	}
 
 	/**
 	 * 根据sql更新
 	 * 
-	 * @param query
 	 * @return
 	 */
+	@Override
 	public int updateBySqlString(String sql) {
-		return commonDao.updateBySqlString(sql);
+		return commonDao.executeSql(sql);
 	}
 
 	/**
@@ -201,22 +212,23 @@ public class CommonServiceImpl implements CommonService {
 	 * @param query
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
-	public <T> List<T> findListbySql(String query) {
-		return commonDao.findListbySql(query);
+	public List<Object> findListbySql(String query) {
+		return commonDao.findListBySqlReObject(query);
 	}
 
 	/**
 	 * 通过属性称获取实体带排序
 	 * 
 	 * @param <T>
-	 * @param clas
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public <T> List<T> findByPropertyisOrder(Class<T> entityClass,
 			String propertyName, Object value, boolean isAsc) {
-		return commonDao.findByPropertyisOrder(entityClass, propertyName,
+		return commonDao.findByPropertyIsOrder(entityClass, propertyName,
 				value, isAsc);
 	}
 
@@ -228,9 +240,10 @@ public class CommonServiceImpl implements CommonService {
 	 * @param isOffset
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public PageList getPageList(final CriteriaQuery cq, final boolean isOffset) {
-		return commonDao.getPageList(cq, isOffset);
+		return commonDao.findPageByCriteriaQuery(cq, isOffset);
 	}
 
 	/**
@@ -240,6 +253,7 @@ public class CommonServiceImpl implements CommonService {
 	 * @param isOffset
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public DataTableReturn getDataTableReturn(final CriteriaQuery cq,
 			final boolean isOffset) {
@@ -254,6 +268,7 @@ public class CommonServiceImpl implements CommonService {
 	 * @return
 	 */
 
+	@Override
 	@Transactional(readOnly = true)
 	public void getDataGridReturn(final CriteriaQuery cq,
 			final boolean isOffset) {
@@ -265,40 +280,40 @@ public class CommonServiceImpl implements CommonService {
 	 * 
 	 * hqlQuery方式分页
 	 * 
-	 * @param cq
-	 * @param isOffset
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public PageList getPageList(final HqlQuery hqlQuery,
 			final boolean needParameter) {
-		return commonDao.getPageList(hqlQuery, needParameter);
+		return commonDao.findPageByHqlQuery(hqlQuery, needParameter);
 	}
 
 	/**
 	 * 
 	 * sqlQuery方式分页
 	 * 
-	 * @param cq
-	 * @param isOffset
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public PageList getPageListBySql(final HqlQuery hqlQuery,
 			final boolean isToEntity) {
-		return commonDao.getPageListBySql(hqlQuery, isToEntity);
+		return commonDao.findPageByHqlQueryReToEntity(hqlQuery, isToEntity);
 	}
 
+	@Override
 	public Session getSession()
 
 	{
 		return commonDao.getSession();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List findByExample(final String entityName,
 			final Object exampleEntity) {
-		return commonDao.findByExample(entityName, exampleEntity);
+		return commonDao.findListByEntity(entityName, exampleEntity);
 	}
 
 	/**
@@ -308,21 +323,36 @@ public class CommonServiceImpl implements CommonService {
 	 * @param cq
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public <T> List<T> getListByCriteriaQuery(final CriteriaQuery cq,
 			Boolean ispage) {
-		return commonDao.getListByCriteriaQuery(cq, ispage);
+		return commonDao.findListByCriteriaQuery(cq, ispage);
+	}
+
+	/**
+	 * 通过cq获取全部实体
+	 *
+	 * @param <T>
+	 * @param cq
+	 * @return
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public <T> List<T> getListByCriteriaQuery(final CriteriaQuery cq) {
+		return commonDao.findListByCriteriaQuery(cq, false);
 	}
 
 	/**
 	 * 文件上传
 	 * 
-	 * @param request
 	 */
+	@Override
 	public <T> T uploadFile(UploadFile uploadFile) {
 		return commonDao.uploadFile(uploadFile);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public HttpServletResponse viewOrDownloadFile(UploadFile uploadFile)
 
@@ -333,10 +363,9 @@ public class CommonServiceImpl implements CommonService {
 	/**
 	 * 生成XML文件
 	 * 
-	 * @param fileName
-	 *            XML全路径
 	 * @return
 	 */
+	@Override
 	public HttpServletResponse createXml(ImportFile importFile) {
 		return commonDao.createXml(importFile);
 	}
@@ -344,18 +373,19 @@ public class CommonServiceImpl implements CommonService {
 	/**
 	 * 解析XML文件
 	 * 
-	 * @param fileName
-	 *            XML全路径
 	 */
+	@Override
 	public void parserXml(String fileName) {
 		commonDao.parserXml(fileName);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<ComboTree> comTree(List<TSDepart> all, ComboTree comboTree) {
 		return commonDao.comTree(all, comboTree);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<ComboTree> ComboTree(List all, ComboTreeModel comboTreeModel, List in, boolean recursive) {
         return commonDao.ComboTree(all, comboTreeModel, in, recursive);
@@ -364,6 +394,7 @@ public class CommonServiceImpl implements CommonService {
 	/**
 	 * 构建树形数据表
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public List<TreeGrid> treegrid(List<?> all, TreeGridModel treeGridModel) {
 		return commonDao.treegrid(all, treeGridModel);
@@ -375,6 +406,7 @@ public class CommonServiceImpl implements CommonService {
 	 * @param <T>
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public <T> List<T> getAutoList(Autocomplete autocomplete) {
 		StringBuffer sb = new StringBuffer("");
@@ -386,93 +418,102 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	
+	@Override
 	public Integer executeSql(String sql, List<Object> param) {
 		return commonDao.executeSql(sql, param);
 	}
 
 	
+	@Override
 	public Integer executeSql(String sql, Object... param) {
 		return commonDao.executeSql(sql, param);
 	}
 
 	
+	@Override
 	public Integer executeSql(String sql, Map<String, Object> param) {
 		return commonDao.executeSql(sql, param);
 	}
 	
+	@Override
 	public Object executeSqlReturnKey(String sql, Map<String, Object> param) {
 		return commonDao.executeSqlReturnKey(sql, param);
 	}
 	
+	@Override
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> findForJdbc(String sql, int page, int rows) {
-		return commonDao.findForJdbc(sql, page, rows);
+		return commonDao.findListMapBySqlWithPage(sql, page, rows);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> findForJdbc(String sql, Object... objs) {
-		return commonDao.findForJdbc(sql, objs);
+		return commonDao.findListMapBySql(sql, objs);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> findForJdbcParam(String sql, int page,
 			int rows, Object... objs) {
-		return commonDao.findForJdbcParam(sql, page, rows, objs);
+		return commonDao.findListMapBySqlWithPage(sql, page, rows, objs);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public <T> List<T> findObjForJdbc(String sql, int page, int rows,
 			Class<T> clazz) {
-		return commonDao.findObjForJdbc(sql, page, rows, clazz);
+		return commonDao.findListBySqlWithPage(sql, page, rows, clazz);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public Map<String, Object> findOneForJdbc(String sql, Object... objs) {
-		return commonDao.findOneForJdbc(sql, objs);
+		return commonDao.getMapBySql(sql, objs);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public Long getCountForJdbc(String sql) {
-		return commonDao.getCountForJdbc(sql);
+		return commonDao.getCountBySql(sql);
 	}
+	@Override
 	@Transactional(readOnly = true)
 	public Long getCountForJdbcParam(String sql, Object... objs) {
-		return commonDao.getCountForJdbcParam(sql,objs);
+		return commonDao.getCountBySql(sql,objs);
 	}
 
 	
+	@Override
 	public <T> void batchSave(List<T> entitys) {
-		this.commonDao.batchSave(entitys);
+		this.commonDao.batchInsert(entitys);
 	}
 
 	/**
 	 * 通过hql 查询语句查找对象
 	 * 
 	 * @param <T>
-	 * @param query
 	 * @return
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public <T> List<T> findHql(String hql, Object... param) {
-		return this.commonDao.findHql(hql, param);
+		return this.commonDao.findListByHql(hql, param);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public <T> List<T> pageList(DetachedCriteria dc, int firstResult,
 			int maxResult) {
-		return this.commonDao.pageList(dc, firstResult, maxResult);
+		return this.commonDao.findListByDetachedCriteria(dc, firstResult, maxResult);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public <T> List<T> findByDetached(DetachedCriteria dc) {
-		return this.commonDao.findByDetached(dc);
+		return this.commonDao.findListByDetached(dc);
 	}
 
-	/**
-	 * 调用存储过程
-	 */
-	public <T> List<T> executeProcedure(String procedureSql,Object... params) {
-		return this.commonDao.executeProcedure(procedureSql, params);
-	}
+
 
 }

@@ -8,8 +8,8 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.hibernate.Query;
+import org.jeecgframework.core.common.dao.BaseDao;
 import org.jeecgframework.core.common.dao.ICommonDao;
-import org.jeecgframework.core.common.dao.IGenericBaseCommonDao;
 import org.jeecgframework.core.common.model.common.UploadFile;
 import org.jeecgframework.core.common.model.json.ComboTree;
 import org.jeecgframework.core.common.model.json.ImportFile;
@@ -42,11 +42,12 @@ import java.util.*;
  */
 @SuppressWarnings("unchecked")
 @Repository
-public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGenericBaseCommonDao {
+public class CommonDao extends BaseDaoImpl implements ICommonDao, BaseDao {
 
 	/**
 	 * 检查用户是否存在
 	 * */
+	@Override
 	public TSUser getUserByUserIdAndUserNameExits(TSUser user) {
 		String password = PasswordUtil.encrypt(user.getUserName(), user.getPassword(), PasswordUtil.getStaticSalt());
 		String query = "from TSUser u where u.userName = :username and u.password=:passowrd";
@@ -73,7 +74,8 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * 检查用户是否存在
 	 * */
-	public TSUser findUserByAccountAndPassword(String username,String inpassword) {
+	@Override
+	public TSUser findUserByAccountAndPassword(String username, String inpassword) {
 		String password = PasswordUtil.encrypt(username, inpassword, PasswordUtil.getStaticSalt());
 		String query = "from TSUser u where u.userName = :username and u.password=:passowrd";
 		Query queryObject = getSession().createQuery(query);
@@ -90,7 +92,8 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * admin账户初始化
 	 */
-	public void pwdInit(TSUser user,String newPwd){
+	@Override
+	public void pwdInit(TSUser user, String newPwd){
 		String query ="from TSUser u where u.userName = :username ";
 		Query queryObject = getSession().createQuery(query);
 		queryObject.setParameter("username", user.getUserName());
@@ -99,15 +102,16 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 			user = users.get(0);
 			String pwd = PasswordUtil.encrypt(user.getUserName(), newPwd, PasswordUtil.getStaticSalt());
 			user.setPassword(pwd);
-			save(user);
+			insert(user);
 		}
 		
 	}
 	
 
+	@Override
 	public String getUserRole(TSUser user) {
 		String userRole = "";
-		List<TSRoleUser> sRoleUser = findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
+		List<TSRoleUser> sRoleUser = findListByProperty(TSRoleUser.class, "TSUser.id", user.getId());
 		for (TSRoleUser tsRoleUser : sRoleUser) {
 			userRole += tsRoleUser.getTSRole().getRoleCode() + ",";
 		}
@@ -118,15 +122,15 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * 文件上传
 	 * 
-	 * @param request
 	 * @throws Exception
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object uploadFile(UploadFile uploadFile) {
 		Object object = uploadFile.getObject();
 		if(uploadFile.getFileKey()!=null)
 		{
-			updateEntitie(object);
+			update(object);
 		}
 		else {
 		try {
@@ -285,10 +289,10 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * 文件下载或预览
 	 * 
-	 * @param request
 	 * @throws Exception
 	 * @throws Exception
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public HttpServletResponse viewOrDownloadFile(UploadFile uploadFile) {
 		uploadFile.getResponse().setContentType("UTF-8");
@@ -310,9 +314,10 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 					e.printStackTrace();
 				}
 			} else {
-				if (uploadFile.getContent() != null)
+				if (uploadFile.getContent() != null) {
 					bis = new ByteArrayInputStream(uploadFile.getContent());
-					fileLength = uploadFile.getContent().length;
+				}
+				fileLength = uploadFile.getContent().length;
 			}
 		
 			if (!uploadFile.isView() && uploadFile.getExtend() != null) {
@@ -355,6 +360,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 		return response;
 	}
 
+	@Override
 	public Map<Object, Object> getDataSourceMap(Template template) {
 		return DataSourceMap.getDataSourceMap();
 	}
@@ -362,6 +368,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * 生成XML importFile 导出xml工具类
 	 */
+	@Override
 	public HttpServletResponse createXml(ImportFile importFile) {
 		HttpServletResponse response = importFile.getResponse();
 		HttpServletRequest request = importFile.getRequest();
@@ -375,7 +382,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 			Class entityClass = importFile.getEntityClass();
 			String[] fields = importFile.getField().split(",");
 			// 得到导出对象的集合
-			List objList = loadAll(entityClass);
+			List objList = findList(entityClass);
 			Class classType = entityClass.getClass();
 			for (Object t : objList) {
 				Element childElement = rElement.addElement(importFile.getEntityName());
@@ -412,6 +419,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * 解析XML文件将数据导入数据库中
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void parserXml(String fileName) {
 		try {
@@ -431,7 +439,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 				// 得到实体的ID
 				String id = employee.attributeValue(fields[0].getName());
 				// 判断实体是否已存在
-				Object obj1 = getEntity(entityClass, id);
+				Object obj1 = getById(entityClass, id);
 				// 实体不存在new个实体
 				if (obj1 == null) {
 					obj1 = entityClass.newInstance();
@@ -463,7 +471,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 				if (obj1 != null) {
 					saveOrUpdate(obj1);
 				} else {
-					save(obj1);
+					insert(obj1);
 				}
 			}
 		} catch (Exception e) {
@@ -474,14 +482,10 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * 根据模型生成JSON
 	 * 
-	 * @param all
-	 *            全部对象
-	 * @param in
-	 *            已拥有的对象
-	 * @param comboBox
-	 *            模型
+
 	 * @return
 	 */
+	@Override
 	public List<ComboTree> comTree(List<TSDepart> all, ComboTree comboTree) {
 		List<ComboTree> trees = new ArrayList<ComboTree>();
 		for (TSDepart depart : all) {
@@ -496,7 +500,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 		ComboTree tree = new ComboTree();
 		tree.setId(oConvertUtils.getString(depart.getId()));
 		tree.setText(depart.getDepartname());
-		List<TSDepart> departsList = findByProperty(TSDepart.class, "TSPDepart.id", depart.getId());
+		List<TSDepart> departsList = findListByProperty(TSDepart.class, "TSPDepart.id", depart.getId());
 		if (departsList != null && departsList.size() > 0) {
 			tree.setState("closed");
 			tree.setChecked(false);
@@ -514,6 +518,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 		return tree;
 	}
 
+	@Override
 	public List<ComboTree> ComboTree(List all, ComboTreeModel comboTreeModel, List in, boolean recursive) {
 		List<ComboTree> trees = new ArrayList<ComboTree>();
 		for (Object obj : all) {
@@ -583,6 +588,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	/**
 	 * 构建树形数据表
 	 */
+	@Override
 	public List<TreeGrid> treegrid(List<?> all, TreeGridModel treeGridModel) {
 		List<TreeGrid> treegrid = new ArrayList<TreeGrid>();
 		for (Object obj : all) {
@@ -630,7 +636,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 			}
 			if (treeGridModel.getRoleid() != null) {
 				String[] opStrings = {};
-				List<TSRoleFunction> roleFunctions = findByProperty(TSRoleFunction.class, "TSFunction.id", id);
+				List<TSRoleFunction> roleFunctions = findListByProperty(TSRoleFunction.class, "TSFunction.id", id);
 
 				if (roleFunctions.size() > 0) {
 					for (TSRoleFunction tRoleFunction : roleFunctions) {
@@ -644,7 +650,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 						}
 					}
 				}
-				List<TSOperation> operateions = findByProperty(TSOperation.class, "TSFunction.id", id);
+				List<TSOperation> operateions = findListByProperty(TSOperation.class, "TSFunction.id", id);
 				StringBuffer attributes = new StringBuffer();
 				if (operateions.size() > 0) {
 					for (TSOperation tOperation : operateions) {

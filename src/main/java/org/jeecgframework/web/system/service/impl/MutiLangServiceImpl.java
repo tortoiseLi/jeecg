@@ -35,7 +35,7 @@ public class MutiLangServiceImpl implements MutiLangServiceI {
 	@Transactional(readOnly = true)
 	public void initAllMutiLang() {
 		Map<String, String> ls = new HashMap<String, String>();
-		List<MutiLangEntity> mutiLang = this.commonDao.loadAll(MutiLangEntity.class);
+		List<MutiLangEntity> mutiLang = this.commonDao.findList(MutiLangEntity.class);
 		for (MutiLangEntity mutiLangEntity : mutiLang) {
 			ls.put(mutiLangEntity.getLangKey() + "_" + mutiLangEntity.getLangCode(), mutiLangEntity.getLangContext());
 		}

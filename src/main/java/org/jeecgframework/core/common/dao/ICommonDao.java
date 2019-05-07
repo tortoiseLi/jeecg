@@ -17,7 +17,7 @@ import org.jeecgframework.core.extend.template.Template;
 import org.jeecgframework.tag.vo.easyui.ComboTreeModel;
 import org.jeecgframework.tag.vo.easyui.TreeGridModel;
 
-public interface ICommonDao extends IGenericBaseCommonDao{
+public interface ICommonDao extends BaseDao{
 	
 	
 	/**
@@ -33,7 +33,6 @@ public interface ICommonDao extends IGenericBaseCommonDao{
 	public String getUserRole(TSUser user);
 	/**
 	 * 文件上传
-	 * @param request
 	 */
 	public <T> T  uploadFile(UploadFile uploadFile);
 	/**
@@ -46,7 +45,6 @@ public interface ICommonDao extends IGenericBaseCommonDao{
 	public Map<Object,Object> getDataSourceMap(Template template);
 	/**
 	 * 生成XML文件
-	 * @param fileName XML全路径
 	 */
 	public HttpServletResponse createXml(ImportFile importFile);
 	/**

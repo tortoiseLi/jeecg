@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
@@ -138,7 +139,7 @@ public interface CommonService {
 	 * @param query
 	 * @return
 	 */
-	public <T> List<T> findListbySql(String query);
+	public List<Object> findListbySql(String query);
 
 	/**
 	 * 通过属性称获取实体带排序
@@ -222,6 +223,8 @@ public interface CommonService {
 	 */
 	public <T> List<T> getListByCriteriaQuery(final CriteriaQuery cq,
 			Boolean ispage);
+
+	public <T> List<T> getListByCriteriaQuery(final CriteriaQuery cq);
 
 	/**
 	 * 文件上传
@@ -354,12 +357,6 @@ public interface CommonService {
 
 	public <T> List<T> findByDetached(DetachedCriteria dc);
 
-	/**
-	 * 执行存储过程
-	 * @param executeSql
-	 * @param params
-	 * @return
-	 */
-	public <T> List<T> executeProcedure(String procedureSql,Object... params);
+
 
 }
