@@ -123,7 +123,7 @@ public class TSFillRuleController extends BaseController {
 		message = "填值规则表删除成功";
 		try{
 			tSFillRuleService.delete(tSFillRule);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "填值规则表删除失败";
@@ -150,7 +150,7 @@ public class TSFillRuleController extends BaseController {
 				id
 				);
 				tSFillRuleService.delete(tSFillRule);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -176,7 +176,7 @@ public class TSFillRuleController extends BaseController {
 		message = "填值规则表添加成功";
 		try{
 			tSFillRuleService.save(tSFillRule);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "填值规则表添加失败";
@@ -202,7 +202,7 @@ public class TSFillRuleController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSFillRule, t);
 			tSFillRuleService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "填值规则表更新失败";

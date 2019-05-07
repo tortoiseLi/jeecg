@@ -403,7 +403,7 @@ public class CgAutoListController extends BaseController{
 			cgTableService.delete(table, id);
 			log.info("["+IpUtil.getIpAddr(request)+"][online表单数据删除]"+message+"表名："+configId);
 			systemService.addLog(message, Globals.Log_Type_DEL,
-					Globals.Log_Leavel_INFO);
+					Globals.LOG_LEVEL_INFO);
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			message = e.getMessage();
@@ -439,7 +439,7 @@ public class CgAutoListController extends BaseController{
 			message = e.getMessage();
 		}
 		systemService.addLog(message, Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+				Globals.LOG_LEVEL_INFO);
 		log.info("["+IpUtil.getIpAddr(request)+"][online表单数据批量删除]"+message+"表名："+configId);
 		j.setMsg(message);
 		return j;

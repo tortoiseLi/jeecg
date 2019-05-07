@@ -289,7 +289,7 @@ public class NoticeController extends BaseController{
 			String sql = "delete from t_s_notice_read_user where notice_id = ?";
 			systemService.executeSql(sql,tSNotice.getId());
 			noticeService.delete(tSNotice);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "通知公告删除失败";
@@ -314,7 +314,7 @@ public class NoticeController extends BaseController{
 			for(String id:ids.split(",")){
 				TSNotice tSNotice = systemService.getEntity(TSNotice.class,id);
 				noticeService.delete(tSNotice);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -392,7 +392,7 @@ public class NoticeController extends BaseController{
 					this.noticeAuthorityUserService.saveNoticeAuthorityUser(noticeAuthorityUser);
 				}
 			}
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "通知公告添加失败";
@@ -483,7 +483,7 @@ public class NoticeController extends BaseController{
 				}
 			}
 
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "通知公告更新失败";

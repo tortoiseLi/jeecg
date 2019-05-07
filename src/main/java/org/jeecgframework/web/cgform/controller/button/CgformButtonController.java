@@ -95,7 +95,7 @@ public class CgformButtonController extends BaseController {
 		cgformButton = systemService.getEntity(CgformButtonEntity.class, cgformButton.getId());
 		message = "删除成功";
 		cgformButtonService.delete(cgformButton);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单自定义按钮删除]"+message);
 		j.setMsg(message);
 		return j;
@@ -132,14 +132,14 @@ public class CgformButtonController extends BaseController {
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformButton, t);
 				cgformButtonService.saveOrUpdate(t);
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			message = "添加成功";
 			cgformButtonService.save(cgformButton);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单自定义按钮添加编辑]"+message);
 		j.setMsg(message);

@@ -49,9 +49,9 @@ public final class Globals {
 	/**
 	 *日志级别定义
 	 */
-	public static final Short Log_Leavel_INFO=1;
-	public static final Short Log_Leavel_WARRING=2;
-	public static final Short Log_Leavel_ERROR=3;
+	public static final Short LOG_LEVEL_INFO = 1;
+	public static final Short LOG_LEVEL_WARRING = 2;
+	public static final Short LOG_LEVEL_ERROR = 3;
 	 /**
 	  * 日志类型
 	  */

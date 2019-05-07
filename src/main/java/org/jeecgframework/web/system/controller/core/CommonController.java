@@ -269,7 +269,7 @@ public class CommonController extends BaseController {
 		Object objfile = systemService.getEntity(MyClassLoader.getClassByScn(subclassname), attachment.getId());// 子类对象
 		message = "" + attachment.getAttachmenttitle() + "删除成功";
 		systemService.delete(objfile);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		logger.info("--删除附件---delObjFile----"+message);
 		
 		j.setMsg(message);

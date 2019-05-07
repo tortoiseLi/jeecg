@@ -149,7 +149,7 @@ public class JfromOrderController extends BaseController {
 		String message = "订单列表删除成功";
 		try{
 			jfromOrderService.delMain(jfromOrder);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "订单列表删除失败";
@@ -175,7 +175,7 @@ public class JfromOrderController extends BaseController {
 				id
 				);
 				jfromOrderService.delMain(jfromOrder);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -200,7 +200,7 @@ public class JfromOrderController extends BaseController {
 		String message = "添加成功";
 		try{
 			jfromOrderService.addMain(jfromOrder, jfromOrderLineList);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "订单列表添加失败";
@@ -223,7 +223,7 @@ public class JfromOrderController extends BaseController {
 		String message = "更新成功";
 		try{
 			jfromOrderService.updateMain(jfromOrder, jfromOrderLineList);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "更新订单列表失败";

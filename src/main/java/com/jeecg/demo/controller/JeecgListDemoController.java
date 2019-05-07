@@ -723,7 +723,7 @@ public class JeecgListDemoController extends BaseController {
 		try{
 			jeecgDemo.setStatus(status);
 			this.jeecgDemoService.updateEntitie(jeecgDemo);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "审核失败";
@@ -775,7 +775,7 @@ public class JeecgListDemoController extends BaseController {
 		message = "删除成功";
 		try{
 			jeecgDemoService.delete(jeecgDemo);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "删除失败";
@@ -802,7 +802,7 @@ public class JeecgListDemoController extends BaseController {
 				id
 				);
 				jeecgDemoService.delete(jeecgDemo);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -828,7 +828,7 @@ public class JeecgListDemoController extends BaseController {
 		message = "添加成功";
 		try{
 			jeecgDemoService.save(jeecgDemo);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "添加失败";
@@ -854,7 +854,7 @@ public class JeecgListDemoController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(jeecgDemo, t);
 			jeecgDemoService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "更新失败";
@@ -998,7 +998,7 @@ public class JeecgListDemoController extends BaseController {
 						message = "JeecgDemo例子: " + jeecgDemo.getName() + "被更新成功";
 						MyBeanUtils.copyBeanNotNull2Bean(jeecgDemo, t);
 						jeecgDemoService.saveOrUpdate(t);
-						systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+						systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						message = "JeecgDemo例子: " + jeecgDemo.getName() + "更新失败!!";
 						e.printStackTrace();
@@ -1008,7 +1008,7 @@ public class JeecgListDemoController extends BaseController {
 						message = "JeecgDemo例子: " + jeecgDemo.getName() + "被添加成功";
 						//jeecgDemo.setStatus("0");
 						jeecgDemoService.save(jeecgDemo);
-						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						message = "JeecgDemo例子: " + jeecgDemo.getName() + "添加失败!!";
 						e.printStackTrace();
@@ -1094,7 +1094,7 @@ public class JeecgListDemoController extends BaseController {
 		String message = "springjdbc 批处理添加测试用户成功";
 			try{
 				jeecgDemoService.jdbcBatchSave();
-				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 			}catch(Exception e){
 				e.printStackTrace();
 				message = "springjdbc 批处理添加测试用户失败";
@@ -1118,7 +1118,7 @@ public class JeecgListDemoController extends BaseController {
 		String message = "jdbc调用存储过程成功";
 			try{
 				jeecgDemoService.jdbcProcedure();
-				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 			}catch(Exception e){
 				e.printStackTrace();
 				message = "jdbc调用存储过程失败";

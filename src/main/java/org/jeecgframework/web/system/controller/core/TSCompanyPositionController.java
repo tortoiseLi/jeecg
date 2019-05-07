@@ -131,7 +131,7 @@ public class TSCompanyPositionController extends BaseController {
 		message = "职务管理删除成功";
 		try{
 			tSCompanyPositionService.delete(tSCompanyPosition);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "职务管理删除失败";
@@ -158,7 +158,7 @@ public class TSCompanyPositionController extends BaseController {
 				id
 				);
 				tSCompanyPositionService.delete(tSCompanyPosition);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -184,7 +184,7 @@ public class TSCompanyPositionController extends BaseController {
 		message = "职务管理添加成功";
 		try{
 			tSCompanyPositionService.save(tSCompanyPosition);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "职务管理添加失败";
@@ -210,7 +210,7 @@ public class TSCompanyPositionController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSCompanyPosition, t);
 			tSCompanyPositionService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "职务管理更新失败";

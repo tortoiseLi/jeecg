@@ -120,7 +120,7 @@ public class CategoryController extends BaseController {
 		j.setMsg("分类管理删除成功");
 		categoryService.delete(tSCategory);
 		systemService.addLog(j.getMsg(), Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+				Globals.LOG_LEVEL_INFO);
 		return j;
 	}
 
@@ -145,7 +145,7 @@ public class CategoryController extends BaseController {
 				MyBeanUtils.copyBeanNotNull2Bean(category, t);
 				categoryService.saveOrUpdate(t);
 				systemService.addLog(j.getMsg(), Globals.Log_Type_UPDATE,
-						Globals.Log_Leavel_INFO);
+						Globals.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e.fillInStackTrace());
 				j.setMsg("分类管理更新失败");
@@ -154,7 +154,7 @@ public class CategoryController extends BaseController {
 			j.setMsg("分类管理添加成功");
 			categoryService.saveCategory(category);
 			systemService.addLog(j.getMsg(), Globals.Log_Type_INSERT,
-					Globals.Log_Leavel_INFO);
+					Globals.LOG_LEVEL_INFO);
 		}
 		return j;
 	}

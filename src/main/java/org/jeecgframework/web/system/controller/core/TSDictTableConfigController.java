@@ -110,7 +110,7 @@ public class TSDictTableConfigController extends BaseController {
 		try{
 			cacheService.clean(dictCacheKey);
 			tSDictTableConfigService.delete(tSDictTableConfig);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "字典表授权配置删除失败";
@@ -138,7 +138,7 @@ public class TSDictTableConfigController extends BaseController {
 				id
 				);
 				tSDictTableConfigService.delete(tSDictTableConfig);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -165,7 +165,7 @@ public class TSDictTableConfigController extends BaseController {
 		try{
 			cacheService.clean(dictCacheKey);
 			tSDictTableConfigService.save(tSDictTableConfig);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "字典表授权配置添加失败";
@@ -192,7 +192,7 @@ public class TSDictTableConfigController extends BaseController {
 			cacheService.clean(dictCacheKey);
 			MyBeanUtils.copyBeanNotNull2Bean(tSDictTableConfig, t);
 			tSDictTableConfigService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "字典表授权配置更新失败";

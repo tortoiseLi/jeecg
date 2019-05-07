@@ -106,7 +106,7 @@ public class CgformEnhanceJavaController extends BaseController {
 		message = "删除成功";
 		try{
 			cgformEnhanceJavaService.delete(cgformEnhanceJava);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "删除失败";
@@ -133,7 +133,7 @@ public class CgformEnhanceJavaController extends BaseController {
 				id
 				);
 				cgformEnhanceJavaService.delete(cgformEnhanceJava);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -195,14 +195,14 @@ public class CgformEnhanceJavaController extends BaseController {
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformEnhanceJavaEntity, t);
 				cgformEnhanceJavaService.saveOrUpdate(t);
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			message = "添加成功";
 			cgformEnhanceJavaService.save(cgformEnhanceJavaEntity);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;

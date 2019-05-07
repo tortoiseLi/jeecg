@@ -143,7 +143,7 @@ public class MultiUploadController extends BaseController {
 		message = "测试多文件上传删除成功";
 		try{
 			multiUploadService.delete(multiUpload);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "测试多文件上传删除失败";
@@ -170,7 +170,7 @@ public class MultiUploadController extends BaseController {
 				id
 				);
 				multiUploadService.delete(multiUpload);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -196,7 +196,7 @@ public class MultiUploadController extends BaseController {
 		message = "测试多文件上传添加成功";
 		try{
 			multiUploadService.save(multiUpload);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "测试多文件上传添加失败";
@@ -223,7 +223,7 @@ public class MultiUploadController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(multiUpload, t);
 			multiUploadService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "测试多文件上传更新失败";

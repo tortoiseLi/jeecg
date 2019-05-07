@@ -135,7 +135,7 @@ public class JformOrderTicket2Controller extends BaseController {
 		try{
 			if(jformOrderTicket2!=null){
 				jformOrderMain2Service.delete(jformOrderTicket2);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -164,7 +164,7 @@ public class JformOrderTicket2Controller extends BaseController {
 				);
 				if(jformOrderTicket2!=null){
 					jformOrderMain2Service.delete(jformOrderTicket2);
-					systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+					systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 				}
 			}
 		}catch(Exception e){
@@ -191,7 +191,7 @@ public class JformOrderTicket2Controller extends BaseController {
 		message = "订单机票信息添加成功";
 		try{
 			jformOrderMain2Service.save(jformOrderTicket2);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "订单机票信息添加失败";
@@ -217,7 +217,7 @@ public class JformOrderTicket2Controller extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(jformOrderTicket2, t);
 			jformOrderMain2Service.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "订单机票信息更新失败";
@@ -357,7 +357,7 @@ public class JformOrderTicket2Controller extends BaseController {
 					try {
 						MyBeanUtils.copyBeanNotNull2Bean(temp, t);
 						systemService.saveOrUpdate(t);
-						systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+						systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -366,7 +366,7 @@ public class JformOrderTicket2Controller extends BaseController {
 						//temp.setDelFlag(0);若有则需要加
 						temp.setFckId(mainId);
 						systemService.save(temp);
-						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

@@ -108,7 +108,7 @@ public class DynamicDataSourceController extends BaseController {
 		message = MutiLangUtil.paramDelSuccess("common.datasource.manage");
 
 		systemService.delete(dbSource);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 
 		j.setMsg(message);
 		return j;
@@ -135,7 +135,7 @@ public class DynamicDataSourceController extends BaseController {
 
 				systemService.saveOrUpdate(t);
 				dynamicDataSourceService.refleshCache();
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 				message = MutiLangUtil.paramUpdFail("common.datasource.manage");
@@ -151,7 +151,7 @@ public class DynamicDataSourceController extends BaseController {
 
 			systemService.save(dbSource);
 			dynamicDataSourceService.refleshCache();
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;

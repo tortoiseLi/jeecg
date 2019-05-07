@@ -452,7 +452,7 @@ public class SystemController extends BaseController {
 			message = "数据字典类型: " + mutiLangService.getLang(type.getTypename()) + "被删除 成功";
 			systemService.delete(type);
 		}
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		//刷新缓存
 		systemService.refleshTypeGroupCach();
 		j.setMsg(message);
@@ -474,7 +474,7 @@ public class SystemController extends BaseController {
 		message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + " 被删除 成功";
         if (ListUtils.isNullOrEmpty(typegroup.getTSTypes())) {
             systemService.delete(typegroup);
-            systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+            systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
             //刷新缓存
             systemService.refleshTypeGroupCach();
         } else {
@@ -500,7 +500,7 @@ public class SystemController extends BaseController {
 		systemService.delete(type);
 		//刷新缓存
 		systemService.refleshTypesCach(type);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		j.setMsg(message);
 		return j;
 	}
@@ -562,11 +562,11 @@ public class SystemController extends BaseController {
 		if (StringUtil.isNotEmpty(typegroup.getId())) {
 			message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + "被更新成功";
 			userService.saveOrUpdate(typegroup);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} else {
 			message = "类型分组: " + mutiLangService.getLang(typegroup.getTypegroupname()) + "被添加成功";
 			userService.save(typegroup);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		//刷新缓存
 		systemService.refleshTypeGroupCach();
@@ -615,11 +615,11 @@ public class SystemController extends BaseController {
 		if (StringUtil.isNotEmpty(type.getId())) {
 			message = "类型: " + mutiLangService.getLang(type.getTypename()) + "被更新成功";
 			userService.saveOrUpdate(type);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} else {
 			message = "类型: " + mutiLangService.getLang(type.getTypename()) + "被添加成功";
 			userService.save(type);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		//刷新缓存
 		systemService.refleshTypesCach(type);
@@ -708,7 +708,7 @@ public class SystemController extends BaseController {
 		depart = systemService.getEntity(TSDepart.class, depart.getId());
 		message = "部门: " + depart.getDepartname() + "被删除 成功";
 		systemService.delete(depart);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 
 		return j;
 	}
@@ -732,7 +732,7 @@ public class SystemController extends BaseController {
 		if (StringUtil.isNotEmpty(depart.getId())) {
 			userService.saveOrUpdate(depart);
             message = MutiLangUtil.paramUpdSuccess("common.department");
-            systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+            systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 
 		} else {
 
@@ -749,7 +749,7 @@ public class SystemController extends BaseController {
 
 			userService.save(depart);
             message = MutiLangUtil.paramAddSuccess("common.department");
-            systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+            systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 
         }
 		j.setMsg(message);
@@ -870,7 +870,7 @@ public class SystemController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		role = systemService.getEntity(TSRole.class, role.getId());
 		userService.delete(role);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		j.setMsg(message);
 		return j;
 	}
@@ -889,11 +889,11 @@ public class SystemController extends BaseController {
 		if (role.getId() != null) {
 			message = "角色: " + role.getRoleName() + "被更新成功";
 			userService.saveOrUpdate(role);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} else {
 			message = "角色: " + role.getRoleName() + "被添加成功";
 			userService.saveOrUpdate(role);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;

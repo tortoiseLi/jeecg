@@ -88,7 +88,7 @@ public class CgformEnhanceJsController extends BaseController {
 		cgformenhanceJs = systemService.getEntity(CgformEnhanceJsEntity.class, cgformenhanceJs.getId());
 		message = "删除成功";
 		cgformenhanceJsService.delete(cgformenhanceJs);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		
 		j.setMsg(message);
 		return j;
@@ -130,14 +130,14 @@ public class CgformEnhanceJsController extends BaseController {
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformenhanceJs, t);
 				cgformenhanceJsService.saveOrUpdate(t);
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			message = "添加成功";
 			cgformenhanceJsService.save(cgformenhanceJs);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;

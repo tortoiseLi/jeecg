@@ -92,7 +92,7 @@ public class NoticeAuthorityUserController extends BaseController {
 		message = "通知公告用户授权删除成功";
 		try{
 			this.noticeAuthorityUserService.doDelNoticeAuthorityUser(noticeAuthorityUser);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "通知公告用户授权删除失败";
@@ -119,7 +119,7 @@ public class NoticeAuthorityUserController extends BaseController {
 				id
 				);
 				noticeAuthorityUserService.delete(noticeAuthorityUser);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -145,7 +145,7 @@ public class NoticeAuthorityUserController extends BaseController {
 		message = "通知公告用户授权添加成功";
 		try{
 			noticeAuthorityUserService.save(noticeAuthorityUser);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "通知公告用户授权添加失败";
@@ -169,7 +169,7 @@ public class NoticeAuthorityUserController extends BaseController {
 		message = "通知公告用户授权保存成功";
 		try{
 			this.noticeAuthorityUserService.saveNoticeAuthorityUser(noticeAuthorityUser);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(BusinessException e){
 			e.printStackTrace();
 			message = e.getMessage();
@@ -197,7 +197,7 @@ public class NoticeAuthorityUserController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(noticeAuthorityUser, t);
 			noticeAuthorityUserService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "通知公告用户授权更新失败";

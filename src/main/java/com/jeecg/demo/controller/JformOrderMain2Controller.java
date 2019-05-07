@@ -144,7 +144,7 @@ public class JformOrderMain2Controller extends BaseController {
 		try{
 			if(jformOrderMain2!=null){
 				jformOrderMain2Service.delMain(jformOrderMain2);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -172,7 +172,7 @@ public class JformOrderMain2Controller extends BaseController {
 				);
 				if(jformOrderMain2!=null){
 					jformOrderMain2Service.delMain(jformOrderMain2);
-					systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+					systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 				}
 			}
 		}catch(Exception e){
@@ -199,7 +199,7 @@ public class JformOrderMain2Controller extends BaseController {
 		String message = "添加成功";
 		try{
 			jformOrderMain2Service.addMain(jformOrderMain2, jformOrderTicket2List,jformOrderCustomer2List);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "订单主信息添加失败";
@@ -223,7 +223,7 @@ public class JformOrderMain2Controller extends BaseController {
 		String message = "更新成功";
 		try{
 			jformOrderMain2Service.updateMain(jformOrderMain2, jformOrderTicket2List,jformOrderCustomer2List);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "更新订单主信息失败";
@@ -436,7 +436,7 @@ public class JformOrderMain2Controller extends BaseController {
 					try {
 						MyBeanUtils.copyBeanNotNull2Bean(temp, t);
 						systemService.saveOrUpdate(t);
-						systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+						systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -444,7 +444,7 @@ public class JformOrderMain2Controller extends BaseController {
 					try {
 						//temp.setDelFlag(0);若有则需要加
 						systemService.save(temp);
-						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

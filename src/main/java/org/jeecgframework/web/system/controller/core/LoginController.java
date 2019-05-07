@@ -305,7 +305,7 @@ public class LoginController extends BaseController{
 		HttpSession session = ContextHolderUtils.getSession();
 		TSUser user = ResourceUtil.getSessionUser();
 		try {
-			systemService.addLog("用户" + user!=null?user.getUserName():"" + "已退出",Globals.Log_Type_EXIT, Globals.Log_Leavel_INFO);
+			systemService.addLog("用户" + user!=null?user.getUserName():"" + "已退出",Globals.Log_Type_EXIT, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			LogUtil.error(e.toString());
 		}

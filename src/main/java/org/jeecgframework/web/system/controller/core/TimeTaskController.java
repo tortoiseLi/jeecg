@@ -94,7 +94,7 @@ public class TimeTaskController extends BaseController {
 		}else{
 			message = "定时任务管理删除成功";
 			timeTaskService.delete(timeTask);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);			
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;
@@ -133,7 +133,7 @@ public class TimeTaskController extends BaseController {
 					}
 					MyBeanUtils.copyBeanNotNull2Bean(timeTask, t);
 					timeTaskService.saveOrUpdate(t);
-					systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+					systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 				} catch (Exception e) {
 					e.printStackTrace();
 					message = "定时任务管理更新失败";
@@ -143,7 +143,7 @@ public class TimeTaskController extends BaseController {
 		} else {
 			message = "定时任务管理添加成功";
 			timeTaskService.save(timeTask);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;

@@ -122,7 +122,7 @@ public class JeecgDemoExcelController extends BaseController {
 		message = "excel导入导出测试表删除成功";
 		try{
 			jeecgDemoExcelService.delete(jeecgDemoExcel);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "excel导入导出测试表删除失败";
@@ -149,7 +149,7 @@ public class JeecgDemoExcelController extends BaseController {
 				id
 				);
 				jeecgDemoExcelService.delete(jeecgDemoExcel);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -175,7 +175,7 @@ public class JeecgDemoExcelController extends BaseController {
 		message = "excel导入导出测试表添加成功";
 		try{
 			jeecgDemoExcelService.save(jeecgDemoExcel);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "excel导入导出测试表添加失败";
@@ -201,7 +201,7 @@ public class JeecgDemoExcelController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(jeecgDemoExcel, t);
 			jeecgDemoExcelService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "excel导入导出测试表更新失败";

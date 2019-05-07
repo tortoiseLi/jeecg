@@ -180,7 +180,7 @@ public class CgFormHeadController extends BaseController {
 		cgFormFieldService.deleteCgForm(cgFormHead);
 		cgFormFieldService.removeSubTableStr4Main(cgFormHead);
 		systemService.addLog(message, Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+				Globals.LOG_LEVEL_INFO);
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单配置删除]"+message+"表名："+cgFormHead.getTableName());
 		j.setMsg(message);
 		return j;
@@ -202,7 +202,7 @@ public class CgFormHeadController extends BaseController {
 		cgFormFieldService.delete(cgFormHead);
 		cgFormFieldService.removeSubTableStr4Main(cgFormHead);
 		systemService.addLog(message, Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+				Globals.LOG_LEVEL_INFO);
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单配置移除]"+message+"表名："+cgFormHead.getTableName());
 		j.setMsg(message);
 		return j;
@@ -228,7 +228,7 @@ public class CgFormHeadController extends BaseController {
 
 		cgFormFieldService.delete(cgFormField);
 		systemService.addLog(message, Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+				Globals.LOG_LEVEL_INFO);
 		j.setMsg(message);
 		return j;
 	}
@@ -389,7 +389,7 @@ public class CgFormHeadController extends BaseController {
 
 			
 			systemService.addLog(message, Globals.Log_Type_UPDATE,
-					Globals.Log_Leavel_INFO);
+					Globals.LOG_LEVEL_INFO);
 		} else if (StringUtil.isEmpty(cgFormHead.getId())&&table==null) {
 			List<CgFormFieldEntity>	formFieldEntities = cgFormHead.getColumns();
 			for (CgFormFieldEntity cgFormFieldEntity : formFieldEntities) {
@@ -407,7 +407,7 @@ public class CgFormHeadController extends BaseController {
 			cgFormIndexService.updateIndexes(cgFormHead);
 
 			systemService.addLog(message, Globals.Log_Type_INSERT,
-					Globals.Log_Leavel_INFO);
+					Globals.LOG_LEVEL_INFO);
 		}
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单配置保存]"+message+"表名："+cgFormHead.getTableName());
 		j.setMsg(message);
@@ -824,7 +824,7 @@ public class CgFormHeadController extends BaseController {
 		cgFormFieldService.updateTable(bean,null,false);
 		message = "保存成功";
 		systemService.addLog(message, Globals.Log_Type_INSERT,
-				Globals.Log_Leavel_INFO);
+				Globals.LOG_LEVEL_INFO);
 		AjaxJson j =  new AjaxJson();
 		j.setMsg(message);
 		return j;
@@ -858,7 +858,7 @@ public class CgFormHeadController extends BaseController {
 		cgFormFieldService.updateTable(bean,null,false);
 		message = "保存成功";
 		systemService.addLog(message, Globals.Log_Type_INSERT,
-				Globals.Log_Leavel_INFO);
+				Globals.LOG_LEVEL_INFO);
 		AjaxJson j =  new AjaxJson();
 		j.setMsg(message);
 		return j;

@@ -95,7 +95,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 		message = "通知公告角色授权删除成功";
 		try{
 			noticeAuthorityRoleService.doDelTSNoticeAuthorityRole(noticeAuthorityRole);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "通知公告角色授权删除失败";
@@ -122,7 +122,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 				id
 				);
 				noticeAuthorityRoleService.delete(noticeAuthorityRole);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -148,7 +148,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 		message = "通知公告角色授权添加成功";
 		try{
 			noticeAuthorityRoleService.save(noticeAuthorityRole);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "通知公告角色授权添加失败";
@@ -174,7 +174,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(noticeAuthorityRole, t);
 			noticeAuthorityRoleService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "通知公告角色授权更新失败";
@@ -236,7 +236,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 		message = "通知公告角色授权保存成功";
 		try{
 			this.noticeAuthorityRoleService.saveTSNoticeAuthorityRole(noticeAuthorityRole);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(BusinessException e){
 			e.printStackTrace();
 			message = e.getMessage();

@@ -463,7 +463,7 @@ public class JeecgFormDemoController extends BaseController {
 		message = "" + document.getDocumentTitle() + "被删除成功";
 		systemService.delete(document);
 		systemService.addLog(message, Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+				Globals.LOG_LEVEL_INFO);
 		j.setSuccess(true);
 		j.setMsg(message);
 		return j;

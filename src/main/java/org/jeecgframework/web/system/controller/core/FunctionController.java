@@ -152,7 +152,7 @@ public class FunctionController extends BaseController {
 	@ResponseBody
 	public AjaxJson del(TSFunction function, HttpServletRequest request) {
 		AjaxJson j = functionService.delFunction(function.getId());
-		systemService.addLog(j.getMsg(), Globals.Log_Type_DEL,Globals.Log_Leavel_INFO);
+		systemService.addLog(j.getMsg(), Globals.Log_Type_DEL,Globals.LOG_LEVEL_INFO);
 		return j;
 	}
 
@@ -186,7 +186,7 @@ public class FunctionController extends BaseController {
 
 
 		systemService.addLog(message, Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+				Globals.LOG_LEVEL_INFO);
 
 		j.setMsg(message);
 
@@ -248,7 +248,7 @@ public class FunctionController extends BaseController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			systemService.addLog(message, Globals.Log_Type_UPDATE,Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE,Globals.LOG_LEVEL_INFO);
 
 			List<TSFunction> subFunction = systemService.findByProperty(TSFunction.class, "TSFunction.id", function.getId());
 			updateSubFunction(subFunction,function);
@@ -274,7 +274,7 @@ public class FunctionController extends BaseController {
 			}
 			message = MutiLangUtil.paramAddSuccess("common.menu");
 			systemService.save(function);
-			systemService.addLog(message, Globals.Log_Type_INSERT,Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT,Globals.LOG_LEVEL_INFO);
 		}
 
 		j.setMsg(message);
@@ -300,12 +300,12 @@ public class FunctionController extends BaseController {
 			message = MutiLangUtil.paramUpdSuccess("common.operation");
 			userService.saveOrUpdate(operation);
 			systemService.addLog(message, Globals.Log_Type_UPDATE,
-					Globals.Log_Leavel_INFO);
+					Globals.LOG_LEVEL_INFO);
 		} else {
 			message = MutiLangUtil.paramAddSuccess("common.operation");
 			userService.save(operation);
 			systemService.addLog(message, Globals.Log_Type_INSERT,
-					Globals.Log_Leavel_INFO);
+					Globals.LOG_LEVEL_INFO);
 		}
 
 		j.setMsg(message);
@@ -616,7 +616,7 @@ public class FunctionController extends BaseController {
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
 		systemService.addLog(message, Globals.Log_Type_DEL,
-				Globals.Log_Leavel_INFO);
+				Globals.LOG_LEVEL_INFO);
 
 		j.setMsg(message);
 
@@ -644,13 +644,13 @@ public class FunctionController extends BaseController {
 			message = MutiLangUtil.paramUpdSuccess("common.operation");
 			userService.saveOrUpdate(operation);
 			systemService.addLog(message, Globals.Log_Type_UPDATE,
-					Globals.Log_Leavel_INFO);
+					Globals.LOG_LEVEL_INFO);
 		} else {
 			if (justHaveDataRule(operation) == 0) {
 				message = MutiLangUtil.paramAddSuccess("common.operation");
 				userService.save(operation);
 				systemService.addLog(message, Globals.Log_Type_INSERT,
-						Globals.Log_Leavel_INFO);
+						Globals.LOG_LEVEL_INFO);
 			} else {
 
 				message = "操作 字段规则已存在";

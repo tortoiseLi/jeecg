@@ -170,7 +170,7 @@ public class TSInterfaceController extends BaseController {
 				systemService.executeSql(interroleSql, tsInterface.getId());
 
 				message = MutiLangUtil.paramDelSuccess("common.menu");
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}
 
@@ -203,7 +203,7 @@ public class TSInterfaceController extends BaseController {
 			roleFunction.setOperation(newOper);
 			userService.updateEntitie(roleFunction);
 		}
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		j.setMsg(message);
 		return j;
 	}
@@ -259,7 +259,7 @@ public class TSInterfaceController extends BaseController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			List<TSInterfaceEntity> subinterface = systemService.findByProperty(TSInterfaceEntity.class, "tSInterface.id",
 					tsInterface.getId());
 			updateSubFunction(subinterface, tsInterface);
@@ -277,7 +277,7 @@ public class TSInterfaceController extends BaseController {
 			}
 			message = MutiLangUtil.paramAddSuccess("common.menu");
 			systemService.save(tsInterface);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
 		return j;
@@ -301,11 +301,11 @@ public class TSInterfaceController extends BaseController {
 		if (StringUtil.isNotEmpty(operation.getId())) {
 			message = MutiLangUtil.paramUpdSuccess("common.operation");
 			userService.saveOrUpdate(operation);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} else {
 			message = MutiLangUtil.paramAddSuccess("common.operation");
 			userService.save(operation);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 
 		j.setMsg(message);
@@ -463,7 +463,7 @@ public class TSInterfaceController extends BaseController {
 		operation = systemService.getEntity(TSInterfaceDdataRuleEntity.class, operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
-		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		j.setMsg(message);
 		return j;
 	}
@@ -481,12 +481,12 @@ public class TSInterfaceController extends BaseController {
 			if (StringUtil.isNotEmpty(operation.getId())) {
 				message = MutiLangUtil.paramUpdSuccess("common.operation");
 				userService.saveOrUpdate(operation);
-				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			} else {
 				if (justHaveDataRule(operation) == 0) {
 					message = MutiLangUtil.paramAddSuccess("common.operation");
 					userService.save(operation);
-					systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+					systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 				} else {
 					message = "操作字段规则已存在";
 				}

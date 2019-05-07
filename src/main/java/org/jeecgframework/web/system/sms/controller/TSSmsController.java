@@ -111,7 +111,7 @@ public class TSSmsController extends BaseController {
 		message = "消息发送记录表删除成功";
 		try{
 			tSSmsService.delete(tSSms);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "消息发送记录表删除失败";
@@ -138,7 +138,7 @@ public class TSSmsController extends BaseController {
 				id
 				);
 				tSSmsService.delete(tSSms);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -164,7 +164,7 @@ public class TSSmsController extends BaseController {
 		message = "消息发送记录表添加成功";
 		try{
 			tSSmsService.save(tSSms);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "消息发送记录表添加失败";
@@ -190,7 +190,7 @@ public class TSSmsController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSSms, t);
 			tSSmsService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "消息发送记录表更新失败";

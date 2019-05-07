@@ -104,7 +104,7 @@ public class TSSmsTemplateController extends BaseController {
 		message = "消息模本表删除成功";
 		try{
 			tSSmsTemplateService.delete(tSSmsTemplate);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "消息模本表删除失败";
@@ -131,7 +131,7 @@ public class TSSmsTemplateController extends BaseController {
 				id
 				);
 				tSSmsTemplateService.delete(tSSmsTemplate);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -157,7 +157,7 @@ public class TSSmsTemplateController extends BaseController {
 		message = "消息模本表添加成功";
 		try{
 			tSSmsTemplateService.save(tSSmsTemplate);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "消息模本表添加失败";
@@ -183,7 +183,7 @@ public class TSSmsTemplateController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSSmsTemplate, t);
 			tSSmsTemplateService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "消息模本表更新失败";

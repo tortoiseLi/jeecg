@@ -365,7 +365,7 @@ public class UserController extends BaseController {
 			users.setActivitiSync(users.getActivitiSync());
 			systemService.updateEntitie(users);	
 			message = "用户: " + users.getUserName() + "密码重置成功";
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(req)+"][重置密码]"+message);
 		} 
 		
@@ -400,7 +400,7 @@ public class UserController extends BaseController {
 		}else if("1".equals(lockValue)){
 			message = "用户：" + user.getUserName() + "激活成功!";
 		}
-		systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		logger.info("["+IpUtil.getIpAddr(req)+"][锁定账户]"+message);
 		}catch(Exception e){
 			message = "操作失败!";
@@ -626,7 +626,7 @@ public class UserController extends BaseController {
 
                 userService.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			} else {
 				userService.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
@@ -666,7 +666,7 @@ public class UserController extends BaseController {
                 systemService.executeSql("delete from t_s_user_org where user_id=?", user.getId()); // 删除 用户-机构 数据
                 userService.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			} else {
 				userService.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
@@ -782,7 +782,7 @@ public class UserController extends BaseController {
 				logType=Globals.Log_Type_INSERT;
 			}
 		}
-		systemService.addLog(message, logType, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, logType, Globals.LOG_LEVEL_INFO);
 		j.setMsg(message);
 		logger.info("["+IpUtil.getIpAddr(req)+"][添加编辑用户]"+message);
 		return j;
@@ -1009,7 +1009,7 @@ public class UserController extends BaseController {
 //			if (StringUtil.isNotEmpty(roleid)) {
 //				saveInterfaceRoleUser(users, roleid);
 //			}
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} else {
 			TSUser users = systemService.findUniqueByProperty(TSUser.class, "userName",user.getUserName());
 			if (users != null) {
@@ -1028,7 +1028,7 @@ public class UserController extends BaseController {
 				if (StringUtil.isNotEmpty(roleid)) {
 					saveInterfaceRoleUser(user, roleid);
 				}
-				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 			}
 
 		}
@@ -1288,7 +1288,7 @@ public class UserController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		message = user.getUserName() + "设置签名成功";
 		systemService.uploadFile(uploadFile);
-		systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		j.setMsg(message);
 
 		return j;

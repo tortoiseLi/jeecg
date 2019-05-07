@@ -313,7 +313,7 @@ public class OrganzationController extends BaseController {
             if(userCount == 0) { // 组织机构下没有用户时，该组织机构才允许删除。
                 systemService.executeSql("delete from t_s_role_org where org_id=?", depart.getId());
                 systemService.delete(depart);
-                systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+                systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
             }else{
 
             	message = MutiLangUtil.getLang("common.department.hasuser");
@@ -358,11 +358,11 @@ public class OrganzationController extends BaseController {
 		if (StringUtil.isNotEmpty(depart.getId())) {
             message = MutiLangUtil.paramUpdSuccess("common.department");
 			userService.saveOrUpdate(depart);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} else {
             message = MutiLangUtil.paramAddSuccess("common.department");
 			userService.save(depart);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 
         j.setMsg(message);
@@ -714,7 +714,7 @@ public class OrganzationController extends BaseController {
         TSDepart depart = systemService.getEntity(TSDepart.class, req.getParameter("orgId"));
         saveOrgUserList(req, depart);
         message =  MutiLangUtil.paramAddSuccess("common.user");
-//      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+//      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
         j.setMsg(message);
 
         return j;

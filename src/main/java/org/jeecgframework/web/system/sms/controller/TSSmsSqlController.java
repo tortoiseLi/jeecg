@@ -97,7 +97,7 @@ public class TSSmsSqlController extends BaseController {
 		message = "业务SQL表删除成功";
 		try{
 			systemService.delete(tSSmsSql);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "业务SQL表删除失败";
@@ -124,7 +124,7 @@ public class TSSmsSqlController extends BaseController {
 				id
 				);
 				systemService.delete(tSSmsSql);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -150,7 +150,7 @@ public class TSSmsSqlController extends BaseController {
 		message = "业务SQL表添加成功";
 		try{
 			tSSmsSqlService.save(tSSmsSql);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "业务SQL表添加失败";
@@ -176,7 +176,7 @@ public class TSSmsSqlController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSSmsSql, t);
 			systemService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			message = "业务SQL表更新失败";

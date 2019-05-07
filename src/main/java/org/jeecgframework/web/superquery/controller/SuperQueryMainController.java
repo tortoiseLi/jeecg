@@ -151,7 +151,7 @@ public class SuperQueryMainController extends BaseController {
 		String message = "高级查询删除成功";
 		try{
 			superQueryMainService.delMain(superQueryMain);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "高级查询删除失败";
@@ -177,7 +177,7 @@ public class SuperQueryMainController extends BaseController {
 				id
 				);
 				superQueryMainService.delMain(superQueryMain);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -203,7 +203,7 @@ public class SuperQueryMainController extends BaseController {
 		String message = "添加成功";
 		try{
 			superQueryMainService.addMain(superQueryMain, superQueryTableList,superQueryFieldList);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "高级查询添加失败";
@@ -227,7 +227,7 @@ public class SuperQueryMainController extends BaseController {
 		String message = "更新成功";
 		try{
 			superQueryMainService.updateMain(superQueryMain, superQueryTableList,superQueryFieldList);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "更新高级查询失败";

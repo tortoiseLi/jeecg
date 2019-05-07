@@ -126,7 +126,7 @@ public class TsBlackListController extends BaseController {
 		message = "黑名单删除成功";
 		try{
 			tsBlackListService.delete(tsBlackList);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
 			message = "黑名单删除失败";
@@ -153,7 +153,7 @@ public class TsBlackListController extends BaseController {
 				id
 				);
 				tsBlackListService.delete(tsBlackList);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -179,7 +179,7 @@ public class TsBlackListController extends BaseController {
 		message = "黑名单添加成功";
 		try{
 			tsBlackListService.save(tsBlackList);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 
 		}catch(DataIntegrityViolationException ce){
 			j.setSuccess(false);
@@ -210,7 +210,7 @@ public class TsBlackListController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tsBlackList, t);
 			tsBlackListService.saveOrUpdate(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 
 		} catch(DataIntegrityViolationException ce){
 			j.setSuccess(false);

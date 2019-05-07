@@ -249,7 +249,7 @@ public class IconController extends BaseController {
 
             message = MutiLangUtil.paramDelSuccess("common.icon");
 			
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 
             j.setMsg(message);
 

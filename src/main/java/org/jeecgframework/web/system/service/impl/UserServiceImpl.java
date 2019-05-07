@@ -95,7 +95,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 				this.commonDao.executeSql("delete from t_s_user_org where user_id=?", user.getId()); // 删除 用户-机构 数据
                 this.commonDao.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
-				this.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				this.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			} else {
 				this.commonDao.delete(user);
 				message = "用户：" + user.getUserName() + "删除成功";
@@ -323,7 +323,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 		}
         
         // 添加登陆日志
-        this.addLog(message, Globals.Log_Type_LOGIN, Globals.Log_Leavel_INFO);
+        this.addLog(message, Globals.Log_Type_LOGIN, Globals.LOG_LEVEL_INFO);
     }
     
 	/**

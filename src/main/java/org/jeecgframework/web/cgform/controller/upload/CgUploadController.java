@@ -157,7 +157,7 @@ public class CgUploadController extends BaseController {
 
 		message = "" + file.getAttachmenttitle() + "被删除成功";
 		cgUploadService.deleteFile(file);
-		systemService.addLog(message, Globals.Log_Type_DEL,Globals.Log_Leavel_INFO);
+		systemService.addLog(message, Globals.Log_Type_DEL,Globals.LOG_LEVEL_INFO);
 		j.setSuccess(true);
 		j.setMsg(message);
 		return j;

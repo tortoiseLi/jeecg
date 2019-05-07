@@ -100,7 +100,7 @@ public class CgDynamGraphConfigHeadController extends BaseController {
 		message = "移动图表配置抬头删除成功";
 		try{
 			cgDynamGraphConfigHeadService.delMain(cgDynamGraphConfigHead);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(request)+"][online移动图表删除]["+cgDynamGraphConfigHead.getCode()+"]"+message);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -126,7 +126,7 @@ public class CgDynamGraphConfigHeadController extends BaseController {
 			for(String id:ids.split(",")){
 				CgDynamGraphConfigHeadEntity cgDynamGraphConfigHead = systemService.getEntity(CgDynamGraphConfigHeadEntity.class, id);
 				cgDynamGraphConfigHeadService.delMain(cgDynamGraphConfigHead);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 				logger.info("["+IpUtil.getIpAddr(request)+"][online移动图表批量删除]["+cgDynamGraphConfigHead.getCode()+"]"+message);
 			}
 		}catch(Exception e){
@@ -166,7 +166,7 @@ public class CgDynamGraphConfigHeadController extends BaseController {
 				}
 			}
 			cgDynamGraphConfigHeadService.addMain(cgDynamGraphConfigHead, cgDynamGraphConfigItemList,cgDynamGraphConfigParamList);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(request)+"][online移动图表录入]["+cgDynamGraphConfigHead.getCode()+"]"+message);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -204,7 +204,7 @@ public class CgDynamGraphConfigHeadController extends BaseController {
 				}
 			}
 			cgDynamGraphConfigHeadService.updateMain(cgDynamGraphConfigHead, cgDynamGraphConfigItemList, cgDynamGraphConfigParamList);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(request)+"][online移动图表更新]["+cgDynamGraphConfigHead.getCode()+"]"+message);
 		}catch(Exception e){
 			e.printStackTrace();

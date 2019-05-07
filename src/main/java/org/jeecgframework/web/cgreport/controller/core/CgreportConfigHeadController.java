@@ -99,7 +99,7 @@ public class CgreportConfigHeadController extends BaseController {
 		message = "动态报表配置抬头删除成功";
 		try{
 			cgreportConfigHeadService.delMain(cgreportConfigHead);
-			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(request)+"][online报表删除]["+cgreportConfigHead.getCode()+"]"+message);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -125,7 +125,7 @@ public class CgreportConfigHeadController extends BaseController {
 			for(String id:ids.split(",")){
 				CgreportConfigHeadEntity cgreportConfigHead = systemService.getEntity(CgreportConfigHeadEntity.class, id);
 				cgreportConfigHeadService.delMain(cgreportConfigHead);
-				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
+				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 				logger.info("["+IpUtil.getIpAddr(request)+"][online报表批量删除]["+cgreportConfigHead.getCode()+"]"+message);
 			}
 		}catch(Exception e){
@@ -165,7 +165,7 @@ public class CgreportConfigHeadController extends BaseController {
 				}
 			}
 			cgreportConfigHeadService.addMain(cgreportConfigHead, cgreportConfigItemList,cgreportConfigParamList);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(request)+"][online报表录入]["+cgreportConfigHead.getCode()+"]"+message);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -203,7 +203,7 @@ public class CgreportConfigHeadController extends BaseController {
 				}
 			}
 			cgreportConfigHeadService.updateMain(cgreportConfigHead, cgreportConfigItemList, cgreportConfigParamList);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(request)+"][online报表更新]["+cgreportConfigHead.getCode()+"]"+message);
 		}catch(Exception e){
 			e.printStackTrace();

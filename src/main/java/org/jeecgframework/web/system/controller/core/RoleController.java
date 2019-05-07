@@ -200,7 +200,7 @@ public class RoleController extends BaseController {
 			userService.delete(role);
 			message = "角色: " + role.getRoleName() + "被删除成功";
 			systemService.addLog(message, Globals.Log_Type_DEL,
-					Globals.Log_Leavel_INFO);
+					Globals.LOG_LEVEL_INFO);
 		} else {
 			message = "角色: 仍被用户使用，请先删除关联关系";
 		}
@@ -269,7 +269,7 @@ public class RoleController extends BaseController {
 			role.setRoleType(OrgConstants.SYSTEM_ROLE_TYPE);
 
 			userService.saveOrUpdate(role);
-			systemService.addLog(message, Globals.Log_Type_UPDATE,Globals.Log_Leavel_INFO);
+			systemService.addLog(message, Globals.Log_Type_UPDATE,Globals.LOG_LEVEL_INFO);
 		} else {
 			message = "角色: " + role.getRoleName() + "被添加成功";
 
@@ -277,7 +277,7 @@ public class RoleController extends BaseController {
 
 			userService.save(role);
 			systemService.addLog(message, Globals.Log_Type_INSERT,
-					Globals.Log_Leavel_INFO);
+					Globals.LOG_LEVEL_INFO);
 		}
 		logger.info(message);
 		return j;
@@ -985,7 +985,7 @@ public class RoleController extends BaseController {
         TSRole role = systemService.getEntity(TSRole.class, req.getParameter("roleId"));
         saveRoleUserList(req, role);
         message =  MutiLangUtil.paramAddSuccess("common.user");
-//      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+//      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
         j.setMsg(message);
 
         return j;
