@@ -22,7 +22,7 @@ import org.jeecgframework.web.cgreport.service.core.CgReportServiceI;
 import org.jeecgframework.web.graphreport.service.core.GraphReportServiceI;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.core.common.controller.BaseController;
-import org.jeecgframework.core.common.service.CommonExcelServiceI;
+import org.jeecgframework.core.common.service.CommonExcelService;
 import org.jeecgframework.core.enums.SysThemesEnum;
 import org.jeecgframework.core.online.def.CgReportConstant;
 import org.jeecgframework.core.online.exception.CgReportNotFoundException;
@@ -56,7 +56,7 @@ public class GraphReportController extends BaseController {
 	@Autowired
 	private SystemService systemService;
 	@Autowired
-	private CommonExcelServiceI cgReportExcelService;
+	private CommonExcelService cgReportExcelService;
 	
 	/**
 	 * 动态报表展现入口

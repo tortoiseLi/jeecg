@@ -27,6 +27,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 基础Service
+ * @author Administrator
+ * @date 2019-05-08
+ * @version V1.0
+ */
 @Service("commonService")
 @Transactional
 public class CommonServiceImpl implements CommonService {
