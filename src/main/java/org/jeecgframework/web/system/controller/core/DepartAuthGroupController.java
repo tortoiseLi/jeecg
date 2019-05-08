@@ -145,7 +145,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "showDepartRoleAuth")
 	public ModelAndView showDepartRoleAuth(String id,HttpServletRequest request) {
-		TSDepartAuthGroupEntity departAuthGroup = systemService.getEntity(TSDepartAuthGroupEntity.class, id);
+		TSDepartAuthGroupEntity departAuthGroup = systemService.getById(TSDepartAuthGroupEntity.class, id);
 		request.setAttribute("departAuthGroup", departAuthGroup);
 		return new ModelAndView("system/authGroup/showDepartRoleAuth");
 	}
@@ -157,7 +157,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "addDepartRoleAuth")
 	public ModelAndView addDepartRoleAuth(String id, HttpServletRequest request) {
-		TSDepartAuthGroupEntity departAuthGroup = systemService.getEntity(TSDepartAuthGroupEntity.class, id);
+		TSDepartAuthGroupEntity departAuthGroup = systemService.getById(TSDepartAuthGroupEntity.class, id);
 		request.setAttribute("departAuthGroup", departAuthGroup);
 		return new ModelAndView("system/authGroup/addDepartRoleAuth");
 	}
@@ -169,7 +169,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "updateDepartRoleAuth")
 	public ModelAndView updateDepartRoleAuth(String id, HttpServletRequest request) {
-		TSRole role = systemService.getEntity(TSRole.class, id);
+		TSRole role = systemService.getById(TSRole.class, id);
 		request.setAttribute("role", role);
 		return new ModelAndView("system/authGroup/updateDepartRoleAuth");
 	}
@@ -223,7 +223,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "departAuthGroupRel")
 	public ModelAndView departAuthGroupRel(String id,TSDepartAuthGroupEntity departAuthGroup, HttpServletRequest request) {
-		departAuthGroup = systemService.getEntity(TSDepartAuthGroupEntity.class, id);
+		departAuthGroup = systemService.getById(TSDepartAuthGroupEntity.class, id);
 		request.setAttribute("departAuthGroup", departAuthGroup);
 		return new ModelAndView("system/authGroup/departAuthGroupShow");
 	}
@@ -236,7 +236,7 @@ public class DepartAuthGroupController extends BaseController {
 	 */
 	@RequestMapping(params = "departRoleAuthGroupRel")
 	public ModelAndView departRoleAuthGroupRel(String id, HttpServletRequest request) {
-		TSRole role = systemService.getEntity(TSRole.class, id);
+		TSRole role = systemService.getById(TSRole.class, id);
 		request.setAttribute("role", role);
 		return new ModelAndView("system/authGroup/departRoleAuthGroupShow");
 	}
@@ -507,7 +507,7 @@ public class DepartAuthGroupController extends BaseController {
 		String parentid = request.getParameter("parentid");
 		StringBuffer hql = new StringBuffer(" from TSDepart t where 1=1 ");
 		if(StringUtils.isNotBlank(parentid)){
-			dePart = this.systemService.getEntity(TSDepart.class, parentid);
+			dePart = this.systemService.getById(TSDepart.class, parentid);
 			hql.append(" and TSPDepart = ? ");
 			tSDeparts = this.systemService.findHql(hql.toString(), dePart);
 		} else {
@@ -640,7 +640,7 @@ public class DepartAuthGroupController extends BaseController {
 			//判断是新增还是更新
 			if(StringUtils.isEmpty(departAuthGroup.getId())) {
 				departAuthGroup.setLevel(1);
-				systemService.save(departAuthGroup);
+				systemService.add(departAuthGroup);
 			} else {
 				systemService.saveOrUpdate(departAuthGroup);
 			}
@@ -665,7 +665,7 @@ public class DepartAuthGroupController extends BaseController {
 	public AjaxJson del(TSDepartAuthGroupEntity departAuthGroup, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		try{
-			departAuthGroup = systemService.getEntity(TSDepartAuthGroupEntity.class, departAuthGroup.getId());
+			departAuthGroup = systemService.getById(TSDepartAuthGroupEntity.class, departAuthGroup.getId());
 			systemService.delete(departAuthGroup);
 			j.setMsg("删除部门管理员组成功");
 			j.setSuccess(true);
@@ -853,7 +853,7 @@ public class DepartAuthGroupController extends BaseController {
 		try {
 			String groupId = request.getParameter("groupId");
 			String function = request.getParameter("functions");
-			TSDepartAuthGroupEntity functionGroup = this.systemService.get(TSDepartAuthGroupEntity.class, groupId);
+			TSDepartAuthGroupEntity functionGroup = this.systemService.getById(TSDepartAuthGroupEntity.class, groupId);
 			List<TSDepartAuthgFunctionRelEntity> functionGroupList = systemService.findByProperty(TSDepartAuthgFunctionRelEntity.class, "tsDepartAuthGroup.id",functionGroup.getId());
 			Map<String, TSDepartAuthgFunctionRelEntity> map = new HashMap<String, TSDepartAuthgFunctionRelEntity>();
 			for (TSDepartAuthgFunctionRelEntity functionofGroup : functionGroupList) {
@@ -895,7 +895,7 @@ public class DepartAuthGroupController extends BaseController {
 				map.remove(s);
 			} else {
 				TSDepartAuthgFunctionRelEntity functionGroupRel = new TSDepartAuthgFunctionRelEntity();
-				TSFunction f = this.systemService.get(TSFunction.class, s);
+				TSFunction f = this.systemService.getById(TSFunction.class, s);
 				functionGroupRel.setTsFunction(f);
 				functionGroupRel.setTsDepartAuthGroup(functionGroup);
 				entitys.add(functionGroupRel);
@@ -906,8 +906,8 @@ public class DepartAuthGroupController extends BaseController {
 		for (; it.hasNext();) {
 			deleteEntitys.add(it.next());
 		}
-		systemService.batchSave(entitys);
-		systemService.deleteAllEntitie(deleteEntitys);
+		systemService.batchAdd(entitys);
+		systemService.deleteCollection(deleteEntitys);
 	}
 	
 	/**
@@ -1049,8 +1049,8 @@ public class DepartAuthGroupController extends BaseController {
 		cq.eq("deleteFlag", Globals.Delete_Normal);
 		List<String> userLists = new ArrayList<String>();
 		String groupId = request.getParameter("groupId");
-		TSDepartAuthGroupEntity departAuthGroup = systemService.getEntity(TSDepartAuthGroupEntity.class, groupId);
-		TSDepart tsDept = this.systemService.getEntity(TSDepart.class, departAuthGroup.getDeptId());
+		TSDepartAuthGroupEntity departAuthGroup = systemService.getById(TSDepartAuthGroupEntity.class, groupId);
+		TSDepart tsDept = this.systemService.getById(TSDepart.class, departAuthGroup.getDeptId());
 		//设定某个组织机构管理员时，可以设定当前组织机构下级部门的人员
 		String deptHql = new String(" from TSUserOrg where tsDepart.orgCode like concat(?,'%')");
 		List<TSUserOrg> userList = this.systemService.findHql(deptHql, tsDept.getOrgCode());
@@ -1103,12 +1103,12 @@ public class DepartAuthGroupController extends BaseController {
 							}
 							functionGroupUser.setUserId(uName);
 							functionGroupUser.setGroupId(groupId);
-							systemService.save(functionGroupUser);
+							systemService.add(functionGroupUser);
 						}
 					} else{
 						functionGroupUser.setUserId(uName);
 						functionGroupUser.setGroupId(groupId);
-						systemService.save(functionGroupUser);
+						systemService.add(functionGroupUser);
 					}
 				}
 			}
@@ -1177,7 +1177,7 @@ public class DepartAuthGroupController extends BaseController {
 					TSRole role = new TSRole();
 					role.setId(s);
 					roleUser.setTSRole(role);
-					systemService.save(roleUser);
+					systemService.add(roleUser);
 				}
 				j.setMsg("角色分配成功");
 				j.setSuccess(true);
@@ -1206,7 +1206,7 @@ public class DepartAuthGroupController extends BaseController {
 			role.setRoleCode(roleCode);
 			role.setRoleName(roleName);
 			role.setRoleType(OrgConstants.DEPART_ROLE_TYPE);	//部门角色
-			systemService.save(role);
+			systemService.add(role);
 			j.setMsg("添加角色信息成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1251,9 +1251,9 @@ public class DepartAuthGroupController extends BaseController {
 		try{
 			List<TSRoleFunction> roleFunctions = systemService.findByProperty(TSRoleFunction.class, "TSRole.id", role.getId());
 			if(roleFunctions.size()>0 && roleFunctions != null) {
-				systemService.deleteAllEntitie(roleFunctions);
+				systemService.deleteCollection(roleFunctions);
 			}
-			role = systemService.getEntity(TSRole.class, role.getId());
+			role = systemService.getById(TSRole.class, role.getId());
 			if(role != null) {
 				systemService.delete(role);
 			}
@@ -1355,7 +1355,7 @@ public class DepartAuthGroupController extends BaseController {
 	@RequestMapping(params = "roleOperationListForFunction")
 	public ModelAndView roleOperationListForFunction(HttpServletRequest request, String functionId) {
 		String gid = request.getParameter("groupId");
-		TSRole role = systemService.getEntity(TSRole.class, gid);
+		TSRole role = systemService.getById(TSRole.class, gid);
 		List<Map<String, Object>> pGroup = new ArrayList<Map<String, Object>>();
 		if (role != null) {
 			if (oConvertUtils.isNotEmpty(role.getDepartAgId())) {
@@ -1402,7 +1402,7 @@ public class DepartAuthGroupController extends BaseController {
 	@RequestMapping(params = "roleDataRuleListForFunction")
 	public ModelAndView roleDataRuleListForFunction(HttpServletRequest request, String functionId) {
 		String gid = request.getParameter("groupId");
-		TSRole role = systemService.getEntity(TSRole.class, gid);
+		TSRole role = systemService.getById(TSRole.class, gid);
 		List<Map<String, Object>> pGroup = new ArrayList<Map<String, Object>>();
 		if (role != null) {
 			if (oConvertUtils.isNotEmpty(role.getDepartAgId())) {
@@ -1451,7 +1451,7 @@ public class DepartAuthGroupController extends BaseController {
 		try {
 			String groupId = request.getParameter("groupId");
 			String function = request.getParameter("functions");
-			TSRole role = this.systemService.get(TSRole.class, groupId);
+			TSRole role = this.systemService.getById(TSRole.class, groupId);
 			List<TSRoleFunction> functionGroupList = systemService
 					.findByProperty(TSRoleFunction.class, "TSRole.id",role.getId());
 			Map<String, TSRoleFunction> map = new HashMap<String, TSRoleFunction>();
@@ -1491,7 +1491,7 @@ public class DepartAuthGroupController extends BaseController {
 				map.remove(s);
 			} else {
 				TSRoleFunction functionGroupRel = new TSRoleFunction();
-				TSFunction f = this.systemService.get(TSFunction.class, s);
+				TSFunction f = this.systemService.getById(TSFunction.class, s);
 				functionGroupRel.setTSFunction(f);
 				functionGroupRel.setTSRole(role);
 				entitys.add(functionGroupRel);
@@ -1502,8 +1502,8 @@ public class DepartAuthGroupController extends BaseController {
 		for (; it.hasNext();) {
 			deleteEntitys.add(it.next());
 		}
-		systemService.batchSave(entitys);
-		systemService.deleteAllEntitie(deleteEntitys);
+		systemService.batchAdd(entitys);
+		systemService.deleteCollection(deleteEntitys);
 	}
 	
 	/**
@@ -1596,7 +1596,7 @@ public class DepartAuthGroupController extends BaseController {
 			}
 			
 			if(oConvertUtils.isNotEmpty(departid)){
-				TSDepart tsdepart = this.systemService.get(TSDepart.class,departid);
+				TSDepart tsdepart = this.systemService.getById(TSDepart.class,departid);
 				MiniDaoPage<TSUser> list = departAuthGroupDao.getUserByDepartCode(dataGrid.getPage(), dataGrid.getRows(),tsdepart.getOrgCode(),user);
 				dataGrid.setTotal(list.getTotal());
 				dataGrid.setResults(list.getResults());
@@ -1687,10 +1687,10 @@ public class DepartAuthGroupController extends BaseController {
 			deleteEntitys.add(it.next());
 		}
 		if(entitys.size()>0){
-			systemService.batchSave(entitys);
+			systemService.batchAdd(entitys);
 		}
 		if(deleteEntitys.size()>0) {
-			systemService.deleteAllEntitie(deleteEntitys);
+			systemService.deleteCollection(deleteEntitys);
 		}
 	}
 	

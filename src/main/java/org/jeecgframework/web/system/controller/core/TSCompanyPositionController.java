@@ -127,7 +127,7 @@ public class TSCompanyPositionController extends BaseController {
 	public AjaxJson doDel(TSCompanyPositionEntity tSCompanyPosition, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tSCompanyPosition = systemService.getEntity(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
+		tSCompanyPosition = systemService.getById(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
 		message = "职务管理删除成功";
 		try{
 			tSCompanyPositionService.delete(tSCompanyPosition);
@@ -154,7 +154,7 @@ public class TSCompanyPositionController extends BaseController {
 		message = "职务管理删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSCompanyPositionEntity tSCompanyPosition = systemService.getEntity(TSCompanyPositionEntity.class, 
+				TSCompanyPositionEntity tSCompanyPosition = systemService.getById(TSCompanyPositionEntity.class,
 				id
 				);
 				tSCompanyPositionService.delete(tSCompanyPosition);
@@ -206,7 +206,7 @@ public class TSCompanyPositionController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "职务管理更新成功";
-		TSCompanyPositionEntity t = tSCompanyPositionService.get(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
+		TSCompanyPositionEntity t = tSCompanyPositionService.getById(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSCompanyPosition, t);
 			tSCompanyPositionService.saveOrUpdate(t);
@@ -229,7 +229,7 @@ public class TSCompanyPositionController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(TSCompanyPositionEntity tSCompanyPosition, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSCompanyPosition.getId())) {
-			tSCompanyPosition = tSCompanyPositionService.getEntity(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
+			tSCompanyPosition = tSCompanyPositionService.getById(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
 		}
 		req.setAttribute("tSCompanyPositionPage", tSCompanyPosition);
 		return new ModelAndView("system/position/tSCompanyPosition-add");
@@ -242,7 +242,7 @@ public class TSCompanyPositionController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(TSCompanyPositionEntity tSCompanyPosition, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSCompanyPosition.getId())) {
-			tSCompanyPosition = tSCompanyPositionService.getEntity(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
+			tSCompanyPosition = tSCompanyPositionService.getById(TSCompanyPositionEntity.class, tSCompanyPosition.getId());
 			req.setAttribute("tSCompanyPositionPage", tSCompanyPosition);
 		}
 		return new ModelAndView("system/position/tSCompanyPosition-update");
@@ -341,7 +341,7 @@ public class TSCompanyPositionController extends BaseController {
 	@ResponseBody
 //	@ApiOperation(value="根据ID获取职务管理信息",notes="根据ID获取职务管理信息",httpMethod="GET",produces="application/json")
 	public ResponseEntity<?> get(@ApiParam(required=true,name="id",value="ID")@PathVariable("id") String id) {
-		TSCompanyPositionEntity task = tSCompanyPositionService.get(TSCompanyPositionEntity.class, id);
+		TSCompanyPositionEntity task = tSCompanyPositionService.getById(TSCompanyPositionEntity.class, id);
 		if (task == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
@@ -400,7 +400,7 @@ public class TSCompanyPositionController extends BaseController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 //	@ApiOperation(value="删除用户信息")
 	public void delete(@ApiParam(name="id",value="ID",required=true)@PathVariable("id") String id) {
-		tSCompanyPositionService.deleteEntityById(TSCompanyPositionEntity.class, id);
+		tSCompanyPositionService.deleteById(TSCompanyPositionEntity.class, id);
 	}
 	
 	
@@ -516,7 +516,7 @@ public class TSCompanyPositionController extends BaseController {
 					userPositionRelEntity.setCompanyId(companyId);
 					userPositionRelEntity.setPositionId(positionId);
 					userPositionRelEntity.setUserId(userId);
-					systemService.save(userPositionRelEntity);
+					systemService.add(userPositionRelEntity);
 				}
 //				updateGroupUser(set, userName, map);
 				j.setMsg("分配职务成功");

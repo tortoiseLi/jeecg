@@ -82,9 +82,9 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 
 			if (oConvertUtils.isEmpty(column.getId())) {
 				databaseFieldIsChange = true;
-				this.save(column);
+				this.add(column);
 			} else {
-				CgFormFieldEntity c = this.getEntity(CgFormFieldEntity.class,column.getId());
+				CgFormFieldEntity c = this.getById(CgFormFieldEntity.class,column.getId());
 				if (!databaseFieldIsChange && databaseFieldIsChange(c, column)) {
 					databaseFieldIsChange = true;
 				}
@@ -149,7 +149,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 					"isNull,isShow,isShowList,isQuery,isKey,fieldMustInput");
 
 			column.setTable(cgFormHead);
-			this.save(column);
+			this.add(column);
 		}
 	}
 
@@ -170,7 +170,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 					"isNull,isShow,isShowList,isQuery,isKey,fieldMustInput");
 
 			column.setTable(cgFormHead);
-			this.save(column);
+			this.add(column);
 		}
 	}
 
@@ -587,7 +587,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		if(operationCodes != null){
 			TSOperation tsOperation;
 			for (String id : operationCodes) {
-				tsOperation = this.getEntity(TSOperation.class, id);
+				tsOperation = this.getById(TSOperation.class, id);
 				if(tsOperation != null && tsOperation.getStatus() == 0){
 					operationCodesMap.put(tsOperation.getOperationcode(), tsOperation);
 				}

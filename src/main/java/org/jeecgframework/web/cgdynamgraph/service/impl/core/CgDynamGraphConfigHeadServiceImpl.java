@@ -26,20 +26,20 @@ public class CgDynamGraphConfigHeadServiceImpl extends CommonServiceImpl impleme
 	 	public void addMain(CgDynamGraphConfigHeadEntity cgDynamGraphConfigHead,
 		        List<CgDynamGraphConfigItemEntity> cgDynamGraphConfigItemList,List<CgDynamGraphConfigParamEntity> cgDynamGraphConfigParamList){
 				//保存主信息
-				this.save(cgDynamGraphConfigHead);
+				this.add(cgDynamGraphConfigHead);
 			
 				/**保存-动态报表配置明细*/
 				for(CgDynamGraphConfigItemEntity cgDynamGraphConfigItem:cgDynamGraphConfigItemList){
 					//外键设置
 					cgDynamGraphConfigItem.setCgrheadId(cgDynamGraphConfigHead.getId());
-					this.save(cgDynamGraphConfigItem);
+					this.add(cgDynamGraphConfigItem);
 				}
 				
 				/**保存-动态报表参数*/
 				for(CgDynamGraphConfigParamEntity cgDynamGraphConfigParam:cgDynamGraphConfigParamList){
 					//外键设置
 					cgDynamGraphConfigParam.setCgrheadId(cgDynamGraphConfigHead.getId());
-					this.save(cgDynamGraphConfigParam);
+					this.add(cgDynamGraphConfigParam);
 				}
 				
 				//执行新增操作配置的sql增强
@@ -86,7 +86,7 @@ public class CgDynamGraphConfigHeadServiceImpl extends CommonServiceImpl impleme
 				if(StringUtil.isEmpty(cgDynamGraphConfigItem.getId())){
 					//外键设置
 					cgDynamGraphConfigItem.setCgrheadId(cgDynamGraphConfigHead.getId());
-					this.save(cgDynamGraphConfigItem);
+					this.add(cgDynamGraphConfigItem);
 				}
 			}
 			
@@ -122,7 +122,7 @@ public class CgDynamGraphConfigHeadServiceImpl extends CommonServiceImpl impleme
 				if(StringUtil.isEmpty(cgDynamGraphConfigParam.getId())){
 					//外键设置
 					cgDynamGraphConfigParam.setCgrheadId(cgDynamGraphConfigHead.getId());
-					this.save(cgDynamGraphConfigParam);
+					this.add(cgDynamGraphConfigParam);
 				}
 			}
 			//执行更新操作配置的sql增强
@@ -140,11 +140,11 @@ public class CgDynamGraphConfigHeadServiceImpl extends CommonServiceImpl impleme
 			//删除-动态报表配置明细
 		    String hql0 = "from CgDynamGraphConfigItemEntity where 1 = 1 AND cgrheadId = ? ";
 		    List<CgDynamGraphConfigItemEntity> cgDynamGraphConfigItemOldList = this.findHql(hql0,id0);
-			this.deleteAllEntitie(cgDynamGraphConfigItemOldList);
+			this.deleteCollection(cgDynamGraphConfigItemOldList);
 			//删除-动态报表参数
 			String hql1 = "from CgDynamGraphConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
 			List<CgDynamGraphConfigParamEntity> cgDynamGraphConfigParamOldList = this.findHql(hql1,id0);
-			this.deleteAllEntitie(cgDynamGraphConfigParamOldList);
+			this.deleteCollection(cgDynamGraphConfigParamOldList);
 		}
 		
 	 	

@@ -747,7 +747,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 					}
 					if(obj instanceof CgformEnhanceJavaInter){
 
-						CgFormHeadEntity head = this.get(CgFormHeadEntity.class, formId);
+						CgFormHeadEntity head = this.getById(CgFormHeadEntity.class, formId);
 						CgformEnhanceJavaInter javaInter = (CgformEnhanceJavaInter) obj;
 						javaInter.execute(head.getTableName(),data);
 
@@ -818,7 +818,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 					}
 					if(obj instanceof CgformEnhanceJavaInter){
 
-						CgFormHeadEntity head = this.get(CgFormHeadEntity.class, formId);
+						CgFormHeadEntity head = this.getById(CgFormHeadEntity.class, formId);
 						CgformEnhanceJavaInter javaInter = (CgformEnhanceJavaInter) obj;
 						javaInter.execute(head.getTableName(),data);
 

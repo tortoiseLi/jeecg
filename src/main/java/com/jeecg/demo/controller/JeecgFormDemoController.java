@@ -194,7 +194,7 @@ public class JeecgFormDemoController extends BaseController {
 		List<TSDepart> demoList = systemService.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id", "departname", "TSDeparts");
-		comboTrees = systemService.ComboTree(demoList, comboTreeModel, null, false);
+		comboTrees = systemService.comboTree(demoList, comboTreeModel, null, false);
 		return comboTrees;
 	}
 	
@@ -234,7 +234,7 @@ public class JeecgFormDemoController extends BaseController {
 				if(counts>0){
 					dataList.add(map);
 				}else{
-					TSDepart de = this.systemService.get(TSDepart.class, tsdepart.getId());
+					TSDepart de = this.systemService.getById(TSDepart.class, tsdepart.getId());
 					if (de != null) {
 						map.put("id", de.getId());
 						map.put("name", de.getDepartname());
@@ -353,7 +353,7 @@ public class JeecgFormDemoController extends BaseController {
 			String fileName = filename.substring(filename.lastIndexOf("/")+1,filename.lastIndexOf("."));
 			document.setAttachmenttitle(fileName);
 			document.setExtend(filename.substring(filename.lastIndexOf(".") + 1));
-			systemService.save(document);
+			systemService.add(document);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxJson.setSuccess(false);
@@ -383,9 +383,9 @@ public class JeecgFormDemoController extends BaseController {
 	@RequestMapping(params = "editFiles")
 	public ModelAndView editFiles(TSDocument doc, ModelMap map,HttpServletRequest request) {
 		if (StringUtil.isNotEmpty(doc.getId())) {
-			doc = systemService.getEntity(TSDocument.class, doc.getId());
+			doc = systemService.getById(TSDocument.class, doc.getId());
 			map.put("doc", doc);
-			TSAttachment attachment = systemService.get(TSAttachment.class, doc.getId());
+			TSAttachment attachment = systemService.getById(TSAttachment.class, doc.getId());
 			map.put("attachment",attachment);
 		}
 		return new ModelAndView("system/document/files");
@@ -409,7 +409,7 @@ public class JeecgFormDemoController extends BaseController {
 		String documentTitle = oConvertUtils.getString(request.getParameter("documentTitle"));// 文件标题
 		if (StringUtil.isNotEmpty(documentId)) {
 			document.setId(documentId);
-			document = systemService.getEntity(TSDocument.class, documentId);
+			document = systemService.getById(TSDocument.class, documentId);
 			document.setDocumentTitle(documentTitle);
 		}
 		document.setSubclassname(MyClassLoader.getPackPath(document));
@@ -459,7 +459,7 @@ public class JeecgFormDemoController extends BaseController {
 	public AjaxJson delDocument(TSDocument document, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		document = systemService.getEntity(TSDocument.class, document.getId());
+		document = systemService.getById(TSDocument.class, document.getId());
 		message = "" + document.getDocumentTitle() + "被删除成功";
 		systemService.delete(document);
 		systemService.addLog(message, Globals.Log_Type_DEL,
@@ -481,9 +481,9 @@ public class JeecgFormDemoController extends BaseController {
 		try {
 			String id = request.getParameter("id");
 			String title = request.getParameter("title");
-			TSDocument document = systemService.getEntity(TSDocument.class,id);
+			TSDocument document = systemService.getById(TSDocument.class,id);
 			document.setDocumentTitle(title);
-			systemService.updateEntitie(document);
+			systemService.update(document);
 			j.setSuccess(true);
 			j.setMsg("文件标题修改成功!");
 		} catch (Exception e) {
@@ -545,7 +545,7 @@ public class JeecgFormDemoController extends BaseController {
 
 		treeGridModel.setFunctionType("functionType");
 
-		treeGrids = systemService.treegrid(functionList, treeGridModel);
+		treeGrids = systemService.treeGrid(functionList, treeGridModel);
 
 		MutiLangUtil.setMutiTree(treeGrids);
 		JSONObject jsonObject=new JSONObject();
@@ -658,7 +658,7 @@ public class JeecgFormDemoController extends BaseController {
 	@ResponseBody
 	public AjaxJson del(TSDepart depart, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		depart = systemService.getEntity(TSDepart.class, depart.getId());
+		depart = systemService.getById(TSDepart.class, depart.getId());
         Long childCount = systemService.getCountForJdbcParam("select count(1) from t_s_depart where parentdepartid = ?", depart.getId());
         if(childCount>0){
         	j.setSuccess(false);

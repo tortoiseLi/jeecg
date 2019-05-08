@@ -153,7 +153,7 @@ public class TSInterfaceController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 
-		tsInterface = systemService.getEntity(TSInterfaceEntity.class, tsInterface.getId());
+		tsInterface = systemService.getById(TSInterfaceEntity.class, tsInterface.getId());
 		List<TSInterfaceEntity> ts = tsInterface.getTSInterfaces();
 		if(ts!=null&&ts.size()>0){
 			 message = MutiLangUtil.getLang("common.menu.del.fail");
@@ -189,7 +189,7 @@ public class TSInterfaceController extends BaseController {
 	public AjaxJson delop(TSOperation operation, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		operation = systemService.getEntity(TSOperation.class, operation.getId());
+		operation = systemService.getById(TSOperation.class, operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
 		String operationId = operation.getId();
@@ -201,7 +201,7 @@ public class TSInterfaceController extends BaseController {
 				newOper = roleFunction.getOperation().replace(operationId, "");
 			}
 			roleFunction.setOperation(newOper);
-			userService.updateEntitie(roleFunction);
+			userService.update(roleFunction);
 		}
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 		j.setMsg(message);
@@ -247,12 +247,12 @@ public class TSInterfaceController extends BaseController {
 		if (tsInterface.gettSInterface().getId().equals("")) {
 			tsInterface.settSInterface(null);
 		} else {
-			TSInterfaceEntity parent = systemService.getEntity(TSInterfaceEntity.class, tsInterface.gettSInterface().getId());
+			TSInterfaceEntity parent = systemService.getById(TSInterfaceEntity.class, tsInterface.gettSInterface().getId());
 			tsInterface.setInterfaceLevel(Short.valueOf(parent.getInterfaceLevel() + 1 + ""));
 		}
 		if (StringUtil.isNotEmpty(tsInterface.getId())) {
 			message = MutiLangUtil.paramUpdSuccess("common.menu");
-			TSInterfaceEntity t = systemService.getEntity(TSInterfaceEntity.class, tsInterface.getId());
+			TSInterfaceEntity t = systemService.getById(TSInterfaceEntity.class, tsInterface.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(tsInterface, t);
 				userService.saveOrUpdate(t);
@@ -276,7 +276,7 @@ public class TSInterfaceController extends BaseController {
 				tsInterface.setInterfaceOrder(tsInterface.getInterfaceOrder());
 			}
 			message = MutiLangUtil.paramAddSuccess("common.menu");
-			systemService.save(tsInterface);
+			systemService.add(tsInterface);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
@@ -304,7 +304,7 @@ public class TSInterfaceController extends BaseController {
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} else {
 			message = MutiLangUtil.paramAddSuccess("common.operation");
-			userService.save(operation);
+			userService.add(operation);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 
@@ -323,13 +323,13 @@ public class TSInterfaceController extends BaseController {
 		List<TSInterfaceEntity> interfacelist = systemService.getList(TSInterfaceEntity.class);
 		req.setAttribute("flist", interfacelist);
 		if (interfaceid != null) {
-			tsInterface = systemService.getEntity(TSInterfaceEntity.class, interfaceid);
+			tsInterface = systemService.getById(TSInterfaceEntity.class, interfaceid);
 			req.setAttribute("tsInterface", tsInterface);
 		}
 		if (tsInterface.gettSInterface() != null && tsInterface.gettSInterface().getId() != null) {
 			tsInterface.setInterfaceLevel((short) 1);
 			tsInterface.settSInterface(
-					(TSInterfaceEntity) systemService.getEntity(TSInterfaceEntity.class, tsInterface.gettSInterface().getId()));
+					(TSInterfaceEntity) systemService.getById(TSInterfaceEntity.class, tsInterface.gettSInterface().getId()));
 			req.setAttribute("tsInterface", tsInterface);
 		}
 		return new ModelAndView("system/tsinterface/interface");
@@ -345,7 +345,7 @@ public class TSInterfaceController extends BaseController {
 		List<TSIcon> iconlist = systemService.getList(TSIcon.class);
 		req.setAttribute("iconlist", iconlist);
 		if (operation.getId() != null) {
-			operation = systemService.getEntity(TSOperation.class, operation.getId());
+			operation = systemService.getById(TSOperation.class, operation.getId());
 			req.setAttribute("operation", operation);
 		}
 		String functionId = oConvertUtils.getString(req.getParameter("functionId"));
@@ -392,7 +392,7 @@ public class TSInterfaceController extends BaseController {
 		treeGridModel.setFieldMap(fieldMap);
 		// 添加排序字段
 		treeGridModel.setOrder("interfaceOrder");
-		treeGrids = systemService.treegrid(interfaceList, treeGridModel);
+		treeGrids = systemService.treeGrid(interfaceList, treeGridModel);
 		MutiLangUtil.setMutiTree(treeGrids);
 		return treeGrids;
 	}
@@ -419,7 +419,7 @@ public class TSInterfaceController extends BaseController {
 		List<TSInterfaceEntity> interfaceList = systemService.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id", "interfaceName", "tsInterfaces");
-		comboTrees = systemService.ComboTree(interfaceList, comboTreeModel, null, false);
+		comboTrees = systemService.comboTree(interfaceList, comboTreeModel, null, false);
 		MutiLangUtil.setMutiTree(comboTrees);
 		return comboTrees;
 	}
@@ -430,7 +430,7 @@ public class TSInterfaceController extends BaseController {
 	@RequestMapping(params = "addorupdaterule")
 	public ModelAndView addorupdaterule(TSInterfaceDdataRuleEntity operation, HttpServletRequest req) {
 		if (operation.getId() != null) {
-			operation = systemService.getEntity(TSInterfaceDdataRuleEntity.class, operation.getId());
+			operation = systemService.getById(TSInterfaceDdataRuleEntity.class, operation.getId());
 			req.setAttribute("operation", operation);
 		}
 		String interfaceId = oConvertUtils.getString(req.getParameter("interfaceId"));
@@ -460,7 +460,7 @@ public class TSInterfaceController extends BaseController {
 	public AjaxJson delrule(TSInterfaceDdataRuleEntity operation, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		operation = systemService.getEntity(TSInterfaceDdataRuleEntity.class, operation.getId());
+		operation = systemService.getById(TSInterfaceDdataRuleEntity.class, operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
@@ -476,7 +476,7 @@ public class TSInterfaceController extends BaseController {
 	public AjaxJson saverule(TSInterfaceDdataRuleEntity operation, HttpServletRequest request)throws Exception {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		TSInterfaceEntity interfaceEntity = systemService.get(TSInterfaceEntity.class, operation.getTSInterface().getId());
+		TSInterfaceEntity interfaceEntity = systemService.getById(TSInterfaceEntity.class, operation.getTSInterface().getId());
 		if(interfaceEntity!=null){
 			if (StringUtil.isNotEmpty(operation.getId())) {
 				message = MutiLangUtil.paramUpdSuccess("common.operation");
@@ -485,7 +485,7 @@ public class TSInterfaceController extends BaseController {
 			} else {
 				if (justHaveDataRule(operation) == 0) {
 					message = MutiLangUtil.paramAddSuccess("common.operation");
-					userService.save(operation);
+					userService.add(operation);
 					systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 				} else {
 					message = "操作字段规则已存在";

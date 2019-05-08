@@ -80,7 +80,7 @@ public class CgformFtlController extends BaseController {
 	 */
 	@RequestMapping(params = "formEkeditor")
 	public ModelAndView ckeditor(HttpServletRequest request, String id) {
-		CgformFtlEntity t = systemService.get(CgformFtlEntity.class, id);
+		CgformFtlEntity t = systemService.getById(CgformFtlEntity.class, id);
 		request.setAttribute("cgformFtlEntity", t);
 		if (t.getFtlContent() == null) {
 			request.setAttribute("contents", "");
@@ -107,7 +107,7 @@ public class CgformFtlController extends BaseController {
 			CgformFtlEntity cgformFtlEntity, String contents) {
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(cgformFtlEntity.getId())) {
-			CgformFtlEntity t = systemService.get(CgformFtlEntity.class,
+			CgformFtlEntity t = systemService.getById(CgformFtlEntity.class,
 					cgformFtlEntity.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformFtlEntity, t);
@@ -168,7 +168,7 @@ public class CgformFtlController extends BaseController {
 	public AjaxJson del(CgformFtlEntity cgformFtl, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		cgformFtl = systemService.getEntity(CgformFtlEntity.class,
+		cgformFtl = systemService.getById(CgformFtlEntity.class,
 				cgformFtl.getId());
 		message = "删除成功";
 		cgformFtlService.delete(cgformFtl);
@@ -191,12 +191,12 @@ public class CgformFtlController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		try {
 			// 判断有没有激活过的模板
-			cgformFtl = systemService.getEntity(CgformFtlEntity.class,cgformFtl.getId());
+			cgformFtl = systemService.getById(CgformFtlEntity.class,cgformFtl.getId());
 			if (!cgformFtlService.hasActive(cgformFtl.getCgformId())) {
 				cgformFtl.setFtlStatus("1");
 				cgformFtlService.saveOrUpdate(cgformFtl);
 				message = "激活成功";
-				CgFormHeadEntity po = systemService.getEntity(CgFormHeadEntity.class, cgformFtl.getCgformId());
+				CgFormHeadEntity po = systemService.getById(CgFormHeadEntity.class, cgformFtl.getCgformId());
 				templetContext.removeTemplateFromCache(po.getTableName()+"_"+TemplateUtil.TemplateType.ADD.getName());
 				templetContext.removeTemplateFromCache(po.getTableName()+"_"+TemplateUtil.TemplateType.DETAIL.getName());
 				templetContext.removeTemplateFromCache(po.getTableName()+"_"+TemplateUtil.TemplateType.UPDATE.getName());
@@ -230,8 +230,8 @@ public class CgformFtlController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		try {
-			cgformFtl = systemService.getEntity(CgformFtlEntity.class,cgformFtl.getId());
-			CgFormHeadEntity po = systemService.getEntity(CgFormHeadEntity.class, cgformFtl.getCgformId());
+			cgformFtl = systemService.getById(CgformFtlEntity.class,cgformFtl.getId());
+			CgFormHeadEntity po = systemService.getById(CgFormHeadEntity.class, cgformFtl.getCgformId());
 			templetContext.removeTemplateFromCache(po.getTableName()+"_"+TemplateUtil.TemplateType.ADD.getName());
 			templetContext.removeTemplateFromCache(po.getTableName()+"_"+TemplateUtil.TemplateType.DETAIL.getName());
 			templetContext.removeTemplateFromCache(po.getTableName()+"_"+TemplateUtil.TemplateType.UPDATE.getName());
@@ -265,7 +265,7 @@ public class CgformFtlController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(cgformFtl.getId())) {
 			message = "更新成功";
-			CgformFtlEntity t = cgformFtlService.get(CgformFtlEntity.class,
+			CgformFtlEntity t = cgformFtlService.getById(CgformFtlEntity.class,
 					cgformFtl.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformFtl, t);
@@ -277,7 +277,7 @@ public class CgformFtlController extends BaseController {
 			}
 		} else {
 			message = "添加成功";
-			cgformFtlService.save(cgformFtl);
+			cgformFtlService.add(cgformFtl);
 			systemService.addLog(message, Globals.Log_Type_INSERT,
 					Globals.LOG_LEVEL_INFO);
 		}
@@ -294,7 +294,7 @@ public class CgformFtlController extends BaseController {
 	public ModelAndView addorupdate(CgformFtlEntity cgformFtl,
 			HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgformFtl.getId())) {
-			cgformFtl = cgformFtlService.getEntity(CgformFtlEntity.class,
+			cgformFtl = cgformFtlService.getById(CgformFtlEntity.class,
 					cgformFtl.getId());
 		}
 		HttpSession session = ContextHolderUtils.getSession();
@@ -402,7 +402,7 @@ public class CgformFtlController extends BaseController {
 
 		if (StringUtil.isNotEmpty(fileKey)) {
 			cgformFtl.setId(fileKey);
-			cgformFtl = systemService.getEntity(CgformFtlEntity.class, fileKey);
+			cgformFtl = systemService.getById(CgformFtlEntity.class, fileKey);
 		} else {
 			cgformFtl.setFtlVersion(cgformFtlService.getNextVarsion(cgformId));
 		}
@@ -535,7 +535,7 @@ public class CgformFtlController extends BaseController {
 	public ModelAndView cgformFtl2(HttpServletRequest request) {
 
 		String formid = request.getParameter("formid");
-		CgFormHeadEntity po = systemService.getEntity(CgFormHeadEntity.class, formid);
+		CgFormHeadEntity po = systemService.getById(CgFormHeadEntity.class, formid);
 		request.setAttribute("formid", formid);
 		request.setAttribute("tableName", po.getTableName());
 
@@ -607,7 +607,7 @@ public class CgformFtlController extends BaseController {
 					ls_form));
 			cgformFtl.setFtlContent(cgformFtl.getFtlContent().replace(
 					"</table>", "</table></form>"));
-			cgformFtlService.save(cgformFtl);
+			cgformFtlService.add(cgformFtl);
 			j.setMsg("上传成功");
 		}
 		Map<String, Object> attributes = new HashMap<String, Object>();

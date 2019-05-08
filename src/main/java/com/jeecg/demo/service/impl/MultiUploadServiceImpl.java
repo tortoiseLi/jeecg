@@ -26,7 +26,7 @@ public class MultiUploadServiceImpl extends CommonServiceImpl implements MultiUp
  	}
  	
  	public Serializable save(MultiUploadEntity entity) throws Exception{
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		//执行新增操作增强业务
  		this.doAddBus(entity);
  		return t;

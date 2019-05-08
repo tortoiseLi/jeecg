@@ -122,7 +122,7 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 				for(CgUploadEntity b:uploadBeans){
 					String path = ResourceUtil.getSysPath()+File.separator+b.getRealpath();//附件路径
 					FileUtils.delete(path);					
-					cgFormFieldService.deleteEntityById(CgUploadEntity.class, b.getId());
+					cgFormFieldService.deleteById(CgUploadEntity.class, b.getId());
 				}
 			}
 

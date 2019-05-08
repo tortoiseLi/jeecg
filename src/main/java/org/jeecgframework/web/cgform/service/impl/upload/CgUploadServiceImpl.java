@@ -84,7 +84,7 @@ public class CgUploadServiceImpl extends CommonServiceImpl implements CgUploadSe
 							//删除cgform_uploadfiles
 							commonDao.executeSql(delSql,metaId);
 							//删除附件表同时删除文件
-							TSAttachment attachment = this.getEntity(TSAttachment.class,metaId);
+							TSAttachment attachment = this.getById(TSAttachment.class,metaId);
 							deleteAttachment(attachment);
 						}else if(a.endsWith("_O")){
 							//String metaId = a.substring(0,a.length()-2);//获取原始ID

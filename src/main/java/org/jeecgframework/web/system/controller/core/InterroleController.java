@@ -120,7 +120,7 @@ public class InterroleController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(InterroleEntity role, HttpServletRequest req) {
 		if (role.getId() != null) {
-			role = systemService.getEntity(InterroleEntity.class, role.getId());
+			role = systemService.getById(InterroleEntity.class, role.getId());
 			req.setAttribute("role", role);
 		}
 		return new ModelAndView("system/interrole/interrole");
@@ -205,7 +205,7 @@ public class InterroleController extends BaseController {
 		String hql = " from InterroleInterfaceEntity  where  interrole_id= ?";
 		List<InterroleInterfaceEntity> findByQueryString = systemService.findHql(hql,role.getId());
 
-		role = systemService.getEntity(InterroleEntity.class, role.getId());
+		role = systemService.getById(InterroleEntity.class, role.getId());
 		if (findByQueryString.size() > 0 && findByQueryString != null) {
 			// 删除角色之前先删除角色权限关系
 			// delRoleFunction(role);
@@ -281,7 +281,7 @@ public class InterroleController extends BaseController {
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		String roleId = request.getParameter("roleId");
 		List<TSInterfaceEntity> loginActionlist = new ArrayList<TSInterfaceEntity>();// 已有权限菜单
-		role = this.systemService.get(InterroleEntity.class, roleId);
+		role = this.systemService.getById(InterroleEntity.class, roleId);
 		if (role != null) {
 			List<InterroleInterfaceEntity> roleInterfaceList = systemService
 					.findHql("from InterroleInterfaceEntity where interroleEntity.id = ?", role.getId());
@@ -425,7 +425,7 @@ public class InterroleController extends BaseController {
 		try {
 			String roleId = request.getParameter("roleId");
 			String roleinterface = request.getParameter("rolefunctions");
-			InterroleEntity role = this.systemService.get(InterroleEntity.class, roleId);
+			InterroleEntity role = this.systemService.getById(InterroleEntity.class, roleId);
 
 			List<InterroleInterfaceEntity> roleInterfaceList = systemService
 					.findByProperty(InterroleInterfaceEntity.class, "interroleEntity.id", role.getId());
@@ -471,7 +471,7 @@ public class InterroleController extends BaseController {
 				map.remove(s);
 			} else {
 				InterroleInterfaceEntity rf = new InterroleInterfaceEntity();
-				TSInterfaceEntity f = this.systemService.get(TSInterfaceEntity.class, s);
+				TSInterfaceEntity f = this.systemService.getById(TSInterfaceEntity.class, s);
 				rf.setInterfaceEntity(f);
 				rf.setInterroleEntity(role);
 				entitys.add(rf);
@@ -482,8 +482,8 @@ public class InterroleController extends BaseController {
 		for (; it.hasNext();) {
 			deleteEntitys.add(it.next());
 		}
-		systemService.batchSave(entitys);
-		systemService.deleteAllEntitie(deleteEntitys);
+		systemService.batchAdd(entitys);
+		systemService.deleteCollection(deleteEntitys);
 
 	}
 
@@ -629,7 +629,7 @@ public class InterroleController extends BaseController {
 	public AjaxJson doAddUserToRole(HttpServletRequest req) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		InterroleEntity role = systemService.getEntity(InterroleEntity.class, req.getParameter("roleId"));
+		InterroleEntity role = systemService.getById(InterroleEntity.class, req.getParameter("roleId"));
 		saveInterRoleUserList(req, role);
 		message = MutiLangUtil.paramAddSuccess("common.user");
 		systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
@@ -662,7 +662,7 @@ public class InterroleController extends BaseController {
 			interRoleUserList.add(interRoleUser);
 		}
 		if (!interRoleUserList.isEmpty()) {
-			systemService.batchSave(interRoleUserList);
+			systemService.batchAdd(interRoleUserList);
 		}
 	}
 

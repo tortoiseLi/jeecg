@@ -139,7 +139,7 @@ public class JformOrderMain2Controller extends BaseController {
 	@ResponseBody
 	public AjaxJson doDel(JformOrderMain2Entity jformOrderMain2, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		jformOrderMain2 = systemService.getEntity(JformOrderMain2Entity.class, jformOrderMain2.getId());
+		jformOrderMain2 = systemService.getById(JformOrderMain2Entity.class, jformOrderMain2.getId());
 		String message = "订单主信息删除成功";
 		try{
 			if(jformOrderMain2!=null){
@@ -167,7 +167,7 @@ public class JformOrderMain2Controller extends BaseController {
 		String message = "订单主信息删除成功";
 		try{
 			for(String id:ids.split(",")){
-				JformOrderMain2Entity jformOrderMain2 = systemService.getEntity(JformOrderMain2Entity.class,
+				JformOrderMain2Entity jformOrderMain2 = systemService.getById(JformOrderMain2Entity.class,
 				id
 				);
 				if(jformOrderMain2!=null){
@@ -257,7 +257,7 @@ public class JformOrderMain2Controller extends BaseController {
 	@RequestMapping(params = "mainPage")
 	public ModelAndView mainPage(JformOrderMain2Entity jformOrderMain2, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jformOrderMain2.getId())) {
-			jformOrderMain2 = jformOrderMain2Service.getEntity(JformOrderMain2Entity.class, jformOrderMain2.getId());
+			jformOrderMain2 = jformOrderMain2Service.getById(JformOrderMain2Entity.class, jformOrderMain2.getId());
 			req.setAttribute("jformOrderMain2Page", jformOrderMain2);
 		}
 		return new ModelAndView("com/jeecg/demo/jformOrderMain2/main/jformOrderMain2");
@@ -432,7 +432,7 @@ public class JformOrderMain2Controller extends BaseController {
 		if(CollectionUtils.isNotEmpty(lists)){
 			for(JformOrderMain2Entity temp:lists){
 				if (StringUtil.isNotEmpty(temp.getId())) {
-					JformOrderMain2Entity t =this.systemService.get(JformOrderMain2Entity.class, temp.getId());
+					JformOrderMain2Entity t =this.systemService.getById(JformOrderMain2Entity.class, temp.getId());
 					try {
 						MyBeanUtils.copyBeanNotNull2Bean(temp, t);
 						systemService.saveOrUpdate(t);
@@ -443,7 +443,7 @@ public class JformOrderMain2Controller extends BaseController {
 				} else {
 					try {
 						//temp.setDelFlag(0);若有则需要加
-						systemService.save(temp);
+						systemService.add(temp);
 						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -488,7 +488,7 @@ public class JformOrderMain2Controller extends BaseController {
 	@ResponseBody
 	@ApiOperation(value="根据ID获取订单主信息信息",notes="根据ID获取订单主信息信息",httpMethod="GET",produces="application/json")
 	public ResponseMessage<?> get(@ApiParam(required=true,name="id",value="ID")@PathVariable("id") String id) {
-		JformOrderMain2Entity task = jformOrderMain2Service.get(JformOrderMain2Entity.class, id);
+		JformOrderMain2Entity task = jformOrderMain2Service.getById(JformOrderMain2Entity.class, id);
 		if (task == null) {
 			return Result.error("根据ID获取订单主信息信息为空");
 		}
@@ -572,7 +572,7 @@ public class JformOrderMain2Controller extends BaseController {
 			return Result.error("ID不能为空");
 		}
 		try {
-			JformOrderMain2Entity jformOrderMain2 = jformOrderMain2Service.get(JformOrderMain2Entity.class, id);
+			JformOrderMain2Entity jformOrderMain2 = jformOrderMain2Service.getById(JformOrderMain2Entity.class, id);
 			jformOrderMain2Service.delMain(jformOrderMain2);
 		} catch (Exception e) {
 			e.printStackTrace();

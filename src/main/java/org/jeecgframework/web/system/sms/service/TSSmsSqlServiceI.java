@@ -9,7 +9,8 @@ public interface TSSmsSqlServiceI extends CommonService{
 	
  	public <T> void delete(T entity);
  	
- 	public <T> Serializable save(T entity);
+ 	@Override
+	public <T> Serializable add(T entity);
  	
  	public <T> void saveOrUpdate(T entity);
  	

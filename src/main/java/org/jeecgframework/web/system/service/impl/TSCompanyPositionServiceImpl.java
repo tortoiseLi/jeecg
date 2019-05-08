@@ -26,7 +26,7 @@ public class TSCompanyPositionServiceImpl extends CommonServiceImpl implements T
  	}
  	
  	public Serializable save(TSCompanyPositionEntity entity) throws Exception{
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		//执行新增操作增强业务
  		this.doAddBus(entity);
  		return t;

@@ -97,7 +97,7 @@ public class CgformButtonSqlController extends BaseController {
 	public AjaxJson del(CgformButtonSqlEntity cgformButtonSql, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		cgformButtonSql = systemService.getEntity(CgformButtonSqlEntity.class, cgformButtonSql.getId());
+		cgformButtonSql = systemService.getById(CgformButtonSqlEntity.class, cgformButtonSql.getId());
 		message = "删除成功";
 		cgformButtonSqlService.delete(cgformButtonSql);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
@@ -145,7 +145,7 @@ public class CgformButtonSqlController extends BaseController {
 		}
 		if (StringUtil.isNotEmpty(cgformButtonSql.getId())) {
 			message = "更新成功";
-			CgformButtonSqlEntity t = cgformButtonSqlService.get(CgformButtonSqlEntity.class, cgformButtonSql.getId());
+			CgformButtonSqlEntity t = cgformButtonSqlService.getById(CgformButtonSqlEntity.class, cgformButtonSql.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(cgformButtonSql, t);
 				cgformButtonSqlService.saveOrUpdate(t);
@@ -155,7 +155,7 @@ public class CgformButtonSqlController extends BaseController {
 			}
 		} else {
 			message = "添加成功";
-			cgformButtonSqlService.save(cgformButtonSql);
+			cgformButtonSqlService.add(cgformButtonSql);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		logger.info("["+IpUtil.getIpAddr(request)+"][online表单sql增强添加更新]"+message);

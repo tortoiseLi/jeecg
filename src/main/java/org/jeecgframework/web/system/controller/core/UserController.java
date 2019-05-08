@@ -214,7 +214,7 @@ public class UserController extends BaseController {
 	public AjaxJson delInterfaceUser(@RequestParam(required = true) String userid) {
 		AjaxJson ajaxJson = new AjaxJson();
 		try {
-			TSUser user = this.userService.getEntity(TSUser.class, userid);
+			TSUser user = this.userService.getById(TSUser.class, userid);
 			if(user!=null) {
 				String sql = "delete from t_s_interrole_user where user_id = ?";
 				this.systemService.executeSql(sql, userid);
@@ -275,7 +275,7 @@ public class UserController extends BaseController {
 		user.setPortrait(fileName);
 		j.setMsg("修改成功");
 		try {
-			systemService.updateEntitie(user);
+			systemService.update(user);
 		} catch (Exception e) {
 			j.setMsg("修改失败");
 			e.printStackTrace();
@@ -307,7 +307,7 @@ public class UserController extends BaseController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			systemService.updateEntitie(user);
+			systemService.update(user);
 			j.setMsg("修改成功");
 			logger.info("["+IpUtil.getIpAddr(request)+"][修改密码]修改成功 userId:"+user.getUserName());
 
@@ -326,7 +326,7 @@ public class UserController extends BaseController {
 	public ModelAndView changepasswordforuser(TSUser user, HttpServletRequest req) {
 		logger.info("["+IpUtil.getIpAddr(req)+"][跳转重置用户密码页面]["+user.getUserName()+"]");
 		if (StringUtil.isNotEmpty(user.getId())) {
-			user = systemService.getEntity(TSUser.class, user.getId());
+			user = systemService.getById(TSUser.class, user.getId());
 			req.setAttribute("user", user);
 			idandname(req, user);
 			//System.out.println(user.getPassword()+"-----"+user.getRealName());
@@ -351,7 +351,7 @@ public class UserController extends BaseController {
 		String password = oConvertUtils.getString(req.getParameter("password"));
 		
 		if (StringUtil.isNotEmpty(id)) {
-			TSUser users = systemService.getEntity(TSUser.class,id);
+			TSUser users = systemService.getById(TSUser.class,id);
 			if("admin".equals(users.getUserName()) && !"admin".equals(ResourceUtil.getSessionUser().getUserName())){
 				message = "超级管理员[admin]，只有admin本人可操作，其他人无权限!";
 				logger.info("["+IpUtil.getIpAddr(req)+"]"+message);
@@ -363,7 +363,7 @@ public class UserController extends BaseController {
 			users.setPassword(PasswordUtil.encrypt(users.getUserName(), password, PasswordUtil.getStaticSalt()));
 			users.setStatus(Globals.User_Normal);
 			users.setActivitiSync(users.getActivitiSync());
-			systemService.updateEntitie(users);	
+			systemService.update(users);
 			message = "用户: " + users.getUserName() + "密码重置成功";
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			logger.info("["+IpUtil.getIpAddr(req)+"][重置密码]"+message);
@@ -384,7 +384,7 @@ public class UserController extends BaseController {
 	public AjaxJson lock(String id, HttpServletRequest req) {
 		AjaxJson j = new AjaxJson();
 		String message = null;
-		TSUser user = systemService.getEntity(TSUser.class, id);
+		TSUser user = systemService.getById(TSUser.class, id);
 		if("admin".equals(user.getUserName())){
 			message = "超级管理员[admin]不可操作";
 			j.setMsg(message);
@@ -394,7 +394,7 @@ public class UserController extends BaseController {
 
 		user.setStatus(new Short(lockValue));
 		try{
-		userService.updateEntitie(user);
+		userService.update(user);
 		if("0".equals(lockValue)){
 			message = "用户：" + user.getUserName() + "锁定成功!";
 		}else if("1".equals(lockValue)){
@@ -450,7 +450,7 @@ public class UserController extends BaseController {
 		List<ComboBox> comboBoxs = new ArrayList<ComboBox>();
 		List<TSDepart> departs = new ArrayList();
 		if (StringUtil.isNotEmpty(id)) {
-			TSUser user = systemService.get(TSUser.class, id);
+			TSUser user = systemService.getById(TSUser.class, id);
 //			if (user.getTSDepart() != null) {
 //				TSDepart depart = systemService.get(TSDepart.class, user.getTSDepart().getId());
 //				departs.add(depart);
@@ -488,7 +488,7 @@ public class UserController extends BaseController {
 		//获取公司编码
 		String orgCode = null;
 		if (oConvertUtils.isNotEmpty(departid)) {
-			TSDepart tsdepart = this.systemService.get(TSDepart.class, departid);
+			TSDepart tsdepart = this.systemService.getById(TSDepart.class, departid);
 			orgCode = tsdepart.getOrgCode();
 		}
 		
@@ -607,12 +607,12 @@ public class UserController extends BaseController {
 			j.setMsg(message);
 			return j;
 		}
-		user = systemService.getEntity(TSUser.class, user.getId());
+		user = systemService.getById(TSUser.class, user.getId());
 //		List<TSRoleUser> roleUser = systemService.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
 		if (!user.getStatus().equals(Globals.User_ADMIN)) {
 
 			user.setDeleteFlag(Globals.Delete_Forbidden);
-			userService.updateEntitie(user);
+			userService.update(user);
 			message = "用户：" + user.getUserName() + "删除成功";
 			logger.info("["+IpUtil.getIpAddr(req)+"][逻辑删除用户]"+message);
 
@@ -656,7 +656,7 @@ public class UserController extends BaseController {
 			j.setMsg(message);
 			return j;
 		}
-		user = systemService.getEntity(TSUser.class, user.getId());
+		user = systemService.getById(TSUser.class, user.getId());
 
 		/*List<TSRoleUser> roleUser = systemService.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
 		if (!user.getStatus().equals(Globals.User_ADMIN)) {
@@ -757,7 +757,7 @@ public class UserController extends BaseController {
 		String roleid = oConvertUtils.getString(req.getParameter("roleid"));
 		String orgid=oConvertUtils.getString(req.getParameter("orgIds"));
 		if (StringUtil.isNotEmpty(user.getId())) {
-			TSUser users = systemService.getEntity(TSUser.class, user.getId());
+			TSUser users = systemService.getById(TSUser.class, user.getId());
 			users.setEmail(user.getEmail());
 			users.setOfficePhone(user.getOfficePhone());
 			users.setMobilePhone(user.getMobilePhone());
@@ -810,7 +810,7 @@ public class UserController extends BaseController {
             userOrgList.add(userOrg);
         }
         if (!userOrgList.isEmpty()) {
-            systemService.batchSave(userOrgList);
+            systemService.batchAdd(userOrgList);
         }
     }
 
@@ -819,10 +819,10 @@ public class UserController extends BaseController {
 		String[] roleids = roleidstr.split(",");
 		for (int i = 0; i < roleids.length; i++) {
 			TSRoleUser rUser = new TSRoleUser();
-			TSRole role = systemService.getEntity(TSRole.class, roleids[i]);
+			TSRole role = systemService.getById(TSRole.class, roleids[i]);
 			rUser.setTSRole(role);
 			rUser.setTSUser(user);
-			systemService.save(rUser);
+			systemService.add(rUser);
 
 		}
 	}
@@ -883,7 +883,7 @@ public class UserController extends BaseController {
         List<String> orgIdList = new ArrayList<String>();
         TSDepart tsDepart = new TSDepart();
 		if (StringUtil.isNotEmpty(user.getId())) {
-			user = systemService.getEntity(TSUser.class, user.getId());
+			user = systemService.getById(TSUser.class, user.getId());
 			
 			req.setAttribute("user", user);
 			idandname(req, user);
@@ -893,7 +893,7 @@ public class UserController extends BaseController {
 			//组织机构关联用户录入
 			String departid = oConvertUtils.getString(req.getParameter("departid"));
 			if(StringUtils.isNotEmpty(departid)){
-				TSDepart depart = systemService.getEntity(TSDepart.class,departid);
+				TSDepart depart = systemService.getById(TSDepart.class,departid);
 				if(depart!=null){
 					req.setAttribute("orgIds", depart.getId()+",");
 					req.setAttribute("departname", depart.getDepartname()+",");
@@ -902,7 +902,7 @@ public class UserController extends BaseController {
 			//角色管理关联用户录入
 			String roleId = oConvertUtils.getString(req.getParameter("roleId"));
 			if(StringUtils.isNotEmpty(roleId)){
-				TSRole tsRole = systemService.getEntity(TSRole.class,roleId);
+				TSRole tsRole = systemService.getById(TSRole.class,roleId);
 				if(tsRole!=null){
 					req.setAttribute("id", roleId);
 					req.setAttribute("roleName", tsRole.getRoleName());
@@ -929,13 +929,13 @@ public class UserController extends BaseController {
 	public ModelAndView addorupdateInterfaceUser(TSUser user, HttpServletRequest req) {
 
 		if (StringUtil.isNotEmpty(user.getId())) {
-			user = systemService.getEntity(TSUser.class, user.getId());
+			user = systemService.getById(TSUser.class, user.getId());
 			req.setAttribute("user", user);
 			interfaceroleidandname(req, user);
 		}else{
 			String roleId = req.getParameter("roleId");
 			if(StringUtils.isNotBlank(roleId)) {
-				InterroleEntity role = systemService.getEntity(InterroleEntity.class, roleId);
+				InterroleEntity role = systemService.getById(InterroleEntity.class, roleId);
 				req.setAttribute("roleId", roleId);
 				req.setAttribute("roleName", role.getRoleName());
 			}
@@ -975,7 +975,7 @@ public class UserController extends BaseController {
 		String roleid = oConvertUtils.getString(req.getParameter("roleid"));
 		String password = oConvertUtils.getString(req.getParameter("password"));
 		if (StringUtil.isNotEmpty(user.getId())) {
-			TSUser users = systemService.getEntity(TSUser.class, user.getId());
+			TSUser users = systemService.getById(TSUser.class, user.getId());
 			users.setEmail(user.getEmail());
 			users.setOfficePhone(user.getOfficePhone());
 			users.setMobilePhone(user.getMobilePhone());
@@ -1002,9 +1002,9 @@ public class UserController extends BaseController {
 			users.setPost(user.getPost());
 			users.setMemo(user.getMemo());
 			
-			systemService.updateEntitie(users);
+			systemService.update(users);
 			List<TSRoleUser> ru = systemService.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
-			systemService.deleteAllEntitie(ru);//TODO ?
+			systemService.deleteCollection(ru);//TODO ?
 			message = "用户: " + users.getUserName() + "更新成功";
 //			if (StringUtil.isNotEmpty(roleid)) {
 //				saveInterfaceRoleUser(users, roleid);
@@ -1021,7 +1021,7 @@ public class UserController extends BaseController {
 //				}
 				user.setStatus(Globals.User_Normal);
 				user.setDeleteFlag(Globals.Delete_Normal);
-				systemService.save(user);
+				systemService.add(user);
                 // todo zhanggm 保存多个组织机构
 //                saveUserOrgList(req, user);
 				message = "用户: " + user.getUserName() + "添加成功";
@@ -1041,10 +1041,10 @@ public class UserController extends BaseController {
 		String[] roleids = roleidstr.split(",");
 		for (int i = 0; i < roleids.length; i++) {
 			InterroleUserEntity rUser = new InterroleUserEntity();
-			InterroleEntity role = systemService.getEntity(InterroleEntity.class, roleids[i]);
+			InterroleEntity role = systemService.getById(InterroleEntity.class, roleids[i]);
 			rUser.setInterroleEntity(role);
 			rUser.setTSUser(user);
-			systemService.save(rUser);
+			systemService.add(rUser);
 		}
 	}
 
@@ -1065,7 +1065,7 @@ public class UserController extends BaseController {
         }
         request.setAttribute("orgList", orgList);
 
-        TSUser user = systemService.getEntity(TSUser.class, userId);
+        TSUser user = systemService.getById(TSUser.class, userId);
         request.setAttribute("user", user);
 
 		return new ModelAndView("system/user/userOrgSelect");
@@ -1278,7 +1278,7 @@ public class UserController extends BaseController {
 		String message = null;
 		UploadFile uploadFile = new UploadFile(req);
 		String id = uploadFile.get("id");
-		TSUser user = systemService.getEntity(TSUser.class, id);
+		TSUser user = systemService.getById(TSUser.class, id);
 		uploadFile.setRealPath("signatureFile");
 		uploadFile.setCusPath("signature");
 		uploadFile.setByteField("signature");
@@ -1508,7 +1508,7 @@ public class UserController extends BaseController {
 							systemService.saveOrUpdate(user);
 						}else{
 							tsUser.setDepartid(null);
-							systemService.save(tsUser);
+							systemService.add(tsUser);
 						}
 					}else{
 						String[] roles = roleCodes.split(",");
@@ -1547,7 +1547,7 @@ public class UserController extends BaseController {
 									TSRoleUser tsRoleUser = new TSRoleUser();
 									tsRoleUser.setTSUser(user);
 									tsRoleUser.setTSRole(roleList.get(0));
-									systemService.save(tsRoleUser);
+									systemService.add(tsRoleUser);
 								}
 
 								systemService.executeSql("delete from t_s_user_org where user_id = ?",id);
@@ -1557,20 +1557,20 @@ public class UserController extends BaseController {
 									TSUserOrg tsUserOrg = new TSUserOrg();
 									tsUserOrg.setTsDepart(departList.get(0));
 									tsUserOrg.setTsUser(user);
-									systemService.save(tsUserOrg);
+									systemService.add(tsUserOrg);
 								}
 							}else{
 								//不存在则保存
 								//TSUser user = users.get(0);
 								tsUser.setDepartid(null);
-								systemService.save(tsUser);
+								systemService.add(tsUser);
 								for(String roleCode:roles){
 									//根据角色编码得到roleid
 									List<TSRole> roleList = systemService.findByProperty(TSRole.class,"roleCode",roleCode);
 									TSRoleUser tsRoleUser = new TSRoleUser();
 									tsRoleUser.setTSUser(tsUser);
 									tsRoleUser.setTSRole(roleList.get(0));
-									systemService.save(tsRoleUser);
+									systemService.add(tsRoleUser);
 								}
 
 								for(String orgCode:depts){
@@ -1579,7 +1579,7 @@ public class UserController extends BaseController {
 									TSUserOrg tsUserOrg = new TSUserOrg();
 									tsUserOrg.setTsDepart(departList.get(0));
 									tsUserOrg.setTsUser(tsUser);
-									systemService.save(tsUserOrg);
+									systemService.add(tsUserOrg);
 								}
 							}
 							j.setMsg("文件导入成功！");
@@ -1626,14 +1626,14 @@ public class UserController extends BaseController {
         List<String> orgIdList = new ArrayList<String>();
         TSDepart tsDepart = new TSDepart();
 		if (StringUtil.isNotEmpty(user.getId())) {
-			user = systemService.getEntity(TSUser.class, user.getId());
+			user = systemService.getById(TSUser.class, user.getId());
 			
 			req.setAttribute("user", user);
 			idandname(req, user);
 			getOrgInfos(req, user);
 		}else{
 			String departid = oConvertUtils.getString(req.getParameter("departid"));
-			TSDepart org = systemService.getEntity(TSDepart.class,departid);
+			TSDepart org = systemService.getById(TSDepart.class,departid);
 			req.setAttribute("orgIds", departid);
 			req.setAttribute("departname", org.getDepartname());
 		}

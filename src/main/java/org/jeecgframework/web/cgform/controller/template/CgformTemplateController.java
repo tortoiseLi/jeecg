@@ -131,7 +131,7 @@ public class CgformTemplateController extends BaseController {
 	public AjaxJson doDel(CgformTemplateEntity cgformTemplate, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		cgformTemplate = systemService.getEntity(CgformTemplateEntity.class, cgformTemplate.getId());
+		cgformTemplate = systemService.getById(CgformTemplateEntity.class, cgformTemplate.getId());
 		message = "自定义模板删除成功";
 		try{
 			cgformTemplateService.delete(cgformTemplate);
@@ -168,7 +168,7 @@ public class CgformTemplateController extends BaseController {
 		message = "自定义模板删除成功";
 		try{
 			for(String id:ids.split(",")){
-				CgformTemplateEntity cgformTemplate = systemService.getEntity(CgformTemplateEntity.class, 
+				CgformTemplateEntity cgformTemplate = systemService.getById(CgformTemplateEntity.class,
 				id
 				);
 				cgformTemplateService.delete(cgformTemplate);
@@ -263,7 +263,7 @@ public class CgformTemplateController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "自定义模板更新成功";
-		CgformTemplateEntity t = cgformTemplateService.get(CgformTemplateEntity.class, cgformTemplate.getId());
+		CgformTemplateEntity t = cgformTemplateService.getById(CgformTemplateEntity.class, cgformTemplate.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(cgformTemplate, t);
 			String basePath=getUploadBasePath(request);
@@ -292,7 +292,7 @@ public class CgformTemplateController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(CgformTemplateEntity cgformTemplate, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgformTemplate.getId())) {
-			cgformTemplate = cgformTemplateService.getEntity(CgformTemplateEntity.class, cgformTemplate.getId());
+			cgformTemplate = cgformTemplateService.getById(CgformTemplateEntity.class, cgformTemplate.getId());
 			req.setAttribute("cgformTemplatePage", cgformTemplate);
 		}
 		return new ModelAndView("jeecg/cgform/template/cgformTemplate-add");
@@ -305,7 +305,7 @@ public class CgformTemplateController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(CgformTemplateEntity cgformTemplate, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgformTemplate.getId())) {
-			cgformTemplate = cgformTemplateService.getEntity(CgformTemplateEntity.class, cgformTemplate.getId());
+			cgformTemplate = cgformTemplateService.getById(CgformTemplateEntity.class, cgformTemplate.getId());
 			req.setAttribute("cgformTemplatePage", cgformTemplate);
 		}
 		return new ModelAndView("jeecg/cgform/template/cgformTemplate-update");
@@ -352,7 +352,7 @@ public class CgformTemplateController extends BaseController {
 	public boolean checkTemplate(String id,HttpServletRequest request){
 		boolean flag=false;
 		if(StringUtils.isNotBlank(id)) {
-			CgformTemplateEntity entity = cgformTemplateService.getEntity(CgformTemplateEntity.class, id);
+			CgformTemplateEntity entity = cgformTemplateService.getById(CgformTemplateEntity.class, id);
 			if (entity != null && entity.getTemplateCode() != null) {
 				File dirFile=new File(getUploadBasePath(request)+File.separator+entity.getTemplateCode());
 				if(dirFile.exists()&&dirFile.isDirectory()){
@@ -371,7 +371,7 @@ public class CgformTemplateController extends BaseController {
 	@RequestMapping(params = "downloadTemplate")
 	public void downloadTemplate(String id,HttpServletRequest request,HttpServletResponse response) {
 		if(StringUtils.isNotBlank(id)){
-			CgformTemplateEntity entity=cgformTemplateService.getEntity(CgformTemplateEntity.class,id);
+			CgformTemplateEntity entity=cgformTemplateService.getById(CgformTemplateEntity.class,id);
 			if(entity!=null&&entity.getTemplateCode()!=null){
 				File zipFile=zipFile(entity.getTemplateCode(),request);
 				if(zipFile!=null&&zipFile.exists()){

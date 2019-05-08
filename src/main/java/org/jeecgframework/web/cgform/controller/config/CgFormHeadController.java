@@ -174,7 +174,7 @@ public class CgFormHeadController extends BaseController {
 	public AjaxJson del(CgFormHeadEntity cgFormHead,
 			HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		cgFormHead = systemService.getEntity(CgFormHeadEntity.class,
+		cgFormHead = systemService.getById(CgFormHeadEntity.class,
 				cgFormHead.getId());
 		String message = "删除成功";
 		cgFormFieldService.deleteCgForm(cgFormHead);
@@ -196,7 +196,7 @@ public class CgFormHeadController extends BaseController {
 	public AjaxJson rem(CgFormHeadEntity cgFormHead,
 			HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		cgFormHead = systemService.getEntity(CgFormHeadEntity.class,
+		cgFormHead = systemService.getById(CgFormHeadEntity.class,
 				cgFormHead.getId());
 		String message = "移除成功";
 		cgFormFieldService.delete(cgFormHead);
@@ -218,13 +218,13 @@ public class CgFormHeadController extends BaseController {
 	public AjaxJson delField(CgFormFieldEntity cgFormField,
 			HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		cgFormField = systemService.getEntity(CgFormFieldEntity.class,
+		cgFormField = systemService.getById(CgFormFieldEntity.class,
 				cgFormField.getId());
 		String message = cgFormField.getFieldName()+"删除成功";
 
 		CgFormHeadEntity table = cgFormField.getTable();
 		table.setIsDbSynch("N");
-		this.cgFormFieldService.updateEntitie(table);
+		this.cgFormFieldService.update(table);
 
 		cgFormFieldService.delete(cgFormField);
 		systemService.addLog(message, Globals.Log_Type_DEL,
@@ -246,7 +246,7 @@ public class CgFormHeadController extends BaseController {
 			HttpServletRequest request) {
 		String message;
 		AjaxJson j = new AjaxJson();
-		cgFormHead = systemService.getEntity(CgFormHeadEntity.class,cgFormHead.getId());
+		cgFormHead = systemService.getById(CgFormHeadEntity.class,cgFormHead.getId());
 
 		logger.info("---同步数据库 ---doDbSynch-----> TableName:"+cgFormHead.getTableName()+" ---修改时间 :"+cgFormHead.getUpdateDate()+" ----创建时间:"+cgFormHead.getCreateDate() +"---请求IP ---+"+oConvertUtils.getIpAddrByRequest(request));
 		//安全控制，判断不在online管理中表单不允许操作
@@ -322,7 +322,7 @@ public class CgFormHeadController extends BaseController {
 		templetContext.clearCache();
 
 		AjaxJson j = new AjaxJson();
-		CgFormHeadEntity oldTable =cgFormFieldService.getEntity(CgFormHeadEntity.class, cgFormHead.getId());
+		CgFormHeadEntity oldTable =cgFormFieldService.getById(CgFormHeadEntity.class, cgFormHead.getId());
 		cgFormFieldService.removeSubTableStr4Main(oldTable);
 		//step.1 如果数据表已经创建,则不能更改主键策略(后续通过强制同步解决此问题)
 		/*if(cgFormHead.getId()!=null){
@@ -563,7 +563,7 @@ public class CgFormHeadController extends BaseController {
 					}
 				}
 				List<CgFormFieldEntity> colums = cgFormFieldService.findByProperty(CgFormFieldEntity.class, "table.id", cgform.getId());
-				cgFormFieldService.deleteAllEntitie(colums);
+				cgFormFieldService.deleteCollection(colums);
 				cgform.setColumns(fieldList);
 				cgFormFieldService.saveTable(cgform);
 			}
@@ -624,7 +624,7 @@ public class CgFormHeadController extends BaseController {
 	public ModelAndView addorupdate(CgFormHeadEntity cgFormHead,
 			HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgFormHead.getId())) {
-			cgFormHead = cgFormFieldService.getEntity(
+			cgFormHead = cgFormFieldService.getById(
 					CgFormHeadEntity.class, cgFormHead.getId());
 			//停用jform这个前缀
 			//cgFormHead.setTableName(cgFormHead.getTableName().replace(CgAutoListConstant.jform_, ""));
@@ -801,7 +801,7 @@ public class CgFormHeadController extends BaseController {
 	 */
 	@RequestMapping(params = "sqlPlugin")
 	public ModelAndView sqlPlugin(String id,HttpServletRequest request) {
-		CgFormHeadEntity bean = cgFormFieldService.getEntity(
+		CgFormHeadEntity bean = cgFormFieldService.getById(
 				CgFormHeadEntity.class, id);
 		request.setAttribute("bean", bean);
 		return new ModelAndView("jeecg/cgform/config/cgFormSqlPlugin");
@@ -818,7 +818,7 @@ public class CgFormHeadController extends BaseController {
 	public AjaxJson sqlPluginSave(String id,String sql_plug_in,
 			HttpServletRequest request) {
 		String message = "";
-		CgFormHeadEntity bean = cgFormFieldService.getEntity(
+		CgFormHeadEntity bean = cgFormFieldService.getById(
 				CgFormHeadEntity.class, id);
 		//bean.setSqlPlugIn(sql_plug_in);
 		cgFormFieldService.updateTable(bean,null,false);
@@ -835,7 +835,7 @@ public class CgFormHeadController extends BaseController {
 	 */
 	@RequestMapping(params = "jsPlugin")
 	public ModelAndView jsPlugin(String id,HttpServletRequest request) {
-		CgFormHeadEntity bean = cgFormFieldService.getEntity(
+		CgFormHeadEntity bean = cgFormFieldService.getById(
 				CgFormHeadEntity.class, id);
 		request.setAttribute("bean", bean);
 		return new ModelAndView("jeecg/cgform/config/cgFormJsPlugin");
@@ -852,7 +852,7 @@ public class CgFormHeadController extends BaseController {
 	public AjaxJson jsPluginSave(String id,String js_plug_in,
 			HttpServletRequest request) {
 		String message = "";
-		CgFormHeadEntity bean = cgFormFieldService.getEntity(
+		CgFormHeadEntity bean = cgFormFieldService.getById(
 				CgFormHeadEntity.class, id);
 		//bean.setJsPlugIn(js_plug_in);停用jsPlugIn这个字段
 		cgFormFieldService.updateTable(bean,null,false);
@@ -878,7 +878,7 @@ public class CgFormHeadController extends BaseController {
 			params.setHeadRows(1);
 			params.setNeedSave(false);
 			try {
-				CgFormHeadEntity cgFormHead = systemService.getEntity(CgFormHeadEntity.class,headId);
+				CgFormHeadEntity cgFormHead = systemService.getById(CgFormHeadEntity.class,headId);
 				if(cgFormHead==null){
 					j.setMsg("表数据异常！");
 					return j;
@@ -946,7 +946,7 @@ public class CgFormHeadController extends BaseController {
 					list.add(fieldEntity);
 					saveList.add(fieldEntity);
 				}
-				systemService.batchSave(saveList);
+				systemService.batchAdd(saveList);
 				if(StringUtil.isEmpty(sb.toString())){
 					j.setMsg("文件导入成功！");
 				}else{
@@ -1003,7 +1003,7 @@ public class CgFormHeadController extends BaseController {
 			if(versions.get(0)!=null){
 				int version = versions.get(0); 
 				CgFormHeadEntity cgFormHead = new CgFormHeadEntity();
-				CgFormHeadEntity physicsTable = systemService.get(CgFormHeadEntity.class,id);
+				CgFormHeadEntity physicsTable = systemService.getById(CgFormHeadEntity.class,id);
 				cgFormHead.setTableName(physicsTable.getTableName()+CgAutoListConstant.ONLINE_TABLE_SPLIT_STR+(version+1+""));
 				cgFormHead.setIsTree(physicsTable.getIsTree());
 				cgFormHead.setContent(physicsTable.getContent());
@@ -1071,7 +1071,7 @@ public class CgFormHeadController extends BaseController {
 					return j;
 			}else{
 				CgFormHeadEntity cgFormHead = new CgFormHeadEntity();
-				CgFormHeadEntity physicsTable = systemService.get(CgFormHeadEntity.class,id);
+				CgFormHeadEntity physicsTable = systemService.getById(CgFormHeadEntity.class,id);
 				cgFormHead.setTableName(physicsTable.getTableName()+CgAutoListConstant.ONLINE_TABLE_SPLIT_STR+"0");
 				cgFormHead.setIsTree(physicsTable.getIsTree());
 				cgFormHead.setContent(physicsTable.getContent());

@@ -47,7 +47,7 @@ public class HasPermissionTag extends TagSupport{
 				for (String operationCodeId : operationCodeIds) {
 					if (oConvertUtils.isEmpty(operationCodeId))
 						break;
-					TSOperation operation = systemService.getEntity(TSOperation.class, operationCodeId);
+					TSOperation operation = systemService.getById(TSOperation.class, operationCodeId);
 					if (operation!=null && operation.getOperationcode().equals(code)){
 						return true;
 					}

@@ -34,7 +34,7 @@ public class CategoryServiceImpl extends CommonServiceImpl implements
 			category.setCode(YouBianCodeUtil.getNextYouBianCode(localMaxCode));
 		}
 
-		this.save(category);
+		this.add(category);
 	}
 	
 	private synchronized String getMaxLocalCode(String parentCode){

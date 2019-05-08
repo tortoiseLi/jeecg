@@ -137,7 +137,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 	public AjaxJson doDel(JformOrderCustomer2Entity jformOrderCustomer2, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		jformOrderCustomer2 = systemService.getEntity(JformOrderCustomer2Entity.class, jformOrderCustomer2.getId());
+		jformOrderCustomer2 = systemService.getById(JformOrderCustomer2Entity.class, jformOrderCustomer2.getId());
 		message = "订单客户信息删除成功";
 		try{
 			if(jformOrderCustomer2!=null){
@@ -166,7 +166,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 		message = "订单客户信息删除成功";
 		try{
 			for(String id:ids.split(",")){
-				JformOrderCustomer2Entity jformOrderCustomer2 = systemService.getEntity(JformOrderCustomer2Entity.class, 
+				JformOrderCustomer2Entity jformOrderCustomer2 = systemService.getById(JformOrderCustomer2Entity.class,
 				id
 				);
 				if(jformOrderCustomer2!=null){
@@ -197,7 +197,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 		AjaxJson j = new AjaxJson();
 		message = "订单客户信息添加成功";
 		try{
-			jformOrderMain2Service.save(jformOrderCustomer2);
+			jformOrderMain2Service.add(jformOrderCustomer2);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -220,7 +220,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "订单客户信息更新成功";
-		JformOrderCustomer2Entity t = jformOrderMain2Service.get(JformOrderCustomer2Entity.class, jformOrderCustomer2.getId());
+		JformOrderCustomer2Entity t = jformOrderMain2Service.getById(JformOrderCustomer2Entity.class, jformOrderCustomer2.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(jformOrderCustomer2, t);
 			jformOrderMain2Service.saveOrUpdate(t);
@@ -243,7 +243,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(JformOrderCustomer2Entity jformOrderCustomer2, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jformOrderCustomer2.getId())) {
-			jformOrderCustomer2 = jformOrderMain2Service.getEntity(JformOrderCustomer2Entity.class, jformOrderCustomer2.getId());
+			jformOrderCustomer2 = jformOrderMain2Service.getById(JformOrderCustomer2Entity.class, jformOrderCustomer2.getId());
 			req.setAttribute("jformOrderCustomer2Page", jformOrderCustomer2);
 		}
 		req.setAttribute("mainId", req.getParameter("mainId"));
@@ -257,7 +257,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(JformOrderCustomer2Entity jformOrderCustomer2, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jformOrderCustomer2.getId())) {
-			jformOrderCustomer2 = jformOrderMain2Service.getEntity(JformOrderCustomer2Entity.class, jformOrderCustomer2.getId());
+			jformOrderCustomer2 = jformOrderMain2Service.getById(JformOrderCustomer2Entity.class, jformOrderCustomer2.getId());
 			req.setAttribute("jformOrderCustomer2Page", jformOrderCustomer2);
 		}
 		return new ModelAndView("com/jeecg/demo/jformOrderMain2/jformOrderCustomer2/update");
@@ -327,7 +327,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 			try {
 				List<JformOrderCustomer2Entity> listJformOrderCustomer2Entitys = ExcelImportUtil.importExcel(file.getInputStream(),JformOrderCustomer2Entity.class,params);
 				for (JformOrderCustomer2Entity jformOrderCustomer2 : listJformOrderCustomer2Entitys) {
-					jformOrderMain2Service.save(jformOrderCustomer2);
+					jformOrderMain2Service.add(jformOrderCustomer2);
 				}
 				j.setMsg("文件导入成功！");
 			} catch (Exception e) {
@@ -361,7 +361,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 		if(CollectionUtils.isNotEmpty(lists)){
 			for(JformOrderCustomer2Entity temp:lists){
 				if (StringUtil.isNotEmpty(temp.getId())) {
-					JformOrderCustomer2Entity t =this.systemService.get(JformOrderCustomer2Entity.class, temp.getId());
+					JformOrderCustomer2Entity t =this.systemService.getById(JformOrderCustomer2Entity.class, temp.getId());
 					try {
 						MyBeanUtils.copyBeanNotNull2Bean(temp, t);
 						systemService.saveOrUpdate(t);
@@ -373,7 +373,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 					try {
 						//temp.setDelFlag(0);若有则需要加
 						temp.setFkId(mainId);
-						systemService.save(temp);
+						systemService.add(temp);
 						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -396,7 +396,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 	@ResponseBody
 	@ApiOperation(value="根据ID获取订单客户信息信息",notes="根据ID获取订单客户信息信息",httpMethod="GET",produces="application/json")
 	public ResponseMessage<?> get(@ApiParam(required=true,name="id",value="ID")@PathVariable("id") String id) {
-		JformOrderCustomer2Entity task = jformOrderMain2Service.get(JformOrderCustomer2Entity.class, id);
+		JformOrderCustomer2Entity task = jformOrderMain2Service.getById(JformOrderCustomer2Entity.class, id);
 		if (task == null) {
 			return Result.error("根据ID获取订单客户信息信息为空");
 		}
@@ -415,7 +415,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 
 		//保存
 		try{
-			jformOrderMain2Service.save(jformOrderCustomer2);
+			jformOrderMain2Service.add(jformOrderCustomer2);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Result.error("订单客户信息信息保存失败");
@@ -455,7 +455,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 			return Result.error("ID不能为空");
 		}
 		try {
-			jformOrderMain2Service.deleteEntityById(JformOrderCustomer2Entity.class, id);
+			jformOrderMain2Service.deleteById(JformOrderCustomer2Entity.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Result.error("订单客户信息删除失败");

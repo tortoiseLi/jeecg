@@ -34,7 +34,7 @@ public class JeecgDemoServiceImpl extends CommonServiceImpl implements JeecgDemo
  	}
  	
  	public Serializable save(JeecgDemoEntity entity) throws Exception{
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		return t;
  	}
  	

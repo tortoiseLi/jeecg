@@ -284,7 +284,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
      */
     public void saveLoginUserInfo(HttpServletRequest req, TSUser user, String orgId) {
     	String message = null;
-        TSDepart currentDepart = this.get(TSDepart.class, orgId);
+        TSDepart currentDepart = this.getById(TSDepart.class, orgId);
         user.setCurrentDepart(currentDepart);
 
         HttpSession session = ContextHolderUtils.getSession();

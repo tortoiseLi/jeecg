@@ -145,7 +145,7 @@ public class JfromOrderController extends BaseController {
 	@ResponseBody
 	public AjaxJson doDel(JfromOrderEntity jfromOrder, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		jfromOrder = systemService.getEntity(JfromOrderEntity.class, jfromOrder.getId());
+		jfromOrder = systemService.getById(JfromOrderEntity.class, jfromOrder.getId());
 		String message = "订单列表删除成功";
 		try{
 			jfromOrderService.delMain(jfromOrder);
@@ -171,7 +171,7 @@ public class JfromOrderController extends BaseController {
 		String message = "订单列表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				JfromOrderEntity jfromOrder = systemService.getEntity(JfromOrderEntity.class,
+				JfromOrderEntity jfromOrder = systemService.getById(JfromOrderEntity.class,
 				id
 				);
 				jfromOrderService.delMain(jfromOrder);
@@ -241,7 +241,7 @@ public class JfromOrderController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(JfromOrderEntity jfromOrder, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jfromOrder.getId())) {
-			jfromOrder = jfromOrderService.getEntity(JfromOrderEntity.class, jfromOrder.getId());
+			jfromOrder = jfromOrderService.getById(JfromOrderEntity.class, jfromOrder.getId());
 			req.setAttribute("jfromOrderPage", jfromOrder);
 		}
 		return new ModelAndView("com/jeecg/demo/jfromOrder-add");
@@ -255,7 +255,7 @@ public class JfromOrderController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(JfromOrderEntity jfromOrder, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jfromOrder.getId())) {
-			jfromOrder = jfromOrderService.getEntity(JfromOrderEntity.class, jfromOrder.getId());
+			jfromOrder = jfromOrderService.getById(JfromOrderEntity.class, jfromOrder.getId());
 			req.setAttribute("jfromOrderPage", jfromOrder);
 		}
 		return new ModelAndView("com/jeecg/demo/jfromOrder-update");
@@ -430,7 +430,7 @@ public class JfromOrderController extends BaseController {
 	@ResponseBody
 	//@ApiOperation(value="根据ID获取订单列表信息",notes="根据ID获取订单列表信息",httpMethod="GET",produces="application/json")
 	public ResponseMessage<?> get(@ApiParam(required=true,name="id",value="ID")@PathVariable("id") String id) {
-		JfromOrderEntity task = jfromOrderService.get(JfromOrderEntity.class, id);
+		JfromOrderEntity task = jfromOrderService.getById(JfromOrderEntity.class, id);
 		if (task == null) {
 			return Result.error("根据ID获取订单列表信息为空");
 		}
@@ -508,7 +508,7 @@ public class JfromOrderController extends BaseController {
 			return Result.error("ID不能为空");
 		}
 		try {
-			JfromOrderEntity jfromOrder = jfromOrderService.get(JfromOrderEntity.class, id);
+			JfromOrderEntity jfromOrder = jfromOrderService.getById(JfromOrderEntity.class, id);
 			jfromOrderService.delMain(jfromOrder);
 		} catch (Exception e) {
 			e.printStackTrace();

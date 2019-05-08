@@ -88,7 +88,7 @@ public class TimeTaskController extends BaseController {
 	public AjaxJson del(TSTimeTaskEntity timeTask, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		timeTask = systemService.getEntity(TSTimeTaskEntity.class, timeTask.getId());
+		timeTask = systemService.getById(TSTimeTaskEntity.class, timeTask.getId());
 		if("1".equals(timeTask.getIsStart())){
 			message = "任务运行中不能删除，请先停止任务";
 		}else{
@@ -122,7 +122,7 @@ public class TimeTaskController extends BaseController {
 			return j;
 		}
 		if (StringUtil.isNotEmpty(timeTask.getId())) {
-			TSTimeTaskEntity t = timeTaskService.get(TSTimeTaskEntity.class, timeTask.getId());
+			TSTimeTaskEntity t = timeTaskService.getById(TSTimeTaskEntity.class, timeTask.getId());
 			if ("1".equals(t.getIsStart())) {
 				message = "任务运行中不可编辑，请先停止任务";
 			}else{
@@ -142,7 +142,7 @@ public class TimeTaskController extends BaseController {
 			
 		} else {
 			message = "定时任务管理添加成功";
-			timeTaskService.save(timeTask);
+			timeTaskService.add(timeTask);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 		j.setMsg(message);
@@ -157,7 +157,7 @@ public class TimeTaskController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(TSTimeTaskEntity timeTask, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(timeTask.getId())) {
-			timeTask = timeTaskService.getEntity(TSTimeTaskEntity.class, timeTask.getId());
+			timeTask = timeTaskService.getById(TSTimeTaskEntity.class, timeTask.getId());
 			req.setAttribute("timeTaskPage", timeTask);
 		}
 		return new ModelAndView("system/timetask/timeTask");
@@ -184,7 +184,7 @@ public class TimeTaskController extends BaseController {
 		
 		AjaxJson j = new AjaxJson();
 		boolean isStart = timeTask.getIsStart().equals("1");
-		timeTask = timeTaskService.get(TSTimeTaskEntity.class, timeTask.getId());		
+		timeTask = timeTaskService.getById(TSTimeTaskEntity.class, timeTask.getId());
 		boolean isSuccess = false;
 		
 		if ("0".equals(timeTask.getIsEffect())) {
@@ -231,7 +231,7 @@ public class TimeTaskController extends BaseController {
 		
 		JSONObject json = new JSONObject();
 		boolean isStart = timeTask.getIsStart().equals("1");
-		timeTask = timeTaskService.get(TSTimeTaskEntity.class, timeTask.getId());		
+		timeTask = timeTaskService.getById(TSTimeTaskEntity.class, timeTask.getId());
 		boolean isSuccess = true;
 		
 		if ("0".equals(timeTask.getIsEffect())) {

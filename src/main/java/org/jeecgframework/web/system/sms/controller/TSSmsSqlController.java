@@ -93,7 +93,7 @@ public class TSSmsSqlController extends BaseController {
 	public AjaxJson doDel(TSSmsSqlEntity tSSmsSql, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tSSmsSql = systemService.getEntity(TSSmsSqlEntity.class, tSSmsSql.getId());
+		tSSmsSql = systemService.getById(TSSmsSqlEntity.class, tSSmsSql.getId());
 		message = "业务SQL表删除成功";
 		try{
 			systemService.delete(tSSmsSql);
@@ -120,7 +120,7 @@ public class TSSmsSqlController extends BaseController {
 		message = "业务SQL表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSSmsSqlEntity tSSmsSql = systemService.getEntity(TSSmsSqlEntity.class, 
+				TSSmsSqlEntity tSSmsSql = systemService.getById(TSSmsSqlEntity.class,
 				id
 				);
 				systemService.delete(tSSmsSql);
@@ -149,7 +149,7 @@ public class TSSmsSqlController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		message = "业务SQL表添加成功";
 		try{
-			tSSmsSqlService.save(tSSmsSql);
+			tSSmsSqlService.add(tSSmsSql);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -172,7 +172,7 @@ public class TSSmsSqlController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "业务SQL表更新成功";
-		TSSmsSqlEntity t = systemService.get(TSSmsSqlEntity.class, tSSmsSql.getId());
+		TSSmsSqlEntity t = systemService.getById(TSSmsSqlEntity.class, tSSmsSql.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSSmsSql, t);
 			systemService.saveOrUpdate(t);
@@ -195,7 +195,7 @@ public class TSSmsSqlController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(TSSmsSqlEntity tSSmsSql, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSmsSql.getId())) {
-			tSSmsSql = systemService.getEntity(TSSmsSqlEntity.class, tSSmsSql.getId());
+			tSSmsSql = systemService.getById(TSSmsSqlEntity.class, tSSmsSql.getId());
 			req.setAttribute("tSSmsSqlPage", tSSmsSql);
 		}
 		return new ModelAndView("system/sms/tSSmsSql-add");
@@ -208,7 +208,7 @@ public class TSSmsSqlController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(TSSmsSqlEntity tSSmsSql, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSmsSql.getId())) {
-			tSSmsSql = systemService.getEntity(TSSmsSqlEntity.class, tSSmsSql.getId());
+			tSSmsSql = systemService.getById(TSSmsSqlEntity.class, tSSmsSql.getId());
 			req.setAttribute("tSSmsSqlPage", tSSmsSql);
 		}
 		return new ModelAndView("system/sms/tSSmsSql-update");

@@ -180,7 +180,7 @@ public class JeecgListDemoController extends BaseController {
 	public AjaxJson vueBootstrapTableGet(String id,HttpServletRequest request) {
 		AjaxJson json=new AjaxJson();
 		if(org.apache.commons.lang.StringUtils.isNotBlank(id)) {
-			JeecgDemoEntity t = jeecgDemoService.get(JeecgDemoEntity.class, id);
+			JeecgDemoEntity t = jeecgDemoService.getById(JeecgDemoEntity.class, id);
 			json.setObj(t);
 		}
 		json.setMsg("查询成功！");
@@ -692,7 +692,7 @@ public class JeecgListDemoController extends BaseController {
 		logger.info("----审核-----");
 		String id=request.getParameter("id");
 		if (StringUtil.isNotEmpty(id)) {
-			JeecgDemoEntity jeecgDemo = jeecgDemoService.getEntity(JeecgDemoEntity.class, id);
+			JeecgDemoEntity jeecgDemo = jeecgDemoService.getById(JeecgDemoEntity.class, id);
 			request.setAttribute("jeecgDemoPage", jeecgDemo);
 		}
 		return new ModelAndView("com/jeecg/demo/jeecgDemo-check");
@@ -718,11 +718,11 @@ public class JeecgListDemoController extends BaseController {
 		logger.info("-------审核意见:"+content);//demo简单作打印,实际项目可酌情处理
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		JeecgDemoEntity jeecgDemo = systemService.getEntity(JeecgDemoEntity.class, id);
+		JeecgDemoEntity jeecgDemo = systemService.getById(JeecgDemoEntity.class, id);
 		message = "审核成功";
 		try{
 			jeecgDemo.setStatus(status);
-			this.jeecgDemoService.updateEntitie(jeecgDemo);
+			this.jeecgDemoService.update(jeecgDemo);
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -751,7 +751,7 @@ public class JeecgListDemoController extends BaseController {
 		req.setAttribute("departList", departList);
 
 		if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
-			jeecgDemo = jeecgDemoService.getEntity(JeecgDemoEntity.class, jeecgDemo.getId());
+			jeecgDemo = jeecgDemoService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 			req.setAttribute("jgDemo", jeecgDemo);
 			if ("0".equals(jeecgDemo.getSex()))
 				req.setAttribute("sex", "男");
@@ -771,7 +771,7 @@ public class JeecgListDemoController extends BaseController {
 	public AjaxJson doDel(JeecgDemoEntity jeecgDemo, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		jeecgDemo = systemService.getEntity(JeecgDemoEntity.class, jeecgDemo.getId());
+		jeecgDemo = systemService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 		message = "删除成功";
 		try{
 			jeecgDemoService.delete(jeecgDemo);
@@ -798,7 +798,7 @@ public class JeecgListDemoController extends BaseController {
 		message = "删除成功";
 		try{
 			for(String id:ids.split(",")){
-				JeecgDemoEntity jeecgDemo = systemService.getEntity(JeecgDemoEntity.class, 
+				JeecgDemoEntity jeecgDemo = systemService.getById(JeecgDemoEntity.class,
 				id
 				);
 				jeecgDemoService.delete(jeecgDemo);
@@ -850,7 +850,7 @@ public class JeecgListDemoController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "更新成功";
-		JeecgDemoEntity t = jeecgDemoService.get(JeecgDemoEntity.class, jeecgDemo.getId());
+		JeecgDemoEntity t = jeecgDemoService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(jeecgDemo, t);
 			jeecgDemoService.saveOrUpdate(t);
@@ -873,7 +873,7 @@ public class JeecgListDemoController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(JeecgDemoEntity jeecgDemo, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
-			jeecgDemo = jeecgDemoService.getEntity(JeecgDemoEntity.class, jeecgDemo.getId());
+			jeecgDemo = jeecgDemoService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 			req.setAttribute("jeecgDemoPage", jeecgDemo);
 		}
 		return new ModelAndView("com/jeecg/demo/jeecgDemo-add");
@@ -886,7 +886,7 @@ public class JeecgListDemoController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(JeecgDemoEntity jeecgDemo, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
-			jeecgDemo = jeecgDemoService.getEntity(JeecgDemoEntity.class, jeecgDemo.getId());
+			jeecgDemo = jeecgDemoService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 			req.setAttribute("jeecgDemoPage", jeecgDemo);
 		}
 		return new ModelAndView("com/jeecg/demo/jeecgDemo-update");
@@ -993,7 +993,7 @@ public class JeecgListDemoController extends BaseController {
 		if(CollectionUtils.isNotEmpty(demos)){
 			for(JeecgDemoEntity jeecgDemo:demos){
 				if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
-					JeecgDemoEntity t =jeecgDemoService.get(JeecgDemoEntity.class, jeecgDemo.getId());
+					JeecgDemoEntity t =jeecgDemoService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 					try {
 						message = "JeecgDemo例子: " + jeecgDemo.getName() + "被更新成功";
 						MyBeanUtils.copyBeanNotNull2Bean(jeecgDemo, t);
@@ -1174,7 +1174,7 @@ public class JeecgListDemoController extends BaseController {
 		if(interfaceRuleDto==null){
 			return Result.error("您没有该接口的权限！");
 		}
-		JeecgDemoEntity task = this.jeecgDemoService.get(JeecgDemoEntity.class, id);
+		JeecgDemoEntity task = this.jeecgDemoService.getById(JeecgDemoEntity.class, id);
 		if (task == null) {
 			return Result.error("根据ID获取jeecgDemo信息为空");
 		}
@@ -1249,7 +1249,7 @@ public class JeecgListDemoController extends BaseController {
 			return Result.error("ID不能为空");
 		}
 		try {
-			this.jeecgDemoService.deleteEntityById(JeecgDemoEntity.class, id);
+			this.jeecgDemoService.deleteById(JeecgDemoEntity.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Result.error("jeecgDemo删除失败");
@@ -1276,7 +1276,7 @@ public class JeecgListDemoController extends BaseController {
 	@RequestMapping(params = "goBootStrapTableUpdate")
 	public ModelAndView goBootStrapTableUpdate(JeecgDemoEntity jeecgDemo, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
-			jeecgDemo = jeecgDemoService.getEntity(JeecgDemoEntity.class, jeecgDemo.getId());
+			jeecgDemo = jeecgDemoService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 			req.setAttribute("jeecgDemoPage", jeecgDemo);
 		}
 		return new ModelAndView("com/jeecg/demo/jeecgDemo-bootstrap-update");
@@ -1290,7 +1290,7 @@ public class JeecgListDemoController extends BaseController {
 	@RequestMapping(params = "goBootStrapTableAdd")
 	public ModelAndView goBootStrapTableAdd(JeecgDemoEntity jeecgDemo, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
-			jeecgDemo = jeecgDemoService.getEntity(JeecgDemoEntity.class, jeecgDemo.getId());
+			jeecgDemo = jeecgDemoService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 			req.setAttribute("jeecgDemoPage", jeecgDemo);
 		}
 		return new ModelAndView("com/jeecg/demo/jeecgDemo-bootstrap-add");
@@ -1313,7 +1313,7 @@ public class JeecgListDemoController extends BaseController {
 		@RequestMapping(params = "goNatureAceTableUpdate")
 		public ModelAndView goNatureAceTableUpdate(JeecgDemoEntity jeecgDemo, HttpServletRequest req) {
 			if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
-				jeecgDemo = jeecgDemoService.getEntity(JeecgDemoEntity.class, jeecgDemo.getId());
+				jeecgDemo = jeecgDemoService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 				req.setAttribute("jeecgDemoPage", jeecgDemo);
 			}
 			return new ModelAndView("com/jeecg/demo/jeecgDemo-nature-ace-update");
@@ -1326,7 +1326,7 @@ public class JeecgListDemoController extends BaseController {
 		@RequestMapping(params = "goNatureAceTableAdd")
 		public ModelAndView goNatureAceTableAdd(JeecgDemoEntity jeecgDemo, HttpServletRequest req) {
 			if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
-				jeecgDemo = jeecgDemoService.getEntity(JeecgDemoEntity.class, jeecgDemo.getId());
+				jeecgDemo = jeecgDemoService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 				req.setAttribute("jeecgDemoPage", jeecgDemo);
 			}
 			return new ModelAndView("com/jeecg/demo/jeecgDemo-nature-ace-add");
@@ -1360,7 +1360,7 @@ public class JeecgListDemoController extends BaseController {
 		@RequestMapping(params = "goBootStrapTableUpdate2")
 		public ModelAndView goBootStrapTableUpdate2(JeecgDemoEntity jeecgDemo, HttpServletRequest req) {
 			if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
-				jeecgDemo = jeecgDemoService.getEntity(JeecgDemoEntity.class, jeecgDemo.getId());
+				jeecgDemo = jeecgDemoService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 				req.setAttribute("jeecgDemoPage", jeecgDemo);
 			}
 			return new ModelAndView("com/jeecg/demo/jeecgDemo-bootstrap-update2");
@@ -1374,7 +1374,7 @@ public class JeecgListDemoController extends BaseController {
 		@RequestMapping(params = "goBootStrapTableAdd2")
 		public ModelAndView goBootStrapTableAdd2(JeecgDemoEntity jeecgDemo, HttpServletRequest req) {
 			if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
-				jeecgDemo = jeecgDemoService.getEntity(JeecgDemoEntity.class, jeecgDemo.getId());
+				jeecgDemo = jeecgDemoService.getById(JeecgDemoEntity.class, jeecgDemo.getId());
 				req.setAttribute("jeecgDemoPage", jeecgDemo);
 			}
 			return new ModelAndView("com/jeecg/demo/jeecgDemo-bootstrap-add2");

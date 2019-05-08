@@ -82,7 +82,7 @@ public class MutiLangController extends BaseController {
 	public AjaxJson del(MutiLangEntity mutiLang, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		mutiLang = systemService.getEntity(MutiLangEntity.class, mutiLang.getId());
+		mutiLang = systemService.getById(MutiLangEntity.class, mutiLang.getId());
 		message = MutiLangUtil.paramDelSuccess("common.language");
 		systemService.delete(mutiLang);
 		mutiLangService.initAllMutiLang();
@@ -104,7 +104,7 @@ public class MutiLangController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(mutiLang.getId())) {
 			message = MutiLangUtil.paramUpdSuccess("common.language");
-			MutiLangEntity t = systemService.get(MutiLangEntity.class, mutiLang.getId());
+			MutiLangEntity t = systemService.getById(MutiLangEntity.class, mutiLang.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(mutiLang, t);
 				systemService.saveOrUpdate(t);
@@ -123,7 +123,7 @@ public class MutiLangController extends BaseController {
 
 			if(StringUtil.isEmpty(message))
 			{
-				systemService.save(mutiLang);
+				systemService.add(mutiLang);
 				message = MutiLangUtil.paramAddSuccess("common.language");
 				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 			}
@@ -143,7 +143,7 @@ public class MutiLangController extends BaseController {
 	public ModelAndView addorupdate(MutiLangEntity mutiLang,
 			HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(mutiLang.getId())) {
-			mutiLang = systemService.getEntity(MutiLangEntity.class, mutiLang.getId());
+			mutiLang = systemService.getById(MutiLangEntity.class, mutiLang.getId());
 			req.setAttribute("mutiLangPage", mutiLang);
 			mutiLangService.putMutiLang(mutiLang);
 		}

@@ -119,7 +119,7 @@ public class DynamicTask {
 
 			task.setIsEffect("1");
 
-			timeTaskService.updateEntitie(task);
+			timeTaskService.update(task);
 			systemService.addLog((start?"开启任务":"停止任务")+task.getTaskId(), Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 			logger.info((start?"开启任务":"停止任务")+"-------TaskId:"+task.getTaskId()+"-------Describe:"+task.getTaskDescribe()+"-----ClassName:"+task.getClassName() );
 		}
@@ -134,7 +134,7 @@ public class DynamicTask {
 	public boolean updateCronExpression(TSTimeTaskEntity task) {
 		try {
 			String newExpression = task.getCronExpression();
-			task = timeTaskService.get(TSTimeTaskEntity.class, task.getId());
+			task = timeTaskService.getById(TSTimeTaskEntity.class, task.getId());
 			
 			//任务运行中
 			if("1".equals(task.getIsStart())){

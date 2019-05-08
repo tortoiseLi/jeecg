@@ -118,7 +118,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 		message = "通知公告角色授权删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSNoticeAuthorityRole noticeAuthorityRole = systemService.getEntity(TSNoticeAuthorityRole.class, 
+				TSNoticeAuthorityRole noticeAuthorityRole = systemService.getById(TSNoticeAuthorityRole.class,
 				id
 				);
 				noticeAuthorityRoleService.delete(noticeAuthorityRole);
@@ -170,7 +170,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "通知公告角色授权更新成功";
-		TSNoticeAuthorityRole t = noticeAuthorityRoleService.get(TSNoticeAuthorityRole.class, noticeAuthorityRole.getId());
+		TSNoticeAuthorityRole t = noticeAuthorityRoleService.getById(TSNoticeAuthorityRole.class, noticeAuthorityRole.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(noticeAuthorityRole, t);
 			noticeAuthorityRoleService.saveOrUpdate(t);
@@ -193,7 +193,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(TSNoticeAuthorityRole noticeAuthorityRole, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(noticeAuthorityRole.getId())) {
-			noticeAuthorityRole = noticeAuthorityRoleService.getEntity(TSNoticeAuthorityRole.class, noticeAuthorityRole.getId());
+			noticeAuthorityRole = noticeAuthorityRoleService.getById(TSNoticeAuthorityRole.class, noticeAuthorityRole.getId());
 			req.setAttribute("noticeAuthorityRolePage", noticeAuthorityRole);
 		}
 		return new ModelAndView("system/user/noticeAuthorityRole-add");
@@ -206,7 +206,7 @@ public class NoticeAuthorityRoleController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(TSNoticeAuthorityRole noticeAuthorityRole, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(noticeAuthorityRole.getId())) {
-			noticeAuthorityRole = noticeAuthorityRoleService.getEntity(TSNoticeAuthorityRole.class, noticeAuthorityRole.getId());
+			noticeAuthorityRole = noticeAuthorityRoleService.getById(TSNoticeAuthorityRole.class, noticeAuthorityRole.getId());
 			req.setAttribute("noticeAuthorityRolePage", noticeAuthorityRole);
 		}
 		return new ModelAndView("system/user/noticeAuthorityRole-update");

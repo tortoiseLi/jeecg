@@ -26,7 +26,7 @@ public class CgFormIndexServiceImpl extends CommonServiceImpl implements CgFormI
  	}
  	
  	public <T> Serializable save(T entity) {
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		//执行新增操作配置的sql增强
  		this.doAddSql((CgFormIndexEntity)entity);
  		return t;
@@ -110,7 +110,7 @@ public class CgFormIndexServiceImpl extends CommonServiceImpl implements CgFormI
 		}
 		cgFormHead.setIsDbSynch(isChange ? "N" : cgFormHead.getIsDbSynch());
 		String id = cgFormHead.getId();
-		CgFormHeadEntity formhead = this.getEntity(CgFormHeadEntity.class, cgFormHead.getId());
+		CgFormHeadEntity formhead = this.getById(CgFormHeadEntity.class, cgFormHead.getId());
 		//根据名称先删除索引
 		/*List<CgFormIndexEntity> oldindexes = this.getSession().
 				createSQLQuery("select * from cgform_index where table_id = '" + cgFormHead.getId() + "'").addEntity(CgFormIndexEntity.class).list();*/
@@ -143,7 +143,7 @@ public class CgFormIndexServiceImpl extends CommonServiceImpl implements CgFormI
 
 	@Override
 	public void createIndexes(CgFormHeadEntity cgFormHead) {
-		CgFormHeadEntity formhead = this.getEntity(CgFormHeadEntity.class, cgFormHead.getId());
+		CgFormHeadEntity formhead = this.getById(CgFormHeadEntity.class, cgFormHead.getId());
 		List<CgFormIndexEntity> indexes = this.getSession().createSQLQuery("select * from cgform_index where table_id = '" + cgFormHead.getId() + "'").addEntity(CgFormIndexEntity.class).list();
 		if(indexes.size()!=0){
 			for(CgFormIndexEntity cgform : indexes){

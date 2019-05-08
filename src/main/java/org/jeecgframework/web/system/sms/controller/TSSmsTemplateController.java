@@ -100,7 +100,7 @@ public class TSSmsTemplateController extends BaseController {
 	public AjaxJson doDel(TSSmsTemplateEntity tSSmsTemplate, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tSSmsTemplate = systemService.getEntity(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
+		tSSmsTemplate = systemService.getById(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
 		message = "消息模本表删除成功";
 		try{
 			tSSmsTemplateService.delete(tSSmsTemplate);
@@ -127,7 +127,7 @@ public class TSSmsTemplateController extends BaseController {
 		message = "消息模本表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				TSSmsTemplateEntity tSSmsTemplate = systemService.getEntity(TSSmsTemplateEntity.class, 
+				TSSmsTemplateEntity tSSmsTemplate = systemService.getById(TSSmsTemplateEntity.class,
 				id
 				);
 				tSSmsTemplateService.delete(tSSmsTemplate);
@@ -179,7 +179,7 @@ public class TSSmsTemplateController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "消息模本表更新成功";
-		TSSmsTemplateEntity t = tSSmsTemplateService.get(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
+		TSSmsTemplateEntity t = tSSmsTemplateService.getById(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(tSSmsTemplate, t);
 			tSSmsTemplateService.saveOrUpdate(t);
@@ -202,7 +202,7 @@ public class TSSmsTemplateController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(TSSmsTemplateEntity tSSmsTemplate, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSmsTemplate.getId())) {
-			tSSmsTemplate = tSSmsTemplateService.getEntity(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
+			tSSmsTemplate = tSSmsTemplateService.getById(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
 			req.setAttribute("tSSmsTemplatePage", tSSmsTemplate);
 		}
 		return new ModelAndView("system/sms/tSSmsTemplate-add");
@@ -215,7 +215,7 @@ public class TSSmsTemplateController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(TSSmsTemplateEntity tSSmsTemplate, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSSmsTemplate.getId())) {
-			tSSmsTemplate = tSSmsTemplateService.getEntity(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
+			tSSmsTemplate = tSSmsTemplateService.getById(TSSmsTemplateEntity.class, tSSmsTemplate.getId());
 			req.setAttribute("tSSmsTemplatePage", tSSmsTemplate);
 		}
 		return new ModelAndView("system/sms/tSSmsTemplate-update");

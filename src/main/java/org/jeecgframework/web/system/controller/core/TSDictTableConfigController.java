@@ -105,7 +105,7 @@ public class TSDictTableConfigController extends BaseController {
 	public AjaxJson doDel(TSDictTableConfigEntity tSDictTableConfig, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		tSDictTableConfig = systemService.getEntity(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
+		tSDictTableConfig = systemService.getById(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
 		message = "字典表授权配置删除成功";
 		try{
 			cacheService.clean(dictCacheKey);
@@ -134,7 +134,7 @@ public class TSDictTableConfigController extends BaseController {
 		try{
 			cacheService.clean(dictCacheKey);
 			for(String id:ids.split(",")){
-				TSDictTableConfigEntity tSDictTableConfig = systemService.getEntity(TSDictTableConfigEntity.class, 
+				TSDictTableConfigEntity tSDictTableConfig = systemService.getById(TSDictTableConfigEntity.class,
 				id
 				);
 				tSDictTableConfigService.delete(tSDictTableConfig);
@@ -187,7 +187,7 @@ public class TSDictTableConfigController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "字典表授权配置更新成功";
-		TSDictTableConfigEntity t = tSDictTableConfigService.get(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
+		TSDictTableConfigEntity t = tSDictTableConfigService.getById(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
 		try {
 			cacheService.clean(dictCacheKey);
 			MyBeanUtils.copyBeanNotNull2Bean(tSDictTableConfig, t);
@@ -211,7 +211,7 @@ public class TSDictTableConfigController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(TSDictTableConfigEntity tSDictTableConfig, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSDictTableConfig.getId())) {
-			tSDictTableConfig = tSDictTableConfigService.getEntity(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
+			tSDictTableConfig = tSDictTableConfigService.getById(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
 			req.setAttribute("tSDictTableConfigPage", tSDictTableConfig);
 		}
 		return new ModelAndView("system/dicttable/tSDictTableConfig-add");
@@ -224,7 +224,7 @@ public class TSDictTableConfigController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(TSDictTableConfigEntity tSDictTableConfig, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(tSDictTableConfig.getId())) {
-			tSDictTableConfig = tSDictTableConfigService.getEntity(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
+			tSDictTableConfig = tSDictTableConfigService.getById(TSDictTableConfigEntity.class, tSDictTableConfig.getId());
 			req.setAttribute("tSDictTableConfigPage", tSDictTableConfig);
 		}
 		return new ModelAndView("system/dicttable/tSDictTableConfig-update");

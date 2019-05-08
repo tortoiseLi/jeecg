@@ -143,7 +143,7 @@ public class IconController extends BaseController {
 		String id = request.getParameter("id");
 		TSIcon icon = new TSIcon();
 		if (StringUtil.isNotEmpty(id)) {
-			icon = systemService.get(TSIcon.class, id);
+			icon = systemService.getById(TSIcon.class, id);
 			icon.setId(id);
 		}
 		icon.setIconName(iconName);
@@ -240,7 +240,7 @@ public class IconController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		
-		icon = systemService.getEntity(TSIcon.class, icon.getId());
+		icon = systemService.getById(TSIcon.class, icon.getId());
 		
 		boolean isPermit=isPermitDel(icon);
 		
@@ -302,7 +302,7 @@ public class IconController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(TSIcon icon, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(icon.getId())) {
-			icon = systemService.getEntity(TSIcon.class, icon.getId());
+			icon = systemService.getById(TSIcon.class, icon.getId());
 			req.setAttribute("icon", icon);
 		}
 		return new ModelAndView("system/icon/icons");
@@ -320,10 +320,10 @@ public class IconController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		try {
-			TSIcon iconOld= systemService.getEntity(TSIcon.class, icon.getId());
+			TSIcon iconOld= systemService.getById(TSIcon.class, icon.getId());
 			iconOld.setIconName(icon.getIconName());
 			iconOld.setIconType(icon.getIconType());
-			this.systemService.updateEntitie(iconOld);
+			this.systemService.update(iconOld);
 			message = MutiLangUtil.paramUpdSuccess("common.icon");
 			j.setMsg(message);
 		} catch (Exception e) {

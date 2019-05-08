@@ -37,7 +37,7 @@ public class TSSmsServiceImpl extends CommonServiceImpl implements TSSmsServiceI
  	}
  	
  	public <T> Serializable save(T entity) {
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		//执行新增操作配置的sql增强
  		this.doAddSql((TSSmsEntity)entity);
  		return t;
@@ -122,7 +122,7 @@ public class TSSmsServiceImpl extends CommonServiceImpl implements TSSmsServiceI
 					tsSmsEntity.setEsSendtime(new Date());
 					remark = "发送成功";
 					tsSmsEntity.setRemark(remark);
-					updateEntitie(tsSmsEntity);
+					update(tsSmsEntity);
 				} catch (Exception e) {
 					//tsSmsEntity.setEsStatus(Constants.SMS_SEND_STATUS_3);
 					if (e instanceof AuthenticationFailedException){
@@ -139,7 +139,7 @@ public class TSSmsServiceImpl extends CommonServiceImpl implements TSSmsServiceI
 					tsSmsEntity.setEsStatus(Constants.SMS_SEND_STATUS_3);
 					tsSmsEntity.setEsSendtime(new Date());
 					tsSmsEntity.setRemark(remark);
-					updateEntitie(tsSmsEntity);
+					update(tsSmsEntity);
 				}
 			}
 			if(Constants.SMS_SEND_TYPE_1.equals(tsSmsEntity.getEsType())){
@@ -154,7 +154,7 @@ public class TSSmsServiceImpl extends CommonServiceImpl implements TSSmsServiceI
 			//更新发送状态
 			tsSmsEntity.setRemark(remark);
 			tsSmsEntity.setEsSendtime(new Date());
-			updateEntitie(tsSmsEntity);
+			update(tsSmsEntity);
 		}
 		LogUtil.info("===============消息发扫描结束=================");
 	}

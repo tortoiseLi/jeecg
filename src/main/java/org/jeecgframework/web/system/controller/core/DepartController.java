@@ -165,7 +165,7 @@ public class DepartController extends BaseController {
 	public AjaxJson del(TSDepart depart, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		depart = systemService.getEntity(TSDepart.class, depart.getId());
+		depart = systemService.getById(TSDepart.class, depart.getId());
         message = MutiLangUtil.paramDelSuccess("common.department");
         if (depart.getTSDeparts().size() == 0) {
 
@@ -225,7 +225,7 @@ public class DepartController extends BaseController {
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} else {
             message = MutiLangUtil.paramAddSuccess("common.department");
-			userService.save(depart);
+			userService.add(depart);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
 
@@ -259,7 +259,7 @@ public class DepartController extends BaseController {
 		List<TSDepart> departList = systemService.getList(TSDepart.class);
 		req.setAttribute("departList", departList);
 		if (StringUtil.isNotEmpty(depart.getId())) {
-			depart = systemService.getEntity(TSDepart.class, depart.getId());
+			depart = systemService.getById(TSDepart.class, depart.getId());
 			req.setAttribute("depart", depart);
 		}
 		return new ModelAndView("system/depart/depart");
@@ -298,7 +298,7 @@ public class DepartController extends BaseController {
 		defaultDepart.setDepartname("请选择组织机构");
 		departsList.add(0, defaultDepart);
 
-		comboTrees = systemService.ComboTree(departsList, comboTreeModel, null, true);
+		comboTrees = systemService.comboTree(departsList, comboTreeModel, null, true);
 		return comboTrees;
 
 	}
@@ -355,7 +355,7 @@ public class DepartController extends BaseController {
 		fieldMap.put("address", "address");
 		fieldMap.put("order", "departOrder");
         treeGridModel.setFieldMap(fieldMap);
-        treeGrids = systemService.treegrid(departList, treeGridModel);
+        treeGrids = systemService.treeGrid(departList, treeGridModel);
 
         JSONArray jsonArray = new JSONArray();
         for (TreeGrid treeGrid : treeGrids) {
@@ -459,7 +459,7 @@ public class DepartController extends BaseController {
         List<TSDepart> departsList = systemService.findByQueryString("from TSDepart where TSPDepart.id is null");
         List<ComboTree> comboTrees = new ArrayList<ComboTree>();
         ComboTreeModel comboTreeModel = new ComboTreeModel("id", "departname", "TSDeparts");
-        comboTrees = systemService.ComboTree(departsList, comboTreeModel, null, true);
+        comboTrees = systemService.comboTree(departsList, comboTreeModel, null, true);
         return comboTrees;
     }
 
@@ -512,7 +512,7 @@ public class DepartController extends BaseController {
     public AjaxJson doAddUserToOrg(HttpServletRequest req) {
     	String message = null;
         AjaxJson j = new AjaxJson();
-        TSDepart depart = systemService.getEntity(TSDepart.class, req.getParameter("orgId"));
+        TSDepart depart = systemService.getById(TSDepart.class, req.getParameter("orgId"));
         saveOrgUserList(req, depart);
         message =  MutiLangUtil.paramAddSuccess("common.user");
 //      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
@@ -541,7 +541,7 @@ public class DepartController extends BaseController {
             userOrgList.add(userOrg);
         }
         if (!userOrgList.isEmpty()) {
-            systemService.batchSave(userOrgList);
+            systemService.batchAdd(userOrgList);
         }
     }
 
@@ -756,7 +756,7 @@ public class DepartController extends BaseController {
 			String localMaxCode  = getMaxLocalCode(null);
 			depart.setOrgCode(YouBianCodeUtil.getNextYouBianCode(localMaxCode));
 		}
-		this.systemService.save(depart);
+		this.systemService.add(depart);
 		return depart;
 	}
 
@@ -820,7 +820,7 @@ public class DepartController extends BaseController {
 						}
 						tsDepart.setDepartOrder("0");
 
-						systemService.save(tsDepart);
+						systemService.add(tsDepart);
 					}
 				}
 				j.setMsg("文件导入成功！");
@@ -859,7 +859,7 @@ public class DepartController extends BaseController {
 		StringBuffer hql = new StringBuffer(" from TSDepart t where 1=1 ");
 		if(StringUtils.isNotBlank(parentid)){
 			
-			TSDepart dePart = this.systemService.getEntity(TSDepart.class, parentid);
+			TSDepart dePart = this.systemService.getById(TSDepart.class, parentid);
 			
 			hql.append(" and TSPDepart = ?");
 			tSDeparts = this.systemService.findHql(hql.toString(), dePart);

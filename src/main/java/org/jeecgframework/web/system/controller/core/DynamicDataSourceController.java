@@ -103,7 +103,7 @@ public class DynamicDataSourceController extends BaseController {
 	@ResponseBody
 	public AjaxJson del(DynamicDataSourceEntity dbSource, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		dbSource = systemService.getEntity(DynamicDataSourceEntity.class, dbSource.getId());
+		dbSource = systemService.getById(DynamicDataSourceEntity.class, dbSource.getId());
 
 		message = MutiLangUtil.paramDelSuccess("common.datasource.manage");
 
@@ -127,7 +127,7 @@ public class DynamicDataSourceController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(dbSource.getId())) {
 			message = MutiLangUtil.paramUpdSuccess("common.datasource.manage");
-			DynamicDataSourceEntity t = systemService.get(DynamicDataSourceEntity.class, dbSource.getId());
+			DynamicDataSourceEntity t = systemService.getById(DynamicDataSourceEntity.class, dbSource.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(dbSource, t);
 
@@ -149,7 +149,7 @@ public class DynamicDataSourceController extends BaseController {
 				e.printStackTrace();
 			}
 
-			systemService.save(dbSource);
+			systemService.add(dbSource);
 			dynamicDataSourceService.refleshCache();
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}
@@ -165,7 +165,7 @@ public class DynamicDataSourceController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(DynamicDataSourceEntity dbSource, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(dbSource.getId())) {
-			dbSource = systemService.getEntity(DynamicDataSourceEntity.class, dbSource.getId());
+			dbSource = systemService.getById(DynamicDataSourceEntity.class, dbSource.getId());
 
 			try {
 				//String result = PasswordUtil.decrypt(d.getDbPassword(), d.getDbUser(), PasswordUtil.getStaticSalt());

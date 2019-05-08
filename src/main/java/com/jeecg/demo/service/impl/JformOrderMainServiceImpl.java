@@ -31,19 +31,19 @@ public class JformOrderMainServiceImpl extends CommonServiceImpl implements Jfor
 	public void addMain(JformOrderMainEntity jformOrderMain,
 	        List<JformOrderCustomerEntity> jformOrderCustomerList,List<JformOrderTicketEntity> jformOrderTicketList){
 			//保存主信息
-			this.save(jformOrderMain);
+			this.add(jformOrderMain);
 		
 			/**保存-JformOrderMain子表*/
 			for(JformOrderCustomerEntity jformOrderCustomer:jformOrderCustomerList){
 				//外键设置
 				jformOrderCustomer.setFkId(jformOrderMain.getId());
-				this.save(jformOrderCustomer);
+				this.add(jformOrderCustomer);
 			}
 			/**保存-JformOrderMain子表*/
 			for(JformOrderTicketEntity jformOrderTicket:jformOrderTicketList){
 				//外键设置
 				jformOrderTicket.setFckId(jformOrderMain.getId());
-				this.save(jformOrderTicket);
+				this.add(jformOrderTicket);
 			}
 			//执行新增操作配置的sql增强
  			this.doAddSql(jformOrderMain);
@@ -103,7 +103,7 @@ public class JformOrderMainServiceImpl extends CommonServiceImpl implements Jfor
 				if(oConvertUtils.isEmpty(jformOrderCustomer.getId())){
 					//外键设置
 					jformOrderCustomer.setFkId(jformOrderMain.getId());
-					this.save(jformOrderCustomer);
+					this.add(jformOrderCustomer);
 				}
 			}
 		}
@@ -143,7 +143,7 @@ public class JformOrderMainServiceImpl extends CommonServiceImpl implements Jfor
 				if(oConvertUtils.isEmpty(jformOrderTicket.getId())){
 					//外键设置
 					jformOrderTicket.setFckId(jformOrderMain.getId());
-					this.save(jformOrderTicket);
+					this.add(jformOrderTicket);
 				}
 			}
 		}
@@ -163,12 +163,12 @@ public class JformOrderMainServiceImpl extends CommonServiceImpl implements Jfor
 		//删除-JformOrderMain子表
 	    String hql0 = "from JformOrderCustomerEntity where 1 = 1 AND fK_ID = ? ";
 	    List<JformOrderCustomerEntity> jformOrderCustomerOldList = this.findHql(hql0,id0);
-		this.deleteAllEntitie(jformOrderCustomerOldList);
+		this.deleteCollection(jformOrderCustomerOldList);
 		//===================================================================================
 		//删除-JformOrderMain子表
 	    String hql1 = "from JformOrderTicketEntity where 1 = 1 AND fCK_ID = ? ";
 	    List<JformOrderTicketEntity> jformOrderTicketOldList = this.findHql(hql1,id1);
-		this.deleteAllEntitie(jformOrderTicketOldList);
+		this.deleteCollection(jformOrderTicketOldList);
 	}
 	
  	

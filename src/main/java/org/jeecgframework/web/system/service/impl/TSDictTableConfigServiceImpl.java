@@ -31,7 +31,7 @@ public class TSDictTableConfigServiceImpl extends CommonServiceImpl implements T
  	}
  	
  	public Serializable save(TSDictTableConfigEntity entity) throws Exception{
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		return t;
  	}
  	

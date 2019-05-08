@@ -24,7 +24,7 @@ public class CgformEnhanceJavaServiceImpl extends CommonServiceImpl implements C
  	}
  	
  	public <T> Serializable save(T entity) {
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		//执行新增操作配置的sql增强
  		this.doAddSql((CgformEnhanceJavaEntity)entity);
  		return t;

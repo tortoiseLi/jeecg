@@ -96,7 +96,7 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 						
 						String iconId = autoMenu.icon();
 						if (StringUtil.isNotEmpty(iconId)) {
-							Object obj = this.get(TSIcon.class, iconId);
+							Object obj = this.getById(TSIcon.class, iconId);
 							if(obj!=null){
 								function.setTSIcon((TSIcon)obj);
 							}else{
@@ -105,7 +105,7 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 						} else {
 							function.setTSIcon(null);
 						}
-						Serializable id = this.save(function);
+						Serializable id = this.add(function);
 						function.setId(id.toString());
 					} else {
 						function = functionMap.get(menuKey.toString());
@@ -151,7 +151,7 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 									} else {
 										operation.setTSIcon(null);
 									}
-									this.save(operation);
+									this.add(operation);
 								}
 							}
 						}

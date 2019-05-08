@@ -289,7 +289,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 				for (String MyoperationCode : operationCodes) {
 					if (oConvertUtils.isEmpty(MyoperationCode))
 						break;
-					TSOperation operation = this.getEntity(TSOperation.class, MyoperationCode);
+					TSOperation operation = this.getById(TSOperation.class, MyoperationCode);
 					if (operation.getOperationcode().startsWith(".") || operation.getOperationcode().startsWith("#")){
 						if (operation.getOperationType().intValue()==Globals.OPERATION_TYPE_HIDE){
 							//out.append("$(\""+name+"\").find(\"#"+operation.getOperationcode().replaceAll(" ", "")+"\").hide();");
@@ -314,11 +314,11 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	@Override
 	@Transactional(readOnly = true)
 	public void flushRoleFunciton(String id, TSFunction newFunction) {
-		TSFunction functionEntity = this.getEntity(TSFunction.class, id);
+		TSFunction functionEntity = this.getById(TSFunction.class, id);
 		if (functionEntity.getTSIcon() == null || !StringUtil.isNotEmpty(functionEntity.getTSIcon().getId())) {
 			return;
 		}
-		TSIcon oldIcon = this.getEntity(TSIcon.class, functionEntity.getTSIcon().getId());
+		TSIcon oldIcon = this.getById(TSIcon.class, functionEntity.getTSIcon().getId());
 		if (!oldIcon.getIconClas().equals(newFunction.getTSIcon().getIconClas())) {
 			// 刷新缓存
 			HttpSession session = ContextHolderUtils.getSession();

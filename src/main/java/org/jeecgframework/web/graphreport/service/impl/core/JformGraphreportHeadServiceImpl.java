@@ -27,13 +27,13 @@ public class JformGraphreportHeadServiceImpl extends CommonServiceImpl implement
 	public void addMain(JformGraphreportHeadEntity jformGraphreportHead,
 	        List<JformGraphreportItemEntity> jformGraphreportItemList){
 			//保存主信息
-			this.save(jformGraphreportHead);
+			this.add(jformGraphreportHead);
 		
 			/**保存-子表*/
 			for(JformGraphreportItemEntity jformGraphreportItem:jformGraphreportItemList){
 				//外键设置
 				jformGraphreportItem.setCgreportHeadId(jformGraphreportHead.getId());
-				this.save(jformGraphreportItem);
+				this.add(jformGraphreportItem);
 			}
 			//执行新增操作配置的sql增强
  			this.doAddSql(jformGraphreportHead);
@@ -81,7 +81,7 @@ public class JformGraphreportHeadServiceImpl extends CommonServiceImpl implement
 				if(oConvertUtils.isEmpty(jformGraphreportItem.getId())){
 					//外键设置
 					jformGraphreportItem.setCgreportHeadId(jformGraphreportHead.getId());
-					this.save(jformGraphreportItem);
+					this.add(jformGraphreportItem);
 				}
 			}
 		//执行更新操作配置的sql增强
@@ -101,7 +101,7 @@ public class JformGraphreportHeadServiceImpl extends CommonServiceImpl implement
 	    String hql0 = "from JformGraphreportItemEntity where 1 = 1 AND cgreportHeadId = ? ";
 
 	    List<JformGraphreportItemEntity> jformGraphreportItemOldList = this.findHql(hql0,id0);
-		this.deleteAllEntitie(jformGraphreportItemOldList);
+		this.deleteCollection(jformGraphreportItemOldList);
 	}
 	
  	

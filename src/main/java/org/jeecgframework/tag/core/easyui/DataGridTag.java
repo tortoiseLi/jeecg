@@ -548,7 +548,7 @@ public class DataGridTag extends TagSupport {
 					break;
 				systemService = ApplicationContextUtil.getContext().getBean(
 							SystemService.class);
-				TSOperation operation = systemService.getEntity(TSOperation.class, MyoperationCode);
+				TSOperation operation = systemService.getById(TSOperation.class, MyoperationCode);
 				if(operation.getOperationcode().equals(field)){
 					columnList.remove(dataGridColumn);
 				}
@@ -3278,7 +3278,7 @@ public class DataGridTag extends TagSupport {
 						break;
 					systemService = ApplicationContextUtil.getContext().getBean(
 								SystemService.class);
-					TSOperation operation = systemService.getEntity(TSOperation.class, MyoperationCode);
+					TSOperation operation = systemService.getById(TSOperation.class, MyoperationCode);
 					if (operation.getOperationcode().startsWith(".") || operation.getOperationcode().startsWith("#")){
 						if (operation.getOperationType().intValue()==Globals.OPERATION_TYPE_HIDE){
 							//out.append("$(\""+name+"\").find(\"#"+operation.getOperationcode().replaceAll(" ", "")+"\").hide();");
@@ -3316,7 +3316,7 @@ public class DataGridTag extends TagSupport {
 						break;
 					systemService = ApplicationContextUtil.getContext().getBean(
 								SystemService.class);
-					TSOperation operation = systemService.getEntity(TSOperation.class, MyoperationCode);
+					TSOperation operation = systemService.getById(TSOperation.class, MyoperationCode);
 					operationCodesStr.add(operation.getOperationcode());
 				}
 				if (!operationCodesStr.contains(operationCode)){

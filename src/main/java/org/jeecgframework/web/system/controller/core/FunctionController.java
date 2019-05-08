@@ -167,7 +167,7 @@ public class FunctionController extends BaseController {
 	public AjaxJson delop(TSOperation operation, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		operation = systemService.getEntity(TSOperation.class,
+		operation = systemService.getById(TSOperation.class,
 				operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
@@ -181,7 +181,7 @@ public class FunctionController extends BaseController {
 				newOper = roleFunction.getOperation().replace(operationId, "");
 			}
 			roleFunction.setOperation(newOper);
-			userService.updateEntitie(roleFunction);
+			userService.update(roleFunction);
 		}
 
 
@@ -231,12 +231,12 @@ public class FunctionController extends BaseController {
 		if (function.getTSFunction().getId().equals("")) {
 			function.setTSFunction(null);
 		} else {
-			TSFunction parent = systemService.getEntity(TSFunction.class,function.getTSFunction().getId());
+			TSFunction parent = systemService.getById(TSFunction.class,function.getTSFunction().getId());
 			function.setFunctionLevel(Short.valueOf(parent.getFunctionLevel()+ 1 + ""));
 		}
 		if (StringUtil.isNotEmpty(function.getId())) {
 			message = MutiLangUtil.paramUpdSuccess("common.menu");
-			TSFunction t = systemService.getEntity(TSFunction.class,function.getId());
+			TSFunction t = systemService.getById(TSFunction.class,function.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(function, t);
 
@@ -273,7 +273,7 @@ public class FunctionController extends BaseController {
 				function.setFunctionOrder(function.getFunctionOrder());
 			}
 			message = MutiLangUtil.paramAddSuccess("common.menu");
-			systemService.save(function);
+			systemService.add(function);
 			systemService.addLog(message, Globals.Log_Type_INSERT,Globals.LOG_LEVEL_INFO);
 		}
 
@@ -303,7 +303,7 @@ public class FunctionController extends BaseController {
 					Globals.LOG_LEVEL_INFO);
 		} else {
 			message = MutiLangUtil.paramAddSuccess("common.operation");
-			userService.save(operation);
+			userService.add(operation);
 			systemService.addLog(message, Globals.Log_Type_INSERT,
 					Globals.LOG_LEVEL_INFO);
 		}
@@ -332,13 +332,13 @@ public class FunctionController extends BaseController {
 		req.setAttribute("iconDeskList", iconDeskList);
 
 		if (functionid != null) {
-			function = systemService.getEntity(TSFunction.class, functionid);
+			function = systemService.getById(TSFunction.class, functionid);
 			req.setAttribute("function", function);
 		}
 		if (function.getTSFunction() != null
 				&& function.getTSFunction().getId() != null) {
 			function.setFunctionLevel((short) 1);
-			function.setTSFunction((TSFunction) systemService.getEntity(
+			function.setTSFunction((TSFunction) systemService.getById(
 					TSFunction.class, function.getTSFunction().getId()));
 			req.setAttribute("function", function);
 		}
@@ -356,7 +356,7 @@ public class FunctionController extends BaseController {
 		List<TSIcon> iconlist = systemService.getList(TSIcon.class);
 		req.setAttribute("iconlist", iconlist);
 		if (operation.getId() != null) {
-			operation = systemService.getEntity(TSOperation.class,
+			operation = systemService.getById(TSOperation.class,
 					operation.getId());
 			req.setAttribute("operation", operation);
 		}
@@ -415,7 +415,7 @@ public class FunctionController extends BaseController {
 
 		treeGridModel.setFunctionType("functionType");
 
-		treeGrids = systemService.treegrid(functionList, treeGridModel);
+		treeGrids = systemService.treeGrid(functionList, treeGridModel);
 
 //		for (TreeGrid tg : treeGrids) {
 //			if("closed".equals(tg.getState()))tg.setSrc("");
@@ -469,7 +469,7 @@ public class FunctionController extends BaseController {
 		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id","functionName", "TSFunctions");
-		comboTrees = systemService.ComboTree(functionList, comboTreeModel,null, false);
+		comboTrees = systemService.comboTree(functionList, comboTreeModel,null, false);
 		MutiLangUtil.setMutiTree(comboTrees);
 		return comboTrees;
 	}
@@ -560,7 +560,7 @@ public class FunctionController extends BaseController {
 		List<TSIcon> iconlist = systemService.getList(TSIcon.class);
 		req.setAttribute("iconlist", iconlist);
 		if (operation.getId() != null) {
-			operation = systemService.getEntity(TSDataRule.class,
+			operation = systemService.getById(TSDataRule.class,
 					operation.getId());
 			req.setAttribute("operation", operation);
 		}
@@ -612,7 +612,7 @@ public class FunctionController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		operation = systemService
-				.getEntity(TSDataRule.class, operation.getId());
+				.getById(TSDataRule.class, operation.getId());
 		message = MutiLangUtil.paramDelSuccess("common.operation");
 		userService.delete(operation);
 		systemService.addLog(message, Globals.Log_Type_DEL,
@@ -648,7 +648,7 @@ public class FunctionController extends BaseController {
 		} else {
 			if (justHaveDataRule(operation) == 0) {
 				message = MutiLangUtil.paramAddSuccess("common.operation");
-				userService.save(operation);
+				userService.add(operation);
 				systemService.addLog(message, Globals.Log_Type_INSERT,
 						Globals.LOG_LEVEL_INFO);
 			} else {

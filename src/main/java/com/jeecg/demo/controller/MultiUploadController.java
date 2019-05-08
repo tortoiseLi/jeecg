@@ -139,7 +139,7 @@ public class MultiUploadController extends BaseController {
 	public AjaxJson doDel(MultiUploadEntity multiUpload, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		multiUpload = systemService.getEntity(MultiUploadEntity.class, multiUpload.getId());
+		multiUpload = systemService.getById(MultiUploadEntity.class, multiUpload.getId());
 		message = "测试多文件上传删除成功";
 		try{
 			multiUploadService.delete(multiUpload);
@@ -166,7 +166,7 @@ public class MultiUploadController extends BaseController {
 		message = "测试多文件上传删除成功";
 		try{
 			for(String id:ids.split(",")){
-				MultiUploadEntity multiUpload = systemService.getEntity(MultiUploadEntity.class, 
+				MultiUploadEntity multiUpload = systemService.getById(MultiUploadEntity.class,
 				id
 				);
 				multiUploadService.delete(multiUpload);
@@ -219,7 +219,7 @@ public class MultiUploadController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "测试多文件上传更新成功";
-		MultiUploadEntity t = multiUploadService.get(MultiUploadEntity.class, multiUpload.getId());
+		MultiUploadEntity t = multiUploadService.getById(MultiUploadEntity.class, multiUpload.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(multiUpload, t);
 			multiUploadService.saveOrUpdate(t);
@@ -242,7 +242,7 @@ public class MultiUploadController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(MultiUploadEntity multiUpload, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(multiUpload.getId())) {
-			multiUpload = multiUploadService.getEntity(MultiUploadEntity.class, multiUpload.getId());
+			multiUpload = multiUploadService.getById(MultiUploadEntity.class, multiUpload.getId());
 			req.setAttribute("multiUploadPage", multiUpload);
 		}
 		return new ModelAndView("com/jeecg/demo/multiUpload-add");
@@ -255,7 +255,7 @@ public class MultiUploadController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(MultiUploadEntity multiUpload, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(multiUpload.getId())) {
-			multiUpload = multiUploadService.getEntity(MultiUploadEntity.class, multiUpload.getId());
+			multiUpload = multiUploadService.getById(MultiUploadEntity.class, multiUpload.getId());
 			req.setAttribute("multiUploadPage", multiUpload);
 		}
 		return new ModelAndView("com/jeecg/demo/multiUpload-update");
@@ -378,7 +378,7 @@ public class MultiUploadController extends BaseController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> get(@PathVariable("id") String id) {
-		MultiUploadEntity task = multiUploadService.get(MultiUploadEntity.class, id);
+		MultiUploadEntity task = multiUploadService.getById(MultiUploadEntity.class, id);
 		if (task == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
@@ -433,6 +433,6 @@ public class MultiUploadController extends BaseController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable("id") String id) {
-		multiUploadService.deleteEntityById(MultiUploadEntity.class, id);
+		multiUploadService.deleteById(MultiUploadEntity.class, id);
 	}
 }

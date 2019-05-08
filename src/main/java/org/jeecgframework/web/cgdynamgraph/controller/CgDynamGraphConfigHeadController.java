@@ -96,7 +96,7 @@ public class CgDynamGraphConfigHeadController extends BaseController {
 	public AjaxJson doDel(CgDynamGraphConfigHeadEntity cgDynamGraphConfigHead, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		cgDynamGraphConfigHead = systemService.getEntity(CgDynamGraphConfigHeadEntity.class, cgDynamGraphConfigHead.getId());
+		cgDynamGraphConfigHead = systemService.getById(CgDynamGraphConfigHeadEntity.class, cgDynamGraphConfigHead.getId());
 		message = "移动图表配置抬头删除成功";
 		try{
 			cgDynamGraphConfigHeadService.delMain(cgDynamGraphConfigHead);
@@ -124,7 +124,7 @@ public class CgDynamGraphConfigHeadController extends BaseController {
 		message = "移动图表配置抬头删除成功";
 		try{
 			for(String id:ids.split(",")){
-				CgDynamGraphConfigHeadEntity cgDynamGraphConfigHead = systemService.getEntity(CgDynamGraphConfigHeadEntity.class, id);
+				CgDynamGraphConfigHeadEntity cgDynamGraphConfigHead = systemService.getById(CgDynamGraphConfigHeadEntity.class, id);
 				cgDynamGraphConfigHeadService.delMain(cgDynamGraphConfigHead);
 				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 				logger.info("["+IpUtil.getIpAddr(request)+"][online移动图表批量删除]["+cgDynamGraphConfigHead.getCode()+"]"+message);
@@ -223,7 +223,7 @@ public class CgDynamGraphConfigHeadController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(CgDynamGraphConfigHeadEntity cgDynamGraphConfigHead, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgDynamGraphConfigHead.getId())) {
-			cgDynamGraphConfigHead = cgDynamGraphConfigHeadService.getEntity(CgDynamGraphConfigHeadEntity.class, cgDynamGraphConfigHead.getId());
+			cgDynamGraphConfigHead = cgDynamGraphConfigHeadService.getById(CgDynamGraphConfigHeadEntity.class, cgDynamGraphConfigHead.getId());
 			req.setAttribute("cgDynamGraphConfigHeadPage", cgDynamGraphConfigHead);
 		}
 		return new ModelAndView("jeecg/cgdynamgraph/core/cgDynamGraphConfigHead-add");
@@ -237,7 +237,7 @@ public class CgDynamGraphConfigHeadController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(CgDynamGraphConfigHeadEntity cgDynamGraphConfigHead, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgDynamGraphConfigHead.getId())) {
-			cgDynamGraphConfigHead = cgDynamGraphConfigHeadService.getEntity(CgDynamGraphConfigHeadEntity.class, cgDynamGraphConfigHead.getId());
+			cgDynamGraphConfigHead = cgDynamGraphConfigHeadService.getById(CgDynamGraphConfigHeadEntity.class, cgDynamGraphConfigHead.getId());
 			req.setAttribute("cgDynamGraphConfigHeadPage", cgDynamGraphConfigHead);
 		}
 		return new ModelAndView("jeecg/cgdynamgraph/core/cgDynamGraphConfigHead-update");

@@ -22,7 +22,7 @@ public class JeecgDemoExcelServiceImpl extends CommonServiceImpl implements Jeec
  	}
  	
  	public Serializable save(JeecgDemoExcelEntity entity) throws Exception{
- 		Serializable t = super.save(entity);
+ 		Serializable t = super.add(entity);
  		return t;
  	}
  	

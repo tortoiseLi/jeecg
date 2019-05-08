@@ -81,7 +81,7 @@ public class CommonController extends BaseController {
 		String subclassname = oConvertUtils.getString(request.getParameter("subclassname"), "org.jeecgframework.web.system.pojo.base.TSAttachment");
 		String contentfield = oConvertUtils.getString(request.getParameter("contentfield"));
 		Class<?> fileClass = MyClassLoader.getClassByScn(subclassname);// 附件的实际类
-		Object fileobj = systemService.getEntity(fileClass, fileid);
+		Object fileobj = systemService.getById(fileClass, fileid);
 		ReflectHelper reflectHelper = new ReflectHelper(fileobj);
 		String extend = oConvertUtils.getString(reflectHelper.getMethodValue("extend"));
 		if ("dwg".equals(extend)) {
@@ -117,7 +117,7 @@ public class CommonController extends BaseController {
 
 		String subclassname = request.getParameter("subclassname");
 		if(oConvertUtils.isEmpty(subclassname)){
-			TSAttachment tsAttachment = systemService.getEntity(TSAttachment.class, fileid);
+			TSAttachment tsAttachment = systemService.getById(TSAttachment.class, fileid);
 			UploadFile uploadFile = new UploadFile(request, response);
 			//byte[] content = tsAttachment.getAttachmentcontent();
 			String path = tsAttachment.getRealpath();;
@@ -133,7 +133,7 @@ public class CommonController extends BaseController {
 		}else{
 			subclassname = oConvertUtils.getString(subclassname);
 			Class<?> fileClass = MyClassLoader.getClassByScn(subclassname);// 自定义附件实体类
-			Object fileobj = systemService.getEntity(fileClass, fileid);
+			Object fileobj = systemService.getById(fileClass, fileid);
 			ReflectHelper reflectHelper = new ReflectHelper(fileobj);
 			UploadFile uploadFile = new UploadFile(request, response);
 			String contentfield = oConvertUtils.getString(request.getParameter("contentfield"), uploadFile.getByteField());
@@ -264,9 +264,9 @@ public class CommonController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		String fileKey = oConvertUtils.getString(request.getParameter("fileKey"));// 文件ID
-		TSAttachment attachment = systemService.getEntity(TSAttachment.class,fileKey);
+		TSAttachment attachment = systemService.getById(TSAttachment.class,fileKey);
 		String subclassname = attachment.getSubclassname(); // 子类类名
-		Object objfile = systemService.getEntity(MyClassLoader.getClassByScn(subclassname), attachment.getId());// 子类对象
+		Object objfile = systemService.getById(MyClassLoader.getClassByScn(subclassname), attachment.getId());// 子类对象
 		message = "" + attachment.getAttachmenttitle() + "删除成功";
 		systemService.delete(objfile);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
@@ -285,13 +285,13 @@ public class CommonController extends BaseController {
 	public ModelAndView objfileList(HttpServletRequest request) {
 		Object object = null;// 业务实体对象
 		String fileKey = oConvertUtils.getString(request.getParameter("fileKey"));// 文件ID
-		TSAttachment attachment = systemService.getEntity(TSAttachment.class,fileKey);
+		TSAttachment attachment = systemService.getById(TSAttachment.class,fileKey);
 		String businessKey = oConvertUtils.getString(request.getParameter("businessKey"));// 业务主键
 		String busentityName = oConvertUtils.getString(request.getParameter("busentityName"));// 业务主键
 		String typename = oConvertUtils.getString(request.getParameter("typename"));// 类型
 		String typecode = oConvertUtils.getString(request.getParameter("typecode"));// 类型typecode
 		if (StringUtil.isNotEmpty(busentityName) && StringUtil.isNotEmpty(businessKey)) {
-			object = systemService.get(MyClassLoader.getClassByScn(busentityName), businessKey);
+			object = systemService.getById(MyClassLoader.getClassByScn(busentityName), businessKey);
 			request.setAttribute("object", object);
 			request.setAttribute("businessKey", businessKey);
 		}

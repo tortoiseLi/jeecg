@@ -89,7 +89,7 @@ public class CgUploadController extends BaseController {
 		}
 		if (StringUtil.isNotEmpty(fileKey)) {
 			cgUploadEntity.setId(fileKey);
-			cgUploadEntity = systemService.getEntity(CgUploadEntity.class, fileKey);
+			cgUploadEntity = systemService.getById(CgUploadEntity.class, fileKey);
 		}
 		UploadFile uploadFile = new UploadFile(request, cgUploadEntity);
 		uploadFile.setCusPath("files");
@@ -125,7 +125,7 @@ public class CgUploadController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		String id  = request.getParameter("id");
-		CgUploadEntity file = systemService.getEntity(CgUploadEntity.class, id);
+		CgUploadEntity file = systemService.getById(CgUploadEntity.class, id);
 
 		String sql  = "select " + file.getCgformField() + " from " + file.getCgformName() + " where id = '" + file.getCgformId() + "'";
 		List<Object> cgformFieldResult = systemService.findListbySql(sql);
@@ -207,7 +207,7 @@ public class CgUploadController extends BaseController {
 						SwfToolsUtil.convert2SWF(savePath);
 					}
 
-					systemService.save(attachment);
+					systemService.add(attachment);
 					attributes.put("url", path + myfilename);
 					attributes.put("name", fileName);
 					attributes.put("swfpath", attachment.getSwfpath());
@@ -289,10 +289,10 @@ public class CgUploadController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		String id  = request.getParameter("id");
 		try {
-			CgUploadEntity file = systemService.getEntity(CgUploadEntity.class, id);
+			CgUploadEntity file = systemService.getById(CgUploadEntity.class, id);
 			if(file==null){
 				//如果关系表中无数据,则表示是情景1
-				TSAttachment attachment = systemService.getEntity(TSAttachment.class, id);
+				TSAttachment attachment = systemService.getById(TSAttachment.class, id);
 				cgUploadService.deleteAttachment(attachment);
 				j.setObj(1);//情景1
 			}else{

@@ -30,13 +30,13 @@ public class JfromOrderServiceImpl extends CommonServiceImpl implements JfromOrd
 	public void addMain(JfromOrderEntity jfromOrder,
 	        List<JfromOrderLineEntity> jfromOrderLineList){
 			//保存主信息
-			this.save(jfromOrder);
+			this.add(jfromOrder);
 		
 			/**保存-订单表体*/
 			for(JfromOrderLineEntity jfromOrderLine:jfromOrderLineList){
 				//外键设置
 				jfromOrderLine.setOrderid(jfromOrder.getId());
-				this.save(jfromOrderLine);
+				this.add(jfromOrderLine);
 			}
 			//执行新增操作配置的sql增强
  			this.doAddSql(jfromOrder);
@@ -93,7 +93,7 @@ public class JfromOrderServiceImpl extends CommonServiceImpl implements JfromOrd
 				if(oConvertUtils.isEmpty(jfromOrderLine.getId())){
 					//外键设置
 					jfromOrderLine.setOrderid(jfromOrder.getId());
-					this.save(jfromOrderLine);
+					this.add(jfromOrderLine);
 				}
 			}
 		}
@@ -112,7 +112,7 @@ public class JfromOrderServiceImpl extends CommonServiceImpl implements JfromOrd
 		//删除-订单表体
 	    String hql0 = "from JfromOrderLineEntity where 1 = 1 AND oRDERID = ? ";
 	    List<JfromOrderLineEntity> jfromOrderLineOldList = this.findHql(hql0,id0);
-		this.deleteAllEntitie(jfromOrderLineOldList);
+		this.deleteCollection(jfromOrderLineOldList);
 	}
 	
  	

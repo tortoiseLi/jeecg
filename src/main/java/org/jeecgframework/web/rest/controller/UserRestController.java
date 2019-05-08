@@ -70,7 +70,7 @@ public class UserRestController {
 	@ResponseBody
 	@ApiOperation(value="根据ID获取用户信息",notes="根据ID获取用户信息",httpMethod="GET",produces="application/json")
 	public ResponseEntity<?> get(@ApiParam(required=true,name="id",value="用户ID") @PathVariable("id") String id) {
-		TSUser task = userService.get(TSUser.class, id);
+		TSUser task = userService.getById(TSUser.class, id);
 		if (task == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
@@ -88,7 +88,7 @@ public class UserRestController {
 		}
 
 		//保存用户
-		userService.save(user);
+		userService.add(user);
 
 		//按照Restful风格约定，创建指向新任务的url, 也可以直接返回id或对象.
 		String id = user.getId();
@@ -120,6 +120,6 @@ public class UserRestController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ApiOperation(value="删除用户信息")
 	public void delete(@ApiParam(name="id",value="用户ID",required=true)@PathVariable("id") String id) {
-		userService.deleteEntityById(TSUser.class, id);
+		userService.deleteById(TSUser.class, id);
 	}
 }

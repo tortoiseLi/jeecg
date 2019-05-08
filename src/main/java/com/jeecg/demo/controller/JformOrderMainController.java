@@ -177,7 +177,7 @@ public class JformOrderMainController extends BaseController {
 	@ResponseBody
 	public AjaxJson doDel(JformOrderMainEntity jformOrderMain, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		jformOrderMain = systemService.getEntity(JformOrderMainEntity.class, jformOrderMain.getId());
+		jformOrderMain = systemService.getById(JformOrderMainEntity.class, jformOrderMain.getId());
 		String message = "订单主信息删除成功";
 		try{
 			jformOrderMainService.delMain(jformOrderMain);
@@ -203,7 +203,7 @@ public class JformOrderMainController extends BaseController {
 		String message = "订单主信息删除成功";
 		try{
 			for(String id:ids.split(",")){
-				JformOrderMainEntity jformOrderMain = systemService.getEntity(JformOrderMainEntity.class,
+				JformOrderMainEntity jformOrderMain = systemService.getById(JformOrderMainEntity.class,
 				id
 				);
 				jformOrderMainService.delMain(jformOrderMain);
@@ -276,7 +276,7 @@ public class JformOrderMainController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(JformOrderMainEntity jformOrderMain, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jformOrderMain.getId())) {
-			jformOrderMain = jformOrderMainService.getEntity(JformOrderMainEntity.class, jformOrderMain.getId());
+			jformOrderMain = jformOrderMainService.getById(JformOrderMainEntity.class, jformOrderMain.getId());
 			req.setAttribute("jformOrderMainPage", jformOrderMain);
 		}
 		return new ModelAndView("com/jeecg/demo/orderOne2Many/jformOrderMain-add");
@@ -290,7 +290,7 @@ public class JformOrderMainController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(JformOrderMainEntity jformOrderMain, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jformOrderMain.getId())) {
-			jformOrderMain = jformOrderMainService.getEntity(JformOrderMainEntity.class, jformOrderMain.getId());
+			jformOrderMain = jformOrderMainService.getById(JformOrderMainEntity.class, jformOrderMain.getId());
 			req.setAttribute("jformOrderMainPage", jformOrderMain);
 		}
 		return new ModelAndView("com/jeecg/demo/orderOne2Many/jformOrderMain-update");
@@ -486,7 +486,7 @@ public class JformOrderMainController extends BaseController {
 	@ResponseBody
 	@ApiOperation(value="根据ID获取订单信息",notes="根据ID获取订单信息",httpMethod="GET",produces="application/json")
 	public ResponseEntity<?> get(@PathVariable("id") String id) {
-		JformOrderMainEntity task = jformOrderMainService.get(JformOrderMainEntity.class, id);
+		JformOrderMainEntity task = jformOrderMainService.getById(JformOrderMainEntity.class, id);
 		if (task == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
@@ -572,7 +572,7 @@ public class JformOrderMainController extends BaseController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ApiOperation(value="删除订单")
 	public void delete(@PathVariable("id") String id) {
-		JformOrderMainEntity jformOrderMain = jformOrderMainService.get(JformOrderMainEntity.class, id);
+		JformOrderMainEntity jformOrderMain = jformOrderMainService.getById(JformOrderMainEntity.class, id);
 		jformOrderMainService.delMain(jformOrderMain);
 	}
 	/**
@@ -616,7 +616,7 @@ public class JformOrderMainController extends BaseController {
 		if(CollectionUtils.isNotEmpty(demos)){
 			for(JformOrderCustomerEntity jeecgDemo:demos){
 				if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
-					JformOrderCustomerEntity t =this.systemService.get(JformOrderCustomerEntity.class, jeecgDemo.getId());
+					JformOrderCustomerEntity t =this.systemService.getById(JformOrderCustomerEntity.class, jeecgDemo.getId());
 					try {
 						MyBeanUtils.copyBeanNotNull2Bean(jeecgDemo, t);
 						systemService.saveOrUpdate(t);
@@ -627,7 +627,7 @@ public class JformOrderMainController extends BaseController {
 				} else {
 					try {
 						//jeecgDemo.setStatus("0");
-						systemService.save(jeecgDemo);
+						systemService.add(jeecgDemo);
 						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -710,7 +710,7 @@ public class JformOrderMainController extends BaseController {
 		List<TSDepart> tSDeparts = new ArrayList<TSDepart>();
 		StringBuffer hql = new StringBuffer(" from TSDepart t where 1=1 ");
 		if(oConvertUtils.isNotEmpty(parentid)){
-			TSDepart dePart = this.systemService.getEntity(TSDepart.class, parentid);
+			TSDepart dePart = this.systemService.getById(TSDepart.class, parentid);
 			hql.append(" and TSPDepart = ?");
 			tSDeparts = this.systemService.findHql(hql.toString(), dePart);
 		}

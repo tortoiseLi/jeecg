@@ -95,7 +95,7 @@ public class CgreportConfigHeadController extends BaseController {
 	public AjaxJson doDel(CgreportConfigHeadEntity cgreportConfigHead, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		cgreportConfigHead = systemService.getEntity(CgreportConfigHeadEntity.class, cgreportConfigHead.getId());
+		cgreportConfigHead = systemService.getById(CgreportConfigHeadEntity.class, cgreportConfigHead.getId());
 		message = "动态报表配置抬头删除成功";
 		try{
 			cgreportConfigHeadService.delMain(cgreportConfigHead);
@@ -123,7 +123,7 @@ public class CgreportConfigHeadController extends BaseController {
 		message = "动态报表配置抬头删除成功";
 		try{
 			for(String id:ids.split(",")){
-				CgreportConfigHeadEntity cgreportConfigHead = systemService.getEntity(CgreportConfigHeadEntity.class, id);
+				CgreportConfigHeadEntity cgreportConfigHead = systemService.getById(CgreportConfigHeadEntity.class, id);
 				cgreportConfigHeadService.delMain(cgreportConfigHead);
 				systemService.addLog(message, Globals.Log_Type_DEL, Globals.LOG_LEVEL_INFO);
 				logger.info("["+IpUtil.getIpAddr(request)+"][online报表批量删除]["+cgreportConfigHead.getCode()+"]"+message);
@@ -222,7 +222,7 @@ public class CgreportConfigHeadController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(CgreportConfigHeadEntity cgreportConfigHead, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgreportConfigHead.getId())) {
-			cgreportConfigHead = cgreportConfigHeadService.getEntity(CgreportConfigHeadEntity.class, cgreportConfigHead.getId());
+			cgreportConfigHead = cgreportConfigHeadService.getById(CgreportConfigHeadEntity.class, cgreportConfigHead.getId());
 			req.setAttribute("cgreportConfigHeadPage", cgreportConfigHead);
 		}
 		return new ModelAndView("jeecg/cgreport/core/cgreportConfigHead-add");
@@ -237,7 +237,7 @@ public class CgreportConfigHeadController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(CgreportConfigHeadEntity cgreportConfigHead, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(cgreportConfigHead.getId())) {
-			cgreportConfigHead = cgreportConfigHeadService.getEntity(CgreportConfigHeadEntity.class, cgreportConfigHead.getId());
+			cgreportConfigHead = cgreportConfigHeadService.getById(CgreportConfigHeadEntity.class, cgreportConfigHead.getId());
 			req.setAttribute("cgreportConfigHeadPage", cgreportConfigHead);
 		}
 		return new ModelAndView("jeecg/cgreport/core/cgreportConfigHead-update");

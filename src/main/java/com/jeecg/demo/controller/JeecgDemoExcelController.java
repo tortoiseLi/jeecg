@@ -118,7 +118,7 @@ public class JeecgDemoExcelController extends BaseController {
 	public AjaxJson doDel(JeecgDemoExcelEntity jeecgDemoExcel, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		jeecgDemoExcel = systemService.getEntity(JeecgDemoExcelEntity.class, jeecgDemoExcel.getId());
+		jeecgDemoExcel = systemService.getById(JeecgDemoExcelEntity.class, jeecgDemoExcel.getId());
 		message = "excel导入导出测试表删除成功";
 		try{
 			jeecgDemoExcelService.delete(jeecgDemoExcel);
@@ -145,7 +145,7 @@ public class JeecgDemoExcelController extends BaseController {
 		message = "excel导入导出测试表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				JeecgDemoExcelEntity jeecgDemoExcel = systemService.getEntity(JeecgDemoExcelEntity.class, 
+				JeecgDemoExcelEntity jeecgDemoExcel = systemService.getById(JeecgDemoExcelEntity.class,
 				id
 				);
 				jeecgDemoExcelService.delete(jeecgDemoExcel);
@@ -197,7 +197,7 @@ public class JeecgDemoExcelController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "excel导入导出测试表更新成功";
-		JeecgDemoExcelEntity t = jeecgDemoExcelService.get(JeecgDemoExcelEntity.class, jeecgDemoExcel.getId());
+		JeecgDemoExcelEntity t = jeecgDemoExcelService.getById(JeecgDemoExcelEntity.class, jeecgDemoExcel.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(jeecgDemoExcel, t);
 			jeecgDemoExcelService.saveOrUpdate(t);
@@ -220,7 +220,7 @@ public class JeecgDemoExcelController extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(JeecgDemoExcelEntity jeecgDemoExcel, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jeecgDemoExcel.getId())) {
-			jeecgDemoExcel = jeecgDemoExcelService.getEntity(JeecgDemoExcelEntity.class, jeecgDemoExcel.getId());
+			jeecgDemoExcel = jeecgDemoExcelService.getById(JeecgDemoExcelEntity.class, jeecgDemoExcel.getId());
 			req.setAttribute("jeecgDemoExcelPage", jeecgDemoExcel);
 		}
 		return new ModelAndView("com/jeecg/demo/excel/jeecgDemoExcel-add");
@@ -233,7 +233,7 @@ public class JeecgDemoExcelController extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(JeecgDemoExcelEntity jeecgDemoExcel, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jeecgDemoExcel.getId())) {
-			jeecgDemoExcel = jeecgDemoExcelService.getEntity(JeecgDemoExcelEntity.class, jeecgDemoExcel.getId());
+			jeecgDemoExcel = jeecgDemoExcelService.getById(JeecgDemoExcelEntity.class, jeecgDemoExcel.getId());
 			req.setAttribute("jeecgDemoExcelPage", jeecgDemoExcel);
 		}
 		return new ModelAndView("com/jeecg/demo/excel/jeecgDemoExcel-update");
@@ -323,7 +323,7 @@ public class JeecgDemoExcelController extends BaseController {
 	@RequestMapping("/ftl2word")
 	public void velocity2word(JeecgDemoExcelEntity jeecgDemoExcel,HttpServletRequest request,HttpServletResponse response) throws IOException{
 		try {
-			jeecgDemoExcel = this.jeecgDemoExcelService.getEntity(JeecgDemoExcelEntity.class, jeecgDemoExcel.getId());
+			jeecgDemoExcel = this.jeecgDemoExcelService.getById(JeecgDemoExcelEntity.class, jeecgDemoExcel.getId());
 			List<Map<String,Object>> departs = this.systemService.findForJdbc("select id,departname from t_s_depart"); 
 			String docFileName ="word-模板导出测试.doc";
 			Map<String,Object> rootMap = new HashMap<String,Object>();

@@ -17,7 +17,7 @@ public class FunctionServiceImpl extends CommonServiceImpl implements FunctionSe
 	@Override
 	public AjaxJson delFunction(String functionId) {
 		AjaxJson j = new AjaxJson();
-		TSFunction function = this.getEntity(TSFunction.class, functionId);
+		TSFunction function = this.getById(TSFunction.class, functionId);
 		String message = MutiLangUtil.paramDelSuccess("common.menu");
 		//删除角色菜单关系
 		this.executeSql("delete from t_s_role_function where functionid=?", functionId);

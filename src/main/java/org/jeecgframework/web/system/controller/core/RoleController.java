@@ -196,7 +196,7 @@ public class RoleController extends BaseController {
 
             systemService.executeSql("delete from t_s_role_org where role_id=?", role.getId()); // 删除 角色-机构 关系信息
 
-            role = systemService.getEntity(TSRole.class, role.getId());
+            role = systemService.getById(TSRole.class, role.getId());
 			userService.delete(role);
 			message = "角色: " + role.getRoleName() + "被删除成功";
 			systemService.addLog(message, Globals.Log_Type_DEL,
@@ -275,7 +275,7 @@ public class RoleController extends BaseController {
 
 			role.setRoleType(OrgConstants.SYSTEM_ROLE_TYPE);//默认系统角色
 
-			userService.save(role);
+			userService.add(role);
 			systemService.addLog(message, Globals.Log_Type_INSERT,
 					Globals.LOG_LEVEL_INFO);
 		}
@@ -378,7 +378,7 @@ public class RoleController extends BaseController {
 			}
 		}
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id", "userName", "TSUser");
-		comboTrees = systemService.ComboTree(loginActionlist,comboTreeModel,loginActionlist, false);
+		comboTrees = systemService.comboTree(loginActionlist,comboTreeModel,loginActionlist, false);
 		return comboTrees;
 	}
 
@@ -415,7 +415,7 @@ public class RoleController extends BaseController {
 		}
 
 		List<Object> allRoleList = this.systemService.getList(TSRole.class);
-		List<ComboTree> comboTrees = systemService.ComboTree(allRoleList,
+		List<ComboTree> comboTrees = systemService.comboTree(allRoleList,
 				comboTreeModel, orgRoleList, false);
 
 		return comboTrees;
@@ -451,7 +451,7 @@ public class RoleController extends BaseController {
 					roleOrg.setTsDepart(depart);
 					roleOrgList.add(roleOrg);
 				}
-				systemService.batchSave(roleOrgList);
+				systemService.batchAdd(roleOrgList);
 			}
 			j.setMsg("角色更新成功");
 		} catch (Exception e) {
@@ -489,7 +489,7 @@ public class RoleController extends BaseController {
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		String roleId = request.getParameter("roleId");
 		List<TSFunction> loginActionlist = new ArrayList<TSFunction>();// 已有权限菜单
-		role = this.systemService.get(TSRole.class, roleId);
+		role = this.systemService.getById(TSRole.class, roleId);
 		if (role != null) {
 			List<TSRoleFunction> roleFunctionList = systemService.findByProperty(TSRoleFunction.class, "TSRole.id",role.getId());
 			if (roleFunctionList.size() > 0) {
@@ -612,7 +612,7 @@ public class RoleController extends BaseController {
 		try {
 			String roleId = request.getParameter("roleId");
 			String rolefunction = request.getParameter("rolefunctions");
-			TSRole role = this.systemService.get(TSRole.class, roleId);
+			TSRole role = this.systemService.getById(TSRole.class, roleId);
 			List<TSRoleFunction> roleFunctionList = systemService
 					.findByProperty(TSRoleFunction.class, "TSRole.id",
 							role.getId());
@@ -657,7 +657,7 @@ public class RoleController extends BaseController {
 				map.remove(s);
 			} else {
 				TSRoleFunction rf = new TSRoleFunction();
-				TSFunction f = this.systemService.get(TSFunction.class, s);
+				TSFunction f = this.systemService.getById(TSFunction.class, s);
 				rf.setTSFunction(f);
 				rf.setTSRole(role);
 				entitys.add(rf);
@@ -668,8 +668,8 @@ public class RoleController extends BaseController {
 		for (; it.hasNext();) {
 			deleteEntitys.add(it.next());
 		}
-		systemService.batchSave(entitys);
-		systemService.deleteAllEntitie(deleteEntitys);
+		systemService.batchAdd(entitys);
+		systemService.deleteCollection(deleteEntitys);
 
 	}
 
@@ -683,7 +683,7 @@ public class RoleController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(TSRole role, HttpServletRequest req) {
 		if (role.getId() != null) {
-			role = systemService.getEntity(TSRole.class, role.getId());
+			role = systemService.getById(TSRole.class, role.getId());
 			req.setAttribute("role", role);
 		}
 		return new ModelAndView("system/role/role");
@@ -715,7 +715,7 @@ public class RoleController extends BaseController {
 		Collections.sort(functionList, new SetListSort());
 		TreeGridModel treeGridModel = new TreeGridModel();
 		treeGridModel.setRoleid(roleId);
-		treeGrids = systemService.treegrid(functionList, treeGridModel);
+		treeGrids = systemService.treeGrid(functionList, treeGridModel);
 		return treeGrids;
 
 	}
@@ -982,7 +982,7 @@ public class RoleController extends BaseController {
     public AjaxJson doAddUserToOrg(HttpServletRequest req) {
     	String message = null;
         AjaxJson j = new AjaxJson();
-        TSRole role = systemService.getEntity(TSRole.class, req.getParameter("roleId"));
+        TSRole role = systemService.getById(TSRole.class, req.getParameter("roleId"));
         saveRoleUserList(req, role);
         message =  MutiLangUtil.paramAddSuccess("common.user");
 //      systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
@@ -1011,7 +1011,7 @@ public class RoleController extends BaseController {
             roleUserList.add(roleUser);
         }
         if (!roleUserList.isEmpty()) {
-            systemService.batchSave(roleUserList);
+            systemService.batchAdd(roleUserList);
         }
     }
 
@@ -1088,7 +1088,7 @@ public class RoleController extends BaseController {
 						MyBeanUtils.copyBeanNotNull2Bean(tsRole,role);
 						systemService.saveOrUpdate(role);
 					}else {
-						systemService.save(tsRole);
+						systemService.add(tsRole);
 					}
 				}
 				j.setMsg("文件导入成功！");

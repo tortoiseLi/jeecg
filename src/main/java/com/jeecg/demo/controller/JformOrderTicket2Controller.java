@@ -130,7 +130,7 @@ public class JformOrderTicket2Controller extends BaseController {
 	public AjaxJson doDel(JformOrderTicket2Entity jformOrderTicket2, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		jformOrderTicket2 = systemService.getEntity(JformOrderTicket2Entity.class, jformOrderTicket2.getId());
+		jformOrderTicket2 = systemService.getById(JformOrderTicket2Entity.class, jformOrderTicket2.getId());
 		message = "订单机票信息删除成功";
 		try{
 			if(jformOrderTicket2!=null){
@@ -159,7 +159,7 @@ public class JformOrderTicket2Controller extends BaseController {
 		message = "订单机票信息删除成功";
 		try{
 			for(String id:ids.split(",")){
-				JformOrderTicket2Entity jformOrderTicket2 = systemService.getEntity(JformOrderTicket2Entity.class, 
+				JformOrderTicket2Entity jformOrderTicket2 = systemService.getById(JformOrderTicket2Entity.class,
 				id
 				);
 				if(jformOrderTicket2!=null){
@@ -190,7 +190,7 @@ public class JformOrderTicket2Controller extends BaseController {
 		AjaxJson j = new AjaxJson();
 		message = "订单机票信息添加成功";
 		try{
-			jformOrderMain2Service.save(jformOrderTicket2);
+			jformOrderMain2Service.add(jformOrderTicket2);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -213,7 +213,7 @@ public class JformOrderTicket2Controller extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		message = "订单机票信息更新成功";
-		JformOrderTicket2Entity t = jformOrderMain2Service.get(JformOrderTicket2Entity.class, jformOrderTicket2.getId());
+		JformOrderTicket2Entity t = jformOrderMain2Service.getById(JformOrderTicket2Entity.class, jformOrderTicket2.getId());
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(jformOrderTicket2, t);
 			jformOrderMain2Service.saveOrUpdate(t);
@@ -236,7 +236,7 @@ public class JformOrderTicket2Controller extends BaseController {
 	@RequestMapping(params = "goAdd")
 	public ModelAndView goAdd(JformOrderTicket2Entity jformOrderTicket2, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jformOrderTicket2.getId())) {
-			jformOrderTicket2 = jformOrderMain2Service.getEntity(JformOrderTicket2Entity.class, jformOrderTicket2.getId());
+			jformOrderTicket2 = jformOrderMain2Service.getById(JformOrderTicket2Entity.class, jformOrderTicket2.getId());
 			req.setAttribute("jformOrderTicket2Page", jformOrderTicket2);
 		}
 		req.setAttribute("mainId", req.getParameter("mainId"));
@@ -250,7 +250,7 @@ public class JformOrderTicket2Controller extends BaseController {
 	@RequestMapping(params = "goUpdate")
 	public ModelAndView goUpdate(JformOrderTicket2Entity jformOrderTicket2, HttpServletRequest req) {
 		if (StringUtil.isNotEmpty(jformOrderTicket2.getId())) {
-			jformOrderTicket2 = jformOrderMain2Service.getEntity(JformOrderTicket2Entity.class, jformOrderTicket2.getId());
+			jformOrderTicket2 = jformOrderMain2Service.getById(JformOrderTicket2Entity.class, jformOrderTicket2.getId());
 			req.setAttribute("jformOrderTicket2Page", jformOrderTicket2);
 		}
 		return new ModelAndView("com/jeecg/demo/jformOrderMain2/jformOrderTicket2/update");
@@ -320,7 +320,7 @@ public class JformOrderTicket2Controller extends BaseController {
 			try {
 				List<JformOrderTicket2Entity> listJformOrderTicket2Entitys = ExcelImportUtil.importExcel(file.getInputStream(),JformOrderTicket2Entity.class,params);
 				for (JformOrderTicket2Entity jformOrderTicket2 : listJformOrderTicket2Entitys) {
-					jformOrderMain2Service.save(jformOrderTicket2);
+					jformOrderMain2Service.add(jformOrderTicket2);
 				}
 				j.setMsg("文件导入成功！");
 			} catch (Exception e) {
@@ -353,7 +353,7 @@ public class JformOrderTicket2Controller extends BaseController {
 		if(CollectionUtils.isNotEmpty(lists)){
 			for(JformOrderTicket2Entity temp:lists){
 				if (StringUtil.isNotEmpty(temp.getId())) {
-					JformOrderTicket2Entity t =this.systemService.get(JformOrderTicket2Entity.class, temp.getId());
+					JformOrderTicket2Entity t =this.systemService.getById(JformOrderTicket2Entity.class, temp.getId());
 					try {
 						MyBeanUtils.copyBeanNotNull2Bean(temp, t);
 						systemService.saveOrUpdate(t);
@@ -365,7 +365,7 @@ public class JformOrderTicket2Controller extends BaseController {
 					try {
 						//temp.setDelFlag(0);若有则需要加
 						temp.setFckId(mainId);
-						systemService.save(temp);
+						systemService.add(temp);
 						systemService.addLog(message, Globals.Log_Type_INSERT, Globals.LOG_LEVEL_INFO);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -388,7 +388,7 @@ public class JformOrderTicket2Controller extends BaseController {
 	@ResponseBody
 	@ApiOperation(value="根据ID获取订单机票信息信息",notes="根据ID获取订单机票信息信息",httpMethod="GET",produces="application/json")
 	public ResponseMessage<?> get(@ApiParam(required=true,name="id",value="ID")@PathVariable("id") String id) {
-		JformOrderTicket2Entity task = jformOrderMain2Service.get(JformOrderTicket2Entity.class, id);
+		JformOrderTicket2Entity task = jformOrderMain2Service.getById(JformOrderTicket2Entity.class, id);
 		if (task == null) {
 			return Result.error("根据ID获取订单机票信息信息为空");
 		}
@@ -407,7 +407,7 @@ public class JformOrderTicket2Controller extends BaseController {
 
 		//保存
 		try{
-			jformOrderMain2Service.save(jformOrderTicket2);
+			jformOrderMain2Service.add(jformOrderTicket2);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Result.error("订单机票信息信息保存失败");
@@ -447,7 +447,7 @@ public class JformOrderTicket2Controller extends BaseController {
 			return Result.error("ID不能为空");
 		}
 		try {
-			jformOrderMain2Service.deleteEntityById(JformOrderTicket2Entity.class, id);
+			jformOrderMain2Service.deleteById(JformOrderTicket2Entity.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Result.error("订单机票信息删除失败");

@@ -102,7 +102,7 @@ public class CategoryController extends BaseController {
 		treeGridModel.setParentText("parent_name");
 		treeGridModel.setParentId("parent_code");
 		treeGridModel.setChildList("list");
-		treeGrids = systemService.treegrid(list, treeGridModel);
+		treeGrids = systemService.treeGrid(list, treeGridModel);
 		return treeGrids;
 	}
 
@@ -115,7 +115,7 @@ public class CategoryController extends BaseController {
 	@ResponseBody
 	public AjaxJson del(TSCategoryEntity tSCategory, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		tSCategory = systemService.getEntity(TSCategoryEntity.class,
+		tSCategory = systemService.getById(TSCategoryEntity.class,
 				tSCategory.getId());
 		j.setMsg("分类管理删除成功");
 		categoryService.delete(tSCategory);
@@ -136,7 +136,7 @@ public class CategoryController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(category.getId())) {
 			j.setMsg("分类管理更新成功");
-			TSCategoryEntity t = categoryService.get(TSCategoryEntity.class,
+			TSCategoryEntity t = categoryService.getById(TSCategoryEntity.class,
 					category.getId());
 
 			category.getParent().setCode(t.getParent()==null||"".equals(t.getParent().getCode())? null :t.getParent().getCode());
@@ -199,7 +199,7 @@ public class CategoryController extends BaseController {
 				.getListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("code", "name", "list");
-		comboTrees = systemService.ComboTree(categoryList, comboTreeModel,
+		comboTrees = systemService.comboTree(categoryList, comboTreeModel,
 				null, false);
 		MutiLangUtil.setMutiTree(comboTrees);
 		return comboTrees;

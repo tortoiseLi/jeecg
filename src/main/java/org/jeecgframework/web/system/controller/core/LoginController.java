@@ -434,14 +434,14 @@ public class LoginController extends BaseController{
 	@ResponseBody
 	public AjaxJson resetPwd(String key,String password){
 		AjaxJson ajaxJson = new AjaxJson();
-		TSPasswordResetkey passwordResetkey = systemService.get(TSPasswordResetkey.class, key);
+		TSPasswordResetkey passwordResetkey = systemService.getById(TSPasswordResetkey.class, key);
 		Date now = new Date();
 		if(passwordResetkey != null && passwordResetkey.getIsReset() != 1 && (now.getTime() - passwordResetkey.getCreateDate().getTime()) < 1000*60*60*3){
 			TSUser user = systemService.findUniqueByProperty(TSUser.class, "userName", passwordResetkey.getUsername());
 			user.setPassword(PasswordUtil.encrypt(user.getUserName(), password, PasswordUtil.getStaticSalt()));
-			systemService.updateEntitie(user);
+			systemService.update(user);
 			passwordResetkey.setIsReset(1);
-			systemService.updateEntitie(passwordResetkey);
+			systemService.update(passwordResetkey);
 			ajaxJson.setMsg("密码重置成功");
 		}else{
 			ajaxJson.setSuccess(false);
@@ -497,7 +497,7 @@ public class LoginController extends BaseController{
 			passwordResetKey.setUsername(user.getUserName());
 			passwordResetKey.setCreateDate(new Date());
 			passwordResetKey.setIsReset(0);
-			userService.save(passwordResetKey);
+			userService.add(passwordResetKey);
 			String content = ResourceUtil.getConfigByName("resetpwd.mail.content");
 			if(content.indexOf("${username}") > -1){
 				content = content.replace("${username}", user.getUserName());

@@ -130,7 +130,7 @@ public class LogController extends BaseController {
 	@RequestMapping(params = "logDetail")
 	public ModelAndView logDetail(TSLog tsLog,HttpServletRequest request){
 		if (StringUtil.isNotEmpty(tsLog.getId())) {
-			tsLog = logService.getEntity(TSLog.class, tsLog.getId());
+			tsLog = logService.getById(TSLog.class, tsLog.getId());
 			request.setAttribute("tsLog", tsLog);
 		}
 		return new ModelAndView("system/log/logDetail");
