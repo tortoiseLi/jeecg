@@ -277,7 +277,7 @@ public class JfromOrderController extends BaseController {
 		//查询-订单表体
 	    String hql0 = "from JfromOrderLineEntity where 1 = 1 AND oRDERID = ? ";
 	    try{
-	    	List<JfromOrderLineEntity> jfromOrderLineEntityList = systemService.findHql(hql0,id0);
+	    	List<JfromOrderLineEntity> jfromOrderLineEntityList = systemService.findListByHql(hql0,id0);
 			req.setAttribute("jfromOrderLineList", jfromOrderLineEntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -313,7 +313,7 @@ public class JfromOrderController extends BaseController {
     		throw new BusinessException(e.getMessage());
     	}
     	cq.add();
-    	List<JfromOrderEntity> list=this.jfromOrderService.getListByCriteriaQuery(cq, false);
+    	List<JfromOrderEntity> list=this.jfromOrderService.findListByCriteriaQuery(cq, false);
     	List<JfromOrderPage> pageList=new ArrayList<JfromOrderPage>();
         if(list!=null&&list.size()>0){
         	for(JfromOrderEntity entity:list){
@@ -322,7 +322,7 @@ public class JfromOrderController extends BaseController {
         		   MyBeanUtils.copyBeanNotNull2Bean(entity,page);
             	    Object id0 = entity.getId();
 				    String hql0 = "from JfromOrderLineEntity where 1 = 1 AND oRDERID = ? ";
-        	        List<JfromOrderLineEntity> jfromOrderLineEntityList = systemService.findHql(hql0,id0);
+        	        List<JfromOrderLineEntity> jfromOrderLineEntityList = systemService.findListByHql(hql0,id0);
             		page.setJfromOrderLineList(jfromOrderLineEntityList);
             		pageList.add(page);
             	}catch(Exception e){
@@ -406,7 +406,7 @@ public class JfromOrderController extends BaseController {
 	@ResponseBody
 	//@ApiOperation(value="订单列表列表信息",produces="application/json",httpMethod="GET")
 	public ResponseMessage<List<JfromOrderPage>> list() {
-		List<JfromOrderEntity> list= jfromOrderService.getList(JfromOrderEntity.class);
+		List<JfromOrderEntity> list= jfromOrderService.findList(JfromOrderEntity.class);
     	List<JfromOrderPage> pageList=new ArrayList<JfromOrderPage>();
         if(list!=null&&list.size()>0){
         	for(JfromOrderEntity entity:list){
@@ -415,7 +415,7 @@ public class JfromOrderController extends BaseController {
         		   MyBeanUtils.copyBeanNotNull2Bean(entity,page);
 					Object id0 = entity.getId();
 				     String hql0 = "from JfromOrderLineEntity where 1 = 1 AND oRDERID = ? ";
-	    			List<JfromOrderLineEntity> jfromOrderLineOldList = this.jfromOrderService.findHql(hql0,id0);
+	    			List<JfromOrderLineEntity> jfromOrderLineOldList = this.jfromOrderService.findListByHql(hql0,id0);
             		page.setJfromOrderLineList(jfromOrderLineOldList);
             		pageList.add(page);
             	}catch(Exception e){
@@ -439,7 +439,7 @@ public class JfromOrderController extends BaseController {
 			MyBeanUtils.copyBeanNotNull2Bean(task, page);
 				Object id0 = task.getId();
 		    String hql0 = "from JfromOrderLineEntity where 1 = 1 AND oRDERID = ? ";
-			List<JfromOrderLineEntity> jfromOrderLineOldList = this.jfromOrderService.findHql(hql0,id0);
+			List<JfromOrderLineEntity> jfromOrderLineOldList = this.jfromOrderService.findListByHql(hql0,id0);
     		page.setJfromOrderLineList(jfromOrderLineOldList);
 		} catch (Exception e) {
 			e.printStackTrace();

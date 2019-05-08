@@ -590,7 +590,7 @@ public class DataGridTag extends TagSupport {
 
 				systemService = ApplicationContextUtil.getContext().getBean(
 						SystemService.class);
-				List<Map<String, Object>> list = systemService.findForJdbc(sql);
+				List<Map<String, Object>> list = systemService.findListMapBySql(sql);
 				for (Map<String, Object> map : list){
 					text += map.get("text") + ",";
 					value += map.get("field") + ",";
@@ -917,7 +917,7 @@ public class DataGridTag extends TagSupport {
 										String field = column.getField().replaceAll("_","\\.");
 										sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_radio\"/>");	
 										String sql = "select " + dictionaryArray[1]+","+dictionaryArray[2]+" from "+dictionaryArray[0];
-										List<Map<String, Object>> dictionaryList = systemService.findForJdbc(sql);
+										List<Map<String, Object>> dictionaryList = systemService.findListMapBySql(sql);
 										if(dictionaryList != null && !dictionaryList.isEmpty()){
 											for (Map<String, Object> map : dictionaryList) {
 												if(map.containsKey(dictionaryArray[1]) && map.containsKey(dictionaryArray[2])){
@@ -955,7 +955,7 @@ public class DataGridTag extends TagSupport {
 										String field = column.getField().replaceAll("_","\\.");
 										sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_checkbox\" value=\"\" />");
 										String sql = "select " + dictionaryArray[1]+","+dictionaryArray[2]+" from "+dictionaryArray[0];
-										List<Map<String, Object>> dictionaryList = systemService.findForJdbc(sql);
+										List<Map<String, Object>> dictionaryList = systemService.findListMapBySql(sql);
 										if(dictionaryList != null && !dictionaryList.isEmpty()){
 											for (Map<String, Object> map : dictionaryList) {
 												if(map.containsKey(dictionaryArray[1]) && map.containsKey(dictionaryArray[2])){
@@ -993,7 +993,7 @@ public class DataGridTag extends TagSupport {
 									String[] dictionaryArray = dictionary.split(",");
 									if(dictionaryArray.length == 3){
 										String sql = "select " + dictionaryArray[1]+","+dictionaryArray[2]+" from "+dictionaryArray[0];
-										List<Map<String, Object>> dictionaryList = systemService.findForJdbc(sql);
+										List<Map<String, Object>> dictionaryList = systemService.findListMapBySql(sql);
 										if(dictionaryList != null && !dictionaryList.isEmpty()){
 											for (Map<String, Object> map : dictionaryList) {
 												if(map.containsKey(dictionaryArray[1]) && map.containsKey(dictionaryArray[2])){
@@ -2255,7 +2255,7 @@ public class DataGridTag extends TagSupport {
 
 								systemService = ApplicationContextUtil.getContext().getBean(
 										SystemService.class);
-								List<Map<String, Object>> list = systemService.findForJdbc(sql);
+								List<Map<String, Object>> list = systemService.findListMapBySql(sql);
 								
 								
 								String showMode = col.getShowMode();
@@ -2990,7 +2990,7 @@ public class DataGridTag extends TagSupport {
 									}
 
 									systemService = ApplicationContextUtil.getContext().getBean(SystemService.class);
-									List<Map<String, Object>> list = systemService.findForJdbc(sql);
+									List<Map<String, Object>> list = systemService.findListMapBySql(sql);
 									
 									comboboxStr.append("editor:{type:'combobox',options:{valueField:'typecode',textField:'typename',data:[");
 
@@ -3658,7 +3658,7 @@ public class DataGridTag extends TagSupport {
 
 									systemService = ApplicationContextUtil.getContext().getBean(
 											SystemService.class);
-									List<Map<String, Object>> list = systemService.findForJdbc(sql);
+									List<Map<String, Object>> list = systemService.findListMapBySql(sql);
 									sb.append("<select name=\""+col.getField().replaceAll("_","\\.")+"\" WIDTH=\"100\" style=\"width: 104px\"> ");
 									sb.append(StringUtil.replaceAll("<option value =\"\" >{0}</option>", "{0}", MutiLangUtil.getLang("common.please.select")));
 									for (Map<String, Object> map : list){

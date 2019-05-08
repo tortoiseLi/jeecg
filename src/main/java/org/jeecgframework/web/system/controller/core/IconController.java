@@ -188,7 +188,7 @@ public class IconController extends BaseController {
 	@ResponseBody
 	public AjaxJson repair(HttpServletRequest request) throws Exception {
 		AjaxJson json = new AjaxJson();
-		List<TSIcon> icons = systemService.loadAll(TSIcon.class);
+		List<TSIcon> icons = systemService.findList(TSIcon.class);
 		String rootpath = request.getSession().getServletContext().getRealPath("/");
 		String csspath = request.getSession().getServletContext().getRealPath("/plug-in/accordion/css/icons.css");
 		// 清空CSS文件内容
@@ -268,7 +268,7 @@ public class IconController extends BaseController {
 	 * @return true允许；false不允许；
 	 */
 	private boolean isPermitDel(TSIcon icon) {
-		List<TSFunction> functions = systemService.findByProperty(TSFunction.class, "TSIcon.id", icon.getId());
+		List<TSFunction> functions = systemService.findListByProperty(TSFunction.class, "TSIcon.id", icon.getId());
 		if (functions==null||functions.isEmpty()) {
 			return true;
 		}
@@ -276,14 +276,14 @@ public class IconController extends BaseController {
 	}
 
 	public void upEntity(TSIcon icon) {
-		List<TSFunction> functions = systemService.findByProperty(TSFunction.class, "TSIcon.id", icon.getId());
+		List<TSFunction> functions = systemService.findListByProperty(TSFunction.class, "TSIcon.id", icon.getId());
 		if (functions.size() > 0) {
 			for (TSFunction tsFunction : functions) {
 				tsFunction.setTSIcon(null);
 				systemService.saveOrUpdate(tsFunction);
 			}
 		}
-		List<TSOperation> operations = systemService.findByProperty(TSOperation.class, "TSIcon.id", icon.getId());
+		List<TSOperation> operations = systemService.findListByProperty(TSOperation.class, "TSIcon.id", icon.getId());
 		if (operations.size() > 0) {
 			for (TSOperation tsOperation : operations) {
 				tsOperation.setTSIcon(null);

@@ -86,7 +86,7 @@ public class CgformEnhanceJavaServiceImpl extends CommonServiceImpl implements C
 		hql.append(" and t.event = 'end' ");
 		hql.append(" and t.activeStatus = '1'");
 
-		List<CgformEnhanceJavaEntity> list = this.findHql(hql.toString(),formId,buttonCode);
+		List<CgformEnhanceJavaEntity> list = this.findListByHql(hql.toString(),formId,buttonCode);
 
 		if(list!=null&&list.size()>0){
 			return list.get(0);
@@ -108,9 +108,9 @@ public class CgformEnhanceJavaServiceImpl extends CommonServiceImpl implements C
 		List<CgformEnhanceJavaEntity> list = null;
 		if(cgformEnhanceJavaEntity.getId()!=null){
 			hql.append(" and t.id !=?");
-			list = this.findHql(hql.toString(),cgformEnhanceJavaEntity.getFormId(),cgformEnhanceJavaEntity.getButtonCode(),cgformEnhanceJavaEntity.getEvent(),cgformEnhanceJavaEntity.getId());
+			list = this.findListByHql(hql.toString(),cgformEnhanceJavaEntity.getFormId(),cgformEnhanceJavaEntity.getButtonCode(),cgformEnhanceJavaEntity.getEvent(),cgformEnhanceJavaEntity.getId());
 		}else{
-			list = this.findHql(hql.toString(),cgformEnhanceJavaEntity.getFormId(),cgformEnhanceJavaEntity.getButtonCode(),cgformEnhanceJavaEntity.getEvent());
+			list = this.findListByHql(hql.toString(),cgformEnhanceJavaEntity.getFormId(),cgformEnhanceJavaEntity.getButtonCode(),cgformEnhanceJavaEntity.getEvent());
 		}
 
 		return list;
@@ -156,9 +156,9 @@ public class CgformEnhanceJavaServiceImpl extends CommonServiceImpl implements C
 		hql.append(" and t.activeStatus = 1");
 		if(oConvertUtils.isNotEmpty(event)) {
 			hql.append(" and t.event = ?");
-			list = this.findHql(hql.toString(),formId,buttonCode,event);
+			list = this.findListByHql(hql.toString(),formId,buttonCode,event);
 		} else {
-			list = this.findHql(hql.toString(),formId,buttonCode);
+			list = this.findListByHql(hql.toString(),formId,buttonCode);
 		}
 
 		if(list!=null&&list.size()>0){

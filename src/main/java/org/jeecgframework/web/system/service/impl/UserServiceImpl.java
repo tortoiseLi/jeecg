@@ -210,8 +210,8 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 		StringBuilder hqlsb1 = new StringBuilder("select distinct f from TSFunction f,TSRoleFunction rf,TSRoleUser ru  ").append("where ru.TSRole.id=rf.TSRole.id and rf.TSFunction.id=f.id and ru.TSUser.id=? ");
 		//查询用户组织机构授权的菜单
 		StringBuilder hqlsb2 = new StringBuilder("select distinct c from TSFunction c,TSRoleFunction rf,TSRoleOrg b,TSUserOrg a ").append("where a.tsDepart.id=b.tsDepart.id and b.tsRole.id=rf.TSRole.id and rf.TSFunction.id=c.id and a.tsUser.id=?");
-		List<TSFunction> list1 = this.findHql(hqlsb1.toString(), userId);
-		List<TSFunction> list2 = this.findHql(hqlsb2.toString(), userId);
+		List<TSFunction> list1 = this.findListByHql(hqlsb1.toString(), userId);
+		List<TSFunction> list2 = this.findListByHql(hqlsb2.toString(), userId);
 		for (TSFunction function : list1) {
 			loginActionlist.put(function.getId(), function);
 		}
@@ -330,7 +330,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 	 * 判断访问IP是否在黑名单
 	 */
 	public boolean isInBlackList(String ip){
-		Long orgNum = this.getCountForJdbcParam("select count(*) from t_s_black_list where ip = ?",ip);
+		Long orgNum = this.getCountBySql("select count(*) from t_s_black_list where ip = ?",ip);
 		return orgNum!=0?true:false;
 	}
 
@@ -469,8 +469,8 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 		StringBuilder hqlsb1 = new StringBuilder("select distinct f from TSFunction f,TSRoleFunction rf,TSRoleUser ru  ").append("where ru.TSRole.id=rf.TSRole.id and rf.TSFunction.id=f.id and ru.TSUser.id=? and f.TSFunction.id = ?");
 		//查询用户组织机构授权的菜单
 		StringBuilder hqlsb2 = new StringBuilder("select distinct c from TSFunction c,TSRoleFunction rf,TSRoleOrg b,TSUserOrg a ").append("where a.tsDepart.id=b.tsDepart.id and b.tsRole.id=rf.TSRole.id and rf.TSFunction.id=c.id and a.tsUser.id=? and c.TSFunction.id = ?");
-		List<TSFunction> list1 = this.findHql(hqlsb1.toString(), userid,functionId);
-		List<TSFunction> list2 = this.findHql(hqlsb2.toString(), userid,functionId);
+		List<TSFunction> list1 = this.findListByHql(hqlsb1.toString(), userid,functionId);
+		List<TSFunction> list2 = this.findListByHql(hqlsb2.toString(), userid,functionId);
 		for (TSFunction function : list1) {
 			loginActionlist.put(function.getId(), function);
 		}

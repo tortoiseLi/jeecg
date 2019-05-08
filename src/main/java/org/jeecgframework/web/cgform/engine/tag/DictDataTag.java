@@ -78,7 +78,7 @@ public class DictDataTag implements TemplateDirectiveModel {
 			}
 			sql.append(" from ").append(tablename);
 			sql.append(" order by ").append(name);
-			List<Map<String, Object>> dataList = systemService.findForJdbc(sql
+			List<Map<String, Object>> dataList = systemService.findListMapBySql(sql
 					.toString());
 			env.setGlobalVariable(var, new SimpleCollection(dataList));
 		}

@@ -88,7 +88,7 @@ public class NoticeController extends BaseController{
 			if(isRead==null || !(isRead==1 || isRead ==0)){
 				isRead = 0;
 			}
-			List<Map<String, Object>> noticeList = systemService.findForJdbcParam(sql,1,10,user.getId(),isRead.intValue());
+			List<Map<String, Object>> noticeList = systemService.findListMapBySqlWithPage(sql,1,10,user.getId(),isRead.intValue());
 
 			//将List转换成JSON存储
 			JSONArray result = new JSONArray();
@@ -115,7 +115,7 @@ public class NoticeController extends BaseController{
 					+ "LEFT JOIN t_s_notice_read_user noticeRead ON  notice.id = noticeRead.notice_id "
 					+ "WHERE noticeRead.del_flag = 0 and noticeRead.user_id = ? "
 					+ "and noticeRead.is_read = 0";
-			List<Map<String, Object>> resultList2 =  systemService.findForJdbc(sql2,user.getId());
+			List<Map<String, Object>> resultList2 =  systemService.findListMapBySql(sql2,user.getId());
 
 			Object count = resultList2.get(0).get("count");
 			j.setObj(count);
@@ -148,7 +148,7 @@ public class NoticeController extends BaseController{
 			request.setAttribute("notice", notice);
 			TSUser user = ResourceUtil.getSessionUser();
 			String hql = "from TSNoticeReadUser where noticeId = ? and userId = ?";
-			List<TSNoticeReadUser> noticeReadList = systemService.findHql(hql,notice.getId(),user.getId());
+			List<TSNoticeReadUser> noticeReadList = systemService.findListByHql(hql,notice.getId(),user.getId());
 			if (noticeReadList != null && !noticeReadList.isEmpty()) {
 				TSNoticeReadUser readUser = noticeReadList.get(0);
 				if(readUser.getIsRead() == 0){
@@ -181,7 +181,7 @@ public class NoticeController extends BaseController{
 					+ " WHERE noticeRead.del_flag = 0 and noticeRead.user_id = ? "
 					+ " ORDER BY noticeRead.is_read asc,noticeRead.create_time DESC ";
 			
-			List<Map<String, Object>> resultList = systemService.findForJdbcParam(sql,dataGrid.getPage(),dataGrid.getRows(),user.getId());
+			List<Map<String, Object>> resultList = systemService.findListMapBySqlWithPage(sql,dataGrid.getPage(),dataGrid.getRows(),user.getId());
 
 			//将List转换成JSON存储
 			List<Map<String, Object>> noticeList = new ArrayList<Map<String, Object>>();
@@ -202,7 +202,7 @@ public class NoticeController extends BaseController{
 
 			String getCountSql ="SELECT count(notice.id) as count FROM t_s_notice notice LEFT JOIN t_s_notice_read_user noticeRead ON  notice.id = noticeRead.notice_id "
 					+ "WHERE noticeRead.del_flag = 0 and noticeRead.user_id = ? and noticeRead.is_read = 0";
-			List<Map<String, Object>> resultList2 = systemService.findForJdbc(getCountSql, user.getId());
+			List<Map<String, Object>> resultList2 = systemService.findListMapBySql(getCountSql, user.getId());
 
 			Object count = resultList2.get(0).get("count");
 			dataGrid.setTotal(Integer.valueOf(count.toString()));
@@ -346,10 +346,10 @@ public class NoticeController extends BaseController{
 				executor.execute(new Runnable() {
 					@Override
 					public void run() {
-						List<TSUser> userList = systemService.findHql("from TSUser");
+						List<TSUser> userList = systemService.findListByHql("from TSUser");
 						for (TSUser user : userList) {
 							String hql = "from TSNoticeReadUser where noticeId = ? and userId = ?";
-							List<TSNoticeReadUser> noticeReadList = systemService.findHql(hql,noticeId,user.getId());
+							List<TSNoticeReadUser> noticeReadList = systemService.findListByHql(hql,noticeId,user.getId());
 							if(noticeReadList == null || noticeReadList.isEmpty()){
 								TSNoticeReadUser readUser = new TSNoticeReadUser();
 								readUser.setCreateTime(new Date());
@@ -426,10 +426,10 @@ public class NoticeController extends BaseController{
 					
 					@Override
 					public void run() {
-						List<TSUser> userList = systemService.findHql("from TSUser");
+						List<TSUser> userList = systemService.findListByHql("from TSUser");
 						for (TSUser user : userList) {
 							String hql = "from TSNoticeReadUser where noticeId = ? and userId = ?";
-							List<TSNoticeReadUser> noticeReadList = systemService.findHql(hql,noticeId,user.getId());
+							List<TSNoticeReadUser> noticeReadList = systemService.findListByHql(hql,noticeId,user.getId());
 							if(noticeReadList == null || noticeReadList.isEmpty()){
 								TSNoticeReadUser readUser = new TSNoticeReadUser();
 								readUser.setCreateTime(new Date());
@@ -496,7 +496,7 @@ public class NoticeController extends BaseController{
 	private void clearUser(String id,HttpServletRequest request){
 		TSNoticeAuthorityUser user=new TSNoticeAuthorityUser();
 		user.setNoticeId(id);
-		List<TSNoticeAuthorityUser> users =systemService.findByExample(TSNoticeAuthorityUser.class.getName(),user);
+		List<TSNoticeAuthorityUser> users =systemService.findListByEntity(TSNoticeAuthorityUser.class.getName(),user);
 		for (int i = 0; i < users.size(); i++) {
 			this.noticeAuthorityUserService.doDelNoticeAuthorityUser(users.get(i));
 		}
@@ -505,7 +505,7 @@ public class NoticeController extends BaseController{
 	private void clearRole(String id,HttpServletRequest request){
 		TSNoticeAuthorityRole role=new TSNoticeAuthorityRole();
 		role.setNoticeId(id);
-		List<TSNoticeAuthorityRole>roles=systemService.findByExample(TSNoticeAuthorityRole.class.getName(),role);
+		List<TSNoticeAuthorityRole>roles=systemService.findListByEntity(TSNoticeAuthorityRole.class.getName(),role);
 		for (int i = 0; i < roles.size(); i++) {
 			this.noticeAuthorityRoleService.doDelTSNoticeAuthorityRole(roles.get(i));
 		}
@@ -542,7 +542,7 @@ public class NoticeController extends BaseController{
 			if (tSNotice.getNoticeLevel().equals("2")){
 				TSNoticeAuthorityRole role=new TSNoticeAuthorityRole();
 				role.setNoticeId(tSNotice.getId());
-				List<TSNoticeAuthorityRole>roles=systemService.findByExample(TSNoticeAuthorityRole.class.getName(),role);
+				List<TSNoticeAuthorityRole>roles=systemService.findListByEntity(TSNoticeAuthorityRole.class.getName(),role);
 				StringBuffer rolesid=new StringBuffer();
 				StringBuffer rolesName =new StringBuffer();
 				for (int i = 0; i < roles.size(); i++) {
@@ -555,7 +555,7 @@ public class NoticeController extends BaseController{
 				TSNoticeAuthorityUser user=new TSNoticeAuthorityUser();
 				user.setNoticeId(tSNotice.getId());
 
-				List<TSNoticeAuthorityUser>users=systemService.findByExample(TSNoticeAuthorityUser.class.getName(),user);
+				List<TSNoticeAuthorityUser>users=systemService.findListByEntity(TSNoticeAuthorityUser.class.getName(),user);
 				StringBuffer usersid=new StringBuffer();
 				StringBuffer usersName =new StringBuffer();
 				for (int i = 0; i < users.size(); i++) {

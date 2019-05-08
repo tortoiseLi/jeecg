@@ -191,7 +191,7 @@ public class JeecgFormDemoController extends BaseController {
 			cq.isNull("TSPDepart");
 		}
 		cq.add();
-		List<TSDepart> demoList = systemService.getListByCriteriaQuery(cq, false);
+		List<TSDepart> demoList = systemService.findListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id", "departname", "TSDeparts");
 		comboTrees = systemService.comboTree(demoList, comboTreeModel, null, false);
@@ -212,7 +212,7 @@ public class JeecgFormDemoController extends BaseController {
 			List<TSDepart> depatrList = new ArrayList<TSDepart>();
 			StringBuffer hql = new StringBuffer(" from TSDepart t");
 			//hql.append(" and (parent.id is null or parent.id='')");
-			depatrList = this.systemService.findHql(hql.toString());
+			depatrList = this.systemService.findListByHql(hql.toString());
 			List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
 			Map<String,Object> map = null;
 			for (TSDepart tsdepart : depatrList) {
@@ -230,7 +230,7 @@ public class JeecgFormDemoController extends BaseController {
 				}
 				sqls = "select count(1) from t_s_depart t where t.parentdepartid = ?";
 				paramss = new Object[]{tsdepart.getId()};
-				long counts = this.systemService.getCountForJdbcParam(sqls, paramss);
+				long counts = this.systemService.getCountBySql(sqls, paramss);
 				if(counts>0){
 					dataList.add(map);
 				}else{
@@ -269,7 +269,7 @@ public class JeecgFormDemoController extends BaseController {
 	public void getAutocompleteData(HttpServletRequest request, HttpServletResponse response) {
 		String searchVal = request.getParameter("q");
 		String hql = "from TSUser where userName like '%"+searchVal+"%'";
-		List autoList = systemService.findHql(hql);
+		List autoList = systemService.findListByHql(hql);
 		try {
 			response.setContentType("application/json;charset=UTF-8");
 			response.setHeader("Pragma", "No-cache");
@@ -525,8 +525,8 @@ public class JeecgFormDemoController extends BaseController {
 		cq = HqlGenerateUtil.getDataAuthorConditionHql(cq, new TSFunction());
 		cq.add();
 
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, pageflag);
-		Long total=systemService.getCountForJdbc("select count(*) from t_s_function where functionlevel=0");
+		List<TSFunction> functionList = systemService.findListByCriteriaQuery(cq, pageflag);
+		Long total=systemService.getCountBySql("select count(*) from t_s_function where functionlevel=0");
 		//菜单管理页面：菜单排序
 		Collections.sort(functionList, new NumberComparator());
 		List<TreeGrid> treeGrids = new ArrayList<TreeGrid>();
@@ -622,7 +622,7 @@ public class JeecgFormDemoController extends BaseController {
 		try{
 			List<TSDepart> depatrList = new ArrayList<TSDepart>();
 			StringBuffer hql = new StringBuffer(" from TSDepart t");
-			depatrList = this.systemService.findHql(hql.toString());
+			depatrList = this.systemService.findListByHql(hql.toString());
 			List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
 			Map<String,Object> map = null;
 			for (TSDepart tsdepart : depatrList) {
@@ -659,7 +659,7 @@ public class JeecgFormDemoController extends BaseController {
 	public AjaxJson del(TSDepart depart, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		depart = systemService.getById(TSDepart.class, depart.getId());
-        Long childCount = systemService.getCountForJdbcParam("select count(1) from t_s_depart where parentdepartid = ?", depart.getId());
+        Long childCount = systemService.getCountBySql("select count(1) from t_s_depart where parentdepartid = ?", depart.getId());
         if(childCount>0){
         	j.setSuccess(false);
         	j.setMsg("有下级,不能删除");

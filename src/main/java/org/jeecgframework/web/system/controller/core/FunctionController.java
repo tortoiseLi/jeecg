@@ -174,7 +174,7 @@ public class FunctionController extends BaseController {
 
 		String operationId = operation.getId();
 		String hql = "from TSRoleFunction rolefun where rolefun.operation like '%"+operationId+"%'";
-		List<TSRoleFunction> roleFunctions= userService.findByQueryString(hql);
+		List<TSRoleFunction> roleFunctions= userService.findListByHql(hql);
 		for(TSRoleFunction roleFunction:roleFunctions){
 			String newOper =roleFunction.getOperation().replace(operationId+",", "");
 			if(roleFunction.getOperation().length()==newOper.length()){
@@ -206,7 +206,7 @@ public class FunctionController extends BaseController {
 				tsFunction.setFunctionLevel(Short.valueOf(parent.getFunctionLevel()
 						+ 1 + ""));
 				systemService.saveOrUpdate(tsFunction);
-				List<TSFunction> subFunction1 = systemService.findByProperty(TSFunction.class, "TSFunction.id", tsFunction.getId());
+				List<TSFunction> subFunction1 = systemService.findListByProperty(TSFunction.class, "TSFunction.id", tsFunction.getId());
 				updateSubFunction(subFunction1,tsFunction);
 		   }
        }
@@ -250,7 +250,7 @@ public class FunctionController extends BaseController {
 			}
 			systemService.addLog(message, Globals.Log_Type_UPDATE,Globals.LOG_LEVEL_INFO);
 
-			List<TSFunction> subFunction = systemService.findByProperty(TSFunction.class, "TSFunction.id", function.getId());
+			List<TSFunction> subFunction = systemService.findListByProperty(TSFunction.class, "TSFunction.id", function.getId());
 			updateSubFunction(subFunction,function);
 
 
@@ -258,14 +258,14 @@ public class FunctionController extends BaseController {
 
 		} else {
 			if (function.getFunctionLevel().equals(Globals.Function_Leave_ONE)) {
-				List<TSFunction> functionList = systemService.findByProperty(
+				List<TSFunction> functionList = systemService.findListByProperty(
 						TSFunction.class, "functionLevel",
 						Globals.Function_Leave_ONE);
 				// int ordre=functionList.size()+1;
 				// function.setFunctionOrder(Globals.Function_Order_ONE+ordre);
 				function.setFunctionOrder(function.getFunctionOrder());
 			} else {
-				List<TSFunction> functionList = systemService.findByProperty(
+				List<TSFunction> functionList = systemService.findListByProperty(
 						TSFunction.class, "functionLevel",
 						Globals.Function_Leave_TWO);
 				// int ordre=functionList.size()+1;
@@ -320,15 +320,15 @@ public class FunctionController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(TSFunction function, HttpServletRequest req) {
 		String functionid = req.getParameter("id");
-		List<TSFunction> fuinctionlist = systemService.getList(TSFunction.class);
+		List<TSFunction> fuinctionlist = systemService.findList(TSFunction.class);
 		req.setAttribute("flist", fuinctionlist);
 
 		// List<TSIcon> iconlist = systemService.getList(TSIcon.class);
 		List<TSIcon> iconlist = systemService
-				.findByQueryString("from TSIcon where iconType != 3");
+				.findListByHql("from TSIcon where iconType != 3");
 		req.setAttribute("iconlist", iconlist);
 		List<TSIcon> iconDeskList = systemService
-				.findByQueryString("from TSIcon where iconType = 3");
+				.findListByHql("from TSIcon where iconType = 3");
 		req.setAttribute("iconDeskList", iconDeskList);
 
 		if (functionid != null) {
@@ -353,7 +353,7 @@ public class FunctionController extends BaseController {
 	@RequestMapping(params = "addorupdateop")
 	public ModelAndView addorupdateop(TSOperation operation,
 			HttpServletRequest req) {
-		List<TSIcon> iconlist = systemService.getList(TSIcon.class);
+		List<TSIcon> iconlist = systemService.findList(TSIcon.class);
 		req.setAttribute("iconlist", iconlist);
 		if (operation.getId() != null) {
 			operation = systemService.getById(TSOperation.class,
@@ -394,7 +394,7 @@ public class FunctionController extends BaseController {
 		cq.add();
 
 		
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, false);
+		List<TSFunction> functionList = systemService.findListByCriteriaQuery(cq, false);
 
         Collections.sort(functionList, new NumberComparator());
 
@@ -441,7 +441,7 @@ public class FunctionController extends BaseController {
 			cq.eq("TSFunction.id", id);
 		}
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(
+		List<TSFunction> functionList = systemService.findListByCriteriaQuery(
 				cq, false);
 		List<TreeGrid> treeGrids = new ArrayList<TreeGrid>();
 		this.systemService.getDataGridReturn(cq, true);
@@ -466,7 +466,7 @@ public class FunctionController extends BaseController {
 			cq.isNull("TSFunction");
 		}
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, false);
+		List<TSFunction> functionList = systemService.findListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id","functionName", "TSFunctions");
 		comboTrees = systemService.comboTree(functionList, comboTreeModel,null, false);
@@ -496,7 +496,7 @@ public class FunctionController extends BaseController {
 			cq.like("functionName", name1);
 		}
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(
+		List<TSFunction> functionList = systemService.findListByCriteriaQuery(
 				cq, false);
 		if (functionList.size() > 0 && functionList != null) {
 			for (int i = 0; i < functionList.size(); i++) {
@@ -557,7 +557,7 @@ public class FunctionController extends BaseController {
 	@RequestMapping(params = "addorupdaterule")
 	public ModelAndView addorupdaterule(TSDataRule operation,
 			HttpServletRequest req) {
-		List<TSIcon> iconlist = systemService.getList(TSIcon.class);
+		List<TSIcon> iconlist = systemService.findList(TSIcon.class);
 		req.setAttribute("iconlist", iconlist);
 		if (operation.getId() != null) {
 			operation = systemService.getById(TSDataRule.class,
@@ -667,7 +667,7 @@ public class FunctionController extends BaseController {
 			return 0;
 		}
 		String sql = "SELECT count(*) FROM t_s_data_rule WHERE functionId = ? and rule_column = ? AND rule_conditions = ?";
-		Long count = this.systemService.getCountForJdbcParam(sql, dataRule.getTSFunction().getId(),column,dataRule.getRuleConditions());
+		Long count = this.systemService.getCountBySql(sql, dataRule.getTSFunction().getId(),column,dataRule.getRuleConditions());
 		return count.intValue();
 
 	}

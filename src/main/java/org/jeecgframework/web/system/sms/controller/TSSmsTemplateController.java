@@ -372,7 +372,7 @@ public class TSSmsTemplateController extends BaseController {
 				j.setSuccess(false);
 				j.setMsg("模板CODE不能为空");
 			}else {
-				tSSmsTemplate = tSSmsTemplateService.findUniqueByProperty(TSSmsTemplateEntity.class, "templateCode", tSSmsTemplate.getTemplateCode());
+				tSSmsTemplate = tSSmsTemplateService.getByProperty(TSSmsTemplateEntity.class, "templateCode", tSSmsTemplate.getTemplateCode());
 				Map<String,Object> data = new HashMap<String,Object>();
 				String json = tSSmsTemplate.getTemplateTestJson();
 				if(StringUtils.isEmpty(json)){

@@ -316,7 +316,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		StringBuilder hql = new StringBuilder("");
 		hql.append("from CgFormFieldEntity f");
 		hql.append(" where f.table.id=? ");
-		List<CgFormFieldEntity> list = this.findHql(hql.toString(), formid);
+		List<CgFormFieldEntity> list = this.findListByHql(hql.toString(), formid);
 		Map<String, CgFormFieldEntity> map = new HashMap<String, CgFormFieldEntity>();
 		if (list != null && list.size() > 0) {
 			for (CgFormFieldEntity po : list) {
@@ -332,7 +332,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		StringBuilder hql = new StringBuilder("");
 		hql.append("from CgFormFieldEntity f");
 		hql.append(" where f.table.tableName=? ");
-		List<CgFormFieldEntity> list = this.findHql(hql.toString(), tableName);
+		List<CgFormFieldEntity> list = this.findListByHql(hql.toString(), tableName);
 		Map<String, CgFormFieldEntity> map = new HashMap<String, CgFormFieldEntity>();
 		if (list != null && list.size() > 0) {
 			for (CgFormFieldEntity po : list) {
@@ -349,7 +349,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		StringBuilder hql = new StringBuilder("");
 		hql.append("from CgFormFieldEntity f");
 		hql.append(" where f.table.tableName=? ");
-		List<CgFormFieldEntity> list = this.findHql(hql.toString(), tableName);
+		List<CgFormFieldEntity> list = this.findListByHql(hql.toString(), tableName);
 		Map<String, CgFormFieldEntity> map = new HashMap<String, CgFormFieldEntity>();
 		if (list != null && list.size() > 0) {
 			for (CgFormFieldEntity po : list) {
@@ -364,7 +364,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		StringBuilder hql = new StringBuilder("");
 		hql.append("from CgFormHeadEntity f");
 		hql.append(" where f.tableName=? ");
-		List<CgFormHeadEntity> list = this.findHql(hql.toString(), tableName);
+		List<CgFormHeadEntity> list = this.findListByHql(hql.toString(), tableName);
 		if (list != null && list.size() > 0) {
 			return list.get(0);
 		}
@@ -385,7 +385,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		sql1.append(" where f.table_id = h.id ");
 		sql1.append(" and h.table_name=? ");
 		sql1.append(" and f.main_table=? ");
-		List<Map<String, Object>> list = this.findForJdbc(sql1.toString(),
+		List<Map<String, Object>> list = this.findListMapBySql(sql1.toString(),
 				subTableName, mainTableName);
 
 		SqlInjectionUtil.filterContent(subTableName);
@@ -405,7 +405,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 			}
 		}
 		sql2.append(" and main.id= ? ");
-		List<Map<String, Object>> subTableDataList = this.findForJdbc(sql2.toString(), mainTableId);
+		List<Map<String, Object>> subTableDataList = this.findListMapBySql(sql2.toString(), mainTableId);
 		return subTableDataList;
 	}
 
@@ -734,7 +734,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		StringBuilder hql = new StringBuilder("");
 		hql.append("from CgFormHeadEntity f");
 		hql.append(" where f.tableName=? ");
-		List<CgFormHeadEntity> list = this.findHql(hql.toString(), tableName);
+		List<CgFormHeadEntity> list = this.findListByHql(hql.toString(), tableName);
 		if (list != null && list.size() > 0) {
 			return list.get(0);
 		}
@@ -761,7 +761,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		StringBuilder hql = new StringBuilder("");
 		hql.append("from CgFormFieldEntity f");
 		hql.append(" where f.isShow !='Y' and f.table.tableName=? ");
-		List<CgFormFieldEntity> list = this.findHql(hql.toString(), tableName);
+		List<CgFormFieldEntity> list = this.findListByHql(hql.toString(), tableName);
 		if (list != null && list.size() > 0) {
 			for (CgFormFieldEntity po : list) {
 				if ("id".equalsIgnoreCase(po.getFieldName())) {
@@ -779,7 +779,7 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 	public boolean checkTableExist(String tableName) {
 		boolean result =true;
 		try{
-			this.findForJdbc("select count(*) from "+tableName);
+			this.findListMapBySql("select count(*) from "+tableName);
 		}catch(Exception e){
 			result =false;
 		}

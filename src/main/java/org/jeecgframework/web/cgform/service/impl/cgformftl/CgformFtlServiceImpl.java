@@ -21,7 +21,7 @@ public class CgformFtlServiceImpl extends CommonServiceImpl implements CgformFtl
         sql.append(" where ftl.cgform_id=head.id");
         sql.append(" and ftl.ftl_version=? ");
         sql.append(" and head.table_name=? ");
-        List<Map<String,Object>> list = this.findForJdbc(sql.toString(), ftlVersion, tableName);
+        List<Map<String,Object>> list = this.findListMapBySql(sql.toString(), ftlVersion, tableName);
         if(list!=null&&list.size()>0){
             return list.get(0);
         }
@@ -39,7 +39,7 @@ public class CgformFtlServiceImpl extends CommonServiceImpl implements CgformFtl
 		sql.append(" where ftl.cgform_id=head.id");
 		sql.append(" and ftl.ftl_status='1'");
 		sql.append(" and head.table_name=? ");
-		List<Map<String,Object>> list = this.findForJdbc(sql.toString(), tableName);
+		List<Map<String,Object>> list = this.findListMapBySql(sql.toString(), tableName);
 		if(list!=null&&list.size()>0){
 			return list.get(0);
 		}
@@ -51,7 +51,7 @@ public class CgformFtlServiceImpl extends CommonServiceImpl implements CgformFtl
 		StringBuilder sql = new StringBuilder("");
 		sql.append("select (max(ftl_version)+1) as varsion from cgform_ftl");
 		sql.append(" where cgform_id = ? ");
-		Map<String,Object> map = this.findOneForJdbc(sql.toString(), cgformId);
+		Map<String,Object> map = this.getMapBySql(sql.toString(), cgformId);
 		if(map!=null){
 			int varsion = map.get("varsion")==null?1:Integer.valueOf(map.get("varsion").toString());
 			return varsion;
@@ -65,7 +65,7 @@ public class CgformFtlServiceImpl extends CommonServiceImpl implements CgformFtl
 		sql.append("select * from cgform_ftl");
 		sql.append(" where ftl_status = '1' ");
 		sql.append(" and cgform_id = ? ");
-		Map<String,Object> map = this.findOneForJdbc(sql.toString(), cgformId);
+		Map<String,Object> map = this.getMapBySql(sql.toString(), cgformId);
 		if(map!=null){
 			return true;
 		}
@@ -78,7 +78,7 @@ public class CgformFtlServiceImpl extends CommonServiceImpl implements CgformFtl
 		cq.eq("cgformId", id);
 		cq.eq("ftlStatus", "1");
 		cq.add();
-		List<CgformFtlEntity> list = this.getListByCriteriaQuery(cq,false);
+		List<CgformFtlEntity> list = this.findListByCriteriaQuery(cq,false);
 		if(list.size() == 1){
 			return list.get(0).getFtlContent();
 		}

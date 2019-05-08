@@ -251,7 +251,7 @@ public class CgFormHeadController extends BaseController {
 		logger.info("---同步数据库 ---doDbSynch-----> TableName:"+cgFormHead.getTableName()+" ---修改时间 :"+cgFormHead.getUpdateDate()+" ----创建时间:"+cgFormHead.getCreateDate() +"---请求IP ---+"+oConvertUtils.getIpAddrByRequest(request));
 		//安全控制，判断不在online管理中表单不允许操作
 		String sql = "select count(*) from cgform_head where table_name = ?";
-		Long i = systemService.getCountForJdbcParam(sql,cgFormHead.getTableName());
+		Long i = systemService.getCountBySql(sql,cgFormHead.getTableName());
 		if(i==0){
 			message = "同步失败，非法无授权访问！";
 			logger.info(message+" ----- 请求IP ---+"+IpUtil.getIpAddr(request));
@@ -284,7 +284,7 @@ public class CgFormHeadController extends BaseController {
 				cgFormFieldService.appendSubTableStr4Main(cgFormHead);
 
 				//判断表单下是否有配置表
-				List<CgFormHeadEntity> list = cgFormFieldService.findByProperty(CgFormHeadEntity.class, "physiceId", cgFormHead.getId());
+				List<CgFormHeadEntity> list = cgFormFieldService.findListByProperty(CgFormHeadEntity.class, "physiceId", cgFormHead.getId());
 				if(list!=null&&list.size()>0){
 					message = "同步成功,当前表单的配置表单已被重置";		
 				}else{
@@ -345,7 +345,7 @@ public class CgFormHeadController extends BaseController {
 		 */
 		if(oConvertUtils.isEmpty(cgFormHead.getId())){
 			String sql = "select count(*) from tmp_tables where wl_table_name = ?";
-			long i = systemService.getCountForJdbcParam(sql, new String[]{cgFormHead.getTableName()});
+			long i = systemService.getCountBySql(sql, new String[]{cgFormHead.getTableName()});
 			if(i>0){
 				logger.info("["+IpUtil.getIpAddr(request)+"][系统已经存在，online表名："+cgFormHead.getTableName());
 				j.setMsg("系统中已经存在该表，不允许创建");
@@ -421,7 +421,7 @@ public class CgFormHeadController extends BaseController {
 	 * @param table
 	 */
 	private void syncTable(CgFormHeadEntity table) {
-		List<CgFormHeadEntity> headList = systemService.findByProperty(CgFormHeadEntity.class, "physiceId", table.getId());
+		List<CgFormHeadEntity> headList = systemService.findListByProperty(CgFormHeadEntity.class, "physiceId", table.getId());
 		List<CgFormFieldEntity>	formFieldEntities = table.getColumns();
 		if(headList!=null&&headList.size()>0){
 			for (CgFormHeadEntity cgform : headList) {
@@ -562,7 +562,7 @@ public class CgFormHeadController extends BaseController {
 						}
 					}
 				}
-				List<CgFormFieldEntity> colums = cgFormFieldService.findByProperty(CgFormFieldEntity.class, "table.id", cgform.getId());
+				List<CgFormFieldEntity> colums = cgFormFieldService.findListByProperty(CgFormFieldEntity.class, "table.id", cgform.getId());
 				cgFormFieldService.deleteCollection(colums);
 				cgform.setColumns(fieldList);
 				cgFormFieldService.saveTable(cgform);
@@ -591,7 +591,7 @@ public class CgFormHeadController extends BaseController {
 	 */
 	private CgFormHeadEntity judgeTableIsNotExit(CgFormHeadEntity cgFormHead, CgFormHeadEntity oldTable,StringBuffer msg) {
 		String message = "";
-		CgFormHeadEntity table = cgFormFieldService.findUniqueByProperty(CgFormHeadEntity.class, "tableName",cgFormHead.getTableName());
+		CgFormHeadEntity table = cgFormFieldService.getByProperty(CgFormHeadEntity.class, "tableName",cgFormHead.getTableName());
 		if (StringUtil.isNotEmpty(cgFormHead.getId())) {
 			if(table != null && !oldTable.getTableName().equals(cgFormHead.getTableName())){
 				message = "重命名的表已经存在";
@@ -652,7 +652,7 @@ public class CgFormHeadController extends BaseController {
 			cq.eq("table.id", cgFormHead.getId());
 			cq.add();
 			columnList = cgFormFieldService
-					.getListByCriteriaQuery(cq, false);
+					.findListByCriteriaQuery(cq, false);
 			//对字段列按顺序排序
 			Collections.sort(columnList,new FieldNumComparator());
 		}else{
@@ -886,7 +886,7 @@ public class CgFormHeadController extends BaseController {
 				List<CgFormFieldVO> fieldList =  ExcelImportUtil.importExcel(file.getInputStream(),CgFormFieldVO.class,params);
 				//根据headid查询该表下的字段信息
 				String hql = "from CgFormFieldEntity where table.id = ? ";
-				List<CgFormFieldEntity> list = systemService.findHql(hql, headId);
+				List<CgFormFieldEntity> list = systemService.findListByHql(hql, headId);
 				if(list==null){
 					list = new ArrayList<CgFormFieldEntity>();
 				}
@@ -999,7 +999,7 @@ public class CgFormHeadController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		if(StringUtil.isNotEmpty(id)){
 			String hql = "select max(c.tableVersion) from CgFormHeadEntity c where c.physiceId = ?";
-			List<Integer> versions = systemService.findHql(hql, id);
+			List<Integer> versions = systemService.findListByHql(hql, id);
 			if(versions.get(0)!=null){
 				int version = versions.get(0); 
 				CgFormHeadEntity cgFormHead = new CgFormHeadEntity();
@@ -1165,10 +1165,10 @@ public class CgFormHeadController extends BaseController {
 		List<CgFormHeadEntity> findHql = null;
 		if(oConvertUtils.isNotEmpty(cgFormHead.getTableName())) {
 			String hql = "from CgFormHeadEntity c where c.physiceId = ? AND c.tableName = ? order by c.tableVersion asc";
-			findHql = systemService.findHql(hql, id, cgFormHead.getTableName());
+			findHql = systemService.findListByHql(hql, id, cgFormHead.getTableName());
 		} else {
 			String hql = "from CgFormHeadEntity c where c.physiceId = ? order by c.tableVersion asc";
-			findHql = systemService.findHql(hql, id);
+			findHql = systemService.findListByHql(hql, id);
 		}
 
 		dataGrid.setResults(findHql);
@@ -1186,7 +1186,7 @@ public class CgFormHeadController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		if(StringUtil.isNotEmpty(id)){
 			String hql = "from CgFormHeadEntity c where physiceId = ?";
-			List<CgFormHeadEntity> cgformList = systemService.findHql(hql, id);
+			List<CgFormHeadEntity> cgformList = systemService.findListByHql(hql, id);
 			if(cgformList!=null&&cgformList.size()>0){
 				CgFormHeadEntity cgFormHeadEntity = cgformList.get(0);
 				j.setSuccess(true);

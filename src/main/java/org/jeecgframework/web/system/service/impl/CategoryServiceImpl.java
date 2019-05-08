@@ -57,7 +57,7 @@ public class CategoryServiceImpl extends CommonServiceImpl implements
 		}
 
 		sb.append(" ORDER BY code DESC ");
-		List<Map<String, Object>> objMapList = this.findForJdbc(sb.toString(), 1, 1);
+		List<Map<String, Object>> objMapList = this.findListMapBySqlWithPage(sb.toString(), 1, 1);
 		String returnCode = null;
 		if(objMapList!=null&& objMapList.size()>0){
 			returnCode = (String)objMapList.get(0).get("code");

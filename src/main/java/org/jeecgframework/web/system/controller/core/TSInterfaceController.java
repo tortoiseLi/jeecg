@@ -159,7 +159,7 @@ public class TSInterfaceController extends BaseController {
 			 message = MutiLangUtil.getLang("common.menu.del.fail");
 		}else{
 			String hql =" from TSInterfaceDdataRuleEntity where TSInterface.id = ?";
-			List<Object> findByQueryString = systemService.findHql(hql,tsInterface.getId());
+			List<Object> findByQueryString = systemService.findListByHql(hql,tsInterface.getId());
 			if(findByQueryString!=null&&findByQueryString.size()>0){
 				 message = MutiLangUtil.getLang("common.menu.del.fail");
 			}else{
@@ -194,7 +194,7 @@ public class TSInterfaceController extends BaseController {
 		userService.delete(operation);
 		String operationId = operation.getId();
 		String hql = "from TSRoleFunction rolefun where rolefun.operation like '%" + operationId + "%'";
-		List<TSRoleFunction> roleFunctions = userService.findByQueryString(hql);
+		List<TSRoleFunction> roleFunctions = userService.findListByHql(hql);
 		for (TSRoleFunction roleFunction : roleFunctions) {
 			String newOper = roleFunction.getOperation().replace(operationId + ",", "");
 			if (roleFunction.getOperation().length() == newOper.length()) {
@@ -221,7 +221,7 @@ public class TSInterfaceController extends BaseController {
 			for (TSInterfaceEntity tsInterface : subInterface) {
 				tsInterface.setInterfaceLevel(Short.valueOf(parent.getInterfaceLevel() + 1 + ""));
 				systemService.saveOrUpdate(tsInterface);
-				List<TSInterfaceEntity> subInterface1 = systemService.findByProperty(TSInterfaceEntity.class, "tSInterface.id",
+				List<TSInterfaceEntity> subInterface1 = systemService.findListByProperty(TSInterfaceEntity.class, "tSInterface.id",
 						tsInterface.getId());
 				updateSubFunction(subInterface1, tsInterface);
 			}
@@ -260,18 +260,18 @@ public class TSInterfaceController extends BaseController {
 				e.printStackTrace();
 			}
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
-			List<TSInterfaceEntity> subinterface = systemService.findByProperty(TSInterfaceEntity.class, "tSInterface.id",
+			List<TSInterfaceEntity> subinterface = systemService.findListByProperty(TSInterfaceEntity.class, "tSInterface.id",
 					tsInterface.getId());
 			updateSubFunction(subinterface, tsInterface);
 		} else {
 			if (tsInterface.getInterfaceLevel().equals(Globals.Function_Leave_ONE)) {
 				@SuppressWarnings("unused")
-				List<TSInterfaceEntity> interfaceList = systemService.findByProperty(TSInterfaceEntity.class, "interfaceLevel",
+				List<TSInterfaceEntity> interfaceList = systemService.findListByProperty(TSInterfaceEntity.class, "interfaceLevel",
 						Globals.Function_Leave_ONE);
 				tsInterface.setInterfaceOrder(tsInterface.getInterfaceOrder());
 			} else {
 				@SuppressWarnings("unused")
-				List<TSInterfaceEntity> interfaceList = systemService.findByProperty(TSInterfaceEntity.class, "interfaceLevel",
+				List<TSInterfaceEntity> interfaceList = systemService.findListByProperty(TSInterfaceEntity.class, "interfaceLevel",
 						Globals.Function_Leave_TWO);
 				tsInterface.setInterfaceOrder(tsInterface.getInterfaceOrder());
 			}
@@ -320,7 +320,7 @@ public class TSInterfaceController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public ModelAndView addorupdate(TSInterfaceEntity tsInterface, HttpServletRequest req) {
 		String interfaceid = req.getParameter("id");
-		List<TSInterfaceEntity> interfacelist = systemService.getList(TSInterfaceEntity.class);
+		List<TSInterfaceEntity> interfacelist = systemService.findList(TSInterfaceEntity.class);
 		req.setAttribute("flist", interfacelist);
 		if (interfaceid != null) {
 			tsInterface = systemService.getById(TSInterfaceEntity.class, interfaceid);
@@ -342,7 +342,7 @@ public class TSInterfaceController extends BaseController {
 	 */
 	@RequestMapping(params = "addorupdateop")
 	public ModelAndView addorupdateop(TSOperation operation, HttpServletRequest req) {
-		List<TSIcon> iconlist = systemService.getList(TSIcon.class);
+		List<TSIcon> iconlist = systemService.findList(TSIcon.class);
 		req.setAttribute("iconlist", iconlist);
 		if (operation.getId() != null) {
 			operation = systemService.getById(TSOperation.class, operation.getId());
@@ -377,7 +377,7 @@ public class TSInterfaceController extends BaseController {
 		cq = HqlGenerateUtil.getDataAuthorConditionHql(cq, new TSInterfaceEntity());
 		cq.add();
 
-		List<TSInterfaceEntity> interfaceList = systemService.getListByCriteriaQuery(cq, false);
+		List<TSInterfaceEntity> interfaceList = systemService.findListByCriteriaQuery(cq, false);
 		List<TreeGrid> treeGrids = new ArrayList<TreeGrid>();
 		TreeGridModel treeGridModel = new TreeGridModel();
 		treeGridModel.setTextField("interfaceName");
@@ -416,7 +416,7 @@ public class TSInterfaceController extends BaseController {
 			cq.isNull("tSInterface");
 		}
 		cq.add();
-		List<TSInterfaceEntity> interfaceList = systemService.getListByCriteriaQuery(cq, false);
+		List<TSInterfaceEntity> interfaceList = systemService.findListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id", "interfaceName", "tsInterfaces");
 		comboTrees = systemService.comboTree(interfaceList, comboTreeModel, null, false);
@@ -505,7 +505,7 @@ public class TSInterfaceController extends BaseController {
 			return 0;
 		}
 		String sql = "SELECT count(1) FROM t_s_interface_datarule WHERE interface_id = ? AND rule_column = ? AND rule_conditions = ?";
-		Long count = this.systemService.getCountForJdbcParam(sql, dataRule.getTSInterface().getId(),column,dataRule.getRuleConditions());
+		Long count = this.systemService.getCountBySql(sql, dataRule.getTSInterface().getId(),column,dataRule.getRuleConditions());
 		return count.intValue();
 
 	}

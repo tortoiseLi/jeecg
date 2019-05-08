@@ -48,7 +48,7 @@ public class JfromOrderServiceImpl extends CommonServiceImpl implements JfromOrd
 		//保存主表信息
 		if(StringUtil.isNotEmpty(jfromOrder.getId())){
 			try {
-				JfromOrderEntity temp = findUniqueByProperty(JfromOrderEntity.class, "id", jfromOrder.getId());
+				JfromOrderEntity temp = getByProperty(JfromOrderEntity.class, "id", jfromOrder.getId());
 				MyBeanUtils.copyBeanNotNull2Bean(jfromOrder, temp);
 				this.saveOrUpdate(temp);
 			} catch (Exception e) {
@@ -63,7 +63,7 @@ public class JfromOrderServiceImpl extends CommonServiceImpl implements JfromOrd
 		//===================================================================================
 		//1.查询出数据库的明细数据-订单表体
 	    String hql0 = "from JfromOrderLineEntity where 1 = 1 AND oRDERID = ? ";
-	    List<JfromOrderLineEntity> jfromOrderLineOldList = this.findHql(hql0,id0);
+	    List<JfromOrderLineEntity> jfromOrderLineOldList = this.findListByHql(hql0,id0);
 		//2.筛选更新明细数据-订单表体
 		if(jfromOrderLineList!=null&&jfromOrderLineList.size()>0){
 		for(JfromOrderLineEntity oldE:jfromOrderLineOldList){
@@ -111,7 +111,7 @@ public class JfromOrderServiceImpl extends CommonServiceImpl implements JfromOrd
 		//===================================================================================
 		//删除-订单表体
 	    String hql0 = "from JfromOrderLineEntity where 1 = 1 AND oRDERID = ? ";
-	    List<JfromOrderLineEntity> jfromOrderLineOldList = this.findHql(hql0,id0);
+	    List<JfromOrderLineEntity> jfromOrderLineOldList = this.findListByHql(hql0,id0);
 		this.deleteCollection(jfromOrderLineOldList);
 	}
 	

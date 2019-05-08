@@ -29,9 +29,9 @@ public class CgformButtonSqlServiceImpl extends CommonServiceImpl implements Cgf
 		List<CgformButtonSqlEntity> list = null;
 		if(cgformButtonSqlEntity.getId()!=null){
 			hql.append(" and t.id !=?");
-			list = this.findHql(hql.toString(),cgformButtonSqlEntity.getFormId(),cgformButtonSqlEntity.getButtonCode(),cgformButtonSqlEntity.getId());
+			list = this.findListByHql(hql.toString(),cgformButtonSqlEntity.getFormId(),cgformButtonSqlEntity.getButtonCode(),cgformButtonSqlEntity.getId());
 		}else{
-			list = this.findHql(hql.toString(),cgformButtonSqlEntity.getFormId(),cgformButtonSqlEntity.getButtonCode());
+			list = this.findListByHql(hql.toString(),cgformButtonSqlEntity.getFormId(),cgformButtonSqlEntity.getButtonCode());
 		}
 
 		return list;
@@ -43,7 +43,7 @@ public class CgformButtonSqlServiceImpl extends CommonServiceImpl implements Cgf
 		hql.append(" from CgformButtonSqlEntity t");
 		hql.append(" where t.formId='").append(formId).append("'");
 		hql.append(" and  t.buttonCode ='").append(buttonCode).append("'");
-		List<CgformButtonSqlEntity> list = this.findHql(hql.toString());
+		List<CgformButtonSqlEntity> list = this.findListByHql(hql.toString());
 		if(list!=null&&list.size()>0){
 			return list.get(0);
 		}

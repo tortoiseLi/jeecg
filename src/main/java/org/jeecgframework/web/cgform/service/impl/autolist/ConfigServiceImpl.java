@@ -50,7 +50,7 @@ public class ConfigServiceImpl implements ConfigServiceI {
 		//step.2 获取动态表配置
 		CgFormHeadEntity tableEntity = null;
 		try{
-			tableEntity = tablePropertyService.findByProperty(CgFormHeadEntity.class, "tableName", tableName).get(0);
+			tableEntity = tablePropertyService.findListByProperty(CgFormHeadEntity.class, "tableName", tableName).get(0);
 			loadConfigs(configs,tableEntity);
 		}catch (Exception e) {
 			e.printStackTrace();

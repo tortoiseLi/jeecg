@@ -279,7 +279,7 @@ public class JformOrderMain2Controller extends BaseController {
 		//查询-订单机票信息
 	    String hql0 = "from JformOrderTicket2Entity where 1 = 1 AND fCK_ID = ? ";
 	    try{
-	    	List<JformOrderTicket2Entity> jformOrderTicket2EntityList = systemService.findHql(hql0,id0);
+	    	List<JformOrderTicket2Entity> jformOrderTicket2EntityList = systemService.findListByHql(hql0,id0);
 			req.setAttribute("jformOrderTicket2List", jformOrderTicket2EntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -301,7 +301,7 @@ public class JformOrderMain2Controller extends BaseController {
 		//查询-订单客户信息
 	    String hql1 = "from JformOrderCustomer2Entity where 1 = 1 AND fK_ID = ? ";
 	    try{
-	    	List<JformOrderCustomer2Entity> jformOrderCustomer2EntityList = systemService.findHql(hql1,id1);
+	    	List<JformOrderCustomer2Entity> jformOrderCustomer2EntityList = systemService.findListByHql(hql1,id1);
 			req.setAttribute("jformOrderCustomer2List", jformOrderCustomer2EntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -326,7 +326,7 @@ public class JformOrderMain2Controller extends BaseController {
     		throw new BusinessException(e.getMessage());
     	}
     	cq.add();
-    	List<JformOrderMain2Entity> list=this.jformOrderMain2Service.getListByCriteriaQuery(cq, false);
+    	List<JformOrderMain2Entity> list=this.jformOrderMain2Service.findListByCriteriaQuery(cq, false);
     	List<JformOrderMain2Page> pageList=new ArrayList<JformOrderMain2Page>();
         if(list!=null&&list.size()>0){
         	for(JformOrderMain2Entity entity:list){
@@ -335,11 +335,11 @@ public class JformOrderMain2Controller extends BaseController {
         		   MyBeanUtils.copyBeanNotNull2Bean(entity,page);
             	    Object id0 = entity.getId();
 				    String hql0 = "from JformOrderTicket2Entity where 1 = 1 AND fCK_ID = ? ";
-        	        List<JformOrderTicket2Entity> jformOrderTicket2EntityList = systemService.findHql(hql0,id0);
+        	        List<JformOrderTicket2Entity> jformOrderTicket2EntityList = systemService.findListByHql(hql0,id0);
             		page.setJformOrderTicket2List(jformOrderTicket2EntityList);
             	    Object id1 = entity.getId();
 				    String hql1 = "from JformOrderCustomer2Entity where 1 = 1 AND fK_ID = ? ";
-        	        List<JformOrderCustomer2Entity> jformOrderCustomer2EntityList = systemService.findHql(hql1,id1);
+        	        List<JformOrderCustomer2Entity> jformOrderCustomer2EntityList = systemService.findListByHql(hql1,id1);
             		page.setJformOrderCustomer2List(jformOrderCustomer2EntityList);
             		pageList.add(page);
             	}catch(Exception e){
@@ -460,7 +460,7 @@ public class JformOrderMain2Controller extends BaseController {
 	@ResponseBody
 	@ApiOperation(value="订单主信息列表信息",produces="application/json",httpMethod="GET")
 	public ResponseMessage<List<JformOrderMain2Page>> list() {
-		List<JformOrderMain2Entity> list= jformOrderMain2Service.getList(JformOrderMain2Entity.class);
+		List<JformOrderMain2Entity> list= jformOrderMain2Service.findList(JformOrderMain2Entity.class);
     	List<JformOrderMain2Page> pageList=new ArrayList<JformOrderMain2Page>();
         if(list!=null&&list.size()>0){
         	for(JformOrderMain2Entity entity:list){
@@ -470,10 +470,10 @@ public class JformOrderMain2Controller extends BaseController {
 					Object id0 = entity.getId();
 					Object id1 = entity.getId();
 				     String hql0 = "from JformOrderTicket2Entity where 1 = 1 AND fCK_ID = ? ";
-	    			List<JformOrderTicket2Entity> jformOrderTicket2OldList = this.jformOrderMain2Service.findHql(hql0,id0);
+	    			List<JformOrderTicket2Entity> jformOrderTicket2OldList = this.jformOrderMain2Service.findListByHql(hql0,id0);
             		page.setJformOrderTicket2List(jformOrderTicket2OldList);
 				     String hql1 = "from JformOrderCustomer2Entity where 1 = 1 AND fK_ID = ? ";
-	    			List<JformOrderCustomer2Entity> jformOrderCustomer2OldList = this.jformOrderMain2Service.findHql(hql1,id1);
+	    			List<JformOrderCustomer2Entity> jformOrderCustomer2OldList = this.jformOrderMain2Service.findListByHql(hql1,id1);
             		page.setJformOrderCustomer2List(jformOrderCustomer2OldList);
             		pageList.add(page);
             	}catch(Exception e){
@@ -498,10 +498,10 @@ public class JformOrderMain2Controller extends BaseController {
 				Object id0 = task.getId();
 				Object id1 = task.getId();
 		    String hql0 = "from JformOrderTicket2Entity where 1 = 1 AND fCK_ID = ? ";
-			List<JformOrderTicket2Entity> jformOrderTicket2OldList = this.jformOrderMain2Service.findHql(hql0,id0);
+			List<JformOrderTicket2Entity> jformOrderTicket2OldList = this.jformOrderMain2Service.findListByHql(hql0,id0);
     		page.setJformOrderTicket2List(jformOrderTicket2OldList);
 		    String hql1 = "from JformOrderCustomer2Entity where 1 = 1 AND fK_ID = ? ";
-			List<JformOrderCustomer2Entity> jformOrderCustomer2OldList = this.jformOrderMain2Service.findHql(hql1,id1);
+			List<JformOrderCustomer2Entity> jformOrderCustomer2OldList = this.jformOrderMain2Service.findListByHql(hql1,id1);
     		page.setJformOrderCustomer2List(jformOrderCustomer2OldList);
 		} catch (Exception e) {
 			e.printStackTrace();

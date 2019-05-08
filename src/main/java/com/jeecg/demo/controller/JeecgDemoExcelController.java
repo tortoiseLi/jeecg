@@ -261,7 +261,7 @@ public class JeecgDemoExcelController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(JeecgDemoExcelEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, jeecgDemoExcel, request.getParameterMap());
-		List<JeecgDemoExcelEntity> jeecgDemoExcels = this.jeecgDemoExcelService.getListByCriteriaQuery(cq,false);
+		List<JeecgDemoExcelEntity> jeecgDemoExcels = this.jeecgDemoExcelService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"excel导入导出测试表");
 		modelMap.put(NormalExcelConstants.CLASS,JeecgDemoExcelEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("excel导入导出测试表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
@@ -324,7 +324,7 @@ public class JeecgDemoExcelController extends BaseController {
 	public void velocity2word(JeecgDemoExcelEntity jeecgDemoExcel,HttpServletRequest request,HttpServletResponse response) throws IOException{
 		try {
 			jeecgDemoExcel = this.jeecgDemoExcelService.getById(JeecgDemoExcelEntity.class, jeecgDemoExcel.getId());
-			List<Map<String,Object>> departs = this.systemService.findForJdbc("select id,departname from t_s_depart"); 
+			List<Map<String,Object>> departs = this.systemService.findListMapBySql("select id,departname from t_s_depart");
 			String docFileName ="word-模板导出测试.doc";
 			Map<String,Object> rootMap = new HashMap<String,Object>();
 			rootMap.put("info", jeecgDemoExcel);
@@ -338,13 +338,13 @@ public class JeecgDemoExcelController extends BaseController {
 	public void jxlsExportXls(JeecgDemoExcelEntity jeecgDemoExcel,HttpServletRequest request,HttpServletResponse response) throws IOException{
 		try {
 			//查询组织结构表 由集合转化成map
-			List<Map<String,Object>> departs = this.systemService.findForJdbc("select id,departname from t_s_depart"); 
+			List<Map<String,Object>> departs = this.systemService.findListMapBySql("select id,departname from t_s_depart");
 			Map<String,Object> dptMap = new HashMap<String,Object>();
 			for (Map<String, Object> map : departs) {
 				dptMap.put(map.get("id").toString(), map.get("departname"));
 			}
 			//获取数据集
-			List<JeecgDemoExcelEntity> list = this.jeecgDemoExcelService.loadAll(JeecgDemoExcelEntity.class);
+			List<JeecgDemoExcelEntity> list = this.jeecgDemoExcelService.findList(JeecgDemoExcelEntity.class);
 			//遍历替换值
 			for (JeecgDemoExcelEntity temp : list) {
 				String sex = temp.getSex();
@@ -410,7 +410,7 @@ public class JeecgDemoExcelController extends BaseController {
     	org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, jformOrderMain);
     	try{
         	cq.add();
-        	List<JformOrderMainEntity> list=this.systemService.getListByCriteriaQuery(cq, false);
+        	List<JformOrderMainEntity> list=this.systemService.findListByCriteriaQuery(cq, false);
         	List<JformOrderMainPage> pageList=new ArrayList<JformOrderMainPage>();
         	if(list!=null&&list.size()>0){
             	for(JformOrderMainEntity entity:list){
@@ -419,7 +419,7 @@ public class JeecgDemoExcelController extends BaseController {
             		   MyBeanUtils.copyBeanNotNull2Bean(entity,page);
                 	    Object id0 = entity.getId();
     				    String hql0 = "from JformOrderCustomerEntity where 1 = 1 AND fK_ID = ? ";
-            	        List<JformOrderCustomerEntity> jformOrderCustomerEntityList = systemService.findHql(hql0,id0);
+            	        List<JformOrderCustomerEntity> jformOrderCustomerEntityList = systemService.findListByHql(hql0,id0);
                 		for (JformOrderCustomerEntity temp : jformOrderCustomerEntityList) {
                 			String sex = temp.getSex();
             				if("0".equals(sex)){

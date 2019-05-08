@@ -94,7 +94,7 @@ public class NoticeAuthorityRoleServiceImpl extends CommonServiceImpl implements
 		cq.eq("role.id", roleid);
 		cq.eq("noticeId", noticeId);
 		cq.add();
-		List<TSNoticeAuthorityRole> rlist =   this.getListByCriteriaQuery(cq, false);
+		List<TSNoticeAuthorityRole> rlist =   this.findListByCriteriaQuery(cq, false);
 		if(rlist.size()==0){
 			return false;
 		}else{
@@ -115,11 +115,11 @@ public class NoticeAuthorityRoleServiceImpl extends CommonServiceImpl implements
 					@Override
 					public void run() {
 						String hql = "from TSRoleUser roleUser where roleUser.TSRole.id = ?";
-						List<TSRoleUser> roleUserList = systemService.findHql(hql,roleId);
+						List<TSRoleUser> roleUserList = systemService.findListByHql(hql,roleId);
 						for (TSRoleUser roleUser : roleUserList) {
 							String userId = roleUser.getTSUser().getId();
 							String noticeReadHql = "from TSNoticeReadUser where noticeId = ? and userId = ?";
-							List<TSNoticeReadUser> noticeReadList = systemService.findHql(noticeReadHql,noticeId,userId);
+							List<TSNoticeReadUser> noticeReadList = systemService.findListByHql(noticeReadHql,noticeId,userId);
 							if(noticeReadList == null || noticeReadList.isEmpty()){
 								//未授权过的消息，添加授权记录
 								TSNoticeReadUser noticeRead = new TSNoticeReadUser();
@@ -154,13 +154,13 @@ public class NoticeAuthorityRoleServiceImpl extends CommonServiceImpl implements
 			@Override
 			public void run() {
 				String hql = "from TSRoleUser roleUser where roleUser.TSRole.id = ?";
-				List<TSRoleUser> roleUserList = systemService.findHql(hql,roleId);
+				List<TSRoleUser> roleUserList = systemService.findListByHql(hql,roleId);
 				List<TSNoticeReadUser> deleteList = new ArrayList<TSNoticeReadUser>();
 				List<TSNoticeReadUser> updateList = new ArrayList<TSNoticeReadUser>();
 				for (TSRoleUser roleUser : roleUserList) {
 					String userId = roleUser.getTSUser().getId();
 					String noticeReadHql = "from TSNoticeReadUser where noticeId = ? and userId = ?";
-					List<TSNoticeReadUser> noticeReadList = systemService.findHql(noticeReadHql,noticeId,userId);
+					List<TSNoticeReadUser> noticeReadList = systemService.findListByHql(noticeReadHql,noticeId,userId);
 					if(noticeReadList != null && noticeReadList.size() > 0){
 						for (TSNoticeReadUser readUser : noticeReadList) {
 							if(readUser.getIsRead() == 1){

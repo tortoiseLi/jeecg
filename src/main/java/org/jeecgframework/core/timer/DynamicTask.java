@@ -248,7 +248,7 @@ public class DynamicTask {
 		TSTimeTaskEntity timTask = new TSTimeTaskEntity();
 		timTask.setIsEffect("1");
 		timTask.setIsStart("1");
-		List<TSTimeTaskEntity> tasks = (List<TSTimeTaskEntity>)timeTaskService.findByExample(TSTimeTaskEntity.class.getName(), timTask);	
+		List<TSTimeTaskEntity> tasks = (List<TSTimeTaskEntity>)timeTaskService.findListByEntity(TSTimeTaskEntity.class.getName(), timTask);
 		logger.info(" register time task class num is ["+tasks.size()+"] ");
 		if(tasks.size() > 0){
 			for (TSTimeTaskEntity task : tasks) {

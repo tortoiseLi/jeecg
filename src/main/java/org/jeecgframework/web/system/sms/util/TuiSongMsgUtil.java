@@ -45,7 +45,7 @@ public class TuiSongMsgUtil {
 	public static String sendMessage(String code,Map<String, Object> data, String sentFrom, String sentTo) {
 		try {
 			//根据模板那Code查询模板信息
-			TSSmsTemplateEntity tsSmsTemplateEntity= getTSSmsServiceInstance().findUniqueByProperty(TSSmsTemplateEntity.class, "templateCode", code);
+			TSSmsTemplateEntity tsSmsTemplateEntity= getTSSmsServiceInstance().getByProperty(TSSmsTemplateEntity.class, "templateCode", code);
 			TSSmsEntity tss=new TSSmsEntity();
 			tss.setEsType(tsSmsTemplateEntity.getTemplateType());
 			tss.setEsSender(sentFrom);
@@ -107,7 +107,7 @@ public class TuiSongMsgUtil {
 			tss.setEsStatus(Constants.SMS_SEND_STATUS_1);
 			tss.setIsRead(0);//0未读1已读
 			String hql="from TSSmsTemplateSqlEntity as tempSql where tempSql.code=? ";
-			List<TSSmsTemplateSqlEntity> tssmsTemplateSqlList=getTssmsTemplateSqlInstance().findHql(hql, code);
+			List<TSSmsTemplateSqlEntity> tssmsTemplateSqlList=getTssmsTemplateSqlInstance().findListByHql(hql, code);
 			for (TSSmsTemplateSqlEntity tsSmsTemplateSqlEntity : tssmsTemplateSqlList) {
 				TSSmsSqlEntity tsSmsSqlEntity = getTSSmsServiceInstance().getById(TSSmsSqlEntity.class, tsSmsTemplateSqlEntity.getSqlId());
 				String templateSql= tsSmsSqlEntity.getSqlContent();//获取对应业务sql表中的sql语句
@@ -187,7 +187,7 @@ public class TuiSongMsgUtil {
 	 */
 	public static String getTemplateSql(String sqlId){
 		String hql="from TSSmsSqlEntity as tssSql where tssSql.id=?";
-		List<TSSmsSqlEntity>tssmsSqlList=getTSSmsSqlInstance().findHql(hql, sqlId);
+		List<TSSmsSqlEntity>tssmsSqlList=getTSSmsSqlInstance().findListByHql(hql, sqlId);
 		String sqlContent="";
 		for (TSSmsSqlEntity tsSmsSqlEntity : tssmsSqlList) {
 			sqlContent=tsSmsSqlEntity.getSqlContent();
@@ -207,7 +207,7 @@ public class TuiSongMsgUtil {
 	 */
 	public static  String getTemplateContent(String templateId){
 		String hql="from TSSmsTemplateEntity as template where template.id=? ";
-		List<TSSmsTemplateEntity> tSSmsTemplateList=getTssmsTemplateInstance().findHql(hql, templateId);
+		List<TSSmsTemplateEntity> tSSmsTemplateList=getTssmsTemplateInstance().findListByHql(hql, templateId);
 		String templateConetent="";
 		for (TSSmsTemplateEntity tsSmsTemplateEntity : tSSmsTemplateList) {
 			templateConetent=tsSmsTemplateEntity.getTemplateContent();

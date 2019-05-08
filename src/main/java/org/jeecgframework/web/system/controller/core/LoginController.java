@@ -131,7 +131,7 @@ public class LoginController extends BaseController{
 			//用户登录验证逻辑
 			TSUser u = userService.checkUserExits(user);
 			if (u == null) {
-				u = userService.findUniqueByProperty(TSUser.class, "email", user.getUserName());
+				u = userService.getByProperty(TSUser.class, "email", user.getUserName());
 
 				if(u == null || !u.getPassword().equals(PasswordUtil.encrypt(u.getUserName(),user.getPassword(), PasswordUtil.getStaticSalt()))){
 
@@ -162,12 +162,12 @@ public class LoginController extends BaseController{
 				String orgId = req.getParameter("orgId");
 				if (oConvertUtils.isEmpty(orgId)) {
 					// 没有传组织机构参数，则获取当前用户的组织机构
-					Long orgNum = systemService.getCountForJdbcParam("select count(1) from t_s_user_org where user_id = ?",u.getId());
+					Long orgNum = systemService.getCountBySql("select count(1) from t_s_user_org where user_id = ?",u.getId());
 					if (orgNum > 1) {
 						attrMap.put("orgNum", orgNum);
 						attrMap.put("user", u);
 					} else {
-						Map<String, Object> userOrgMap = systemService.findOneForJdbc("select org_id as orgId from t_s_user_org where user_id=?", u.getId());
+						Map<String, Object> userOrgMap = systemService.getMapBySql("select org_id as orgId from t_s_user_org where user_id=?", u.getId());
 						userService.saveLoginUserInfo(req, u, (String) userOrgMap.get("orgId"));
 					}
 				} else {
@@ -198,7 +198,7 @@ public class LoginController extends BaseController{
 		String orgId = req.getParameter("orgId");
 		TSUser u = userService.checkUserExits(user);
 		if(u == null){
-			u = userService.findUniqueByProperty(TSUser.class, "email", user.getUserName());
+			u = userService.getByProperty(TSUser.class, "email", user.getUserName());
 		}
 		if (oConvertUtils.isNotEmpty(orgId)) {
 			attrMap.put("orgNum", 1);
@@ -221,7 +221,7 @@ public class LoginController extends BaseController{
 		String roles = "";
 		if (user != null) {
 			log.info(" >>>>>>>>>>>>>>>>>>>>>>>>>>  Login 用户登录成功，初始化Main首页用户信息  （Main 首页加载逻辑）  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
-			List<TSRoleUser> rUsers = systemService.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
+			List<TSRoleUser> rUsers = systemService.findListByProperty(TSRoleUser.class, "TSUser.id", user.getId());
 			for (TSRoleUser ru : rUsers) {
 				TSRole role = ru.getTSRole();
 				roles += role.getRoleName() + ",";
@@ -437,7 +437,7 @@ public class LoginController extends BaseController{
 		TSPasswordResetkey passwordResetkey = systemService.getById(TSPasswordResetkey.class, key);
 		Date now = new Date();
 		if(passwordResetkey != null && passwordResetkey.getIsReset() != 1 && (now.getTime() - passwordResetkey.getCreateDate().getTime()) < 1000*60*60*3){
-			TSUser user = systemService.findUniqueByProperty(TSUser.class, "userName", passwordResetkey.getUsername());
+			TSUser user = systemService.getByProperty(TSUser.class, "userName", passwordResetkey.getUsername());
 			user.setPassword(PasswordUtil.encrypt(user.getUserName(), password, PasswordUtil.getStaticSalt()));
 			systemService.update(user);
 			passwordResetkey.setIsReset(1);
@@ -474,14 +474,14 @@ public class LoginController extends BaseController{
 				ajaxJson.setMsg("邮件地址不能为空");
 				return ajaxJson;
 			}
-			TSUser user = systemService.findUniqueByProperty(TSUser.class, "email", email);
+			TSUser user = systemService.getByProperty(TSUser.class, "email", email);
 			if(user == null){
 				ajaxJson.setSuccess(false);
 				ajaxJson.setMsg("用户名对应的用户信息不存在");
 				return ajaxJson;
 			}
 			String hql = "from TSPasswordResetkey bean where bean.username = ? and bean.isReset = 0 order by bean.createDate desc limit 1";
-			List<TSPasswordResetkey> resetKeyList = systemService.findHql(hql,user.getUserName());
+			List<TSPasswordResetkey> resetKeyList = systemService.findListByHql(hql,user.getUserName());
 			if(resetKeyList != null && !resetKeyList.isEmpty()){
 				TSPasswordResetkey resetKey = resetKeyList.get(0);
 				Date now = new Date();
@@ -739,7 +739,7 @@ public class LoginController extends BaseController{
 	
 	public JSONArray getChildOfAdminLteTree(TSFunction function) {
 		JSONArray jsonArray = new JSONArray();
-		List<TSFunction> functions = this.systemService.findByProperty(TSFunction.class, "TSFunction.id", function.getId());
+		List<TSFunction> functions = this.systemService.findListByProperty(TSFunction.class, "TSFunction.id", function.getId());
 		if(functions != null && functions.size() > 0) {
 			for (TSFunction tsFunction : functions) {
 				JSONObject jsonObject = new JSONObject();

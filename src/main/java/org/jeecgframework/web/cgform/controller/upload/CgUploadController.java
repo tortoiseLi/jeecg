@@ -128,7 +128,7 @@ public class CgUploadController extends BaseController {
 		CgUploadEntity file = systemService.getById(CgUploadEntity.class, id);
 
 		String sql  = "select " + file.getCgformField() + " from " + file.getCgformName() + " where id = '" + file.getCgformId() + "'";
-		List<Object> cgformFieldResult = systemService.findListbySql(sql);
+		List<Object> cgformFieldResult = systemService.findListBySqlReObject(sql);
 		if(cgformFieldResult != null && !cgformFieldResult.isEmpty() && cgformFieldResult.get(0) != null){
 			String path = cgformFieldResult.get(0).toString();
 			String realPath = file.getRealpath();
@@ -137,7 +137,7 @@ public class CgUploadController extends BaseController {
 			if(path.equals(realPath)){
 				//获取这个关联的其他文件信息
 				String hql = "from CgUploadEntity where cgformId = ?  and cgformField = ?  and cgformName = ?";
-				List<CgUploadEntity> uploadList = systemService.findHql(hql,file.getCgformId(),file.getCgformField(),file.getCgformName());
+				List<CgUploadEntity> uploadList = systemService.findListByHql(hql,file.getCgformId(),file.getCgformField(),file.getCgformName());
 				if(uploadList != null && !uploadList.isEmpty() && uploadList.size() > 1){
 					for (CgUploadEntity cgUploadEntity : uploadList) {
 						if(!file.getId().equals(cgUploadEntity.getId())){
@@ -334,7 +334,7 @@ public class CgUploadController extends BaseController {
 		cq.eq("cgformId", cgFormId);
 		cq.eq("cgformField", cgField);
 		cq.add();
-		List<CgUploadEntity> list = this.systemService.getListByCriteriaQuery(cq, false);
+		List<CgUploadEntity> list = this.systemService.findListByCriteriaQuery(cq, false);
 		net.sf.json.JSONArray array = net.sf.json.JSONArray.fromObject(list);
 		JSONObject json = new JSONObject();
 		json.put("total",list.size());

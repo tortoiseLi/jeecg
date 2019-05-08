@@ -262,7 +262,7 @@ public class TSFillRuleController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(TSFillRuleEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tSFillRule, request.getParameterMap());
-		List<TSFillRuleEntity> tSFillRules = this.tSFillRuleService.getListByCriteriaQuery(cq,false);
+		List<TSFillRuleEntity> tSFillRules = this.tSFillRuleService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"填值规则表");
 		modelMap.put(NormalExcelConstants.CLASS,TSFillRuleEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("填值规则表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
@@ -324,7 +324,7 @@ public class TSFillRuleController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseMessage<List<TSFillRuleEntity>> list() {
-		List<TSFillRuleEntity> listTSFillRules=tSFillRuleService.getList(TSFillRuleEntity.class);
+		List<TSFillRuleEntity> listTSFillRules=tSFillRuleService.findList(TSFillRuleEntity.class);
 		return Result.success(listTSFillRules);
 	}
 	

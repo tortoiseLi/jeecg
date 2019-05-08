@@ -24,7 +24,7 @@ public class FillRuleUtil {
 		Object obj=null;
 		try {
 			TSFillRuleServiceI ruleServiceI = ApplicationContextUtil.getContext().getBean(TSFillRuleServiceI.class);
-			TSFillRuleEntity ruleEntity = ruleServiceI.findUniqueByProperty(TSFillRuleEntity.class, "ruleCode", ruleCode);
+			TSFillRuleEntity ruleEntity = ruleServiceI.getByProperty(TSFillRuleEntity.class, "ruleCode", ruleCode);
 			if(ruleEntity!=null){
 				IFillRuleHandler ruleHandler = (IFillRuleHandler) Class.forName(ruleEntity.getRuleClass()).newInstance();
 				obj=ruleHandler.execute(ruleEntity.getRuleParam());

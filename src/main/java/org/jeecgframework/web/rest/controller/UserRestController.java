@@ -57,7 +57,7 @@ public class UserRestController {
 	@ResponseBody
 	@ApiOperation(value="用户列表信息",produces="application/json",httpMethod="GET")
 	public List<TSUser> list() {
-		List<TSUser> listUsers=userService.getList(TSUser.class);
+		List<TSUser> listUsers=userService.findList(TSUser.class);
 		return listUsers;
 	}
 

@@ -34,14 +34,14 @@ public class FunctionServiceImpl extends CommonServiceImpl implements FunctionSe
 				j.setSuccess(false);
 				return j;
 			}
-			List<TSOperation> op = this.findHql("from TSOperation where TSFunction.id = ?", functionId);
+			List<TSOperation> op = this.findListByHql("from TSOperation where TSFunction.id = ?", functionId);
 			if (op != null && op.size() > 0) {
 				message = "菜单【" + MutiLangUtil.getLang(function.getFunctionName()) + "】有设置页面权限，不能删除";
 				j.setMsg(message);
 				j.setSuccess(false);
 				return j;
 			}
-			List<TSDataRule> tsdr = this.findByProperty(TSDataRule.class, "TSFunction", function);
+			List<TSDataRule> tsdr = this.findListByProperty(TSDataRule.class, "TSFunction", function);
 			if (tsdr != null && tsdr.size() > 0) {
 				message = "菜单【" + MutiLangUtil.getLang(function.getFunctionName()) + "】存在数据规则，不能删除";
 				j.setMsg(message);

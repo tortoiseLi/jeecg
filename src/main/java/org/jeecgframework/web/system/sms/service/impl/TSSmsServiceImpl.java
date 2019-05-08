@@ -105,7 +105,7 @@ public class TSSmsServiceImpl extends CommonServiceImpl implements TSSmsServiceI
 	public void send() {
 		LogUtil.info("===============消息发扫描开始=================");
 		//List<TSSmsEntity> smsSendList = findHql("from TSSmsEntity e where e.esStatus = ? or e.esStatus = ? ", Constants.SMS_SEND_STATUS_1,Constants.SMS_SEND_STATUS_3);
-		List<TSSmsEntity> smsSendList = findHql("from TSSmsEntity e where e.esStatus = ?", Constants.SMS_SEND_STATUS_1);
+		List<TSSmsEntity> smsSendList = findListByHql("from TSSmsEntity e where e.esStatus = ?", Constants.SMS_SEND_STATUS_1);
 		if(smsSendList==null || smsSendList.size()==0){
 			return;
 		}
@@ -167,7 +167,7 @@ public class TSSmsServiceImpl extends CommonServiceImpl implements TSSmsServiceI
 		}else{
 			hql = "from TSSmsEntity t where t.esType='3' and t.esReceiver=? and str(t.esSendtime) like ?";
 		}
-		list = this.findHql(hql, new Object[] {curUser,curDate+'%'});
+		list = this.findListByHql(hql, new Object[] {curUser,curDate+'%'});
 		return list;
 	}
 

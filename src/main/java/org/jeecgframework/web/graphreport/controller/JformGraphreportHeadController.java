@@ -241,7 +241,7 @@ public class JformGraphreportHeadController extends BaseController {
 		//查询-子表
 	    String hql0 = "from JformGraphreportItemEntity where 1 = 1 AND cGREPORT_HEAD_ID = ? ";
 	    try{
-	    	List<JformGraphreportItemEntity> jformGraphreportItemEntityList = systemService.findHql(hql0,id0);
+	    	List<JformGraphreportItemEntity> jformGraphreportItemEntityList = systemService.findListByHql(hql0,id0);
 			req.setAttribute("jformGraphreportItemList", jformGraphreportItemEntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -256,12 +256,12 @@ public class JformGraphreportHeadController extends BaseController {
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, jformGraphreportHead);
 
-		List<JformGraphreportHeadEntity> dataList= this.jformGraphreportHeadService.getListByCriteriaQuery(cq,false);
+		List<JformGraphreportHeadEntity> dataList= this.jformGraphreportHeadService.findListByCriteriaQuery(cq,false);
 		List<JformGraphreportHeadPage> pageList=new ArrayList<JformGraphreportHeadPage>();
 		if(dataList!=null&&dataList.size()>0){
 			String hql0 = "from JformGraphreportItemEntity where 1 = 1 AND cGREPORT_HEAD_ID = ? ";
 			for(JformGraphreportHeadEntity headEntity:dataList){
-				List<JformGraphreportItemEntity> itemEntities = systemService.findHql(hql0,headEntity.getId());
+				List<JformGraphreportItemEntity> itemEntities = systemService.findListByHql(hql0,headEntity.getId());
 				pageList.add(new JformGraphreportHeadPage(itemEntities,headEntity));
 			}
 		}

@@ -141,7 +141,7 @@ public class InterroleServiceImpl extends CommonServiceImpl implements Interrole
 		cq1.eq("interroleEntity.id", role.getId());
 		cq1.eq("interfaceEntity.id", interfaceId);
 		cq1.add();
-		List<InterroleInterfaceEntity> rFunctions = getListByCriteriaQuery(cq1, false);
+		List<InterroleInterfaceEntity> rFunctions = findListByCriteriaQuery(cq1, false);
 		if (null != rFunctions && rFunctions.size() > 0) {
 			 InterroleInterfaceEntity tsRoleInterface = rFunctions.get(0);
 			if (null != tsRoleInterface.getDataRule()) {

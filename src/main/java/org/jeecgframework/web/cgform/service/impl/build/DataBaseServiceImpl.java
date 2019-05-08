@@ -355,7 +355,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 		hql.append(" from CgformButtonSqlEntity t");
 		hql.append(" where t.formId=?");
 		hql.append(" and  t.buttonCode =?");
-		List<CgformButtonSqlEntity> list = this.findHql(hql.toString(),formId,buttonCode);
+		List<CgformButtonSqlEntity> list = this.findListByHql(hql.toString(),formId,buttonCode);
 		if(list!=null&&list.size()>0){
 			return list.get(0);
 		}
@@ -487,7 +487,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 		sql1.append(" where f.table_id = h.id ");
 		sql1.append(" and h.table_name=? ");
 		sql1.append(" and f.main_table=? ");
-		List<Map<String,Object>> list = this.findForJdbc(sql1.toString(), subTableName,mainTableName);
+		List<Map<String,Object>> list = this.findListMapBySql(sql1.toString(), subTableName,mainTableName);
 		return list;
 	}
 
@@ -514,7 +514,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 			}
 		}
 		sql2.append(" and main.id= ? ");
-		List<Map<String,Object>> subTableDataList = this.findForJdbc(sql2.toString(),mainTableId);
+		List<Map<String,Object>> subTableDataList = this.findListMapBySql(sql2.toString(),mainTableId);
 		Map<Object,Map<String, Object>> dataMap = new HashMap<Object, Map<String,Object>>();
 		if(subTableDataList!=null){
 			for(Map<String,Object> map:subTableDataList){
@@ -773,7 +773,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 		hql.append(" and  t.activeStatus ='1'");
 
 		hql.append(" and t.event = 'end' ");
-		List<CgformEnhanceJavaEntity> list = this.findHql(hql.toString(),formId,buttonCode);
+		List<CgformEnhanceJavaEntity> list = this.findListByHql(hql.toString(),formId,buttonCode);
 
 		if(list!=null&&list.size()>0){
 			return list.get(0);
@@ -785,7 +785,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 		StringBuilder hql = new StringBuilder("");
 		hql.append(" from CgformEnhanceJavaEntity t");
 		hql.append(" where t.formId=?");
-		List<CgformEnhanceJavaEntity> list = this.findHql(hql.toString(),formId);
+		List<CgformEnhanceJavaEntity> list = this.findListByHql(hql.toString(),formId);
 		return list;
 	}
 
@@ -846,9 +846,9 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 
 		if(oConvertUtils.isNotEmpty(event)) {
 			hql.append(" and t.event = ?");
-			list = this.findHql(hql.toString(),formId,buttonCode,event);
+			list = this.findListByHql(hql.toString(),formId,buttonCode,event);
 		} else {
-			list = this.findHql(hql.toString(),formId,buttonCode);
+			list = this.findListByHql(hql.toString(),formId,buttonCode);
 		}
 
 		if(list!=null&&list.size()>0){

@@ -342,7 +342,7 @@ public class CommonController extends BaseController {
 		}
 
 		String sql = "select count(1) from super_query_main where query_code = ?";
-		long count = this.systemService.getCountForJdbcParam(sql, superQueryCode);
+		long count = this.systemService.getCountBySql(sql, superQueryCode);
 
 		if(count>0){
 			return "yes";

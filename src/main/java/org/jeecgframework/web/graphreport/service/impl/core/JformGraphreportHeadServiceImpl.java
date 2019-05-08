@@ -52,7 +52,7 @@ public class JformGraphreportHeadServiceImpl extends CommonServiceImpl implement
 
 	    String hql0 = "from JformGraphreportItemEntity where 1 = 1 AND cgreportHeadId = ? ";
 
-	    List<JformGraphreportItemEntity> jformGraphreportItemOldList = this.findHql(hql0,id0);
+	    List<JformGraphreportItemEntity> jformGraphreportItemOldList = this.findListByHql(hql0,id0);
 		//2.筛选更新明细数据-子表
 		for(JformGraphreportItemEntity oldE:jformGraphreportItemOldList){
 			boolean isUpdate = false;
@@ -100,7 +100,7 @@ public class JformGraphreportHeadServiceImpl extends CommonServiceImpl implement
 
 	    String hql0 = "from JformGraphreportItemEntity where 1 = 1 AND cgreportHeadId = ? ";
 
-	    List<JformGraphreportItemEntity> jformGraphreportItemOldList = this.findHql(hql0,id0);
+	    List<JformGraphreportItemEntity> jformGraphreportItemOldList = this.findListByHql(hql0,id0);
 		this.deleteCollection(jformGraphreportItemOldList);
 	}
 	

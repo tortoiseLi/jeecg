@@ -189,7 +189,7 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "typeGroupTabs")
 	public ModelAndView typeGroupTabs(HttpServletRequest request) {
-		List<TSTypegroup> typegroupList = systemService.loadAll(TSTypegroup.class);
+		List<TSTypegroup> typegroupList = systemService.findList(TSTypegroup.class);
 		request.setAttribute("typegroupList", typegroupList);
 		return new ModelAndView("system/type/typeGroupTabs");
 	}
@@ -228,7 +228,7 @@ public class SystemController extends BaseController {
         String typegroupname = request.getParameter("typegroupname");
         if(oConvertUtils.isNotEmpty(typegroupname)) {
             typegroupname = typegroupname.trim();
-            List<String> typegroupnameKeyList = systemService.findByQueryString("select typegroupname from TSTypegroup");
+            List<String> typegroupnameKeyList = systemService.findListByHql("select typegroupname from TSTypegroup");
             if(typegroupname.lastIndexOf("*")==-1){
             	typegroupname = typegroupname + "*";
             }
@@ -355,7 +355,7 @@ public class SystemController extends BaseController {
 			cq = new CriteriaQuery(TSType.class);
 			cq.eq("TSTypegroup.id", treegrid.getId().substring(1));
 			cq.add();
-			List<TSType> typeList = systemService.getListByCriteriaQuery(cq, false);
+			List<TSType> typeList = systemService.findListByCriteriaQuery(cq, false);
 			for (TSType obj : typeList) {
 				TreeGrid treeNode = new TreeGrid();
 				treeNode.setId("T"+obj.getId());
@@ -380,11 +380,11 @@ public class SystemController extends BaseController {
             String typegroupname = request.getParameter("typegroupname");
             if(typegroupname != null && typegroupname.trim().length() > 0) {
                 typegroupname = typegroupname.trim();
-                List<String> typegroupnameKeyList = systemService.findByQueryString("select typegroupname from TSTypegroup");
+                List<String> typegroupnameKeyList = systemService.findListByHql("select typegroupname from TSTypegroup");
                 MutiLangSqlCriteriaUtil.assembleCondition(typegroupnameKeyList, cq, "typegroupname", typegroupname);
             }
 
-            List<TSTypegroup> typeGroupList = systemService.getListByCriteriaQuery(cq, false);
+            List<TSTypegroup> typeGroupList = systemService.findListByCriteriaQuery(cq, false);
 			for (TSTypegroup obj : typeGroupList) {
 				TreeGrid treeNode = new TreeGrid();
 				treeNode.setId("G"+obj.getId());
@@ -517,7 +517,7 @@ public class SystemController extends BaseController {
 		ValidForm v = new ValidForm();
 		String typegroupcode=oConvertUtils.getString(request.getParameter("param"));
 		String code=oConvertUtils.getString(request.getParameter("code"));
-		List<TSTypegroup> typegroups=systemService.findByProperty(TSTypegroup.class,"typegroupcode",typegroupcode);
+		List<TSTypegroup> typegroups=systemService.findListByProperty(TSTypegroup.class,"typegroupcode",typegroupcode);
 		if(typegroups.size()>0&&!code.equals(typegroupcode))
 		{
 			v.setInfo("分组已存在");
@@ -591,7 +591,7 @@ public class SystemController extends BaseController {
 		hql.append(" AND entity.TSTypegroup.typegroupcode =  ?");
 		hql.append(" AND entity.typecode =  ?");
 //		List<Object> types = this.systemService.findByQueryString(hql.toString());
-		List<Object> types = this.systemService.findHql(hql.toString(),typeGroupCode,typecode);
+		List<Object> types = this.systemService.findListByHql(hql.toString(),typeGroupCode,typecode);
 
 		if(types.size()>0&&(code==null||!code.equals(typecode)))
 		{
@@ -652,7 +652,7 @@ public class SystemController extends BaseController {
 	public ModelAndView addorupdateType(TSType type, HttpServletRequest req) {
 		String typegroupid = req.getParameter("typegroupid");
 		req.setAttribute("typegroupid", typegroupid);
-        TSTypegroup typegroup = systemService.findUniqueByProperty(TSTypegroup.class, "id", typegroupid);
+        TSTypegroup typegroup = systemService.getByProperty(TSTypegroup.class, "id", typegroupid);
         String typegroupname = typegroup.getTypegroupname();
 
         req.setAttribute("typegroup", typegroup);
@@ -739,7 +739,7 @@ public class SystemController extends BaseController {
 //			String orgCode = systemService.generateOrgCode(depart.getId(), pid);
 //			depart.setOrgCode(orgCode);
 			if(oConvertUtils.isNotEmpty(pid)){
-				TSDepart paretDept = systemService.findUniqueByProperty(TSDepart.class, "id", pid);
+				TSDepart paretDept = systemService.getByProperty(TSDepart.class, "id", pid);
 				String localMaxCode  = getMaxLocalCode(paretDept.getOrgCode());
 				depart.setOrgCode(YouBianCodeUtil.getSubYouBianCode(paretDept.getOrgCode(), localMaxCode));
 			}else{
@@ -779,7 +779,7 @@ public class SystemController extends BaseController {
 		}
 
 		sb.append(" ORDER BY org_code DESC");
-		List<Map<String, Object>> objMapList = systemService.findForJdbc(sb.toString(), 1, 1);
+		List<Map<String, Object>> objMapList = systemService.findListMapBySqlWithPage(sb.toString(), 1, 1);
 		String returnCode = null;
 		if(objMapList!=null && objMapList.size()>0){
 			returnCode = (String)objMapList.get(0).get("org_code");
@@ -795,7 +795,7 @@ public class SystemController extends BaseController {
 	 */
 	@RequestMapping(params = "addorupdateDepart")
 	public ModelAndView addorupdateDepart(TSDepart depart, HttpServletRequest req) {
-		List<TSDepart> departList = systemService.getList(TSDepart.class);
+		List<TSDepart> departList = systemService.findList(TSDepart.class);
 		req.setAttribute("departList", departList);
 		if (depart.getId() != null) {
 			depart = systemService.getById(TSDepart.class, depart.getId());
@@ -821,7 +821,7 @@ public class SystemController extends BaseController {
 			cq.isNull("TSPDepart.id");
 		}
 		cq.add();
-		List<TSDepart> departsList = systemService.getListByCriteriaQuery(cq, false);
+		List<TSDepart> departsList = systemService.findListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		comboTrees = systemService.comTree(departsList, comboTree);
 		return comboTrees;
@@ -929,13 +929,13 @@ public class SystemController extends BaseController {
 			cq.isNull("TFunction");
 		}
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, false);
+		List<TSFunction> functionList = systemService.findListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		Integer roleid = oConvertUtils.getInt(request.getParameter("roleid"), 0);
 		List<TSFunction> loginActionlist = new ArrayList<TSFunction>();// 已有权限菜单
 		role = this.systemService.getById(TSRole.class, roleid);
 		if (role != null) {
-			List<TSRoleFunction> roleFunctionList = systemService.findByProperty(TSRoleFunction.class, "TSRole.id", role.getId());
+			List<TSRoleFunction> roleFunctionList = systemService.findListByProperty(TSRoleFunction.class, "TSRole.id", role.getId());
 			if (roleFunctionList.size() > 0) {
 				for (TSRoleFunction roleFunction : roleFunctionList) {
 					TSFunction function = (TSFunction) roleFunction.getTSFunction();
@@ -959,7 +959,7 @@ public class SystemController extends BaseController {
 		Integer roleid = oConvertUtils.getInt(request.getParameter("roleid"), 0);
 		String rolefunction = request.getParameter("rolefunctions");
 		TSRole role = this.systemService.getById(TSRole.class, roleid);
-		List<TSRoleFunction> roleFunctionList = systemService.findByProperty(TSRoleFunction.class, "TSRole.id", role.getId());
+		List<TSRoleFunction> roleFunctionList = systemService.findListByProperty(TSRoleFunction.class, "TSRole.id", role.getId());
 		systemService.deleteCollection(roleFunctionList);
 		String[] roleFunctions = null;
 		if (rolefunction != "") {
@@ -1021,7 +1021,7 @@ public class SystemController extends BaseController {
 			cq.isNull("TFunction");
 		}
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, false);
+		List<TSFunction> functionList = systemService.findListByCriteriaQuery(cq, false);
 		List<TreeGrid> treeGrids = new ArrayList<TreeGrid>();
 		Collections.sort(functionList, new SetListSort());
 		TreeGridModel treeGridModel = new TreeGridModel();
@@ -1090,7 +1090,7 @@ public class SystemController extends BaseController {
 	 */
 	public void savep(String roleid, String functionid, String ids) {
 		String hql = "from TRoleFunction t where" + " t.TSRole.id=" + roleid + " " + "and t.TFunction.functionid=" + functionid;
-		TSRoleFunction rFunction = systemService.singleResult(hql);
+		TSRoleFunction rFunction = systemService.getByHql(hql);
 		if (rFunction != null) {
 			rFunction.setOperation(ids);
 			systemService.saveOrUpdate(rFunction);
@@ -1104,7 +1104,7 @@ public class SystemController extends BaseController {
 	 */
 	public void clearp(String roleid) {
 		String hql = "from TRoleFunction t where" + " t.TSRole.id=" + roleid;
-		List<TSRoleFunction> rFunctions = systemService.findByQueryString(hql);
+		List<TSRoleFunction> rFunctions = systemService.findListByHql(hql);
 		if (rFunctions.size() > 0) {
 			for (TSRoleFunction tRoleFunction : rFunctions) {
 				tRoleFunction.setOperation(null);
@@ -1205,7 +1205,7 @@ public class SystemController extends BaseController {
     public AjaxJson getDataVersion(@RequestParam String tableName, @RequestParam String dataId){
     	AjaxJson j = new AjaxJson();
     	String hql = "from TSDatalogEntity where tableName = ? and dataId = ? order by versionNumber desc";
-    	List<TSDatalogEntity> datalogEntities = this.systemService.findHql(hql, new Object[]{tableName,dataId});
+    	List<TSDatalogEntity> datalogEntities = this.systemService.findListByHql(hql, new Object[]{tableName,dataId});
 
     	if (datalogEntities.size() > 0) {
 			j.setObj(datalogEntities);

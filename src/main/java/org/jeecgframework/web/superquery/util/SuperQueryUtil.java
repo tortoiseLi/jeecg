@@ -47,10 +47,10 @@ private static final Logger logger = Logger.getLogger(SuperQueryUtil.class);
 			String relation = parseObject.get("relation").toString();
 			//step.3根据queryCode查询数据返回主表
 			String sql = "select sqt.table_name from super_query_table sqt where sqt.is_main = 'Y' and sqt.main_id = (select sqm.id from super_query_main sqm where sqm.query_code = ?)";
-			List<Map<String,Object>> tableName = systemService.findForJdbc(sql, queryCode);
+			List<Map<String,Object>> tableName = systemService.findListMapBySql(sql, queryCode);
 			//根据queryCode查询数据库返回从表
 			String sql1 = "select sqt.table_name,sqt.fk_field from super_query_table sqt where sqt.is_main = 'N' and sqt.main_id = (select sqm.id from super_query_main sqm where sqm.query_code = ?)";
-			List<Map<String,Object>> fromName = systemService.findForJdbc(sql1, queryCode);
+			List<Map<String,Object>> fromName = systemService.findListMapBySql(sql1, queryCode);
 			//queryRules为所查询的所有信息。
 			JSONArray queryRules = (JSONArray) parseObject.get("children");
 			logger.info("------" + queryRules.toString() + "------");

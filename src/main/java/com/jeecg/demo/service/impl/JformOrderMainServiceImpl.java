@@ -55,7 +55,7 @@ public class JformOrderMainServiceImpl extends CommonServiceImpl implements Jfor
 		//保存主表信息
 		if(StringUtil.isNotEmpty(jformOrderMain.getId())){
 			try {
-				JformOrderMainEntity temp = findUniqueByProperty(JformOrderMainEntity.class, "id", jformOrderMain.getId());
+				JformOrderMainEntity temp = getByProperty(JformOrderMainEntity.class, "id", jformOrderMain.getId());
 				MyBeanUtils.copyBeanNotNull2Bean(jformOrderMain, temp);
 				this.saveOrUpdate(temp);
 			} catch (Exception e) {
@@ -71,7 +71,7 @@ public class JformOrderMainServiceImpl extends CommonServiceImpl implements Jfor
 		//===================================================================================
 		//1.查询出数据库的明细数据-JformOrderMain子表
 	    String hql0 = "from JformOrderCustomerEntity where 1 = 1 AND fK_ID = ? ";
-	    List<JformOrderCustomerEntity> jformOrderCustomerOldList = this.findHql(hql0,id0);
+	    List<JformOrderCustomerEntity> jformOrderCustomerOldList = this.findListByHql(hql0,id0);
 		//2.筛选更新明细数据-JformOrderMain子表
 
 	    //TODO author：XueLin  for: 客户数据全删完size == 0
@@ -110,7 +110,7 @@ public class JformOrderMainServiceImpl extends CommonServiceImpl implements Jfor
 		//===================================================================================
 		//1.查询出数据库的明细数据-JformOrderMain子表
 	    String hql1 = "from JformOrderTicketEntity where 1 = 1 AND fCK_ID = ? ";
-	    List<JformOrderTicketEntity> jformOrderTicketOldList = this.findHql(hql1,id1);
+	    List<JformOrderTicketEntity> jformOrderTicketOldList = this.findListByHql(hql1,id1);
 		//2.筛选更新明细数据-JformOrderMain子表
 
 	    //TODO author：XueLin  for: 机票信息全删完 size == 0
@@ -162,12 +162,12 @@ public class JformOrderMainServiceImpl extends CommonServiceImpl implements Jfor
 		//===================================================================================
 		//删除-JformOrderMain子表
 	    String hql0 = "from JformOrderCustomerEntity where 1 = 1 AND fK_ID = ? ";
-	    List<JformOrderCustomerEntity> jformOrderCustomerOldList = this.findHql(hql0,id0);
+	    List<JformOrderCustomerEntity> jformOrderCustomerOldList = this.findListByHql(hql0,id0);
 		this.deleteCollection(jformOrderCustomerOldList);
 		//===================================================================================
 		//删除-JformOrderMain子表
 	    String hql1 = "from JformOrderTicketEntity where 1 = 1 AND fCK_ID = ? ";
-	    List<JformOrderTicketEntity> jformOrderTicketOldList = this.findHql(hql1,id1);
+	    List<JformOrderTicketEntity> jformOrderTicketOldList = this.findListByHql(hql1,id1);
 		this.deleteCollection(jformOrderTicketOldList);
 	}
 	

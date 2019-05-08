@@ -275,7 +275,7 @@ public class TsBlackListController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(TsBlackListEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tsBlackList, request.getParameterMap());
-		List<TsBlackListEntity> tsBlackLists = this.tsBlackListService.getListByCriteriaQuery(cq,false);
+		List<TsBlackListEntity> tsBlackLists = this.tsBlackListService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"黑名单");
 		modelMap.put(NormalExcelConstants.CLASS,TsBlackListEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("黑名单列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
@@ -346,7 +346,7 @@ public class TsBlackListController extends BaseController {
 		CriteriaQuery query=new CriteriaQuery(TsBlackListEntity.class);
 		InterfaceUtil.installCriteriaQuery(query, interfaceRuleDto, InterfaceEnum.blacklist_list);
 		query.add();
-		List<TsBlackListEntity> listTsBlackLists = this.tsBlackListService.getListByCriteriaQuery(query, false);
+		List<TsBlackListEntity> listTsBlackLists = this.tsBlackListService.findListByCriteriaQuery(query, false);
 		return Result.success(listTsBlackLists);
 	}
 

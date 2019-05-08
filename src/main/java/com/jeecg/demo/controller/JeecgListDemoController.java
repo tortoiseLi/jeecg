@@ -440,8 +440,8 @@ public class JeecgListDemoController extends BaseController {
 	@RequestMapping(params = "getTotalReport")
 	@ResponseBody
 	public String getTotalReport(HttpServletRequest request) {
-		List<Map<String,Object>> maplist=systemService.findForJdbc("select l.broswer broswer ,count(broswer) broswercount from t_s_log l group by l.broswer", null);
-		Long countSutent = systemService.getCountForJdbc("select count(*) from t_s_log where 1=1");
+		List<Map<String,Object>> maplist=systemService.findListMapBySql("select l.broswer broswer ,count(broswer) broswercount from t_s_log l group by l.broswer");
+		Long countSutent = systemService.getCountBySql("select count(*) from t_s_log where 1=1");
 		for(Map map:maplist){
 			Long personcount = Long.parseLong(map.get("broswercount").toString());
 			Double  percentage = 0.0;
@@ -453,10 +453,10 @@ public class JeecgListDemoController extends BaseController {
 		}
 		Long count = 0L;
 		if(JdbcDao.DATABSE_TYPE_SQLSERVER.equals(DBTypeUtil.getDBType())){
-			count = systemService.getCountForJdbcParam("select count(0) from (select l." +
+			count = systemService.getCountBySql("select count(0) from (select l." +
 					"  broswer ,count(broswer) broswercount from t_s_log  l group by l.broswer) as t( broswer, broswercount)",null);
 		}else{
-			count = systemService.getCountForJdbcParam("select count(0) from (select l.broswer broswer ,count(broswer) broswercount from t_s_log l group by l.broswer)t",null);
+			count = systemService.getCountBySql("select count(0) from (select l.broswer broswer ,count(broswer) broswercount from t_s_log l group by l.broswer)t",null);
 		}
 		
 		StringBuffer strb =new StringBuffer();
@@ -480,8 +480,8 @@ public class JeecgListDemoController extends BaseController {
 	 */
 	@RequestMapping(params = "listAllStatisticByJdbc")
 	public void listAllStatisticByJdbc(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		List<Map<String,Object>> maplist=systemService.findForJdbc("select l.broswer broswer ,count(broswer) broswercount from t_s_log l group by l.broswer", null);
-		Long countSutent = systemService.getCountForJdbc("select count(*) from t_s_log where 1=1");
+		List<Map<String,Object>> maplist=systemService.findListMapBySql("select l.broswer broswer ,count(broswer) broswercount from t_s_log l group by l.broswer");
+		Long countSutent = systemService.getCountBySql("select count(*) from t_s_log where 1=1");
 		for(Map map:maplist){
 			Long personcount = Long.parseLong(map.get("broswercount").toString());
 			Double  percentage = 0.0;
@@ -493,10 +493,10 @@ public class JeecgListDemoController extends BaseController {
 		}
 		Long count = 0L;
 		if(JdbcDao.DATABSE_TYPE_SQLSERVER.equals(DBTypeUtil.getDBType())){
-			count = systemService.getCountForJdbcParam("select count(0) from (select l." +
+			count = systemService.getCountBySql("select count(0) from (select l." +
 					"  broswer ,count(broswer) broswercount from t_s_log  l group by l.broswer) as t( broswer, broswercount)",null);
 		}else{
-			count = systemService.getCountForJdbcParam("select count(0) from (select l.broswer broswer ,count(broswer) broswercount from t_s_log l group by l.broswer)t",null);
+			count = systemService.getCountBySql("select count(0) from (select l.broswer broswer ,count(broswer) broswercount from t_s_log l group by l.broswer)t",null);
 		}
 		
 		dataGrid.setTotal(count.intValue());
@@ -517,8 +517,8 @@ public class JeecgListDemoController extends BaseController {
 		Highchart hc = new Highchart();
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT broswer as className ,count(broswer)  FROM TSLog group by broswer");
-		List userBroswerList = systemService.findByQueryString(sb.toString());
-		Long count = systemService.getCountForJdbc("SELECT COUNT(1) FROM T_S_Log WHERE 1=1");
+		List userBroswerList = systemService.findListByHql(sb.toString());
+		Long count = systemService.getCountBySql("SELECT COUNT(1) FROM T_S_Log WHERE 1=1");
 		List lt = new ArrayList();
 		hc = new Highchart();
 		hc.setName(mutiLangService.getLang(BROSWER_COUNT_ANALYSIS));
@@ -747,7 +747,7 @@ public class JeecgListDemoController extends BaseController {
 	@RequestMapping(params = "print")
 	public ModelAndView print(JeecgDemoEntity jeecgDemo, HttpServletRequest req) {
 		// 获取部门信息
-		List<TSDepart> departList = systemService.getList(TSDepart.class);
+		List<TSDepart> departList = systemService.findList(TSDepart.class);
 		req.setAttribute("departList", departList);
 
 		if (StringUtil.isNotEmpty(jeecgDemo.getId())) {
@@ -914,7 +914,7 @@ public class JeecgListDemoController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(JeecgDemoEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, jeecgDemo, request.getParameterMap());
-		List<JeecgDemoEntity> jeecgDemos = this.jeecgDemoService.getListByCriteriaQuery(cq,false);
+		List<JeecgDemoEntity> jeecgDemos = this.jeecgDemoService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"jeecg_demo");
 		modelMap.put(NormalExcelConstants.CLASS,JeecgDemoEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("jeecg_demo列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),"导出信息"));
@@ -975,7 +975,7 @@ public class JeecgListDemoController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public List<JeecgDemoEntity> list() {
-		List<JeecgDemoEntity> listJeecgDemos=jeecgDemoService.getList(JeecgDemoEntity.class);
+		List<JeecgDemoEntity> listJeecgDemos=jeecgDemoService.findList(JeecgDemoEntity.class);
 		return listJeecgDemos;
 	}
 	
@@ -1417,7 +1417,7 @@ public class JeecgListDemoController extends BaseController {
 			JSONObject object = new JSONObject();
 			object.put("message", "");
 			try {
-				List<Map<String,Object>> data = this.systemService.findForJdbc(sql);
+				List<Map<String,Object>> data = this.systemService.findListMapBySql(sql);
 				for (Map<String, Object> map : data) {
 					for (String key : map.keySet()) {
 						if(null == map.get(key)){

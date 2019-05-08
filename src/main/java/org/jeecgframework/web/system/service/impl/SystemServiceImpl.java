@@ -256,7 +256,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		cq1.eq("TSRole.id", role.getId());
 		cq1.eq("TSFunction.id", functionId);
 		cq1.add();
-		List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+		List<TSRoleFunction> rFunctions = findListByCriteriaQuery(cq1, false);
 		if (null != rFunctions && rFunctions.size() > 0) {
 			TSRoleFunction tsRoleFunction = rFunctions.get(0);
 			if (null != tsRoleFunction.getOperation()) {
@@ -323,7 +323,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			// 刷新缓存
 			HttpSession session = ContextHolderUtils.getSession();
 			TSUser user = ResourceUtil.getSessionUser();
-			List<TSRoleUser> rUsers = this.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
+			List<TSRoleUser> rUsers = this.findListByProperty(TSRoleUser.class, "TSUser.id", user.getId());
 			for (TSRoleUser ru : rUsers) {
 				TSRole role = ru.getTSRole();
 				session.removeAttribute(role.getId());
@@ -379,7 +379,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		cq1.eq("TSRole.id", role.getId());
 		cq1.eq("TSFunction.id", functionId);
 		cq1.add();
-		List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+		List<TSRoleFunction> rFunctions = findListByCriteriaQuery(cq1, false);
 		if (null != rFunctions && rFunctions.size() > 0) {
 			TSRoleFunction tsRoleFunction = rFunctions.get(0);
 			if (null != tsRoleFunction.getDataRule()) {
@@ -399,7 +399,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	@Override
 	@Transactional(readOnly = true)
 	public  void initAllTSIcons() {
-		List<TSIcon> list = this.loadAll(TSIcon.class);
+		List<TSIcon> list = this.findList(TSIcon.class);
 		for (TSIcon tsIcon : list) {
 			ResourceUtil.allTSIcons.put(tsIcon.getId(), tsIcon);
 		}
@@ -463,7 +463,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> functionGroups = getListByCriteriaQuery(cq1, false);
+			List<TSRoleFunction> functionGroups = findListByCriteriaQuery(cq1, false);
 			if (null != functionGroups && functionGroups.size() > 0) {
 				TSRoleFunction tsFunctionGroup = functionGroups.get(0);
 				if (null != tsFunctionGroup.getOperation()) {
@@ -479,7 +479,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			cq1.eq("tsDepartAuthGroup.id", functionGroup.getId());
 			cq1.eq("tsFunction.id", functionId);
 			cq1.add();
-			List<TSDepartAuthgFunctionRelEntity> functionGroups = getListByCriteriaQuery(cq1, false);
+			List<TSDepartAuthgFunctionRelEntity> functionGroups = findListByCriteriaQuery(cq1, false);
 			if (null != functionGroups && functionGroups.size() > 0) {
 				TSDepartAuthgFunctionRelEntity tsFunctionGroup = functionGroups.get(0);
 				if (null != tsFunctionGroup.getOperation()) {
@@ -511,7 +511,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> functionGroups = getListByCriteriaQuery(cq1, false);
+			List<TSRoleFunction> functionGroups = findListByCriteriaQuery(cq1, false);
 			if (null != functionGroups && functionGroups.size() > 0) {
 				TSRoleFunction tsFunctionGroup = functionGroups.get(0);
 				if (null != tsFunctionGroup.getDataRule()) {
@@ -527,7 +527,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			cq1.eq("tsDepartAuthGroup.id", functionGroup.getId());
 			cq1.eq("tsFunction.id", functionId);
 			cq1.add();
-			List<TSDepartAuthgFunctionRelEntity> functionGroups = getListByCriteriaQuery(cq1, false);
+			List<TSDepartAuthgFunctionRelEntity> functionGroups = findListByCriteriaQuery(cq1, false);
 			if (null != functionGroups && functionGroups.size() > 0) {
 				TSDepartAuthgFunctionRelEntity tsFunctionGroup = functionGroups.get(0);
 				if (null != tsFunctionGroup.getDatarule()) {
@@ -561,7 +561,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		if(realRequestPath.indexOf("autoFormController/af/")>-1 && realRequestPath.indexOf("?")!=-1){
 			realRequestPath = realRequestPath.substring(0, realRequestPath.indexOf("?"));
 		}
-		List<TSFunction> functions = this.findByProperty(TSFunction.class, "functionUrl", realRequestPath);
+		List<TSFunction> functions = this.findListByProperty(TSFunction.class, "functionUrl", realRequestPath);
 		if (functions.size()>0){
 			functionId = functions.get(0).getId();
 		}
@@ -582,7 +582,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	public boolean loginUserIsHasMenuAuth(String requestPath,String clickFunctionId,String userid,String orgId){
         //step.1 先判断请求是否配置菜单，没有配置菜单默认不作权限控制[注意：这里不限制权限类型菜单]
         String hasMenuSql = "select count(*) from t_s_function where functiontype = 0 and functionurl = ?";
-        Long hasMenuCount = this.getCountForJdbcParam(hasMenuSql,requestPath);
+        Long hasMenuCount = this.getCountBySql(hasMenuSql,requestPath);
     	logger.debug("-----[ 读取数据库判断访问权限 ]-------requestPath----------"+requestPath+"------------hasMenuCount--------"+ hasMenuCount);
         if(hasMenuCount<=0){
         	return true;
@@ -593,14 +593,14 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		String sql = "SELECT count(*) FROM t_s_function f,t_s_role_function  rf,t_s_role_user ru " +
 					" WHERE f.id=rf.functionid AND rf.roleid=ru.roleid AND " +
 					"ru.userid=? AND f.functionurl = ?";
-		authSize = this.getCountForJdbcParam(sql,userid,requestPath);
+		authSize = this.getCountBySql(sql,userid,requestPath);
 		if(authSize <=0){
 			//step.3 判断菜单是否有组织机构角色权限
             Long orgAuthSize = Long.valueOf(0);
             String functionOfOrgSql = "SELECT count(*) from t_s_function f, t_s_role_function rf, t_s_role_org ro  " +
                     "WHERE f.ID=rf.functionid AND rf.roleid=ro.role_id " +
                     "AND ro.org_id=? AND f.functionurl = ?";
-            orgAuthSize = this.getCountForJdbcParam(functionOfOrgSql,orgId,requestPath);
+            orgAuthSize = this.getCountBySql(functionOfOrgSql,orgId,requestPath);
 			return orgAuthSize > 0;
         }else{
 			return true;
@@ -614,14 +614,14 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	@Transactional(readOnly = true)
 	public Set<String> getLoginDataRuleIdsByUserId(String userId,String functionId,String orgId) {
 		Set<String> dataRuleIds = new HashSet<String>();
-		List<TSRoleUser> rUsers = findByProperty(TSRoleUser.class, "TSUser.id", userId);
+		List<TSRoleUser> rUsers = findListByProperty(TSRoleUser.class, "TSUser.id", userId);
 		for (TSRoleUser ru : rUsers) {
 			TSRole role = ru.getTSRole();
 			CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+			List<TSRoleFunction> rFunctions = findListByCriteriaQuery(cq1, false);
 			if (null != rFunctions && rFunctions.size() > 0) {
 				TSRoleFunction tsRoleFunction = rFunctions.get(0);
 				if (oConvertUtils.isNotEmpty(tsRoleFunction.getDataRule())) {
@@ -633,14 +633,14 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			}
 		}
 
-		List<TSRoleOrg> tsRoleOrg = findByProperty(TSRoleOrg.class, "tsDepart.id", orgId);
+		List<TSRoleOrg> tsRoleOrg = findListByProperty(TSRoleOrg.class, "tsDepart.id", orgId);
 		for (TSRoleOrg roleOrg : tsRoleOrg) {
 			TSRole role = roleOrg.getTsRole();
 			CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+			List<TSRoleFunction> rFunctions = findListByCriteriaQuery(cq1, false);
 			if (null != rFunctions && rFunctions.size() > 0) {
 				TSRoleFunction tsRoleFunction = rFunctions.get(0);
 				if (oConvertUtils.isNotEmpty(tsRoleFunction.getDataRule())) {
@@ -667,11 +667,11 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	@Transactional(readOnly = true)
 	public List<TSOperation> getLoginOperationsByUserId(String userId, String functionId, String orgId) {
 		String hql="FROM TSOperation where functionid = ?";
-		List<TSOperation> operations = findHql(hql,functionId);
+		List<TSOperation> operations = findListByHql(hql,functionId);
 		if(operations == null || operations.size()<1){
 			return null;
 		}
-		List<TSRoleUser> rUsers = findByProperty(TSRoleUser.class, "TSUser.id", userId);
+		List<TSRoleUser> rUsers = findListByProperty(TSRoleUser.class, "TSUser.id", userId);
 		
 		for(TSRoleUser ru : rUsers){
 			TSRole role = ru.getTSRole();
@@ -679,7 +679,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+			List<TSRoleFunction> rFunctions = findListByCriteriaQuery(cq1, false);
 			if (null != rFunctions && rFunctions.size() > 0) {
 				TSRoleFunction tsRoleFunction = rFunctions.get(0);
 				if (oConvertUtils.isNotEmpty(tsRoleFunction.getOperation())) {
@@ -696,14 +696,14 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			}
 		}
 
-		List<TSRoleOrg> tsRoleOrgs = findByProperty(TSRoleOrg.class, "tsDepart.id", orgId);
+		List<TSRoleOrg> tsRoleOrgs = findListByProperty(TSRoleOrg.class, "tsDepart.id", orgId);
 		for (TSRoleOrg tsRoleOrg : tsRoleOrgs) {
 			TSRole role = tsRoleOrg.getTsRole();
 			CriteriaQuery cq1 = new CriteriaQuery(TSRoleFunction.class);
 			cq1.eq("TSRole.id", role.getId());
 			cq1.eq("TSFunction.id", functionId);
 			cq1.add();
-			List<TSRoleFunction> rFunctions = getListByCriteriaQuery(cq1, false);
+			List<TSRoleFunction> rFunctions = findListByCriteriaQuery(cq1, false);
 			if (null != rFunctions && rFunctions.size() > 0) {
 				TSRoleFunction tsRoleFunction = rFunctions.get(0);
 				if (oConvertUtils.isNotEmpty(tsRoleFunction.getOperation())) {

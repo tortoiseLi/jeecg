@@ -258,7 +258,7 @@ public class CgreportConfigHeadController extends BaseController {
 		//查询-动态报表配置明细
 	    String hql0 = "from CgreportConfigItemEntity where 1 = 1 AND cgrheadId = ? ";
 	    try{
-	    	List<CgreportConfigItemEntity> cgreportConfigItemEntityList = systemService.findHql(hql0,id0);
+	    	List<CgreportConfigItemEntity> cgreportConfigItemEntityList = systemService.findListByHql(hql0,id0);
 			req.setAttribute("cgreportConfigItemList", cgreportConfigItemEntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -281,7 +281,7 @@ public class CgreportConfigHeadController extends BaseController {
 		//查询-动态报表配置明细
 	    String hql0 = "from CgreportConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
 	    try{
-	    	List<CgreportConfigParamEntity> cgreportConfigParamEntityList = systemService.findHql(hql0,id0);
+	    	List<CgreportConfigParamEntity> cgreportConfigParamEntityList = systemService.findListByHql(hql0,id0);
 			req.setAttribute("cgreportConfigParamList", cgreportConfigParamEntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -297,9 +297,9 @@ public class CgreportConfigHeadController extends BaseController {
         modelMap.put("url",url);
         StringBuilder sb = new StringBuilder("");
 	    try{
-	    	CgreportConfigHeadEntity cgreportConfigHead = systemService.findUniqueByProperty(CgreportConfigHeadEntity.class, "code", title);
+	    	CgreportConfigHeadEntity cgreportConfigHead = systemService.getByProperty(CgreportConfigHeadEntity.class, "code", title);
 	    	String hql0 = "from CgreportConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
-	    	List<CgreportConfigParamEntity> cgreportConfigParamList = systemService.findHql(hql0,cgreportConfigHead.getId());
+	    	List<CgreportConfigParamEntity> cgreportConfigParamList = systemService.findListByHql(hql0,cgreportConfigHead.getId());
 	    	if(cgreportConfigParamList!=null&cgreportConfigParamList.size()>0){
 	    		for(CgreportConfigParamEntity cgreportConfigParam :cgreportConfigParamList){
 	    			sb.append("&").append(cgreportConfigParam.getParamName()).append("=");

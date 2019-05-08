@@ -65,13 +65,6 @@ public interface BaseDao {
 	<T> void update(T entity);
 
 	/**
-	 * 根据ID更新实体
-	 * @param entityClass
-	 * @param id
-	 */
-	void updateById(Class entityClass, Serializable id);
-
-	/**
 	 * 新增或修改
 	 * @param entity
 	 * @param <T>
@@ -203,11 +196,11 @@ public interface BaseDao {
 
 	/**
 	 * 根据实体查询list
-	 * @param entityClass
+	 * @param entityName
 	 * @param exampleEntity
 	 * @return
 	 */
-	List findListByEntity(final String entityClass, final Object exampleEntity);
+	List findListByEntity(final String entityName, final Object exampleEntity);
 
 	/**
 	 * 查询实体List

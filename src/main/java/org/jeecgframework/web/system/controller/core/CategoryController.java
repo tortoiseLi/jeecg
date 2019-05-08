@@ -92,7 +92,7 @@ public class CategoryController extends BaseController {
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq,
 				category, request.getParameterMap());
 		List<TSCategoryEntity> list = this.categoryService
-				.getListByCriteriaQuery(cq, false);
+				.findListByCriteriaQuery(cq, false);
 		List<TreeGrid> treeGrids = new ArrayList<TreeGrid>();
 		TreeGridModel treeGridModel = new TreeGridModel();
 		treeGridModel.setIdField("code");
@@ -167,15 +167,15 @@ public class CategoryController extends BaseController {
 	@RequestMapping(params = "addorupdate")
 	public String addorupdate(ModelMap map, TSCategoryEntity category) {
 		if (StringUtil.isNotEmpty(category.getCode())) {
-			category = categoryService.findUniqueByProperty(TSCategoryEntity.class,
+			category = categoryService.getByProperty(TSCategoryEntity.class,
 					"code",category.getCode());
 			map.put("categoryPage", category);
 		}
-		map.put("iconlist", systemService.findByProperty(TSIcon.class,
+		map.put("iconlist", systemService.findListByProperty(TSIcon.class,
 				"iconType", (short) 1));
 		if (category.getParent() != null
 				&& StringUtil.isNotEmpty(category.getParent().getCode())) {
-			TSCategoryEntity parent = categoryService.findUniqueByProperty(TSCategoryEntity.class, "code", category.getParent().getCode());
+			TSCategoryEntity parent = categoryService.getByProperty(TSCategoryEntity.class, "code", category.getParent().getCode());
 			category.setParent(parent);
 			map.put("categoryPage", category);
 		}
@@ -196,7 +196,7 @@ public class CategoryController extends BaseController {
 		}
 		cq.add();
 		List<TSCategoryEntity> categoryList = systemService
-				.getListByCriteriaQuery(cq, false);
+				.findListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		ComboTreeModel comboTreeModel = new ComboTreeModel("code", "name", "list");
 		comboTrees = systemService.comboTree(categoryList, comboTreeModel,
@@ -225,7 +225,7 @@ public class CategoryController extends BaseController {
 		}
 		cq.add();
 		List<TSCategoryEntity> categoryList = systemService
-				.getListByCriteriaQuery(cq, false);
+				.findListByCriteriaQuery(cq, false);
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		for (int i = 0; i < categoryList.size(); i++) {
 			comboTrees.add(categoryConvertToTree(categoryList.get(i)));

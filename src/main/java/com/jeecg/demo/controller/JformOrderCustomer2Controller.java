@@ -285,7 +285,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(JformOrderCustomer2Entity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, jformOrderCustomer2, request.getParameterMap());
-		List<JformOrderCustomer2Entity> jformOrderCustomer2s = this.jformOrderMain2Service.getListByCriteriaQuery(cq,false);
+		List<JformOrderCustomer2Entity> jformOrderCustomer2s = this.jformOrderMain2Service.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"订单客户信息");
 		modelMap.put(NormalExcelConstants.CLASS,JformOrderCustomer2Entity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("订单客户信息列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
@@ -388,7 +388,7 @@ public class JformOrderCustomer2Controller extends BaseController {
 	@ResponseBody
 	@ApiOperation(value="订单客户信息列表信息",produces="application/json",httpMethod="GET")
 	public ResponseMessage<List<JformOrderCustomer2Entity>> list() {
-		List<JformOrderCustomer2Entity> listJformOrderCustomer2s=jformOrderMain2Service.getList(JformOrderCustomer2Entity.class);
+		List<JformOrderCustomer2Entity> listJformOrderCustomer2s=jformOrderMain2Service.findList(JformOrderCustomer2Entity.class);
 		return Result.success(listJformOrderCustomer2s);
 	}
 	

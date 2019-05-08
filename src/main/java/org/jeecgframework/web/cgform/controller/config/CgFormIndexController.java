@@ -261,7 +261,7 @@ public class CgFormIndexController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(CgFormIndexEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, cgFormIndex, request.getParameterMap());
-		List<CgFormIndexEntity> cgFormIndexs = this.cgFormIndexService.getListByCriteriaQuery(cq,false);
+		List<CgFormIndexEntity> cgFormIndexs = this.cgFormIndexService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"索引表");
 		modelMap.put(NormalExcelConstants.CLASS,CgFormIndexEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("索引表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
@@ -323,7 +323,7 @@ public class CgFormIndexController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public List<CgFormIndexEntity> list() {
-		List<CgFormIndexEntity> listCgFormIndexs=cgFormIndexService.getList(CgFormIndexEntity.class);
+		List<CgFormIndexEntity> listCgFormIndexs=cgFormIndexService.findList(CgFormIndexEntity.class);
 		return listCgFormIndexs;
 	}
 	
@@ -394,7 +394,7 @@ public class CgFormIndexController extends BaseController {
 			CriteriaQuery cq = new CriteriaQuery(CgFormIndexEntity.class);
 			cq.eq("table.id", cgFormHead.getId());
 			cq.add();
-			columnList = cgFormIndexService.getListByCriteriaQuery(cq, false);
+			columnList = cgFormIndexService.findListByCriteriaQuery(cq, false);
 			//对字段列按顺序排序
 			//Collections.sort(columnList,new FieldNumComparator());
 		}else{

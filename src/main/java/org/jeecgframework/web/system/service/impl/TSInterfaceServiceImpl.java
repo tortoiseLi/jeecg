@@ -136,7 +136,7 @@ public class TSInterfaceServiceImpl extends CommonServiceImpl implements TSInter
 		sb.append(" left join t_s_base_user tsbu on tsiu.user_id = tsbu.id");
 		sb.append(" where tsbu.username = ? and tsi.interface_code=? ");
 		InterfaceRuleDto interfaceRuleDto = null;
-		Map<String,Object> map=this.findOneForJdbc(sb.toString(), userName,interfaceEnum.getCode());
+		Map<String,Object> map=this.getMapBySql(sb.toString(), userName,interfaceEnum.getCode());
 		if(map!=null && map.size()>0){
 			String id = (String) map.get("id");
 			String interfaceCode = (String)map.get("interface_code");
@@ -151,7 +151,7 @@ public class TSInterfaceServiceImpl extends CommonServiceImpl implements TSInter
 				String hql = "from TSInterfaceDdataRuleEntity where id in (:ids)";
 				ruleList = commonDao.getSession().createQuery(hql).setParameterList("ids", dataRuleIdArr).list();
 			}else if(StringUtils.isNotEmpty(id)){
-				ruleList=this.findByProperty(TSInterfaceDdataRuleEntity.class, "TSInterface.id", id);
+				ruleList=this.findListByProperty(TSInterfaceDdataRuleEntity.class, "TSInterface.id", id);
 			}
 			interfaceRuleDto.setInterfaceDataRule(ruleList);
 		}

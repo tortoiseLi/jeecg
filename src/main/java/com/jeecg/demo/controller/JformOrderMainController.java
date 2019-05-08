@@ -312,7 +312,7 @@ public class JformOrderMainController extends BaseController {
 		//查询-JformOrderMain子表
 	    String hql0 = "from JformOrderCustomerEntity where 1 = 1 AND fK_ID = ? ";
 	    try{
-	    	List<JformOrderCustomerEntity> jformOrderCustomerEntityList = systemService.findHql(hql0,id0);
+	    	List<JformOrderCustomerEntity> jformOrderCustomerEntityList = systemService.findListByHql(hql0,id0);
 			req.setAttribute("jformOrderCustomerList", jformOrderCustomerEntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -334,7 +334,7 @@ public class JformOrderMainController extends BaseController {
 		//查询-JformOrderMain子表
 	    String hql1 = "from JformOrderTicketEntity where 1 = 1 AND fCK_ID = ? ";
 	    try{
-	    	List<JformOrderTicketEntity> jformOrderTicketEntityList = systemService.findHql(hql1,id1);
+	    	List<JformOrderTicketEntity> jformOrderTicketEntityList = systemService.findListByHql(hql1,id1);
 			req.setAttribute("jformOrderTicketList", jformOrderTicketEntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -359,7 +359,7 @@ public class JformOrderMainController extends BaseController {
     		throw new BusinessException(e.getMessage());
     	}
     	cq.add();
-    	List<JformOrderMainEntity> list=this.jformOrderMainService.getListByCriteriaQuery(cq, false);
+    	List<JformOrderMainEntity> list=this.jformOrderMainService.findListByCriteriaQuery(cq, false);
     	List<JformOrderMainPage> pageList=new ArrayList<JformOrderMainPage>();
         if(list!=null&&list.size()>0){
         	for(JformOrderMainEntity entity:list){
@@ -368,11 +368,11 @@ public class JformOrderMainController extends BaseController {
         		   MyBeanUtils.copyBeanNotNull2Bean(entity,page);
             	    Object id0 = entity.getId();
 				    String hql0 = "from JformOrderCustomerEntity where 1 = 1 AND fK_ID = ? ";
-        	        List<JformOrderCustomerEntity> jformOrderCustomerEntityList = systemService.findHql(hql0,id0);
+        	        List<JformOrderCustomerEntity> jformOrderCustomerEntityList = systemService.findListByHql(hql0,id0);
             		page.setJformOrderCustomerList(jformOrderCustomerEntityList);
             	    Object id1 = entity.getId();
 				    String hql1 = "from JformOrderTicketEntity where 1 = 1 AND fCK_ID = ? ";
-        	        List<JformOrderTicketEntity> jformOrderTicketEntityList = systemService.findHql(hql1,id1);
+        	        List<JformOrderTicketEntity> jformOrderTicketEntityList = systemService.findListByHql(hql1,id1);
             		page.setJformOrderTicketList(jformOrderTicketEntityList);
             		pageList.add(page);
             	}catch(Exception e){
@@ -457,7 +457,7 @@ public class JformOrderMainController extends BaseController {
 	@ApiOperation(value="订单列表信息",produces="application/json",httpMethod="GET")
 
  	public List<JformOrderMainPage> list() {
-		List<JformOrderMainEntity> list= jformOrderMainService.getList(JformOrderMainEntity.class);
+		List<JformOrderMainEntity> list= jformOrderMainService.findList(JformOrderMainEntity.class);
     	List<JformOrderMainPage> pageList=new ArrayList<JformOrderMainPage>();
         if(list!=null&&list.size()>0){
         	for(JformOrderMainEntity entity:list){
@@ -467,10 +467,10 @@ public class JformOrderMainController extends BaseController {
 					Object id0 = entity.getId();
 					Object id1 = entity.getId();
 				     String hql0 = "from JformOrderCustomerEntity where 1 = 1 AND fK_ID = ? ";
-	    			List<JformOrderCustomerEntity> jformOrderCustomerOldList = this.jformOrderMainService.findHql(hql0,id0);
+	    			List<JformOrderCustomerEntity> jformOrderCustomerOldList = this.jformOrderMainService.findListByHql(hql0,id0);
             		page.setJformOrderCustomerList(jformOrderCustomerOldList);
 				     String hql1 = "from JformOrderTicketEntity where 1 = 1 AND fCK_ID = ? ";
-	    			List<JformOrderTicketEntity> jformOrderTicketOldList = this.jformOrderMainService.findHql(hql1,id1);
+	    			List<JformOrderTicketEntity> jformOrderTicketOldList = this.jformOrderMainService.findListByHql(hql1,id1);
             		page.setJformOrderTicketList(jformOrderTicketOldList);
             		pageList.add(page);
             	}catch(Exception e){
@@ -495,10 +495,10 @@ public class JformOrderMainController extends BaseController {
 		try {
 			MyBeanUtils.copyBeanNotNull2Bean(task, page);
 			String hql0 = "from JformOrderCustomerEntity where 1 = 1 AND fK_ID = ? ";
- 			List<JformOrderCustomerEntity> jformOrderCustomerOldList = this.jformOrderMainService.findHql(hql0,id);
+ 			List<JformOrderCustomerEntity> jformOrderCustomerOldList = this.jformOrderMainService.findListByHql(hql0,id);
      		page.setJformOrderCustomerList(jformOrderCustomerOldList);
 			String hql1 = "from JformOrderTicketEntity where 1 = 1 AND fCK_ID = ? ";
- 			List<JformOrderTicketEntity> jformOrderTicketOldList = this.jformOrderMainService.findHql(hql1,id);
+ 			List<JformOrderTicketEntity> jformOrderTicketOldList = this.jformOrderMainService.findListByHql(hql1,id);
      		page.setJformOrderTicketList(jformOrderTicketOldList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -583,7 +583,7 @@ public class JformOrderMainController extends BaseController {
 	@RequestMapping(params = "getFiles")
 	@ResponseBody
 	public AjaxJson getFiles(String id){
-		List<CgUploadEntity> uploadBeans = cgFormFieldService.findByProperty(CgUploadEntity.class, "cgformId", id);
+		List<CgUploadEntity> uploadBeans = cgFormFieldService.findListByProperty(CgUploadEntity.class, "cgformId", id);
 		List<Map<String,Object>> files = new ArrayList<Map<String,Object>>(0);
 		for(CgUploadEntity b:uploadBeans){
 			String title = b.getAttachmenttitle();//附件名
@@ -663,7 +663,7 @@ public class JformOrderMainController extends BaseController {
 		net.sf.json.JSONArray jsonArray = new net.sf.json.JSONArray();
 		//String parentid = request.getParameter("parentid");
 		String sql = "select id,departname as name,ifnull(parentdepartid,0) as ppp_id,org_code as code from t_s_depart where 1=1 ";
-		List<Map<String,Object>> dateList = this.systemService.findForJdbc(sql);
+		List<Map<String,Object>> dateList = this.systemService.findListMapBySql(sql);
 		Map<String,Map<String,Object>> dataMap = new HashMap<String,Map<String,Object>>();
 		//TODO 不应该每次都需要查询 建议从缓存中取到所有的list
 		String name = request.getParameter("name");
@@ -678,7 +678,7 @@ public class JformOrderMainController extends BaseController {
 					}
 					//判断是否有子节点 可用isleaf判断
 					sql = "select count(1) from t_s_depart t where t.parentdepartid = ?";
-					long count = this.systemService.getCountForJdbcParam(sql, new Object[]{id});
+					long count = this.systemService.getCountBySql(sql, new Object[]{id});
 					if(count>0){
 						map.put("isParent",true);
 					}
@@ -712,7 +712,7 @@ public class JformOrderMainController extends BaseController {
 		if(oConvertUtils.isNotEmpty(parentid)){
 			TSDepart dePart = this.systemService.getById(TSDepart.class, parentid);
 			hql.append(" and TSPDepart = ?");
-			tSDeparts = this.systemService.findHql(hql.toString(), dePart);
+			tSDeparts = this.systemService.findListByHql(hql.toString(), dePart);
 		}
 		//TODO 不应该每次都需要查询 建议从缓存中取到所有的list 再筛选
 		List<Map<String,Object>> dateList = new ArrayList<Map<String,Object>>();
@@ -736,7 +736,7 @@ public class JformOrderMainController extends BaseController {
 				//根据id判断是否有子节点
 				sql = "select count(1) from t_s_depart t where t.parentdepartid = ?";
 				params = new Object[]{depart.getId()};
-				long count = this.systemService.getCountForJdbcParam(sql, params);
+				long count = this.systemService.getCountBySql(sql, params);
 				if(count>0){
 					map.put("isParent",true);
 				}

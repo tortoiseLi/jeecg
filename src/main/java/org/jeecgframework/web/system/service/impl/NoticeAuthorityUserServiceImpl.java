@@ -84,7 +84,7 @@ public class NoticeAuthorityUserServiceImpl extends CommonServiceImpl implements
 		cq.eq("user.id", userid);
 		cq.eq("noticeId", noticeId);
 		cq.add();
-		List<TSNoticeAuthorityUser> rlist =   this.getListByCriteriaQuery(cq, false);
+		List<TSNoticeAuthorityUser> rlist =   this.findListByCriteriaQuery(cq, false);
 		if(rlist.size()==0){
 			return false;
 		}else{
@@ -100,7 +100,7 @@ public class NoticeAuthorityUserServiceImpl extends CommonServiceImpl implements
 			throw new BusinessException("该用户已授权，请勿重复操作。");
 		}else{
 			String hql = "from TSNoticeReadUser where noticeId = ? and userId = ?";
-			List<TSNoticeReadUser> noticeReadList = this.findHql(hql,noticeId,userId);
+			List<TSNoticeReadUser> noticeReadList = this.findListByHql(hql,noticeId,userId);
 			if(noticeReadList == null || noticeReadList.isEmpty()){
 				//未授权过的消息，添加授权记录
 				TSNoticeReadUser noticeRead = new TSNoticeReadUser();

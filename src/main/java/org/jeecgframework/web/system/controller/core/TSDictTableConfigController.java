@@ -252,7 +252,7 @@ public class TSDictTableConfigController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(TSDictTableConfigEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tSDictTableConfig, request.getParameterMap());
-		List<TSDictTableConfigEntity> tSDictTableConfigs = this.tSDictTableConfigService.getListByCriteriaQuery(cq,false);
+		List<TSDictTableConfigEntity> tSDictTableConfigs = this.tSDictTableConfigService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"字典表授权配置");
 		modelMap.put(NormalExcelConstants.CLASS,TSDictTableConfigEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("字典表授权配置列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),

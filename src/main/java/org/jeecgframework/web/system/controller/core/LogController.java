@@ -186,8 +186,8 @@ public class LogController extends BaseController {
 		Highchart hc = new Highchart();
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT broswer ,count(broswer) FROM TSLog group by broswer");
-		List userBroswerList = systemService.findByQueryString(sb.toString());
-		Long count = systemService.getCountForJdbc("SELECT COUNT(1) FROM T_S_Log WHERE 1=1");
+		List userBroswerList = systemService.findListByHql(sb.toString());
+		Long count = systemService.getCountBySql("SELECT COUNT(1) FROM T_S_Log WHERE 1=1");
 		List lt = new ArrayList();
 		hc = new Highchart();
 		hc.setName(MutiLangUtil.getLang(USER_BROWSER_ANALYSIS));

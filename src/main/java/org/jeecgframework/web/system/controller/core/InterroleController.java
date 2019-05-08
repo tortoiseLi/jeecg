@@ -166,7 +166,7 @@ public class InterroleController extends BaseController {
 		ValidForm v = new ValidForm();
 		String roleCode = oConvertUtils.getString(request.getParameter("param"));
 		String code = oConvertUtils.getString(request.getParameter("code"));
-		List<InterroleEntity> roles = systemService.findByProperty(InterroleEntity.class, "roleCode", roleCode);
+		List<InterroleEntity> roles = systemService.findListByProperty(InterroleEntity.class, "roleCode", roleCode);
 		if (roles.size() > 0 && !code.equals(roleCode)) {
 			v.setInfo("角色编码已存在");
 			v.setStatus("n");
@@ -203,7 +203,7 @@ public class InterroleController extends BaseController {
 		// int count = interroleService.getUsersOfThisRole(role.getId());
 
 		String hql = " from InterroleInterfaceEntity  where  interrole_id= ?";
-		List<InterroleInterfaceEntity> findByQueryString = systemService.findHql(hql,role.getId());
+		List<InterroleInterfaceEntity> findByQueryString = systemService.findListByHql(hql,role.getId());
 
 		role = systemService.getById(InterroleEntity.class, role.getId());
 		if (findByQueryString.size() > 0 && findByQueryString != null) {
@@ -230,7 +230,7 @@ public class InterroleController extends BaseController {
 	 * @param role
 	 */
 	protected void delRoleFunction(InterroleEntity role) {
-		List<InterroleInterfaceEntity> roleFunctions = systemService.findByProperty(InterroleInterfaceEntity.class,
+		List<InterroleInterfaceEntity> roleFunctions = systemService.findListByProperty(InterroleInterfaceEntity.class,
 				"interroleEntity.id", role.getId());
 		if (roleFunctions.size() > 0) {
 			for (InterroleInterfaceEntity tsRoleFunction : roleFunctions) {
@@ -238,7 +238,7 @@ public class InterroleController extends BaseController {
 			}
 		}
 		// TODO 用户关系
-		List<TSRoleUser> roleUsers = systemService.findByProperty(TSRoleUser.class, "TSRole.id", role.getId());
+		List<TSRoleUser> roleUsers = systemService.findListByProperty(TSRoleUser.class, "TSRole.id", role.getId());
 		for (TSRoleUser tsRoleUser : roleUsers) {
 			systemService.delete(tsRoleUser);
 		}
@@ -276,7 +276,7 @@ public class InterroleController extends BaseController {
 		}
 		cq.notEq("interfaceLevel", Short.parseShort("-1"));
 		cq.add();
-		List<TSInterfaceEntity> interfaceList = systemService.getListByCriteriaQuery(cq, false);
+		List<TSInterfaceEntity> interfaceList = systemService.findListByCriteriaQuery(cq, false);
 		// Collections.sort(interfaceList, new NumberComparator());
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 		String roleId = request.getParameter("roleId");
@@ -284,7 +284,7 @@ public class InterroleController extends BaseController {
 		role = this.systemService.getById(InterroleEntity.class, roleId);
 		if (role != null) {
 			List<InterroleInterfaceEntity> roleInterfaceList = systemService
-					.findHql("from InterroleInterfaceEntity where interroleEntity.id = ?", role.getId());
+					.findListByHql("from InterroleInterfaceEntity where interroleEntity.id = ?", role.getId());
 			if (roleInterfaceList.size() > 0) {
 				for (InterroleInterfaceEntity roleInterface : roleInterfaceList) {
 					TSInterfaceEntity inter = (TSInterfaceEntity) roleInterface.getInterfaceEntity();
@@ -403,7 +403,7 @@ public class InterroleController extends BaseController {
 		// List<TSInterfaceDdataRuleEntity> dataRuleList =
 		// this.systemService.getListByCriteriaQuery(cq, false);
 		List<TSInterfaceDdataRuleEntity> dataRuleList = systemService
-				.findHql("from TSInterfaceDdataRuleEntity where TSInterface.id = ?", interfaceId);
+				.findListByHql("from TSInterfaceDdataRuleEntity where TSInterface.id = ?", interfaceId);
 
 		Set<String> dataRulecodes = interroleService.getOperationCodesByRoleIdAndruleDataId(roleId, interfaceId);
 		request.setAttribute("dataRuleList", dataRuleList);
@@ -428,7 +428,7 @@ public class InterroleController extends BaseController {
 			InterroleEntity role = this.systemService.getById(InterroleEntity.class, roleId);
 
 			List<InterroleInterfaceEntity> roleInterfaceList = systemService
-					.findByProperty(InterroleInterfaceEntity.class, "interroleEntity.id", role.getId());
+					.findListByProperty(InterroleInterfaceEntity.class, "interroleEntity.id", role.getId());
 			Map<String, InterroleInterfaceEntity> map = new HashMap<String, InterroleInterfaceEntity>();
 			for (InterroleInterfaceEntity interfaceOfRole : roleInterfaceList) {
 
@@ -509,7 +509,7 @@ public class InterroleController extends BaseController {
 		cq1.eq("interroleEntity.id", roleId);
 		cq1.eq("interfaceEntity.id", interfaceId);
 		cq1.add();
-		List<InterroleInterfaceEntity> rInterfaces = systemService.getListByCriteriaQuery(cq1, false);
+		List<InterroleInterfaceEntity> rInterfaces = systemService.findListByCriteriaQuery(cq1, false);
 		if (null != rInterfaces && rInterfaces.size() > 0) {
 			InterroleInterfaceEntity tsRoleInterface = rInterfaces.get(0);
 			tsRoleInterface.setDataRule(dataRulecodes);
@@ -547,7 +547,7 @@ public class InterroleController extends BaseController {
 		String roleId = request.getParameter("roleId");
 		// List<TSRoleUser> roleUser =
 		// systemService.findByProperty(TSRoleUser.class, "TSRole.id", roleId);
-		List<InterroleUserEntity> interRoleUser = systemService.findByProperty(InterroleUserEntity.class,
+		List<InterroleUserEntity> interRoleUser = systemService.findListByProperty(InterroleUserEntity.class,
 				"interroleEntity.id", roleId);
 		/*
 		 * // zhanggm：这个查询逻辑也可以使用这种 子查询的方式进行查询 CriteriaQuery subCq = new
@@ -681,7 +681,7 @@ public class InterroleController extends BaseController {
 			// List<TSRoleUser> roleUserList =
 			// this.systemService.findByProperty(TSRoleUser.class, "TSUser.id",
 			// userid);
-			List<InterroleUserEntity> interRoleUser = this.systemService.findByProperty(InterroleUserEntity.class,
+			List<InterroleUserEntity> interRoleUser = this.systemService.findListByProperty(InterroleUserEntity.class,
 					"interroleEntity.id", userid);
 			if (interRoleUser.size() == 1) {
 				ajaxJson.setSuccess(false);

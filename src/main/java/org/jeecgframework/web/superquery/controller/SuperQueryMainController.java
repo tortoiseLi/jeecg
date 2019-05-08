@@ -285,7 +285,7 @@ public class SuperQueryMainController extends BaseController {
 		//查询-表集合
 	    String hql0 = "from SuperQueryTableEntity where 1 = 1 AND mAIN_ID = ? ";
 	    try{
-	    	List<SuperQueryTableEntity> superQueryTableEntityList = systemService.findHql(hql0,id0);
+	    	List<SuperQueryTableEntity> superQueryTableEntityList = systemService.findListByHql(hql0,id0);
 			req.setAttribute("superQueryTableList", superQueryTableEntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -307,7 +307,7 @@ public class SuperQueryMainController extends BaseController {
 		//查询-字段配置
 	    String hql1 = "from SuperQueryFieldEntity where 1 = 1 AND MAIN_ID = ? ";
 	    try{
-	    	List<SuperQueryFieldEntity> superQueryFieldEntityList = systemService.findHql(hql1,id1);
+	    	List<SuperQueryFieldEntity> superQueryFieldEntityList = systemService.findListByHql(hql1,id1);
 			req.setAttribute("superQueryFieldList", superQueryFieldEntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -332,7 +332,7 @@ public class SuperQueryMainController extends BaseController {
     		throw new BusinessException(e.getMessage());
     	}
     	cq.add();
-    	List<SuperQueryMainEntity> list=this.superQueryMainService.getListByCriteriaQuery(cq, false);
+    	List<SuperQueryMainEntity> list=this.superQueryMainService.findListByCriteriaQuery(cq, false);
     	List<SuperQueryMainPage> pageList=new ArrayList<SuperQueryMainPage>();
         if(list!=null&&list.size()>0){
         	for(SuperQueryMainEntity entity:list){
@@ -341,11 +341,11 @@ public class SuperQueryMainController extends BaseController {
         		   MyBeanUtils.copyBeanNotNull2Bean(entity,page);
             	    Object id0 = entity.getId();
 				    String hql0 = "from SuperQueryTableEntity where 1 = 1 AND mAIN_ID = ? ";
-        	        List<SuperQueryTableEntity> superQueryTableEntityList = systemService.findHql(hql0,id0);
+        	        List<SuperQueryTableEntity> superQueryTableEntityList = systemService.findListByHql(hql0,id0);
             		page.setSuperQueryTableList(superQueryTableEntityList);
             	    Object id1 = entity.getId();
 				    String hql1 = "from SuperQueryFieldEntity where 1 = 1 AND mAIN_ID = ? ";
-        	        List<SuperQueryFieldEntity> superQueryFieldEntityList = systemService.findHql(hql1,id1);
+        	        List<SuperQueryFieldEntity> superQueryFieldEntityList = systemService.findListByHql(hql1,id1);
             		page.setSuperQueryFieldList(superQueryFieldEntityList);
             		pageList.add(page);
             	}catch(Exception e){
@@ -430,7 +430,7 @@ public class SuperQueryMainController extends BaseController {
 	@ResponseBody
 	//@ApiOperation(value="高级查询列表信息",produces="application/json",httpMethod="GET")
 	public ResponseMessage<List<SuperQueryMainPage>> list() {
-		List<SuperQueryMainEntity> list= superQueryMainService.getList(SuperQueryMainEntity.class);
+		List<SuperQueryMainEntity> list= superQueryMainService.findList(SuperQueryMainEntity.class);
     	List<SuperQueryMainPage> pageList=new ArrayList<SuperQueryMainPage>();
         if(list!=null&&list.size()>0){
         	for(SuperQueryMainEntity entity:list){
@@ -440,10 +440,10 @@ public class SuperQueryMainController extends BaseController {
 					Object id0 = entity.getId();
 					Object id1 = entity.getId();
 				     String hql0 = "from SuperQueryTableEntity where 1 = 1 AND mAIN_ID = ? ";
-	    			List<SuperQueryTableEntity> superQueryTableOldList = this.superQueryMainService.findHql(hql0,id0);
+	    			List<SuperQueryTableEntity> superQueryTableOldList = this.superQueryMainService.findListByHql(hql0,id0);
             		page.setSuperQueryTableList(superQueryTableOldList);
 				     String hql1 = "from SuperQueryFieldEntity where 1 = 1 AND mAIN_ID = ? ";
-	    			List<SuperQueryFieldEntity> superQueryFieldOldList = this.superQueryMainService.findHql(hql1,id1);
+	    			List<SuperQueryFieldEntity> superQueryFieldOldList = this.superQueryMainService.findListByHql(hql1,id1);
             		page.setSuperQueryFieldList(superQueryFieldOldList);
             		pageList.add(page);
             	}catch(Exception e){
@@ -468,10 +468,10 @@ public class SuperQueryMainController extends BaseController {
 				Object id0 = task.getId();
 				Object id1 = task.getId();
 		    String hql0 = "from SuperQueryTableEntity where 1 = 1 AND mAIN_ID = ? ";
-			List<SuperQueryTableEntity> superQueryTableOldList = this.superQueryMainService.findHql(hql0,id0);
+			List<SuperQueryTableEntity> superQueryTableOldList = this.superQueryMainService.findListByHql(hql0,id0);
     		page.setSuperQueryTableList(superQueryTableOldList);
 		    String hql1 = "from SuperQueryFieldEntity where 1 = 1 AND mAIN_ID = ? ";
-			List<SuperQueryFieldEntity> superQueryFieldOldList = this.superQueryMainService.findHql(hql1,id1);
+			List<SuperQueryFieldEntity> superQueryFieldOldList = this.superQueryMainService.findListByHql(hql1,id1);
     		page.setSuperQueryFieldList(superQueryFieldOldList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -580,7 +580,7 @@ public class SuperQueryMainController extends BaseController {
 			String queryCode = request.getParameter("queryCode");
 			String hql = " select  a FROM SuperQueryTableEntity a ,SuperQueryMainEntity b  WHERE a.mainId=b.id and b.queryCode=?";
 			//String query="select * FROM super_query_main a ,super_query_table b where  a.id=b.main_id  and a.query_code=?";
-			List<SuperQueryTableEntity> findHql = systemService.findHql(hql, queryCode);
+			List<SuperQueryTableEntity> findHql = systemService.findListByHql(hql, queryCode);
 			// 定义一个map集合用于分组
 			Map<String, List<SuperQueryTableEntity>> mapList = new HashMap<String, List<SuperQueryTableEntity>>();
 			for (Iterator it = findHql.iterator(); it.hasNext();) {
@@ -647,7 +647,7 @@ public class SuperQueryMainController extends BaseController {
 		String tableName = request.getParameter("tableName");
 
 		String sql=" SELECT DISTINCT table_name, name, txt,ctype,stype,dict_code,dict_table ,dict_text,main_id  from super_query_field where table_name= ?";
-		List<Map<String, Object>> findForJdbc = systemService.findForJdbc(sql,tableName);
+		List<Map<String, Object>> findForJdbc = systemService.findListMapBySql(sql,tableName);
 		List<Map<String,Object>> fieldList = new ArrayList<Map<String,Object>>();
 		for (Map<String, Object> map : findForJdbc) {
 			Map<String, Object> temp = new HashMap<String, Object>();
@@ -679,7 +679,7 @@ public class SuperQueryMainController extends BaseController {
 				String name = param.get("name").toString();
 				String userId = ResourceUtil.getSessionUser().getId();
 				String [] obj=new String[]{name,userId,queryCode};
-				List<SuperQueryHistoryEntity> list = systemService.findHql("from SuperQueryHistoryEntity where historyName=? and userId=? and queryCode = ?", obj);
+				List<SuperQueryHistoryEntity> list = systemService.findListByHql("from SuperQueryHistoryEntity where historyName=? and userId=? and queryCode = ?", obj);
 				if(list != null && list.size() > 0 ){
 					ajaxJson.setSuccess(false);
 				}else{
@@ -715,7 +715,7 @@ public class SuperQueryMainController extends BaseController {
 			String userId = ResourceUtil.getSessionUser().getId();
 			String hql="from SuperQueryHistoryEntity where user_id=? and queryCode=?";
 			String[] param=new String[]{userId,queryCode};
-			List<SuperQueryHistoryEntity> findHql = systemService.findHql(hql, param);
+			List<SuperQueryHistoryEntity> findHql = systemService.findListByHql(hql, param);
 			if(findHql != null && findHql.size() >0){
 			  for (SuperQueryHistoryEntity superQueryHistoryEntity : findHql) {
 				list.add(superQueryHistoryEntity.getHistoryName());
@@ -744,7 +744,7 @@ public class SuperQueryMainController extends BaseController {
 			String userId = ResourceUtil.getSessionUser().getId();
 			String[] arr=new String[]{name,userId};
 			String hql=" from SuperQueryHistoryEntity where history_name=? and user_id=?";
-			List<SuperQueryHistoryEntity> findHql = systemService.findHql(hql, arr);
+			List<SuperQueryHistoryEntity> findHql = systemService.findListByHql(hql, arr);
 			if(findHql != null && findHql.size() >0){
 				 for (SuperQueryHistoryEntity history : findHql) {
 					 record = history.getRecord();
@@ -772,7 +772,7 @@ public class SuperQueryMainController extends BaseController {
 				String userId=ResourceUtil.getSessionUser().getId();
 				String [] par=new String []{name,userId};
 				String hql="from SuperQueryHistoryEntity where history_name=? and userId=?";
-				List<SuperQueryHistoryEntity> historyList = systemService.findHql(hql, par);
+				List<SuperQueryHistoryEntity> historyList = systemService.findListByHql(hql, par);
 				if(historyList!=null&&historyList.size()>0){
 					json.setSuccess(false);
 				}else{
@@ -840,7 +840,7 @@ public class SuperQueryMainController extends BaseController {
 
 			String sql = "select stype,name,txt,dict_table,dict_code,dict_text from super_query_field where name=? AND main_id = ?";
 
-			List<Map<String, Object>> page = systemService.findForJdbc(sql,field,mainId);
+			List<Map<String, Object>> page = systemService.findListMapBySql(sql,field,mainId);
 			if(page.size()>0) {
 				json.setObj(page);
 			}
@@ -865,7 +865,7 @@ public class SuperQueryMainController extends BaseController {
 		try {
 			//step.1 根据数据字典Code查询结果
 			String sql = "select t.typecode,t.typename from t_s_type t where typegroupid = (select tg.id from t_s_typegroup tg where tg.typegroupcode=?)";
-			List<Map<String, Object>> selectType = systemService.findForJdbc(sql,typegroup);
+			List<Map<String, Object>> selectType = systemService.findListMapBySql(sql,typegroup);
 			//step.2 根据查询的结果判断是否是国际化语言，是的话转换
 			List<Map<String, Object>> listMap = new ArrayList<Map<String,Object>>();
 			MutiLangServiceI mutiLangService = ApplicationContextUtil.getContext().getBean(MutiLangServiceI.class);	
@@ -898,7 +898,7 @@ public class SuperQueryMainController extends BaseController {
 		AjaxJson json = new AjaxJson();
 		try {
 			String sql = "select id from super_query_main where query_code = ?";
-			List<Map<String,Object>> main = systemService.findForJdbc(sql, queryCode);
+			List<Map<String,Object>> main = systemService.findListMapBySql(sql, queryCode);
 			if(main != null && main.size() > 0) {
 				json.setObj(main.get(0).get("id"));
 			}

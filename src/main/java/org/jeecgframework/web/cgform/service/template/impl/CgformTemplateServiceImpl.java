@@ -86,7 +86,7 @@ public class CgformTemplateServiceImpl extends CommonServiceImpl implements Cgfo
 
 	@Override
 	public CgformTemplateEntity findByCode(String code) {
-		return findUniqueByProperty(CgformTemplateEntity.class,"templateCode",code);
+		return getByProperty(CgformTemplateEntity.class,"templateCode",code);
 	}
 
 	@Override
@@ -95,10 +95,10 @@ public class CgformTemplateServiceImpl extends CommonServiceImpl implements Cgfo
 		String hql =  "";
 		if("1".equals(type)){
 			hql = "from CgformTemplateEntity where templateType in ('1','3') and status = 1";
-			return findHql(hql);
+			return findListByHql(hql);
 		}else if("2".equals(type)){
 			hql = "from CgformTemplateEntity where templateType in ('2','3') and status = 1";
-			return findHql(hql);
+			return findListByHql(hql);
 		}else{
 			return null;
 		}

@@ -283,7 +283,7 @@ public class MultiUploadController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(MultiUploadEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, multiUpload, request.getParameterMap());
-		List<MultiUploadEntity> multiUploads = this.multiUploadService.getListByCriteriaQuery(cq,false);
+		List<MultiUploadEntity> multiUploads = this.multiUploadService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"测试多文件上传");
 		modelMap.put(NormalExcelConstants.CLASS,MultiUploadEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("测试多文件上传列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
@@ -350,7 +350,7 @@ public class MultiUploadController extends BaseController {
 	@RequestMapping(params = "getFiles")
 	@ResponseBody
 	public AjaxJson getFiles(String id){
-		List<CgUploadEntity> uploadBeans = cgFormFieldService.findByProperty(CgUploadEntity.class, "cgformId", id);
+		List<CgUploadEntity> uploadBeans = cgFormFieldService.findListByProperty(CgUploadEntity.class, "cgformId", id);
 		List<Map<String,Object>> files = new ArrayList<Map<String,Object>>(0);
 		for(CgUploadEntity b:uploadBeans){
 			String title = b.getAttachmenttitle();//附件名
@@ -371,7 +371,7 @@ public class MultiUploadController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public List<MultiUploadEntity> list() {
-		List<MultiUploadEntity> listMultiUploads=multiUploadService.getList(MultiUploadEntity.class);
+		List<MultiUploadEntity> listMultiUploads=multiUploadService.findList(MultiUploadEntity.class);
 		return listMultiUploads;
 	}
 	

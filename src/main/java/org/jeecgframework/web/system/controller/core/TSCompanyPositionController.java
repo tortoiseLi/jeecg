@@ -270,7 +270,7 @@ public class TSCompanyPositionController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(TSCompanyPositionEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tSCompanyPosition, request.getParameterMap());
-		List<TSCompanyPositionEntity> tSCompanyPositions = this.tSCompanyPositionService.getListByCriteriaQuery(cq,false);
+		List<TSCompanyPositionEntity> tSCompanyPositions = this.tSCompanyPositionService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"职务管理");
 		modelMap.put(NormalExcelConstants.CLASS,TSCompanyPositionEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("职务管理列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
@@ -333,7 +333,7 @@ public class TSCompanyPositionController extends BaseController {
 	@ResponseBody
 //	@ApiOperation(value="职务管理列表信息",produces="application/json",httpMethod="GET")
 	public List<TSCompanyPositionEntity> list() {
-		List<TSCompanyPositionEntity> listTSCompanyPositions=tSCompanyPositionService.getList(TSCompanyPositionEntity.class);
+		List<TSCompanyPositionEntity> listTSCompanyPositions=tSCompanyPositionService.findList(TSCompanyPositionEntity.class);
 		return listTSCompanyPositions;
 	}
 	
@@ -429,12 +429,12 @@ public class TSCompanyPositionController extends BaseController {
 			}
 			
 			//根据公司id查询，该公司下的职务
-			List<TSCompanyPositionEntity> list = tSCompanyPositionService.findByProperty(TSCompanyPositionEntity.class, "companyId", companyId);
+			List<TSCompanyPositionEntity> list = tSCompanyPositionService.findListByProperty(TSCompanyPositionEntity.class, "companyId", companyId);
 			
 			//根据用户id和公司id查询用户管理的职务
 			String hql = "select up from TSUserPositionRelEntity up,TSCompanyPositionEntity p where  p.companyId = up.companyId " +
 					" and up.companyId = ? and up.userId = ?";
-			List<TSUserPositionRelEntity> selectlist = tSCompanyPositionService.findHql(hql, companyId,userId);
+			List<TSUserPositionRelEntity> selectlist = tSCompanyPositionService.findListByHql(hql, companyId,userId);
 			populateTree(list,selectlist,dataList);
 			
 		}catch(Exception e){
@@ -444,7 +444,7 @@ public class TSCompanyPositionController extends BaseController {
 	}
 	
 	private String getCompanyId(String departid){
-		TSDepart depart= this.systemService.findUniqueByProperty(TSDepart.class, "id", departid);
+		TSDepart depart= this.systemService.getByProperty(TSDepart.class, "id", departid);
 		if(depart!=null&&("1".equals(depart.getOrgType())||"4".equals(depart.getOrgType()))){
 			return depart.getId();
 		}else{

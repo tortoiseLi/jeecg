@@ -65,9 +65,9 @@ public class NoticeServiceImpl extends CommonServiceImpl implements NoticeServic
 	public <T> void delete(T entity) {
 
 		TSNotice notice = (TSNotice)entity;
-		super.deleteCollection(super.findByProperty(TSNoticeReadUser.class, "noticeId", notice.getId()));
-		super.deleteCollection(super.findByProperty(TSNoticeAuthorityUser.class, "noticeId", notice.getId()));
-		super.deleteCollection(super.findByProperty(TSNoticeAuthorityRole.class, "noticeId", notice.getId()));
+		super.deleteCollection(super.findListByProperty(TSNoticeReadUser.class, "noticeId", notice.getId()));
+		super.deleteCollection(super.findListByProperty(TSNoticeAuthorityUser.class, "noticeId", notice.getId()));
+		super.deleteCollection(super.findListByProperty(TSNoticeAuthorityRole.class, "noticeId", notice.getId()));
 		super.delete(notice);
  		//执行删除操作配置的sql增强
 		this.doDelSql(notice);

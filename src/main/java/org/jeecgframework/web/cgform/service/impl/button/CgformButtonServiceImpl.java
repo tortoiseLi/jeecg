@@ -23,7 +23,7 @@ public class CgformButtonServiceImpl extends CommonServiceImpl implements Cgform
 		StringBuilder hql = new StringBuilder("");
 		hql.append(" from CgformButtonEntity t");
 		hql.append(" where t.formId=? order by t.orderNum asc");
-		List<CgformButtonEntity> list = this.findHql(hql.toString(), formId);
+		List<CgformButtonEntity> list = this.findListByHql(hql.toString(), formId);
 		return list;
 	}
 	
@@ -42,9 +42,9 @@ public class CgformButtonServiceImpl extends CommonServiceImpl implements Cgform
 		List<CgformButtonEntity> list = null;
 		if(cgformButtonEntity.getId()!=null){
 			hql.append(" and t.id !=?");
-			list = this.findHql(hql.toString(),cgformButtonEntity.getFormId(),cgformButtonEntity.getButtonCode(),cgformButtonEntity.getId());
+			list = this.findListByHql(hql.toString(),cgformButtonEntity.getFormId(),cgformButtonEntity.getButtonCode(),cgformButtonEntity.getId());
 		}else{
-			list = this.findHql(hql.toString(),cgformButtonEntity.getFormId(),cgformButtonEntity.getButtonCode());
+			list = this.findListByHql(hql.toString(),cgformButtonEntity.getFormId(),cgformButtonEntity.getButtonCode());
 		}
 
 		return list;

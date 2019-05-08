@@ -45,7 +45,7 @@ public class TSDictTableConfigServiceImpl extends CommonServiceImpl implements T
 		String[] dic = dictionary.split(",");
 		//根据自定义字典信息查询授权配置信息
 		String hql = "from TSDictTableConfigEntity where tableName = ? and valueCol = ? and textCol = ? and isvalid = 'Y'";
-		List<TSDictTableConfigEntity> list = this.findHql(hql, dic[0],dic[1],dic[2]);
+		List<TSDictTableConfigEntity> list = this.findListByHql(hql, dic[0],dic[1],dic[2]);
 		/*String dictConditionPram = dictCondition;
 		if(dictConditionPram!=null){
 			dictConditionPram = StringUtils.deleteWhitespace(dictConditionPram);
@@ -86,7 +86,7 @@ public class TSDictTableConfigServiceImpl extends CommonServiceImpl implements T
 			}else{
 				sql += " where "+dic[1]+" = ? ";
 			}
-			List<Map<String, Object>> list = this.findForJdbc(sql,value);
+			List<Map<String, Object>> list = this.findListMapBySql(sql,value);
 			if(list!=null&&list.size()>0){
 				text = list.get(0).get("text");
 			}

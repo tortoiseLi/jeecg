@@ -258,7 +258,7 @@ public class CgDynamGraphConfigHeadController extends BaseController {
 		//查询-移动图表配置明细
 	    String hql0 = "from CgDynamGraphConfigItemEntity where 1 = 1 AND cgrheadId = ? ";
 	    try{
-	    	List<CgDynamGraphConfigItemEntity> cgDynamGraphConfigItemEntityList = systemService.findHql(hql0,id0);
+	    	List<CgDynamGraphConfigItemEntity> cgDynamGraphConfigItemEntityList = systemService.findListByHql(hql0,id0);
 			req.setAttribute("cgDynamGraphConfigItemList", cgDynamGraphConfigItemEntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -281,7 +281,7 @@ public class CgDynamGraphConfigHeadController extends BaseController {
 		//查询-移动图表配置明细
 	    String hql0 = "from CgDynamGraphConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
 	    try{
-	    	List<CgDynamGraphConfigParamEntity> cgDynamGraphConfigParamEntityList = systemService.findHql(hql0,id0);
+	    	List<CgDynamGraphConfigParamEntity> cgDynamGraphConfigParamEntityList = systemService.findListByHql(hql0,id0);
 			req.setAttribute("cgDynamGraphConfigParamList",cgDynamGraphConfigParamEntityList);
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -297,9 +297,9 @@ public class CgDynamGraphConfigHeadController extends BaseController {
         modelMap.put("url",url);
         StringBuilder sb = new StringBuilder("");
 	    try{
-	    	CgDynamGraphConfigHeadEntity cgDynamGraphConfigHeadEntity = systemService.findUniqueByProperty(CgDynamGraphConfigHeadEntity.class,  "code", title);
+	    	CgDynamGraphConfigHeadEntity cgDynamGraphConfigHeadEntity = systemService.getByProperty(CgDynamGraphConfigHeadEntity.class,  "code", title);
 	    	String hql0 = "from CgDynamGraphConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
-	    	List<CgDynamGraphConfigParamEntity> cgreportConfigParamList = systemService.findHql(hql0,cgDynamGraphConfigHeadEntity.getId());
+	    	List<CgDynamGraphConfigParamEntity> cgreportConfigParamList = systemService.findListByHql(hql0,cgDynamGraphConfigHeadEntity.getId());
 	    	if(cgreportConfigParamList!=null&cgreportConfigParamList.size()>0){
 	    		for(CgDynamGraphConfigParamEntity cgreportConfigParam :cgreportConfigParamList){
 	    			sb.append("&").append(cgreportConfigParam.getParamName()).append("=");

@@ -191,7 +191,7 @@ public class DynamicDataSourceController extends BaseController {
     @RequestMapping(params = "getAll")
     @ResponseBody
     public List<ComboBox> getAll(){
-        List<DynamicDataSourceEntity> list= systemService.getList(DynamicDataSourceEntity.class);
+        List<DynamicDataSourceEntity> list= systemService.findList(DynamicDataSourceEntity.class);
         List<ComboBox> comboBoxes=new ArrayList<ComboBox>();
         if(list!=null&&list.size()>0){
             for(DynamicDataSourceEntity entity:list){

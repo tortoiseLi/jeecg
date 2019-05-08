@@ -53,7 +53,7 @@ public class SuperQueryMainServiceImpl extends CommonServiceImpl implements Supe
 		//保存主表信息
 		if(StringUtil.isNotEmpty(superQueryMain.getId())){
 			try {
-				SuperQueryMainEntity temp = findUniqueByProperty(SuperQueryMainEntity.class, "id", superQueryMain.getId());
+				SuperQueryMainEntity temp = getByProperty(SuperQueryMainEntity.class, "id", superQueryMain.getId());
 				MyBeanUtils.copyBeanNotNull2Bean(superQueryMain, temp);
 				this.saveOrUpdate(temp);
 			} catch (Exception e) {
@@ -69,7 +69,7 @@ public class SuperQueryMainServiceImpl extends CommonServiceImpl implements Supe
 		//===================================================================================
 		//1.查询出数据库的明细数据-表集合
 	    String hql0 = "from SuperQueryTableEntity where 1 = 1 AND mAIN_ID = ? ";
-	    List<SuperQueryTableEntity> superQueryTableOldList = this.findHql(hql0,id0);
+	    List<SuperQueryTableEntity> superQueryTableOldList = this.findListByHql(hql0,id0);
 		//2.筛选更新明细数据-表集合
 		if(superQueryTableList!=null&&superQueryTableList.size()>0){
 		for(SuperQueryTableEntity oldE:superQueryTableOldList){
@@ -106,7 +106,7 @@ public class SuperQueryMainServiceImpl extends CommonServiceImpl implements Supe
 		//===================================================================================
 		//1.查询出数据库的明细数据-字段配置
 	    String hql1 = "from SuperQueryFieldEntity where 1 = 1 AND mAIN_ID = ? ";
-	    List<SuperQueryFieldEntity> superQueryFieldOldList = this.findHql(hql1,id1);
+	    List<SuperQueryFieldEntity> superQueryFieldOldList = this.findListByHql(hql1,id1);
 		//2.筛选更新明细数据-字段配置
 		if(superQueryFieldList!=null&&superQueryFieldList.size()>0){
 		for(SuperQueryFieldEntity oldE:superQueryFieldOldList){
@@ -155,12 +155,12 @@ public class SuperQueryMainServiceImpl extends CommonServiceImpl implements Supe
 		//===================================================================================
 		//删除-表集合
 	    String hql0 = "from SuperQueryTableEntity where 1 = 1 AND mAIN_ID = ? ";
-	    List<SuperQueryTableEntity> superQueryTableOldList = this.findHql(hql0,id0);
+	    List<SuperQueryTableEntity> superQueryTableOldList = this.findListByHql(hql0,id0);
 		this.deleteCollection(superQueryTableOldList);
 		//===================================================================================
 		//删除-字段配置
 	    String hql1 = "from SuperQueryFieldEntity where 1 = 1 AND mAIN_ID = ? ";
-	    List<SuperQueryFieldEntity> superQueryFieldOldList = this.findHql(hql1,id1);
+	    List<SuperQueryFieldEntity> superQueryFieldOldList = this.findListByHql(hql1,id1);
 		this.deleteCollection(superQueryFieldOldList);
 	}
 	

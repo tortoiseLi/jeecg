@@ -63,9 +63,9 @@ public class CgDynamGraphServiceImpl extends CommonServiceImpl implements
 		
 		public List<String> queryCgDynamGraphParam(String reportId){
 			List<String> list = null;
-			CgDynamGraphConfigHeadEntity cgDynamGraphConfigHead = this.findUniqueByProperty(CgDynamGraphConfigHeadEntity.class, "code", reportId);
+			CgDynamGraphConfigHeadEntity cgDynamGraphConfigHead = this.getByProperty(CgDynamGraphConfigHeadEntity.class, "code", reportId);
 	    	String hql0 = "from CgDynamGraphConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
-	    	List<CgDynamGraphConfigParamEntity> cgDynamGraphConfigParamList = this.findHql(hql0,cgDynamGraphConfigHead.getId());
+	    	List<CgDynamGraphConfigParamEntity> cgDynamGraphConfigParamList = this.findListByHql(hql0,cgDynamGraphConfigHead.getId());
 	    	if(cgDynamGraphConfigParamList!=null&cgDynamGraphConfigParamList.size()>0){
 	    		list = new ArrayList<String>();
 	    		for(CgDynamGraphConfigParamEntity cgDynamGraphConfigParam :cgDynamGraphConfigParamList){

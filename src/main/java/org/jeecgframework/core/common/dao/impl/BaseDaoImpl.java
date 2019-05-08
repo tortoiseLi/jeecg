@@ -109,11 +109,6 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 	}
 
 	@Override
-	public void updateById(Class entityClass, Serializable id) {
-		update(getById(entityClass, id));
-	}
-
-	@Override
 	public <T> void saveOrUpdate(T entity) {
 		try {
 			getSession().saveOrUpdate(entity);
@@ -522,7 +517,6 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 
 	@Override
 	public Long getCountBySql(String sql, Object...params) {
-		sql = "select count(1) as count from ("+ sql +") t";
 		return this.jdbcTemplate.queryForObject(sql, params, Long.class);
 	}
 

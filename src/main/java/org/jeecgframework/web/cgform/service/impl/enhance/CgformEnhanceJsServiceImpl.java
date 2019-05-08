@@ -26,7 +26,7 @@ public class CgformEnhanceJsServiceImpl extends CommonServiceImpl implements Cgf
 
 		hql.append(" where t.formId=?");
 		hql.append(" and  t.cgJsType =?");
-		List<CgformEnhanceJsEntity> list = this.findHql(hql.toString(),formId,cgJsType);
+		List<CgformEnhanceJsEntity> list = this.findListByHql(hql.toString(),formId,cgJsType);
 
 		if(list!=null&&list.size()>0){
 			return list.get(0);

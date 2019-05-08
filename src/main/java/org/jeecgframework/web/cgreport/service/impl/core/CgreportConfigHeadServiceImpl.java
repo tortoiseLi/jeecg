@@ -60,7 +60,7 @@ public class CgreportConfigHeadServiceImpl extends CommonServiceImpl implements 
 		//===================================================================================
 		//1.查询出数据库的明细数据-动态报表配置明细
 	    String hql0 = "from CgreportConfigItemEntity where 1 = 1 AND cgrheadId = ? ";
-	    List<CgreportConfigItemEntity> cgreportConfigItemOldList = this.findHql(hql0,id0);
+	    List<CgreportConfigItemEntity> cgreportConfigItemOldList = this.findListByHql(hql0,id0);
 		//2.筛选更新明细数据-动态报表配置明细
 		for(CgreportConfigItemEntity oldE:cgreportConfigItemOldList){
 			boolean isUpdate = false;
@@ -96,7 +96,7 @@ public class CgreportConfigHeadServiceImpl extends CommonServiceImpl implements 
 		//===================================================================================
 		//1.查询出数据库的报表参数-动态报表参数
 	    String hql1 = "from CgreportConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
-	    List<CgreportConfigParamEntity> cgreportConfigParamOldList = this.findHql(hql1,id0);
+	    List<CgreportConfigParamEntity> cgreportConfigParamOldList = this.findListByHql(hql1,id0);
 		//2.筛选更新明细数据-动态报表配置明细
 		for(CgreportConfigParamEntity oldE:cgreportConfigParamOldList){
 			boolean isUpdate = false;
@@ -142,11 +142,11 @@ public class CgreportConfigHeadServiceImpl extends CommonServiceImpl implements 
 		//===================================================================================
 		//删除-动态报表配置明细
 	    String hql0 = "from CgreportConfigItemEntity where 1 = 1 AND cgrheadId = ? ";
-	    List<CgreportConfigItemEntity> cgreportConfigItemOldList = this.findHql(hql0,id0);
+	    List<CgreportConfigItemEntity> cgreportConfigItemOldList = this.findListByHql(hql0,id0);
 		this.deleteCollection(cgreportConfigItemOldList);
 		//删除-动态报表参数
 		String hql1 = "from CgreportConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
-		List<CgreportConfigParamEntity> cgreportConfigParamOldList = this.findHql(hql1,id0);
+		List<CgreportConfigParamEntity> cgreportConfigParamOldList = this.findListByHql(hql1,id0);
 		this.deleteCollection(cgreportConfigParamOldList);
 	}
 	

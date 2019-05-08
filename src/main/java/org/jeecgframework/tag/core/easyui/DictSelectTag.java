@@ -363,7 +363,7 @@ public class DictSelectTag extends TagSupport {
 
 		systemService = ApplicationContextUtil.getContext().getBean(
 				SystemService.class);
-		List<Map<String, Object>> list = systemService.findForJdbc(sql);
+		List<Map<String, Object>> list = systemService.findListMapBySql(sql);
 		return list;
 	}
 	

@@ -112,10 +112,10 @@ public class UserController extends BaseController {
 		TSUser u = ResourceUtil.getSessionUser();
 		// 登陆者的权限
 		Set<TSFunction> loginActionlist = new HashSet<TSFunction>();// 已有权限菜单
-		List<TSRoleUser> rUsers = systemService.findByProperty(TSRoleUser.class, "TSUser.id", u.getId());
+		List<TSRoleUser> rUsers = systemService.findListByProperty(TSRoleUser.class, "TSUser.id", u.getId());
 		for (TSRoleUser ru : rUsers) {
 			TSRole role = ru.getTSRole();
-			List<TSRoleFunction> roleFunctionList = systemService.findByProperty(TSRoleFunction.class, "TSRole.id", role.getId());
+			List<TSRoleFunction> roleFunctionList = systemService.findListByProperty(TSRoleFunction.class, "TSRole.id", role.getId());
 			if (roleFunctionList.size() > 0) {
 				for (TSRoleFunction roleFunction : roleFunctionList) {
 					TSFunction function = (TSFunction) roleFunction.getTSFunction();
@@ -162,7 +162,7 @@ public class UserController extends BaseController {
 	@RequestMapping(params = "user")
 	public String user(HttpServletRequest request) {
 		// 给部门查询条件中的下拉框准备数据
-		List<TSDepart> departList = systemService.getList(TSDepart.class);
+		List<TSDepart> departList = systemService.findList(TSDepart.class);
 		request.setAttribute("departsReplace", RoletoJson.listToReplaceStr(departList, "departname", "id"));
 		departList.clear();
 		return "system/user/userList";
@@ -171,7 +171,7 @@ public class UserController extends BaseController {
 	@RequestMapping(params = "interfaceUser")
 	public String interfaceUser(HttpServletRequest request) {
 		// 给部门查询条件中的下拉框准备数据
-		List<TSDepart> departList = systemService.getList(TSDepart.class);
+		List<TSDepart> departList = systemService.findList(TSDepart.class);
 		request.setAttribute("departsReplace", RoletoJson.listToReplaceStr(departList, "departname", "id"));
 		departList.clear();
 		return "system/user/interfaceUserList";
@@ -193,7 +193,7 @@ public class UserController extends BaseController {
             if (o instanceof TSUser) {
                 TSUser cfe = (TSUser) o;
                 if (cfe.getId() != null && !"".equals(cfe.getId())) {
-                    List<InterroleUserEntity> roleUser = systemService.findByProperty(InterroleUserEntity.class, "TSUser.id", cfe.getId());
+                    List<InterroleUserEntity> roleUser = systemService.findListByProperty(InterroleUserEntity.class, "TSUser.id", cfe.getId());
                     if (roleUser.size() > 0) {
                         String roleName = "";
                         for (InterroleUserEntity ru : roleUser) {
@@ -422,14 +422,14 @@ public class UserController extends BaseController {
 		List<ComboBox> comboBoxs = new ArrayList<ComboBox>();
 		List<TSRole> roles = new ArrayList<TSRole>();
 		if (StringUtil.isNotEmpty(id)) {
-			List<TSRoleUser> roleUser = systemService.findByProperty(TSRoleUser.class, "TSUser.id", id);
+			List<TSRoleUser> roleUser = systemService.findListByProperty(TSRoleUser.class, "TSUser.id", id);
 			if (roleUser.size() > 0) {
 				for (TSRoleUser ru : roleUser) {
 					roles.add(ru.getTSRole());
 				}
 			}
 		}
-		List<TSRole> roleList = systemService.getList(TSRole.class);
+		List<TSRole> roleList = systemService.findList(TSRole.class);
 		comboBoxs = TagUtil.getComboBox(roleList, roles, comboBox);
 
 		roleList.clear();
@@ -456,12 +456,12 @@ public class UserController extends BaseController {
 //				departs.add(depart);
 //			}
             // todo zhanggm 获取指定用户的组织机构列表
-            List<TSDepart[]> resultList = systemService.findHql("from TSDepart d,TSUserOrg uo where d.id=uo.orgId and uo.id=?", id);
+            List<TSDepart[]> resultList = systemService.findListByHql("from TSDepart d,TSUserOrg uo where d.id=uo.orgId and uo.id=?", id);
             for (TSDepart[] departArr : resultList) {
                 departs.add(departArr[0]);
             }
         }
-		List<TSDepart> departList = systemService.getList(TSDepart.class);
+		List<TSDepart> departList = systemService.findList(TSDepart.class);
 		comboBoxs = TagUtil.getComboBox(departList, departs, comboBox);
 		return comboBoxs;
 	}
@@ -546,7 +546,7 @@ public class UserController extends BaseController {
             if (o instanceof TSUser) {
                 TSUser cfe = (TSUser) o;
                 if (cfe.getId() != null && !"".equals(cfe.getId())) {
-                    List<TSRoleUser> roleUser = systemService.findByProperty(TSRoleUser.class, "TSUser.id", cfe.getId());
+                    List<TSRoleUser> roleUser = systemService.findListByProperty(TSRoleUser.class, "TSUser.id", cfe.getId());
                     if (roleUser.size() > 0) {
                         String roleName = "";
                         for (TSRoleUser ru : roleUser) {
@@ -709,7 +709,7 @@ public class UserController extends BaseController {
 		ValidForm v = new ValidForm();
 		String userName=oConvertUtils.getString(request.getParameter("param"));
 		String code=oConvertUtils.getString(request.getParameter("code"));
-		List<TSUser> roles=systemService.findByProperty(TSUser.class,"userName",userName);
+		List<TSUser> roles=systemService.findListByProperty(TSUser.class,"userName",userName);
 		if(roles.size()>0&&!code.equals(userName))
 		{
 			v.setInfo("用户名已存在");
@@ -729,7 +729,7 @@ public class UserController extends BaseController {
 		ValidForm validForm = new ValidForm();
 		String email=oConvertUtils.getString(request.getParameter("param"));
 		String code=oConvertUtils.getString(request.getParameter("code"));
-		List<TSUser> userList=systemService.findByProperty(TSUser.class,"email",email);
+		List<TSUser> userList=systemService.findListByProperty(TSUser.class,"email",email);
 		if(userList.size()>0&&!code.equals(email))
 		{
 			validForm.setInfo("邮箱已绑定相关用户信息");
@@ -768,7 +768,7 @@ public class UserController extends BaseController {
 			this.userService.saveOrUpdate(users, orgid.split(","), roleid.split(","));
 			message = "用户: " + users.getUserName() + "更新成功";
 		} else {
-			TSUser users = systemService.findUniqueByProperty(TSUser.class, "userName",user.getUserName());
+			TSUser users = systemService.getByProperty(TSUser.class, "userName",user.getUserName());
 			if (users != null) {
 				message = "用户: " + users.getUserName() + "已经存在";
 			} else {
@@ -945,7 +945,7 @@ public class UserController extends BaseController {
 	}
 	
 	public void interfaceroleidandname(HttpServletRequest req, TSUser user) {
-		List<InterroleUserEntity> roleUsers = systemService.findByProperty(InterroleUserEntity.class, "TSUser.id", user.getId());
+		List<InterroleUserEntity> roleUsers = systemService.findListByProperty(InterroleUserEntity.class, "TSUser.id", user.getId());
 		String roleId = "";
 		String roleName = "";
 		if (roleUsers.size() > 0) {
@@ -1003,7 +1003,7 @@ public class UserController extends BaseController {
 			users.setMemo(user.getMemo());
 			
 			systemService.update(users);
-			List<TSRoleUser> ru = systemService.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
+			List<TSRoleUser> ru = systemService.findListByProperty(TSRoleUser.class, "TSUser.id", user.getId());
 			systemService.deleteCollection(ru);//TODO ?
 			message = "用户: " + users.getUserName() + "更新成功";
 //			if (StringUtil.isNotEmpty(roleid)) {
@@ -1011,7 +1011,7 @@ public class UserController extends BaseController {
 //			}
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.LOG_LEVEL_INFO);
 		} else {
-			TSUser users = systemService.findUniqueByProperty(TSUser.class, "userName",user.getUserName());
+			TSUser users = systemService.getByProperty(TSUser.class, "userName",user.getUserName());
 			if (users != null) {
 				message = "用户: " + users.getUserName() + "已经存在";
 			} else {
@@ -1059,7 +1059,7 @@ public class UserController extends BaseController {
 		List<TSDepart> orgList = new ArrayList<TSDepart>();
 		String userId = oConvertUtils.getString(request.getParameter("userId"));
 
-        List<Object[]> orgArrList = systemService.findHql("from TSDepart d,TSUserOrg uo where d.id=uo.tsDepart.id and uo.tsUser.id=?", new String[]{userId});
+        List<Object[]> orgArrList = systemService.findListByHql("from TSDepart d,TSUserOrg uo where d.id=uo.tsDepart.id and uo.tsUser.id=?", new String[]{userId});
         for (Object[] departs : orgArrList) {
             orgList.add((TSDepart) departs[0]);
         }
@@ -1073,7 +1073,7 @@ public class UserController extends BaseController {
 
 
 	public void idandname(HttpServletRequest req, TSUser user) {
-		List<TSRoleUser> roleUsers = systemService.findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
+		List<TSRoleUser> roleUsers = systemService.findListByProperty(TSRoleUser.class, "TSUser.id", user.getId());
 		String roleId = "";
 		String roleName = "";
 		if (roleUsers.size() > 0) {
@@ -1088,7 +1088,7 @@ public class UserController extends BaseController {
 	}
 	
 	public void getOrgInfos(HttpServletRequest req, TSUser user) {
-		List<TSUserOrg> tSUserOrgs = systemService.findByProperty(TSUserOrg.class, "tsUser.id", user.getId());
+		List<TSUserOrg> tSUserOrgs = systemService.findListByProperty(TSUserOrg.class, "tsUser.id", user.getId());
 		String orgIds = "";
 		String departname = "";
 		if (tSUserOrgs.size() > 0) {
@@ -1107,7 +1107,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(params = "choose")
 	public String choose(HttpServletRequest request) {
-		List<TSRole> roles = systemService.loadAll(TSRole.class);
+		List<TSRole> roles = systemService.findList(TSRole.class);
 		request.setAttribute("roleList", roles);
 		return "system/membership/checkuser";
 	}
@@ -1145,7 +1145,7 @@ public class UserController extends BaseController {
 		}
 		String userid = "";
 		if (roleid.length() > 0) {
-			List<TSRoleUser> roleUsers = systemService.findByProperty(TSRoleUser.class, "TRole.roleid", oConvertUtils.getInt(roleid, 0));
+			List<TSRoleUser> roleUsers = systemService.findListByProperty(TSRoleUser.class, "TRole.roleid", oConvertUtils.getInt(roleid, 0));
 			if (roleUsers.size() > 0) {
 				for (TSRoleUser tRoleUser : roleUsers) {
 					userid += tRoleUser.getTSUser().getId() + ",";
@@ -1163,7 +1163,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(params = "roleDepart")
 	public String roleDepart(HttpServletRequest request) {
-		List<TSRole> roles = systemService.loadAll(TSRole.class);
+		List<TSRole> roles = systemService.findList(TSRole.class);
 		request.setAttribute("roleList", roles);
 		return "system/membership/roledepart";
 	}
@@ -1417,7 +1417,7 @@ public class UserController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(TSUser.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tsUser, request.getParameterMap());
-		List<TSUser> tsUsers = this.userService.getListByCriteriaQuery(cq,false);
+		List<TSUser> tsUsers = this.userService.findListByCriteriaQuery(cq,false);
 		//导出的时候处理一下组织机构编码和角色编码
 		for(int i=0;i<tsUsers.size();i++){
 			TSUser user = tsUsers.get(i);
@@ -1499,7 +1499,7 @@ public class UserController extends BaseController {
 					tsUser.setUserType(Globals.USER_TYPE_SYSTEM);//导入用户 在用户管理列表不显示
 
 					if((roleCodes==null||roleCodes.equals(""))||(deptCodes==null||deptCodes.equals(""))){
-						List<TSUser> users = systemService.findByProperty(TSUser.class,"userName",username);
+						List<TSUser> users = systemService.findListByProperty(TSUser.class,"userName",username);
 						if(users.size()!=0){
 							//用户存在更新
 							TSUser user = users.get(0);
@@ -1516,14 +1516,14 @@ public class UserController extends BaseController {
 						boolean flag = true;
 						//判断组织机构编码和角色编码是否存在，如果不存在，也不能导入
 						for(String roleCode:roles){
-							List<TSRole> roleList = systemService.findByProperty(TSRole.class,"roleCode",roleCode);
+							List<TSRole> roleList = systemService.findListByProperty(TSRole.class,"roleCode",roleCode);
 							if(roleList.size()==0){
 								flag = false;
 							}
 						}
 
 						for(String deptCode:depts){
-							List<TSDepart> departList = systemService.findByProperty(TSDepart.class,"orgCode",deptCode);
+							List<TSDepart> departList = systemService.findListByProperty(TSDepart.class,"orgCode",deptCode);
 							if(departList.size()==0){
 								flag = false;
 							}
@@ -1531,7 +1531,7 @@ public class UserController extends BaseController {
 
 						if(flag){
 							//判断用户是否存在
-							List<TSUser> users = systemService.findByProperty(TSUser.class,"userName",username);
+							List<TSUser> users = systemService.findListByProperty(TSUser.class,"userName",username);
 							if(users.size()!=0){
 								//用户存在更新
 								TSUser user = users.get(0);
@@ -1543,7 +1543,7 @@ public class UserController extends BaseController {
 								systemService.executeSql("delete from t_s_role_user where userid = ?",id);
 								for(String roleCode:roles){
 									//根据角色编码得到roleid
-									List<TSRole> roleList = systemService.findByProperty(TSRole.class,"roleCode",roleCode);
+									List<TSRole> roleList = systemService.findListByProperty(TSRole.class,"roleCode",roleCode);
 									TSRoleUser tsRoleUser = new TSRoleUser();
 									tsRoleUser.setTSUser(user);
 									tsRoleUser.setTSRole(roleList.get(0));
@@ -1553,7 +1553,7 @@ public class UserController extends BaseController {
 								systemService.executeSql("delete from t_s_user_org where user_id = ?",id);
 								for(String orgCode:depts){
 									//根据角色编码得到roleid
-									List<TSDepart> departList = systemService.findByProperty(TSDepart.class,"orgCode",orgCode);
+									List<TSDepart> departList = systemService.findListByProperty(TSDepart.class,"orgCode",orgCode);
 									TSUserOrg tsUserOrg = new TSUserOrg();
 									tsUserOrg.setTsDepart(departList.get(0));
 									tsUserOrg.setTsUser(user);
@@ -1566,7 +1566,7 @@ public class UserController extends BaseController {
 								systemService.add(tsUser);
 								for(String roleCode:roles){
 									//根据角色编码得到roleid
-									List<TSRole> roleList = systemService.findByProperty(TSRole.class,"roleCode",roleCode);
+									List<TSRole> roleList = systemService.findListByProperty(TSRole.class,"roleCode",roleCode);
 									TSRoleUser tsRoleUser = new TSRoleUser();
 									tsRoleUser.setTSUser(tsUser);
 									tsRoleUser.setTSRole(roleList.get(0));
@@ -1575,7 +1575,7 @@ public class UserController extends BaseController {
 
 								for(String orgCode:depts){
 									//根据角色编码得到roleid
-									List<TSDepart> departList = systemService.findByProperty(TSDepart.class,"orgCode",orgCode);
+									List<TSDepart> departList = systemService.findListByProperty(TSDepart.class,"orgCode",orgCode);
 									TSUserOrg tsUserOrg = new TSUserOrg();
 									tsUserOrg.setTsDepart(departList.get(0));
 									tsUserOrg.setTsUser(tsUser);

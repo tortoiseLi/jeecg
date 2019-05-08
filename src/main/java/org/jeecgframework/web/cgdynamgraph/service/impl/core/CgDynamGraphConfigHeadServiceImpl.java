@@ -57,7 +57,7 @@ public class CgDynamGraphConfigHeadServiceImpl extends CommonServiceImpl impleme
 			//===================================================================================
 			//1.查询出数据库的明细数据-动态报表配置明细
 		    String hql0 = "from CgDynamGraphConfigItemEntity where 1 = 1 AND cgrheadId = ? ";
-		    List<CgDynamGraphConfigItemEntity> cgDynamGraphConfigItemOldList = this.findHql(hql0,id0);
+		    List<CgDynamGraphConfigItemEntity> cgDynamGraphConfigItemOldList = this.findListByHql(hql0,id0);
 			//2.筛选更新明细数据-动态报表配置明细
 			for(CgDynamGraphConfigItemEntity oldE:cgDynamGraphConfigItemOldList){
 				boolean isUpdate = false;
@@ -93,7 +93,7 @@ public class CgDynamGraphConfigHeadServiceImpl extends CommonServiceImpl impleme
 			//===================================================================================
 			//1.查询出数据库的报表参数-动态报表参数
 		    String hql1 = "from CgDynamGraphConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
-		    List<CgDynamGraphConfigParamEntity> cgDynamGraphConfigParamOldList = this.findHql(hql1,id0);
+		    List<CgDynamGraphConfigParamEntity> cgDynamGraphConfigParamOldList = this.findListByHql(hql1,id0);
 			//2.筛选更新明细数据-动态报表配置明细
 			for(CgDynamGraphConfigParamEntity oldE:cgDynamGraphConfigParamOldList){
 				boolean isUpdate = false;
@@ -139,11 +139,11 @@ public class CgDynamGraphConfigHeadServiceImpl extends CommonServiceImpl impleme
 			//===================================================================================
 			//删除-动态报表配置明细
 		    String hql0 = "from CgDynamGraphConfigItemEntity where 1 = 1 AND cgrheadId = ? ";
-		    List<CgDynamGraphConfigItemEntity> cgDynamGraphConfigItemOldList = this.findHql(hql0,id0);
+		    List<CgDynamGraphConfigItemEntity> cgDynamGraphConfigItemOldList = this.findListByHql(hql0,id0);
 			this.deleteCollection(cgDynamGraphConfigItemOldList);
 			//删除-动态报表参数
 			String hql1 = "from CgDynamGraphConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
-			List<CgDynamGraphConfigParamEntity> cgDynamGraphConfigParamOldList = this.findHql(hql1,id0);
+			List<CgDynamGraphConfigParamEntity> cgDynamGraphConfigParamOldList = this.findListByHql(hql1,id0);
 			this.deleteCollection(cgDynamGraphConfigParamOldList);
 		}
 		

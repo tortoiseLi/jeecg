@@ -67,7 +67,7 @@ public class BaseController {
 		// 统计的总行数
 		dc.setProjection(Projections.rowCount());
 
-		totalRow = Integer.parseInt(commonService.findByDetached(dc).get(0)
+		totalRow = Integer.parseInt(commonService.findListByDetached(dc).get(0)
 				.toString());
 		totalPage = (totalRow + pageRow - 1) / pageRow;
 
@@ -76,7 +76,7 @@ public class BaseController {
 		// 清空统计函数
 		dc.setProjection(null);
 		// dc.setResultTransformer(dc.DISTINCT_ROOT_ENTITY);
-		List<?> list = commonService.pageList(dc, (currentPage - 1) * pageRow,
+		List<?> list = commonService.findListByDetachedCriteria(dc, (currentPage - 1) * pageRow,
 				pageRow);
 
 		request.setAttribute("currentPage", currentPage);

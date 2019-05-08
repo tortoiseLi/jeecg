@@ -52,7 +52,7 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 			int page, int rows) {
 		StringBuilder sqlB = new StringBuilder();
 		dealQuerySql(table,field,params,sqlB);
-		List<Map<String, Object>> result = commonService.findForJdbcParam(sqlB
+		List<Map<String, Object>> result = commonService.findListMapBySqlWithPage(sqlB
 				.toString(), page, rows);
 		return result;
 	}
@@ -64,7 +64,7 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 		if(!StringUtil.isEmpty(sort)&& !StringUtil.isEmpty(order)){
 			sqlB.append(" ORDER BY "+sort+" "+ order);
 		}
-		List<Map<String, Object>> result = commonService.findForJdbcParam(sqlB
+		List<Map<String, Object>> result = commonService.findListMapBySqlWithPage(sqlB
 				.toString(), page, rows);
 		return result;
 	}
@@ -117,7 +117,7 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 				}
 			}
 //--------longjb-start--20150526 ----for:add step.3 判断是否有附件字段,进行连带删除附件及附件表---------------
-			List<CgUploadEntity> uploadBeans = cgFormFieldService.findByProperty(CgUploadEntity.class, "cgformId", id);
+			List<CgUploadEntity> uploadBeans = cgFormFieldService.findListByProperty(CgUploadEntity.class, "cgformId", id);
 			if(uploadBeans!=null){
 				for(CgUploadEntity b:uploadBeans){
 					String path = ResourceUtil.getSysPath()+File.separator+b.getRealpath();//附件路径
@@ -174,7 +174,7 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 	public Long getQuerySingleSize(String table, String field, Map params) {
 		StringBuilder sqlB = new StringBuilder();
 		dealQuerySql(table,"count(*) as query_size,",params,sqlB);
-		List<Map<String, Object>> result = commonService.findForJdbc(sqlB.toString());
+		List<Map<String, Object>> result = commonService.findListMapBySql(sqlB.toString());
 		if(result.size()>=1){
 			return Long.parseLong(String.valueOf(result.get(0).get("query_size")));
 		}else{
@@ -210,7 +210,7 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 
 			String subSQL = "select " + parentIdFieldName + ", count(*) ct from " + table + " a where a." + parentIdFieldName + " in" + "(" + parentIds + ") group by a." + parentIdFieldName + "";
 
-			List<Map<String, Object>> subCountResult =  this.findForJdbc(subSQL);
+			List<Map<String, Object>> subCountResult =  this.findListMapBySql(subSQL);
 			Map<String, Object> subCountMap = new HashMap<String, Object>();
 			for (Map<String, Object> map : subCountResult) {
 				subCountMap.put(map.get(parentIdFieldName).toString(), map.get("ct"));

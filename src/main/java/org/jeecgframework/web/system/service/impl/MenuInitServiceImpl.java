@@ -42,8 +42,8 @@ public class MenuInitServiceImpl extends CommonServiceImpl implements
 		// 4.循环@AutoMenuOperation方法标签，判断该菜单下是否有该操作码配置，如果存在不插入，不存在进行插入
 		// 比较规则[菜单ID-操作码 ：全匹配]
 
-		List<TSFunction> functionList = this.loadAll(TSFunction.class);
-		List<TSOperation> operationList = this.loadAll(TSOperation.class);
+		List<TSFunction> functionList = this.findList(TSFunction.class);
+		List<TSOperation> operationList = this.findList(TSOperation.class);
 		
 		Map<String, TSFunction> functionMap = new HashMap<String, TSFunction>();//菜单map,key为菜单匹配规则的字符串
 		Map<String, TSOperation> operationMap = new HashMap<String, TSOperation>();//菜单操作按钮map,key为菜单操作按钮匹配规则的字符串

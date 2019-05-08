@@ -278,7 +278,7 @@ public class JformOrderTicket2Controller extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(JformOrderTicket2Entity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, jformOrderTicket2, request.getParameterMap());
-		List<JformOrderTicket2Entity> jformOrderTicket2s = this.jformOrderMain2Service.getListByCriteriaQuery(cq,false);
+		List<JformOrderTicket2Entity> jformOrderTicket2s = this.jformOrderMain2Service.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"订单机票信息");
 		modelMap.put(NormalExcelConstants.CLASS,JformOrderTicket2Entity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("订单机票信息列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
@@ -380,7 +380,7 @@ public class JformOrderTicket2Controller extends BaseController {
 	@ResponseBody
 	@ApiOperation(value="订单机票信息列表信息",produces="application/json",httpMethod="GET")
 	public ResponseMessage<List<JformOrderTicket2Entity>> list() {
-		List<JformOrderTicket2Entity> listJformOrderTicket2s=jformOrderMain2Service.getList(JformOrderTicket2Entity.class);
+		List<JformOrderTicket2Entity> listJformOrderTicket2s=jformOrderMain2Service.findList(JformOrderTicket2Entity.class);
 		return Result.success(listJformOrderTicket2s);
 	}
 	

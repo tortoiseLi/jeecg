@@ -75,9 +75,9 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 	
 	public List<String> queryCgReportParam(String reportId){
 		List<String> list = null;
-		CgreportConfigHeadEntity cgreportConfigHead = this.findUniqueByProperty(CgreportConfigHeadEntity.class, "code", reportId);
+		CgreportConfigHeadEntity cgreportConfigHead = this.getByProperty(CgreportConfigHeadEntity.class, "code", reportId);
     	String hql0 = "from CgreportConfigParamEntity where 1 = 1 AND cgrheadId = ? ";
-    	List<CgreportConfigParamEntity> cgreportConfigParamList = this.findHql(hql0,cgreportConfigHead.getId());
+    	List<CgreportConfigParamEntity> cgreportConfigParamList = this.findListByHql(hql0,cgreportConfigHead.getId());
     	if(cgreportConfigParamList!=null&cgreportConfigParamList.size()>0){
     		list = new ArrayList<String>();
     		for(CgreportConfigParamEntity cgreportConfigParam :cgreportConfigParamList){
@@ -249,7 +249,7 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 
 			dictCodeOrSQL = dictCodeOrSQL.replaceAll("'[kK][eE][yY]'", "typecode").replaceAll("'[vV][aA][lL][uU][eE]'", "typename");
 
-			dicDatas = this.findForJdbc(dictCodeOrSQL);
+			dicDatas = this.findListMapBySql(dictCodeOrSQL);
 		}else {
 			dicDatas = queryDic(dictCodeOrSQL);
 		}

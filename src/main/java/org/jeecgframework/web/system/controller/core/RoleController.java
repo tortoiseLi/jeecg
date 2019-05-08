@@ -142,7 +142,7 @@ public class RoleController extends BaseController {
 	public AjaxJson delUserRole(@RequestParam(required=true)String userid,@RequestParam(required=true)String roleid) {
 		AjaxJson ajaxJson = new AjaxJson();
 		try {
-			List<TSRoleUser> roleUserList = this.systemService.findByProperty(TSRoleUser.class, "TSUser.id", userid);
+			List<TSRoleUser> roleUserList = this.systemService.findListByProperty(TSRoleUser.class, "TSUser.id", userid);
 			if(roleUserList.size() == 1){
 				ajaxJson.setSuccess(false);
 				ajaxJson.setMsg("不可删除用户的角色关系，请使用修订用户角色关系");
@@ -223,7 +223,7 @@ public class RoleController extends BaseController {
 		String roleCode = oConvertUtils
 				.getString(request.getParameter("param"));
 		String code = oConvertUtils.getString(request.getParameter("code"));
-		List<TSRole> roles = systemService.findByProperty(TSRole.class,
+		List<TSRole> roles = systemService.findListByProperty(TSRole.class,
 				"roleCode", roleCode);
 		if (roles.size() > 0 && !code.equals(roleCode)) {
 			v.setInfo("角色编码已存在");
@@ -238,14 +238,14 @@ public class RoleController extends BaseController {
 	 * @param role
 	 */
 	protected void delRoleFunction(TSRole role) {
-		List<TSRoleFunction> roleFunctions = systemService.findByProperty(
+		List<TSRoleFunction> roleFunctions = systemService.findListByProperty(
 				TSRoleFunction.class, "TSRole.id", role.getId());
 		if (roleFunctions.size() > 0) {
 			for (TSRoleFunction tsRoleFunction : roleFunctions) {
 				systemService.delete(tsRoleFunction);
 			}
 		}
-		List<TSRoleUser> roleUsers = systemService.findByProperty(
+		List<TSRoleUser> roleUsers = systemService.findListByProperty(
 				TSRoleUser.class, "TSRole.id", role.getId());
 		for (TSRoleUser tsRoleUser : roleUsers) {
 			systemService.delete(tsRoleUser);
@@ -321,7 +321,7 @@ public class RoleController extends BaseController {
 
 		//查询条件组装器
         String roleId = request.getParameter("roleId");
-        List<TSRoleUser> roleUser = systemService.findByProperty(TSRoleUser.class, "TSRole.id", roleId);
+        List<TSRoleUser> roleUser = systemService.findListByProperty(TSRoleUser.class, "TSRole.id", roleId);
         /*
         // zhanggm：这个查询逻辑也可以使用这种 子查询的方式进行查询
         CriteriaQuery subCq = new CriteriaQuery(TSRoleUser.class);
@@ -370,7 +370,7 @@ public class RoleController extends BaseController {
 		List<TSUser> loginActionlist = new ArrayList<TSUser>();
 		if (user != null) {
 
-			List<TSRoleUser> roleUser = systemService.findByProperty(TSRoleUser.class, "TSRole.id", roleId);
+			List<TSRoleUser> roleUser = systemService.findListByProperty(TSRoleUser.class, "TSRole.id", roleId);
 			if (roleUser.size() > 0) {
 				for (TSRoleUser ru : roleUser) {
 					loginActionlist.add(ru.getTSUser());
@@ -406,7 +406,7 @@ public class RoleController extends BaseController {
 		ComboTreeModel comboTreeModel = new ComboTreeModel("id", "roleName", "");
 		String orgId = request.getParameter("orgId");
 		List<TSRole[]> orgRoleArrList = systemService
-				.findHql(
+				.findListByHql(
 						"from TSRole r, TSRoleOrg ro, TSDepart o WHERE r.id=ro.tsRole.id AND ro.tsDepart.id=o.id AND o.id=?",
 						orgId);
 		List<TSRole> orgRoleList = new ArrayList<TSRole>();
@@ -414,7 +414,7 @@ public class RoleController extends BaseController {
 			orgRoleList.add((TSRole) roleArr[0]);
 		}
 
-		List<Object> allRoleList = this.systemService.getList(TSRole.class);
+		List<TSRole> allRoleList = this.systemService.findList(TSRole.class);
 		List<ComboTree> comboTrees = systemService.comboTree(allRoleList,
 				comboTreeModel, orgRoleList, false);
 
@@ -483,7 +483,7 @@ public class RoleController extends BaseController {
 		}
 		cq.notEq("functionLevel", Short.parseShort("-1"));
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(
+		List<TSFunction> functionList = systemService.findListByCriteriaQuery(
 				cq, false);
 		Collections.sort(functionList, new NumberComparator());
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
@@ -491,7 +491,7 @@ public class RoleController extends BaseController {
 		List<TSFunction> loginActionlist = new ArrayList<TSFunction>();// 已有权限菜单
 		role = this.systemService.getById(TSRole.class, roleId);
 		if (role != null) {
-			List<TSRoleFunction> roleFunctionList = systemService.findByProperty(TSRoleFunction.class, "TSRole.id",role.getId());
+			List<TSRoleFunction> roleFunctionList = systemService.findListByProperty(TSRoleFunction.class, "TSRole.id",role.getId());
 			if (roleFunctionList.size() > 0) {
 				for (TSRoleFunction roleFunction : roleFunctionList) {
 					TSFunction function = (TSFunction) roleFunction.getTSFunction();
@@ -614,7 +614,7 @@ public class RoleController extends BaseController {
 			String rolefunction = request.getParameter("rolefunctions");
 			TSRole role = this.systemService.getById(TSRole.class, roleId);
 			List<TSRoleFunction> roleFunctionList = systemService
-					.findByProperty(TSRoleFunction.class, "TSRole.id",
+					.findListByProperty(TSRoleFunction.class, "TSRole.id",
 							role.getId());
 			Map<String, TSRoleFunction> map = new HashMap<String, TSRoleFunction>();
 			for (TSRoleFunction functionOfRole : roleFunctionList) {
@@ -709,7 +709,7 @@ public class RoleController extends BaseController {
 			cq.isNull("TSFunction");
 		}
 		cq.add();
-		List<TSFunction> functionList = systemService.getListByCriteriaQuery(
+		List<TSFunction> functionList = systemService.findListByCriteriaQuery(
 				cq, false);
 		List<TreeGrid> treeGrids = new ArrayList<TreeGrid>();
 		Collections.sort(functionList, new SetListSort());
@@ -785,7 +785,7 @@ public class RoleController extends BaseController {
 		cq.eq("TSRole.id", roleId);
 		cq.eq("TSFunction.id", functionid);
 		cq.add();
-		List<TSRoleFunction> rFunctions = systemService.getListByCriteriaQuery(
+		List<TSRoleFunction> rFunctions = systemService.findListByCriteriaQuery(
 				cq, false);
 		if (rFunctions.size() > 0) {
 			TSRoleFunction roleFunction = rFunctions.get(0);
@@ -800,7 +800,7 @@ public class RoleController extends BaseController {
 	 * @param roleId
 	 */
 	public void clearp(String roleId) {
-		List<TSRoleFunction> rFunctions = systemService.findByProperty(
+		List<TSRoleFunction> rFunctions = systemService.findListByProperty(
 				TSRoleFunction.class, "TSRole.id", roleId);
 		if (rFunctions.size() > 0) {
 			for (TSRoleFunction tRoleFunction : rFunctions) {
@@ -826,7 +826,7 @@ public class RoleController extends BaseController {
 		cq.eq("status", Short.valueOf("0"));
 		cq.add();
 		List<TSOperation> operationList = this.systemService
-				.getListByCriteriaQuery(cq, false);
+				.findListByCriteriaQuery(cq, false);
 		Set<String> operationCodes = systemService.getOperationCodesByRoleIdAndFunctionId(roleId, functionId);
 		request.setAttribute("operationList", operationList);
 		request.setAttribute("operationcodes", operationCodes);
@@ -859,7 +859,7 @@ public class RoleController extends BaseController {
 		cq1.eq("TSRole.id", roleId);
 		cq1.eq("TSFunction.id", functionId);
 		cq1.add();
-		List<TSRoleFunction> rFunctions = systemService.getListByCriteriaQuery(
+		List<TSRoleFunction> rFunctions = systemService.findListByCriteriaQuery(
 				cq1, false);
 		if (null != rFunctions && rFunctions.size() > 0) {
 			TSRoleFunction tsRoleFunction = rFunctions.get(0);
@@ -887,7 +887,7 @@ public class RoleController extends BaseController {
 		cq.eq("TSFunction.id", functionId);
 		cq.add();
 		List<TSDataRule> dataRuleList = this.systemService
-				.getListByCriteriaQuery(cq, false);
+				.findListByCriteriaQuery(cq, false);
 		Set<String> dataRulecodes = systemService.getDataRuleIdsByRoleIdAndFunctionId(roleId, functionId);
 		request.setAttribute("dataRuleList", dataRuleList);
 		request.setAttribute("dataRulecodes", dataRulecodes);
@@ -921,7 +921,7 @@ public class RoleController extends BaseController {
 		cq1.eq("TSRole.id", roleId);
 		cq1.eq("TSFunction.id", functionId);
 		cq1.add();
-		List<TSRoleFunction> rFunctions = systemService.getListByCriteriaQuery(
+		List<TSRoleFunction> rFunctions = systemService.findListByCriteriaQuery(
 				cq1, false);
 		if (null != rFunctions && rFunctions.size() > 0) {
 			TSRoleFunction tsRoleFunction = rFunctions.get(0);
@@ -1038,7 +1038,7 @@ public class RoleController extends BaseController {
 		tsRole.setRoleName(null);
 		CriteriaQuery cq = new CriteriaQuery(TSRole.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tsRole, request.getParameterMap());
-		List<TSRole> tsRoles = systemService.getListByCriteriaQuery(cq,false);
+		List<TSRole> tsRoles = systemService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"角色表");
 		modelMap.put(NormalExcelConstants.CLASS,TSRole.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("角色表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
@@ -1082,7 +1082,7 @@ public class RoleController extends BaseController {
 				List<TSRole> tsRoles = ExcelImportUtil.importExcel(file.getInputStream(),TSRole.class,params);
 				for (TSRole tsRole : tsRoles) {
 					String roleCode = tsRole.getRoleCode();
-					List<TSRole> roles = systemService.findByProperty(TSRole.class,"roleCode",roleCode);
+					List<TSRole> roles = systemService.findListByProperty(TSRole.class,"roleCode",roleCode);
 					if(roles.size()!=0){
 						TSRole role = roles.get(0);
 						MyBeanUtils.copyBeanNotNull2Bean(tsRole,role);

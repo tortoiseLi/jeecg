@@ -333,7 +333,7 @@ public class CgformTemplateController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(CgformTemplateEntity.class, dataGrid);
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, cgformTemplate, request.getParameterMap());
-		List<CgformTemplateEntity> cgformTemplates = this.cgformTemplateService.getListByCriteriaQuery(cq, false);
+		List<CgformTemplateEntity> cgformTemplates = this.cgformTemplateService.findListByCriteriaQuery(cq, false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"自定义模板");
 		modelMap.put(NormalExcelConstants.CLASS,CgformTemplateEntity.class);
 		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("自定义模板列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
@@ -588,7 +588,7 @@ public class CgformTemplateController extends BaseController {
 	public AjaxJson checkCode(String param){
 		org.springframework.util.Assert.notNull(param);
 		AjaxJson j=new AjaxJson();
-	 	Long count=cgformTemplateService.getCountForJdbcParam("select count(id) from cgform_template where template_code=?  ", new Object[]{param});
+	 	Long count=cgformTemplateService.getCountBySql("select count(id) from cgform_template where template_code=?  ", new Object[]{param});
 	 	if(count==null||count<=0){
 		 	j.setSuccess(true);
 	 	}else {
