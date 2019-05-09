@@ -2,9 +2,7 @@ package org.jeecgframework.tag.core.easyui;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
@@ -12,9 +10,8 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.enums.MenuButtonsEnum;
-import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.ApplicationContextUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.pojo.base.TSOperation;
 import org.jeecgframework.web.system.service.SystemService;
@@ -85,7 +82,7 @@ public class MenuButtonsTag extends TagSupport{
 		StringBuffer sb = new StringBuffer();
 		List<String> optcodes = null;
 		boolean flag = false;
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtils.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
 			flag = true;
 		}else{
 			optcodes= getOperationcodes();

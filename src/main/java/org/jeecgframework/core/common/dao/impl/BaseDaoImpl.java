@@ -68,17 +68,22 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 
 	@Override
 	public <T> void batchInsert(List<T> entityList) {
-		for (int i=0; i<entityList.size(); i++) {
-			getSession().save(entityList.get(i));
-			if (i % 1000 == 0) {
-				// 1000个对象批量写入数据库，后才清理缓存
-				getSession().flush();
-				getSession().clear();
+		try {
+			for (int i=0; i<entityList.size(); i++) {
+				getSession().save(entityList.get(i));
+				if (i % 1000 == 0) {
+					// 1000个对象批量写入数据库，后才清理缓存
+					getSession().flush();
+					getSession().clear();
+				}
 			}
+			//最后页面的数据，进行提交手工清理
+			getSession().flush();
+			getSession().clear();
+		} catch (RuntimeException e) {
+			logger.error("批量保存实体异常", e);
+			throw e;
 		}
-		//最后页面的数据，进行提交手工清理
-		getSession().flush();
-		getSession().clear();
 	}
 
 	@Override
@@ -86,26 +91,41 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 		try {
 			getSession().delete(entity);
 		} catch (RuntimeException e) {
-			logger.error("删除异常", e);
+			logger.error("删除实体异常", e);
 			throw e;
 		}
 	}
 
 	@Override
 	public void deleteById(Class entityClass, Serializable id) {
-		delete(getById(entityClass, id));
+		try {
+			delete(getById(entityClass, id));
+		} catch (RuntimeException e) {
+			logger.error("根据ID删除实体异常", e);
+			throw e;
+		}
 	}
 
 	@Override
 	public <T> void deleteCollection(Collection<T> collection) {
-		for (Object entity: collection) {
-			getSession().delete(entity);
+		try {
+			for (Object entity: collection) {
+				getSession().delete(entity);
+			}
+		} catch (RuntimeException e) {
+			logger.error("删除实体集合异常", e);
+			throw e;
 		}
 	}
 
 	@Override
 	public <T> void update(T entity) {
-		getSession().update(entity);
+		try {
+			getSession().update(entity);
+		} catch (RuntimeException e) {
+			logger.error("更新实体异常", e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -113,7 +133,7 @@ public abstract class BaseDaoImpl<T> implements BaseDao {
 		try {
 			getSession().saveOrUpdate(entity);
 		} catch (RuntimeException e) {
-			logger.error("添加或更新异常", e);
+			logger.error("新增或更新实体异常", e);
 			throw e;
 		}
 	}

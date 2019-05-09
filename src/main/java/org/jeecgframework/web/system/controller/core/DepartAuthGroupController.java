@@ -27,7 +27,7 @@ import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.NumberComparator;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.minidao.pojo.MiniDaoPage;
@@ -86,7 +86,7 @@ public class DepartAuthGroupController extends BaseController {
 	@RequestMapping(params = "list")
 	public ModelAndView list(HttpServletRequest request) {
 		//获取当前登录的用户名
-		String userName = ResourceUtil.getSessionUser().getUserName();
+		String userName = ResourceUtils.getSessionUser().getUserName();
 		request.setAttribute("userName", userName);
 		return new ModelAndView("system/authGroup/depart_role");
 	}
@@ -293,7 +293,7 @@ public class DepartAuthGroupController extends BaseController {
 		try{
 			List<Map<String,Object>> departAuthGroupList = new ArrayList<Map<String,Object>>();
 			//获取当前登录用户账号
-			String userName = ResourceUtil.getSessionUser().getUserName();
+			String userName = ResourceUtils.getSessionUser().getUserName();
 			List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
 			List<Map<String,Object>> chkDepartAuthGroupList = new ArrayList<Map<String,Object>>();
 			//超级用户可查看全部
@@ -332,7 +332,7 @@ public class DepartAuthGroupController extends BaseController {
 		try{
 			List<Map<String,Object>> departAuthGroupList = new ArrayList<Map<String,Object>>();
 			//获取当前登录用户账号
-			String userName = ResourceUtil.getSessionUser().getUserName();
+			String userName = ResourceUtils.getSessionUser().getUserName();
 			List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
 			List<Map<String,Object>> chkDepartAuthGroupList = new ArrayList<Map<String,Object>>();
 			//超级用户可查看全部
@@ -491,7 +491,7 @@ public class DepartAuthGroupController extends BaseController {
 	public AjaxJson getDepartInfo(HttpServletRequest request, HttpServletResponse response){
 		AjaxJson j = new AjaxJson();
 		//根据登陆用户判断，二级管理员根据一级权限组查询
-		TSUser sessionUser = ResourceUtil.getSessionUser();
+		TSUser sessionUser = ResourceUtils.getSessionUser();
 		String userName = null;
 		if(sessionUser!=null)userName=sessionUser.getUserName();
 		String orgIds = request.getParameter("orgIds");

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,7 +115,7 @@ public class ImgServerServlet extends HttpServlet {
 		InputStream inputStream = null;
 		OutputStream outputStream = null;
 		try {
-			String localPath = ResourceUtil.getConfigByName("webUploadpath");
+			String localPath = ResourceUtils.getConfigByName("webUploadpath");
 			String imgurl = localPath + File.separator + imgPath;
 			inputStream = new BufferedInputStream(new FileInputStream(imgurl));
 			outputStream = response.getOutputStream();

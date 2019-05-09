@@ -29,7 +29,7 @@ import org.jeecgframework.core.extend.swftools.SwfToolsUtil;
 import org.jeecgframework.core.util.DateUtils;
 import org.jeecgframework.core.util.FileUtils;
 import org.jeecgframework.core.util.PinyinUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,7 +174,7 @@ public class CgUploadController extends BaseController {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		try {
 			Map<String, MultipartFile> fileMap = request.getFileMap();
-			String uploadbasepath = ResourceUtil.getConfigByName("uploadpath");
+			String uploadbasepath = ResourceUtils.getConfigByName("uploadpath");
 			// 文件数据库保存路径
 			String path = uploadbasepath + "/";// 文件保存在硬盘的相对路径
 			String realPath = request.getSession().getServletContext().getRealPath("/") + "/" + path;// 文件的硬盘真实路径
@@ -201,7 +201,7 @@ public class CgUploadController extends BaseController {
 					attachment.setExtend(extend);
 					attachment.setRealpath(path + myfilename);
 
-					String globalSwfTransformFlag = ResourceUtil.getConfigByName("swf.transform.flag");
+					String globalSwfTransformFlag = ResourceUtils.getConfigByName("swf.transform.flag");
 					if("true".equals(globalSwfTransformFlag) && !FileUtils.isPicture(extend)){
 						attachment.setSwfpath( path + FileUtils.getFilePrefix(myfilename) + ".swf");
 						SwfToolsUtil.convert2SWF(savePath);

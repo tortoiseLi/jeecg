@@ -32,7 +32,7 @@ import org.jeecgframework.core.util.ListtoMenu;
 import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.PasswordUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.RoletoJson;
 import org.jeecgframework.core.util.SetListSort;
 import org.jeecgframework.core.util.StringUtil;
@@ -109,7 +109,7 @@ public class UserController extends BaseController {
 	@RequestMapping(params = "menu")
 	public void menu(HttpServletRequest request, HttpServletResponse response) {
 		SetListSort sort = new SetListSort();
-		TSUser u = ResourceUtil.getSessionUser();
+		TSUser u = ResourceUtils.getSessionUser();
 		// 登陆者的权限
 		Set<TSFunction> loginActionlist = new HashSet<TSFunction>();// 已有权限菜单
 		List<TSRoleUser> rUsers = systemService.findListByProperty(TSRoleUser.class, "TSUser.id", u.getId());
@@ -240,7 +240,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(params = "userinfo")
 	public String userinfo(HttpServletRequest request) {
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		request.setAttribute("user", user);
 		return "system/user/userinfo";
 	}
@@ -252,13 +252,13 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(params = "changepassword")
 	public String changepassword(HttpServletRequest request) {
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		request.setAttribute("user", user);
 		return "system/user/changepassword";
 	}
 	@RequestMapping(params = "changeportrait")
 	public String changeportrait(HttpServletRequest request) {
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		request.setAttribute("user", user);
 		return "system/user/changeportrait";
 	}
@@ -271,7 +271,7 @@ public class UserController extends BaseController {
 	@ResponseBody
 	public AjaxJson saveportrait(HttpServletRequest request,String fileName) {
 		AjaxJson j = new AjaxJson();
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		user.setPortrait(fileName);
 		j.setMsg("修改成功");
 		try {
@@ -293,7 +293,7 @@ public class UserController extends BaseController {
 	@ResponseBody
 	public AjaxJson savenewpwd(HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		logger.info("["+IpUtil.getIpAddr(request)+"][修改密码] start");
 		String password = oConvertUtils.getString(request.getParameter("password"));
 		String newpassword = oConvertUtils.getString(request.getParameter("newpassword"));
@@ -352,7 +352,7 @@ public class UserController extends BaseController {
 		
 		if (StringUtil.isNotEmpty(id)) {
 			TSUser users = systemService.getById(TSUser.class,id);
-			if("admin".equals(users.getUserName()) && !"admin".equals(ResourceUtil.getSessionUser().getUserName())){
+			if("admin".equals(users.getUserName()) && !"admin".equals(ResourceUtils.getSessionUser().getUserName())){
 				message = "超级管理员[admin]，只有admin本人可操作，其他人无权限!";
 				logger.info("["+IpUtil.getIpAddr(req)+"]"+message);
 				j.setMsg(message);
@@ -1315,7 +1315,7 @@ public class UserController extends BaseController {
 	}
 	@RequestMapping(params = "changestyle")
 	public String changeStyle(HttpServletRequest request) {
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		if(user==null){
 			return "login/login";
 		}
@@ -1350,7 +1350,7 @@ public class UserController extends BaseController {
 	public AjaxJson saveStyle(HttpServletRequest request,HttpServletResponse response) {
 		AjaxJson j = new AjaxJson();
 		j.setSuccess(Boolean.FALSE);
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		if(user!=null){
 			String indexStyle = request.getParameter("indexStyle");
 //			String cssTheme = request.getParameter("cssTheme");
@@ -1443,7 +1443,7 @@ public class UserController extends BaseController {
 		}
 		modelMap.put(NormalExcelConstants.FILE_NAME,"用户表");
 		modelMap.put(NormalExcelConstants.CLASS,TSUser.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("用户表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("用户表列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 				"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,tsUsers);
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
@@ -1460,7 +1460,7 @@ public class UserController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		modelMap.put(NormalExcelConstants.FILE_NAME,"用户表");
 		modelMap.put(NormalExcelConstants.CLASS,TSUser.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("用户表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("用户表列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 				"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,new ArrayList());
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;

@@ -27,7 +27,7 @@ import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.YouBianCodeUtil;
 import org.jeecgframework.core.util.oConvertUtils;
@@ -636,7 +636,7 @@ public class DepartController extends BaseController {
 		}*/
 		modelMap.put(NormalExcelConstants.FILE_NAME,"组织机构表");
 		modelMap.put(NormalExcelConstants.CLASS,TSDepart.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("组织机构表列表", "导出人:"+ ResourceUtil.getSessionUser().getRealName(),
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("组织机构表列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 				"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,tsDeparts);
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
@@ -652,7 +652,7 @@ public class DepartController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		modelMap.put(NormalExcelConstants.FILE_NAME,"组织机构表");
 		modelMap.put(NormalExcelConstants.CLASS,TSDepart.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("组织机构表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("组织机构表列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 				"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,new ArrayList());
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
@@ -666,7 +666,7 @@ public class DepartController extends BaseController {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT org_code FROM t_s_depart");
 
-		if(ResourceUtil.getJdbcUrl().indexOf(JdbcDao.DATABSE_TYPE_SQLSERVER)!=-1){
+		if(ResourceUtils.getJdbcUrl().indexOf(JdbcDao.DATABSE_TYPE_SQLSERVER)!=-1){
 			sb.append(" where LEN(org_code) = ").append(localCodeLength);
 		}else{
 			sb.append(" where LENGTH(org_code) = ").append(localCodeLength);

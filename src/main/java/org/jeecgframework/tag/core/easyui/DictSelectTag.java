@@ -11,7 +11,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.web.system.pojo.base.TSType;
 import org.jeecgframework.web.system.pojo.base.TSTypegroup;
 import org.jeecgframework.web.system.service.SystemService;
@@ -144,8 +144,8 @@ public class DictSelectTag extends TagSupport {
 				sb.append("</select>");
 			}
 		} else {
-			TSTypegroup typeGroup = ResourceUtil.getCacheTypeGroup(this.typeGroupCode.toLowerCase());
-			List<TSType> types = ResourceUtil.getCacheTypes(this.typeGroupCode.toLowerCase());
+			TSTypegroup typeGroup = ResourceUtils.getCacheTypeGroup(this.typeGroupCode.toLowerCase());
+			List<TSType> types = ResourceUtils.getCacheTypes(this.typeGroupCode.toLowerCase());
 			if (hasLabel) {
 				sb.append("<div class=\"" + divClass + "\">");
 				sb.append("<label class=\"" + labelClass + "\" >");

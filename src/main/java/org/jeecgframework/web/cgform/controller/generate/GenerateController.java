@@ -31,7 +31,6 @@ import org.jeecgframework.codegenerate.util.CodeStringUtils;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.enums.OnlineGenerateEnum;
-import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.cgform.entity.button.CgformButtonEntity;

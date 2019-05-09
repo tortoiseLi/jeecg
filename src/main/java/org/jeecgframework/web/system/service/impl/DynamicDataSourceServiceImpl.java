@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.jeecgframework.core.common.dao.CommonDao;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.web.system.pojo.base.DynamicDataSourceEntity;
 import org.jeecgframework.web.system.service.CacheServiceI;
 import org.jeecgframework.web.system.service.DynamicDataSourceServiceI;
@@ -37,13 +37,13 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceServiceI {
 			dynamicDataSourceMap.put(dynamicSourceEntity.getDbKey(), dynamicSourceEntity);
 		}
 		//缓存数据
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY,dynamicDataSourceMap);
+		cacheService.put(CacheServiceI.FOREVER_CACHE, ResourceUtils.DYNAMIC_DB_CONFIGS_FOREVER_CACHE_KEY,dynamicDataSourceMap);
 		logger.info("  ------ 初始化动态数据源配置【系统缓存】---------size: [{}] ",dynamicDataSourceMap.size());
 		return dynamicSourceEntityList;
 	}
 
 	public static DynamicDataSourceEntity getDbSourceEntityByKey(String dbKey) {
-		DynamicDataSourceEntity dynamicDataSourceEntity = ResourceUtil.getCacheDynamicDataSourceEntity(dbKey);
+		DynamicDataSourceEntity dynamicDataSourceEntity = ResourceUtils.getCacheDynamicDataSourceEntity(dbKey);
 		return dynamicDataSourceEntity;
 	}
 
@@ -53,7 +53,7 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceServiceI {
 		initDynamicDataSource();
 		
 		//2.清空旧的DB连接池
-		ResourceUtil.cleanCacheBasicDataSource();
+		ResourceUtils.cleanCacheBasicDataSource();
 	}
 
 	@Override

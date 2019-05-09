@@ -21,7 +21,7 @@ import org.jeecgframework.core.extend.hqlsearch.SysContextSqlConvert;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.JSONHelper;
 import org.jeecgframework.core.util.JeecgDataAutorUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.manager.ClientManager;
 import org.jeecgframework.web.system.pojo.base.Client;
@@ -75,7 +75,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 		
 		
 		//通过转换，获取用户的请求URL地址
-		String requestPath = ResourceUtil.getJgAuthRequsetPath(request);
+		String requestPath = ResourceUtils.getJgAuthRequestPath(request);
 
 		requestPath = filterUrl(requestPath);
 

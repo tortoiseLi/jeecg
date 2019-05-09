@@ -3,7 +3,7 @@ package org.jeecgframework.core.common.model.json;
 import java.util.List;
 
 import org.jeecgframework.core.util.ContextHolderUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 
 
 /**
@@ -86,7 +86,7 @@ public class DataGrid {
 	}
 
 	public int getRows() {
-		if(ContextHolderUtils.getRequest()!=null&&ResourceUtil.getParameter("rows")!=null){
+		if(ContextHolderUtils.getRequest()!=null&& ResourceUtils.getParameter("rows")!=null){
 			return rows;
 		}
 		return 10000;

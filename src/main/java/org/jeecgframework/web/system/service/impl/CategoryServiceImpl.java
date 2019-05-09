@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.jeecgframework.core.common.dao.jdbc.JdbcDao;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.YouBianCodeUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.pojo.base.TSCategoryEntity;
@@ -44,7 +44,7 @@ public class CategoryServiceImpl extends CommonServiceImpl implements
 		int localCodeLength = parentCode.length() + YouBianCodeUtil.zhanweiLength;
 		StringBuilder sb = new StringBuilder();
 
-		if(ResourceUtil.getJdbcUrl().indexOf(JdbcDao.DATABSE_TYPE_SQLSERVER)!=-1){
+		if(ResourceUtils.getJdbcUrl().indexOf(JdbcDao.DATABSE_TYPE_SQLSERVER)!=-1){
 			sb.append("SELECT code FROM t_s_category");
 			sb.append(" where LEN(code) = ").append(localCodeLength);
 		}else{

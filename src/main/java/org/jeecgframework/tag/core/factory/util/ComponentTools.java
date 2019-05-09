@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.jeecgframework.core.util.ApplicationContextUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.DataGridTag;
 import org.jeecgframework.tag.core.easyui.TagUtil;
@@ -269,7 +269,7 @@ public class ComponentTools {
 	}
 	
 	public List<TSType> getDictData(DataGridColumn col){
-		List<TSType> types = ResourceUtil.getCacheTypes(col.getDictionary().toLowerCase());
+		List<TSType> types = ResourceUtils.getCacheTypes(col.getDictionary().toLowerCase());
 		return types;
 	}
 	

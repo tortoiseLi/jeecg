@@ -22,7 +22,7 @@ import org.jeecgframework.core.online.util.CgReportQueryParamUtil;
 import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.DynamicDBUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.SqlUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.SysThemesUtil;
@@ -196,7 +196,7 @@ public class CgReportController extends BaseController {
     				sb.append(value);
 
     			}else{
-    				value = ResourceUtil.getUserSystemData(param);
+    				value = ResourceUtils.getUserSystemData(param);
     				sb.append(value);
     			}
 

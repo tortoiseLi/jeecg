@@ -18,7 +18,6 @@ import javax.validation.Validator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.formula.functions.T;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.exception.BusinessException;
@@ -28,8 +27,7 @@ import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ReflectHelper;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
@@ -59,7 +57,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jeecg.demo.entity.JformOrderCustomerEntity;
 import com.jeecg.demo.entity.JformOrderMainEntity;
 import com.jeecg.demo.entity.JformOrderTicketEntity;
@@ -435,7 +432,7 @@ public class JformOrderMainController extends BaseController {
 	public String exportXlsByT(ModelMap map) {
 		map.put(NormalExcelConstants.FILE_NAME,"订单主信息");
 		map.put(NormalExcelConstants.CLASS,JformOrderMainPage.class);
-		map.put(NormalExcelConstants.PARAMS,new ExportParams("订单主信息列表", "导出人:"+ ResourceUtil.getSessionUser().getRealName(),
+		map.put(NormalExcelConstants.PARAMS,new ExportParams("订单主信息列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 		"导出信息"));
 		map.put(NormalExcelConstants.DATA_LIST,new ArrayList());
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;

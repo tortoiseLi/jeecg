@@ -14,7 +14,7 @@ import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -255,7 +255,7 @@ public class TSDictTableConfigController extends BaseController {
 		List<TSDictTableConfigEntity> tSDictTableConfigs = this.tSDictTableConfigService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"字典表授权配置");
 		modelMap.put(NormalExcelConstants.CLASS,TSDictTableConfigEntity.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("字典表授权配置列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("字典表授权配置列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 			"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,tSDictTableConfigs);
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
@@ -271,7 +271,7 @@ public class TSDictTableConfigController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
     	modelMap.put(NormalExcelConstants.FILE_NAME,"字典表授权配置");
     	modelMap.put(NormalExcelConstants.CLASS,TSDictTableConfigEntity.class);
-    	modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("字典表授权配置列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+    	modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("字典表授权配置列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
     	"导出信息"));
     	modelMap.put(NormalExcelConstants.DATA_LIST,new ArrayList());
     	return NormalExcelConstants.JEECG_EXCEL_VIEW;

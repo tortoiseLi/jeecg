@@ -20,7 +20,7 @@ import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
@@ -258,7 +258,7 @@ public class CgFormHeadController extends BaseController {
 			j.setMsg(message);
 			return j;
 		}
-		TSUser currentUser = ResourceUtil.getSessionUser();
+		TSUser currentUser = ResourceUtils.getSessionUser();
         if(CgAutoListConstant.SYS_DEV_FLAG_0.equals(currentUser.getDevFlag())){
             message = "同步失败，当前用户未授权开发权限！";
             logger.info(message+" ----- 请求IP ---+"+IpUtil.getIpAddr(request));
@@ -631,7 +631,7 @@ public class CgFormHeadController extends BaseController {
 			req.setAttribute("cgFormHeadPage", cgFormHead);
 		}
 
-		List<TSType> typeList = ResourceUtil.getCacheTypes(MutiLangUtil.getLang("bdfl"));
+		List<TSType> typeList = ResourceUtils.getCacheTypes(MutiLangUtil.getLang("bdfl"));
 		req.setAttribute("typeList", typeList);
 
 		return new ModelAndView("jeecg/cgform/config/cgFormHead");

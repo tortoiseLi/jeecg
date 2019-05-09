@@ -7,7 +7,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ApplicationContextUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.pojo.base.TSOperation;
 import org.jeecgframework.web.system.service.SystemService;
@@ -37,7 +37,7 @@ public class HasPermissionTag extends TagSupport{
 	}
 	
 	public boolean showTagBody(String code) {
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtils.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
 			return false;
 		}else{
 			//权限判断；

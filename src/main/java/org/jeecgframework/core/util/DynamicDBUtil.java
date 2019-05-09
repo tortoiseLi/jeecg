@@ -55,15 +55,15 @@ public class DynamicDBUtil {
 	 */
 	public static BasicDataSource getDbSourceBydbKey(final String dbKey) {
 		//获取多数据源配置
-		DynamicDataSourceEntity dynamicSourceEntity = ResourceUtil.getCacheDynamicDataSourceEntity(dbKey);
+		DynamicDataSourceEntity dynamicSourceEntity = ResourceUtils.getCacheDynamicDataSourceEntity(dbKey);
 		//先判断缓存中是否存在数据库链接
-		BasicDataSource cacheDbSource = ResourceUtil.getCacheBasicDataSource(dbKey);
+		BasicDataSource cacheDbSource = ResourceUtils.getCacheBasicDataSource(dbKey);
 		if(cacheDbSource!=null && !cacheDbSource.isClosed()){
 			logger.debug("--------getDbSourceBydbKey------------------从缓存中获取DB连接-------------------");
 			return cacheDbSource;
 		}else{
 			BasicDataSource dataSource = getJdbcDataSource(dynamicSourceEntity);
-			ResourceUtil.putCacheBasicDataSource(dbKey, dataSource);
+			ResourceUtils.putCacheBasicDataSource(dbKey, dataSource);
 			logger.info("--------getDbSourceBydbKey------------------创建DB数据库连接-------------------");
 			return dataSource;
 		}

@@ -27,7 +27,7 @@ import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.SysThemesUtil;
 import org.jeecgframework.core.util.oConvertUtils;
@@ -600,7 +600,7 @@ public class DataGridTag extends TagSupport {
 			}else{
 				String text = "";
 				String value = "";
-				List<TSType> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
+				List<TSType> typeList = ResourceUtils.getCacheTypes(dictionary.toLowerCase());
 				if (typeList != null && !typeList.isEmpty()) {
 					for (TSType type : typeList) {
 						text += MutiLangUtil.doMutiLang(type.getTypename(), "") + ",";
@@ -934,7 +934,7 @@ public class DataGridTag extends TagSupport {
 								}
 							}else{
 								//字典表数据
-								List<TSType> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
+								List<TSType> typeList = ResourceUtils.getCacheTypes(dictionary.toLowerCase());
 								if(typeList != null && !typeList.isEmpty()){
 									String field = column.getField().replaceAll("_","\\.");
 									sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_radio\"/>");
@@ -971,7 +971,7 @@ public class DataGridTag extends TagSupport {
 								}
 							}else{
 								//字典表数据
-								List<TSType> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
+								List<TSType> typeList = ResourceUtils.getCacheTypes(dictionary.toLowerCase());
 								if(typeList != null && !typeList.isEmpty()){
 									String field = column.getField().replaceAll("_","\\.");
 									sb.append("<input type=\"hidden\" name=\""+field+"\" id=\""+field+"_checkbox\" value=\"\" />");									
@@ -1011,7 +1011,7 @@ public class DataGridTag extends TagSupport {
 								}
 							}else{
 								//字典表数据
-								List<TSType> typeList = ResourceUtil.getCacheTypes(dictionary.toLowerCase());
+								List<TSType> typeList = ResourceUtils.getCacheTypes(dictionary.toLowerCase());
 								if(typeList != null && !typeList.isEmpty()){
 									for (TSType type : typeList) {
 										sb.append("<option value=\"");
@@ -2308,7 +2308,7 @@ public class DataGridTag extends TagSupport {
 								}
 								
 							}else{
-								List<TSType> types = ResourceUtil.getCacheTypes(col.getDictionary().toLowerCase());
+								List<TSType> types = ResourceUtils.getCacheTypes(col.getDictionary().toLowerCase());
 								
 								String showMode = col.getShowMode();
 								if (null != showMode && "radio".equals(showMode)) {
@@ -3013,7 +3013,7 @@ public class DataGridTag extends TagSupport {
 							}
 
 						}else{
-							List<TSType> types = ResourceUtil.getCacheTypes(column.getDictionary().toLowerCase());
+							List<TSType> types = ResourceUtils.getCacheTypes(column.getDictionary().toLowerCase());
 							if (types != null) {
 								comboboxStr.append("editor:{type:'combobox',options:{valueField:'typecode',textField:'typename',data:[");
 								for (TSType type : types) {
@@ -3269,7 +3269,7 @@ public class DataGridTag extends TagSupport {
   
 	public String getNoAuthOperButton(){
 		StringBuffer sb = new StringBuffer();
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtils.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
 		}else{
 			Set<String> operationCodes = (Set<String>) super.pageContext.getRequest().getAttribute(Globals.OPERATIONCODES);
 			if (null!=operationCodes) {
@@ -3305,7 +3305,7 @@ public class DataGridTag extends TagSupport {
 	 * @version 1.0
 	 */
 	private void installOperationCode(DataGridUrl dataGridUrl,String operationCode,List optList){
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtils.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
 			optList.add(dataGridUrl);
 		}else if(!oConvertUtils.isEmpty(operationCode)){
 			Set<String> operationCodes = (Set<String>) super.pageContext.getRequest().getAttribute(Globals.OPERATIONCODES);
@@ -3668,7 +3668,7 @@ public class DataGridTag extends TagSupport {
 									}
 									sb.append("</select>");
 								}else{
-									List<TSType> types = ResourceUtil.getCacheTypes(col.getDictionary().toLowerCase());
+									List<TSType> types = ResourceUtils.getCacheTypes(col.getDictionary().toLowerCase());
 									sb.append("<select name=\""+col.getField().replaceAll("_","\\.")+"\" WIDTH=\"100\" style=\"width: 104px\"> ");
 									sb.append(StringUtil.replaceAll("<option value =\"\" >{0}</option>", "{0}", MutiLangUtil.getLang("common.please.select")));
 									for (TSType type : types) {
@@ -4026,7 +4026,7 @@ appendLine(sb,"					}}\">关系</th>");
 		appendLine(sb,"<th data-options=\"field:'condition',width:20,align:'right',formatter:function(value,row){");
 		appendLine(sb,"							var data=  ");
 		appendLine(sb,"					[  ");
-		List<TSType> types = ResourceUtil.getCacheTypes("rulecon");
+		List<TSType> types = ResourceUtils.getCacheTypes("rulecon");
 		if (types != null) {
 			for (int i=0;i<types.size();i++){
 				TSType type = types.get(i);

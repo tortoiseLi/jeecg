@@ -29,7 +29,7 @@ import org.jeecgframework.core.extend.hqlsearch.parse.vo.HqlRuleEnum;
 import org.jeecgframework.core.util.JSONHelper;
 import org.jeecgframework.core.util.JeecgDataAutorUtils;
 import org.jeecgframework.core.util.LogUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.pojo.base.TSDataRule;
@@ -283,7 +283,7 @@ public class HqlGenerateUtil {
 		try {
 			Set<String> varParams = getSqlRuleParams(sqlRule);
 			for(String var:varParams){
-				String tempValue = ResourceUtil.converRuleValue(var);
+				String tempValue = ResourceUtils.converRuleValue(var);
 				sqlRule = sqlRule.replace("#{"+var+"}",tempValue);
 			}
 		} catch (Exception e) {
@@ -352,7 +352,7 @@ public class HqlGenerateUtil {
 	private static String converRuleValue(String ruleValue) {
 
 		//这个方法建议去掉，直接调用ResourceUtil.converRuleValue(ruleValue)
-		String value = ResourceUtil.converRuleValue(ruleValue);
+		String value = ResourceUtils.converRuleValue(ruleValue);
 		return value!= null ? value : ruleValue;
 	}
 

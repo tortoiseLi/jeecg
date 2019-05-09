@@ -28,16 +28,14 @@ import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.ReflectHelper;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.SqlInjectionUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Controller;
@@ -106,7 +104,7 @@ public class CgformSqlController extends BaseController {
 			//update by duanqilu 2013-12-05 增加多表单导出功能
 			//MigrateForm.createFile(request,cgFormHeadEntity.getTableName())
 			String ls_filename = cgFormHeadEntity.getTableName();// 创建文件
-			String destFileDir = ResourceUtil.getSystempPath()+File.separator+ls_filename;
+			String destFileDir = ResourceUtils.getSysTempPath()+File.separator+ls_filename;
 			MigrateForm.generateXmlDataOutFlieContent(dbTables, destFileDir);
 			ls_filename = MigrateForm.zip(null, "", destFileDir); // 压缩文件
 			// 文件下载
@@ -170,7 +168,7 @@ public class CgformSqlController extends BaseController {
 		uploadFile.setSwfpath("");
 		String uploadbasepath = uploadFile.getBasePath();// 文件上传根目录
 		if (uploadbasepath == null) {
-			uploadbasepath = ResourceUtil.getConfigByName("uploadpath");
+			uploadbasepath = ResourceUtils.getConfigByName("uploadpath");
 		}
 		String path = uploadbasepath + File.separator;// 文件保存在硬盘的相对路径
 		String realPath = uploadFile.getMultipartRequest().getSession()

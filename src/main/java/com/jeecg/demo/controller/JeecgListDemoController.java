@@ -44,7 +44,7 @@ import org.jeecgframework.core.util.DateUtils;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.JeecgDataAutorUtils;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.jwt.util.GsonUtil;
@@ -57,7 +57,6 @@ import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.datatable.SortDirection;
-import org.jeecgframework.web.system.controller.core.LoginController;
 import org.jeecgframework.web.system.enums.InterfaceEnum;
 import org.jeecgframework.web.system.pojo.base.InterfaceRuleDto;
 import org.jeecgframework.web.system.pojo.base.TSDepart;
@@ -917,7 +916,7 @@ public class JeecgListDemoController extends BaseController {
 		List<JeecgDemoEntity> jeecgDemos = this.jeecgDemoService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"jeecg_demo");
 		modelMap.put(NormalExcelConstants.CLASS,JeecgDemoEntity.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("jeecg_demo列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),"导出信息"));
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("jeecg_demo列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,jeecgDemos);
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
 	}
@@ -932,7 +931,7 @@ public class JeecgListDemoController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
     	modelMap.put(NormalExcelConstants.FILE_NAME,"jeecg_demo");
     	modelMap.put(NormalExcelConstants.CLASS,JeecgDemoEntity.class);
-    	modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("jeecg_demo列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+    	modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("jeecg_demo列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
     	"导出信息"));
     	modelMap.put(NormalExcelConstants.DATA_LIST,new ArrayList());
     	return NormalExcelConstants.JEECG_EXCEL_VIEW;

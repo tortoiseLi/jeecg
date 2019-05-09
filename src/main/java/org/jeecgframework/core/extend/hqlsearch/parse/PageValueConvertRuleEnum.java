@@ -1,11 +1,7 @@
 package org.jeecgframework.core.extend.hqlsearch.parse;
 
-import java.util.Arrays;
-
 import org.jeecgframework.core.extend.hqlsearch.parse.vo.HqlParseEnum;
 import org.jeecgframework.core.extend.hqlsearch.parse.vo.HqlRuleEnum;
-import org.jeecgframework.core.util.PropertiesUtil;
-import org.jeecgframework.core.util.ResourceUtil;
 
 /**
  * 界面可视化数组转化为枚举

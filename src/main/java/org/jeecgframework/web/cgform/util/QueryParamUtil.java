@@ -3,13 +3,11 @@ package org.jeecgframework.web.cgform.util;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jeecgframework.core.util.DBTypeUtil;
-import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.web.cgform.common.CgAutoListConstant;
 import org.jeecgframework.web.cgform.entity.config.CgFormFieldEntity;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;

@@ -9,7 +9,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.jeecgframework.core.online.util.FreemarkerHelper;
 import org.jeecgframework.core.util.FileUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.oConvertUtils;
 
 public class WebUploaderPlTag extends TagSupport {
@@ -29,7 +29,7 @@ public class WebUploaderPlTag extends TagSupport {
 	private int size;//文件总大小【 废弃】
 	private boolean duplicate=false;//去重， 根据文件名字、文件大小和最后修改时间来生成hash Key.【 废弃】
 	private String showImgDiv;//显示图片的div,如果不给会默认在按钮下方添加div其id为'tempdiv_'+name【 废弃】
-	private String showAndDownUrl=ResourceUtil.getConfigByName("showAndDownUrl");//预览图片请求的url&文件下载url
+	private String showAndDownUrl= ResourceUtils.getConfigByName("showAndDownUrl");//预览图片请求的url&文件下载url
 	private String pathValues;//默认值
 	private String type="file";
 	private String buttonText = "选择文件";//控件按钮显示文本

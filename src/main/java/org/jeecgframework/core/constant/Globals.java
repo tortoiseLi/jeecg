@@ -1,6 +1,6 @@
 package org.jeecgframework.core.constant;
 
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 
 
 /**  
@@ -130,7 +130,7 @@ public final class Globals {
 	  */
 	 public static boolean BUTTON_AUTHORITY_CHECK = false;
 	 static{
-		 String button_authority_jeecg = ResourceUtil.getSessionattachmenttitle("button.authority.jeecg");
+		 String button_authority_jeecg = ResourceUtils.getSessionAttachmentTitle("button.authority.jeecg");
 		 if("true".equals(button_authority_jeecg)){
 			 BUTTON_AUTHORITY_CHECK = true;
 		 }

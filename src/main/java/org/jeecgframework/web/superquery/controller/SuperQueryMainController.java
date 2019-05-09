@@ -27,7 +27,7 @@ import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.jwt.util.ResponseMessage;
@@ -409,7 +409,7 @@ public class SuperQueryMainController extends BaseController {
 	public String exportXlsByT(ModelMap map) {
 		map.put(NormalExcelConstants.FILE_NAME,"高级查询");
 		map.put(NormalExcelConstants.CLASS,SuperQueryMainPage.class);
-		map.put(NormalExcelConstants.PARAMS,new ExportParams("高级查询列表", "导出人:"+ ResourceUtil.getSessionUser().getRealName(),
+		map.put(NormalExcelConstants.PARAMS,new ExportParams("高级查询列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 		"导出信息"));
 		map.put(NormalExcelConstants.DATA_LIST,new ArrayList());
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
@@ -677,7 +677,7 @@ public class SuperQueryMainController extends BaseController {
 		try {
 			if(StringUtil.isNotEmpty(param)){
 				String name = param.get("name").toString();
-				String userId = ResourceUtil.getSessionUser().getId();
+				String userId = ResourceUtils.getSessionUser().getId();
 				String [] obj=new String[]{name,userId,queryCode};
 				List<SuperQueryHistoryEntity> list = systemService.findListByHql("from SuperQueryHistoryEntity where historyName=? and userId=? and queryCode = ?", obj);
 				if(list != null && list.size() > 0 ){
@@ -712,7 +712,7 @@ public class SuperQueryMainController extends BaseController {
 		String queryCode = request.getParameter("queryCode");
 		try {
 			List<String>list=new ArrayList<String>();
-			String userId = ResourceUtil.getSessionUser().getId();
+			String userId = ResourceUtils.getSessionUser().getId();
 			String hql="from SuperQueryHistoryEntity where user_id=? and queryCode=?";
 			String[] param=new String[]{userId,queryCode};
 			List<SuperQueryHistoryEntity> findHql = systemService.findListByHql(hql, param);
@@ -741,7 +741,7 @@ public class SuperQueryMainController extends BaseController {
 		 String record="";
 		try {
 			String name = request.getParameter("name");
-			String userId = ResourceUtil.getSessionUser().getId();
+			String userId = ResourceUtils.getSessionUser().getId();
 			String[] arr=new String[]{name,userId};
 			String hql=" from SuperQueryHistoryEntity where history_name=? and user_id=?";
 			List<SuperQueryHistoryEntity> findHql = systemService.findListByHql(hql, arr);
@@ -769,7 +769,7 @@ public class SuperQueryMainController extends BaseController {
 		try {
 			if(StringUtil.isNotEmpty(request.getParameter("name"))){
 				String name = request.getParameter("name");//修改后的名称
-				String userId=ResourceUtil.getSessionUser().getId();
+				String userId= ResourceUtils.getSessionUser().getId();
 				String [] par=new String []{name,userId};
 				String hql="from SuperQueryHistoryEntity where history_name=? and userId=?";
 				List<SuperQueryHistoryEntity> historyList = systemService.findListByHql(hql, par);
@@ -806,7 +806,7 @@ public class SuperQueryMainController extends BaseController {
 		try {
 			if(StringUtil.isNotEmpty(request.getParameter("name"))){
 				String name = request.getParameter("name");
-				String userId=ResourceUtil.getSessionUser().getId();
+				String userId= ResourceUtils.getSessionUser().getId();
 
 				String sql = "delete from  super_query_history where  history_name = ? and user_id = ?";
 				int deletebyName = systemService.executeSql(sql,name,userId);

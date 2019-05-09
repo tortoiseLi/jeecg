@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 
 import org.apache.poi.ss.formula.functions.T;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -239,18 +239,18 @@ public class JdbcDao extends SimpleJdbcTemplate{
 		sqlParam[0] = sql;
 		sqlParam[1] = beginNum+"";
 		sqlParam[2] = rows+"";
-		if(ResourceUtil.getJdbcUrl().indexOf(DATABSE_TYPE_MYSQL)!=-1){
+		if(ResourceUtils.getJdbcUrl().indexOf(DATABSE_TYPE_MYSQL)!=-1){
 			sql = MessageFormat.format(MYSQL_SQL, sqlParam);
-		}else if(ResourceUtil.getJdbcUrl().indexOf(DATABSE_TYPE_POSTGRE)!=-1){
+		}else if(ResourceUtils.getJdbcUrl().indexOf(DATABSE_TYPE_POSTGRE)!=-1){
 			sql = MessageFormat.format(POSTGRE_SQL, sqlParam);
 		}else {
 			int beginIndex = (page-1)*rows;
 			int endIndex = beginIndex+rows;
 			sqlParam[2] = Integer.toString(beginIndex);
 			sqlParam[1] = Integer.toString(endIndex);
-			if(ResourceUtil.getJdbcUrl().indexOf(DATABSE_TYPE_ORACLE)!=-1) {
+			if(ResourceUtils.getJdbcUrl().indexOf(DATABSE_TYPE_ORACLE)!=-1) {
 				sql = MessageFormat.format(ORACLE_SQL, sqlParam);
-			} else if(ResourceUtil.getJdbcUrl().indexOf(DATABSE_TYPE_SQLSERVER)!=-1) {
+			} else if(ResourceUtils.getJdbcUrl().indexOf(DATABSE_TYPE_SQLSERVER)!=-1) {
 				sqlParam[0] = sql.substring(getAfterSelectInsertPoint(sql));
 				sql = MessageFormat.format(SQLSERVER_SQL, sqlParam);
 			}

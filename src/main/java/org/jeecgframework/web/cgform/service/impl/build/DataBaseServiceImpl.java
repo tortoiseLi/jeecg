@@ -16,7 +16,7 @@ import org.jeecgframework.core.util.ApplicationContextUtil;
 import org.jeecgframework.core.util.DBTypeUtil;
 import org.jeecgframework.core.util.DateUtils;
 import org.jeecgframework.core.util.MyClassLoader;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.SqlInjectionUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.UUIDGenerator;
@@ -601,7 +601,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 	 */
 	private void fillUpdateSysVar(String tableName,Map<String, Object> data) {
 
-		if (ResourceUtil.getSessionUser()==null){
+		if (ResourceUtils.getSessionUser()==null){
 			return;
 		}
 
@@ -617,11 +617,11 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 		}
 		if(data.containsKey(DataBaseConstant.UPDATE_BY_TABLE)
 				||getAllFieldByTableName(tableName).containsKey(DataBaseConstant.CREATE_DATE_TABLE)){
-			data.put(DataBaseConstant.UPDATE_BY_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_CODE));
+			data.put(DataBaseConstant.UPDATE_BY_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_CODE));
 		}
 		if(data.containsKey(DataBaseConstant.UPDATE_NAME_TABLE)
 				||getAllFieldByTableName(tableName).containsKey(DataBaseConstant.CREATE_DATE_TABLE)){
-			data.put(DataBaseConstant.UPDATE_NAME_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_NAME));
+			data.put(DataBaseConstant.UPDATE_NAME_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_NAME));
 		}
 	}
 
@@ -631,7 +631,7 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 	 */
 	private void fillInsertSysVar(String tableName,Map<String, Object> data) {
 
-		if (ResourceUtil.getSessionUser()==null){
+		if (ResourceUtils.getSessionUser()==null){
 			return;
 		}
 
@@ -647,27 +647,27 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 		}
 		if(data.containsKey(DataBaseConstant.CREATE_BY_TABLE)
 				||getAllFieldByTableName(tableName).containsKey(DataBaseConstant.CREATE_BY_TABLE)){
-			data.put(DataBaseConstant.CREATE_BY_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_CODE));
+			data.put(DataBaseConstant.CREATE_BY_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_CODE));
 		}
 		if(data.containsKey(DataBaseConstant.CREATE_NAME_TABLE)
 				||getAllFieldByTableName(tableName).containsKey(DataBaseConstant.CREATE_NAME_TABLE)){
-			data.put(DataBaseConstant.CREATE_NAME_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_NAME));
+			data.put(DataBaseConstant.CREATE_NAME_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_NAME));
 		}
 		if(data.containsKey(DataBaseConstant.SYS_COMPANY_CODE_TABLE)
 				||getAllFieldByTableName(tableName).containsKey(DataBaseConstant.SYS_COMPANY_CODE_TABLE)){
-			data.put(DataBaseConstant.SYS_COMPANY_CODE_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.SYS_COMPANY_CODE));
+			data.put(DataBaseConstant.SYS_COMPANY_CODE_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.SYS_COMPANY_CODE));
 		}
 		if(data.containsKey(DataBaseConstant.SYS_ORG_CODE_TABLE)
 				||getAllFieldByTableName(tableName).containsKey(DataBaseConstant.SYS_ORG_CODE_TABLE)){
-			data.put(DataBaseConstant.SYS_ORG_CODE_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.SYS_ORG_CODE));
+			data.put(DataBaseConstant.SYS_ORG_CODE_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.SYS_ORG_CODE));
 		}
 		if(data.containsKey(DataBaseConstant.SYS_USER_CODE_TABLE)
 				||getAllFieldByTableName(tableName).containsKey(DataBaseConstant.SYS_USER_CODE_TABLE)){
-			data.put(DataBaseConstant.SYS_USER_CODE_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_CODE));
+			data.put(DataBaseConstant.SYS_USER_CODE_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_CODE));
 		}
 		if(data.containsKey(DataBaseConstant.BPM_STATUS_TABLE)
 				||getAllFieldByTableName(tableName).containsKey(DataBaseConstant.BPM_STATUS_TABLE)){
-			data.put(DataBaseConstant.BPM_STATUS_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.BPM_STATUS_TABLE));
+			data.put(DataBaseConstant.BPM_STATUS_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.BPM_STATUS_TABLE));
 		}
 	}
 	
@@ -678,10 +678,10 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 	 * @return
 	 */
 	private Map<String, Object> minidaoReplaceExtendSqlSysVar(Map<String, Object> data){
-		data.put("sys."+DataBaseConstant.SYS_USER_CODE_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_CODE));
-		data.put("sys."+DataBaseConstant.SYS_USER_NAME_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_NAME));
-		data.put("sys."+DataBaseConstant.SYS_ORG_CODE_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.SYS_ORG_CODE));
-		data.put("sys."+DataBaseConstant.SYS_COMPANY_CODE_TABLE, ResourceUtil.getUserSystemData(DataBaseConstant.SYS_COMPANY_CODE));
+		data.put("sys."+DataBaseConstant.SYS_USER_CODE_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_CODE));
+		data.put("sys."+DataBaseConstant.SYS_USER_NAME_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_NAME));
+		data.put("sys."+DataBaseConstant.SYS_ORG_CODE_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.SYS_ORG_CODE));
+		data.put("sys."+DataBaseConstant.SYS_COMPANY_CODE_TABLE, ResourceUtils.getUserSystemData(DataBaseConstant.SYS_COMPANY_CODE));
 		data.put("sys."+DataBaseConstant.SYS_DATE_TABLE, DateUtils.formatDate());
 		data.put("sys."+DataBaseConstant.SYS_TIME_TABLE, DateUtils.formatTime());
 		return data;
@@ -694,10 +694,10 @@ public class DataBaseServiceImpl extends CommonServiceImpl implements DataBaseSe
 	 * @return
 	 */
 	private String replaceExtendSqlSysVar(String sql){
-		sql = sql.replace("#{sys."+DataBaseConstant.SYS_USER_CODE_TABLE+"}", ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_CODE))
-				.replace("#{sys."+DataBaseConstant.SYS_USER_NAME_TABLE+"}", ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_NAME))
-				.replace("#{sys."+DataBaseConstant.SYS_ORG_CODE_TABLE+"}", ResourceUtil.getUserSystemData(DataBaseConstant.SYS_ORG_CODE))
-				.replace("#{sys."+DataBaseConstant.SYS_COMPANY_CODE_TABLE+"}", ResourceUtil.getUserSystemData(DataBaseConstant.SYS_COMPANY_CODE))
+		sql = sql.replace("#{sys."+DataBaseConstant.SYS_USER_CODE_TABLE+"}", ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_CODE))
+				.replace("#{sys."+DataBaseConstant.SYS_USER_NAME_TABLE+"}", ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_NAME))
+				.replace("#{sys."+DataBaseConstant.SYS_ORG_CODE_TABLE+"}", ResourceUtils.getUserSystemData(DataBaseConstant.SYS_ORG_CODE))
+				.replace("#{sys."+DataBaseConstant.SYS_COMPANY_CODE_TABLE+"}", ResourceUtils.getUserSystemData(DataBaseConstant.SYS_COMPANY_CODE))
 				.replace("#{sys."+DataBaseConstant.SYS_DATE_TABLE+"}",  DateUtils.formatDate())
 				.replace("#{sys."+DataBaseConstant.SYS_TIME_TABLE+"}",  DateUtils.formatTime());
 		return sql;

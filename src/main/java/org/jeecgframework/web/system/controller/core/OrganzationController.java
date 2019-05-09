@@ -25,7 +25,7 @@ import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
@@ -681,7 +681,7 @@ public class OrganzationController extends BaseController {
 //        CriteriaQuery subCq = new CriteriaQuery(TSUserOrg.class);
 //        subCq.setProjection(Property.forName("tsUser.id"));
 //        subCq.notEq("tsDepart.id", orgId);
-        TSDepart tsDepart = ResourceUtil.getSessionUser().getCurrentDepart();
+        TSDepart tsDepart = ResourceUtils.getSessionUser().getCurrentDepart();
 //        subCq.like("tsDepart.orgCode", tsDepart.getOrgCode()+"%");
 //        subCq.add();
 
@@ -837,7 +837,7 @@ public class OrganzationController extends BaseController {
 		}*/
 		modelMap.put(NormalExcelConstants.FILE_NAME,"组织机构表");
 		modelMap.put(NormalExcelConstants.CLASS,TSDepart.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("组织机构表列表", "导出人:"+ ResourceUtil.getSessionUser().getRealName(),
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("组织机构表列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 				"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,tsDeparts);
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
@@ -853,7 +853,7 @@ public class OrganzationController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		modelMap.put(NormalExcelConstants.FILE_NAME,"组织机构表");
 		modelMap.put(NormalExcelConstants.CLASS,TSDepart.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("组织机构表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("组织机构表列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 				"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,new ArrayList());
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
@@ -1034,7 +1034,7 @@ public class OrganzationController extends BaseController {
 		} else {
 //			hql.append(" and t.orgType = ?");
 //			tSDeparts = this.systemService.findHql(hql.toString(), "1");
-			TSDepart dePart = ResourceUtil.getSessionUser().getCurrentDepart();
+			TSDepart dePart = ResourceUtils.getSessionUser().getCurrentDepart();
 			tSDeparts.add(dePart);
 //			hql.append(" and TSPDepart = ?");
 //			tSDeparts = this.systemService.findHql(hql.toString(), dePart);
@@ -1135,7 +1135,7 @@ public class OrganzationController extends BaseController {
 				populateTree(departList,dataList);
 			}else{
 
-				String userName = ResourceUtil.getSessionUser().getUserName();
+				String userName = ResourceUtils.getSessionUser().getUserName();
 				StringBuffer hql = new StringBuffer(" from TSDepart t where 1=1 ");
 				//当其他用户登陆的时候查询用户关联的管理员组的组织机构
 
@@ -1163,7 +1163,7 @@ public class OrganzationController extends BaseController {
 		List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
 		try{
 			String id = request.getParameter("id");
-			String userName = ResourceUtil.getSessionUser().getUserName();
+			String userName = ResourceUtils.getSessionUser().getUserName();
 			if("admin".equals(userName)) {
 				if(oConvertUtils.isEmpty(id)){
 					//加载根节点

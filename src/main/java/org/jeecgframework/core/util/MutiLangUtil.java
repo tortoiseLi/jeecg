@@ -3,9 +3,8 @@ package org.jeecgframework.core.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jeecgframework.core.common.model.json.ComboTree;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
@@ -111,7 +110,7 @@ public class MutiLangUtil {
 	 * @return 如果存在则返回true，否则false
 	 */
 	public static boolean existLangKey(String lang_key){
-		String langContext = ResourceUtil.getMutiLan(lang_key + "_" + "zh-cn");
+		String langContext = ResourceUtils.getMultiLan(lang_key + "_" + "zh-cn");
 		if(oConvertUtils.isNotEmpty(langContext))
 		{
 			return true;
@@ -127,7 +126,7 @@ public class MutiLangUtil {
 	 * @return 如果存在则返回true，否则false
 	 */
 	public static boolean existLangKey(String lang_key,String langCode){	
-		String langContext = ResourceUtil.getMutiLan(lang_key + "_" + langCode);
+		String langContext = ResourceUtils.getMultiLan(lang_key + "_" + langCode);
 		if(oConvertUtils.isNotEmpty(langContext))
 		{
 			return true;
@@ -184,9 +183,9 @@ public class MutiLangUtil {
 			language = (String)request.getSession().getAttribute("lang");
 		}
 		
-		String langContext = ResourceUtil.getMutiLan(langKey + "_" + language);
+		String langContext = ResourceUtils.getMultiLan(langKey + "_" + language);
 		if(StringUtil.isEmpty(langContext)){
-			langContext = ResourceUtil.getMutiLan("common.notfind.langkey" + "_" + language);
+			langContext = ResourceUtils.getMultiLan("common.notfind.langkey" + "_" + language);
 			if("null".equals(langContext)||langContext==null ||langKey.startsWith("?")){
 				langContext = "";
 			}

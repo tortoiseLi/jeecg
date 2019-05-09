@@ -3,7 +3,7 @@
  */
 package org.jeecgframework.web.system.servlet;
 
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -118,8 +118,8 @@ public class RandCodeImageServlet extends HttpServlet {
 	 * @return 随机码
 	 */
 	private String exctractRandCode() {
-		final String randCodeType = ResourceUtil.getRandCodeType();
-        int randCodeLength = Integer.parseInt(ResourceUtil.getRandCodeLength());
+		final String randCodeType = ResourceUtils.getRandCodeType();
+        int randCodeLength = Integer.parseInt(ResourceUtils.getRandCodeLength());
         if (randCodeType == null) {
 			return RandCodeImageEnum.NUMBER_CHAR.generateStr(randCodeLength);
 		} else {

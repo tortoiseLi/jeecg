@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.web.system.pojo.base.TSType;
 import org.jeecgframework.web.system.service.SystemService;
 import org.slf4j.Logger;
@@ -57,7 +57,7 @@ public class DictDataTag implements TemplateDirectiveModel {
 
 		if (tablename == null || tablename.trim().length() <= 0) {
 			// 根据dict_field查询字典表list
-			List<TSType> dataList = ResourceUtil.getCacheTypes(name.toLowerCase());
+			List<TSType> dataList = ResourceUtils.getCacheTypes(name.toLowerCase());
 			if (dataList == null) {
 				dataList = new ArrayList<TSType>();
 			}

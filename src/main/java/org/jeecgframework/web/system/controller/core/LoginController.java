@@ -29,7 +29,7 @@ import org.jeecgframework.core.util.ListtoMenu;
 import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.PasswordUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.SysThemesUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.manager.ClientManager;
@@ -217,7 +217,7 @@ public class LoginController extends BaseController{
 	 */
 	@RequestMapping(params = "login")
 	public String login(ModelMap modelMap,HttpServletRequest request,HttpServletResponse response) {
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		String roles = "";
 		if (user != null) {
 			log.info(" >>>>>>>>>>>>>>>>>>>>>>>>>>  Login 用户登录成功，初始化Main首页用户信息  （Main 首页加载逻辑）  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
@@ -303,7 +303,7 @@ public class LoginController extends BaseController{
 	@RequestMapping(params = "logout")
 	public ModelAndView logout(HttpServletRequest request) {
 		HttpSession session = ContextHolderUtils.getSession();
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		try {
 			systemService.addLog("用户" + user!=null?user.getUserName():"" + "已退出",Globals.Log_Type_EXIT, Globals.LOG_LEVEL_INFO);
 		} catch (Exception e) {
@@ -322,7 +322,7 @@ public class LoginController extends BaseController{
 	 */
 	@RequestMapping(params = "left")
 	public ModelAndView left(HttpServletRequest request) {
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		HttpSession session = ContextHolderUtils.getSession();
         ModelAndView modelAndView = new ModelAndView();
 		// 登陆者的权限
@@ -498,7 +498,7 @@ public class LoginController extends BaseController{
 			passwordResetKey.setCreateDate(new Date());
 			passwordResetKey.setIsReset(0);
 			userService.add(passwordResetKey);
-			String content = ResourceUtil.getConfigByName("resetpwd.mail.content");
+			String content = ResourceUtils.getConfigByName("resetpwd.mail.content");
 			if(content.indexOf("${username}") > -1){
 				content = content.replace("${username}", user.getUserName());
 			}
@@ -506,14 +506,14 @@ public class LoginController extends BaseController{
 			
 			//配置邮件模板参数
 			Map<String, Object> mailConfig = new HashMap<String, Object>();
-			mailConfig.put("title", ResourceUtil.getConfigByName("resetpwd.mail.title"));
+			mailConfig.put("title", ResourceUtils.getConfigByName("resetpwd.mail.title"));
 			mailConfig.put("content",content);
 			mailConfig.put("url",url);
 			mailConfig.put("commentUrl","http://www.jeecg.org");
 			
 			String mailContent = new FreemarkerHelper().parseTemplate("export/mail/password_reset.ftl", mailConfig);
 			
-			MailUtil.sendEmail(ResourceUtil.getConfigByName("mail.smtpHost"), email,"邮箱重置密码", mailContent, ResourceUtil.getConfigByName("mail.sender"), ResourceUtil.getConfigByName("mail.user"), ResourceUtil.getConfigByName("mail.pwd"));
+			MailUtil.sendEmail(ResourceUtils.getConfigByName("mail.smtpHost"), email,"邮箱重置密码", mailContent, ResourceUtils.getConfigByName("mail.sender"), ResourceUtils.getConfigByName("mail.user"), ResourceUtils.getConfigByName("mail.pwd"));
 			ajaxJson.setMsg("成功发送密码重置邮件");
 
 			
@@ -612,7 +612,7 @@ public class LoginController extends BaseController{
 	 */
 	@RequestMapping(params = "top")
 	public ModelAndView top(HttpServletRequest request) {
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		HttpSession session = ContextHolderUtils.getSession();
 		// 登陆者的权限
 		if (user.getId() == null) {
@@ -634,7 +634,7 @@ public class LoginController extends BaseController{
 	 */
 	@RequestMapping(params = "shortcut_top")
 	public ModelAndView shortcut_top(HttpServletRequest request) {
-		TSUser user = ResourceUtil.getSessionUser();
+		TSUser user = ResourceUtils.getSessionUser();
 		HttpSession session = ContextHolderUtils.getSession();
 		// 登陆者的权限
 		if (user.getId() == null) {
@@ -654,7 +654,7 @@ public class LoginController extends BaseController{
     @RequestMapping(params = "primaryMenu")
     @ResponseBody
 	public String getPrimaryMenu() {
-		List<TSFunction> primaryMenu = userService.getFunctionMap(ResourceUtil.getSessionUser().getId()).get(0);
+		List<TSFunction> primaryMenu = userService.getFunctionMap(ResourceUtils.getSessionUser().getId()).get(0);
 		//Shortcut一级菜单图标个性化设置（TODO 暂时写死）
         String floor = userService.getShortcutPrimaryMenu(primaryMenu);
 		return floor;
@@ -669,7 +669,7 @@ public class LoginController extends BaseController{
 	@ResponseBody
 	public String getPrimaryMenuDiy() {
 		//取二级菜单
-		List<TSFunction> primaryMenu = userService.getFunctionMap(ResourceUtil.getSessionUser().getId()).get(1);
+		List<TSFunction> primaryMenu = userService.getFunctionMap(ResourceUtils.getSessionUser().getId()).get(1);
 		//Shortcut二级菜单图标个性化设置（TODO 暂时写死）
 		String floor = userService.getShortcutPrimaryMenuDiy(primaryMenu);
 		return floor;
@@ -686,7 +686,7 @@ public class LoginController extends BaseController{
 		if(oConvertUtils.isNotEmpty(getPrimaryMenuForWebos)){
 			j.setMsg(getPrimaryMenuForWebos.toString());
 		}else{
-			String PMenu = ListtoMenu.getWebosMenu(userService.getFunctionMap(ResourceUtil.getSessionUser().getId()));
+			String PMenu = ListtoMenu.getWebosMenu(userService.getFunctionMap(ResourceUtils.getSessionUser().getId()));
 			ContextHolderUtils.getSession().setAttribute("getPrimaryMenuForWebos", PMenu);
 			j.setMsg(PMenu);
 		}
@@ -712,7 +712,7 @@ public class LoginController extends BaseController{
 		try {
 
 			//List<TSFunction> functions = this.systemService.findByProperty(TSFunction.class, "TSFunction.id", functionId);
-			String userid = ResourceUtil.getSessionUser().getId();
+			String userid = ResourceUtils.getSessionUser().getId();
 			List<TSFunction> functions = userService.getSubFunctionList(userid, functionId);
 
 			JSONArray jsonArray = new JSONArray();

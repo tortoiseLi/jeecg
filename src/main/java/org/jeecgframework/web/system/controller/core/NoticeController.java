@@ -23,7 +23,7 @@ import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.web.system.pojo.base.TSNotice;
@@ -78,7 +78,7 @@ public class NoticeController extends BaseController{
 	public AjaxJson getNoticeList(Integer isRead,HttpServletRequest req) {
 		AjaxJson j = new AjaxJson();
 		try {
-			TSUser user = ResourceUtil.getSessionUser();
+			TSUser user = ResourceUtils.getSessionUser();
 
 			String sql = "SELECT notice.*,noticeRead.is_read as is_read FROM t_s_notice notice "
 					+ "LEFT JOIN t_s_notice_read_user noticeRead ON  notice.id = noticeRead.notice_id "
@@ -146,7 +146,7 @@ public class NoticeController extends BaseController{
 		if (StringUtil.isNotEmpty(notice.getId())) {
 			notice = this.systemService.getById(TSNotice.class, notice.getId());
 			request.setAttribute("notice", notice);
-			TSUser user = ResourceUtil.getSessionUser();
+			TSUser user = ResourceUtils.getSessionUser();
 			String hql = "from TSNoticeReadUser where noticeId = ? and userId = ?";
 			List<TSNoticeReadUser> noticeReadList = systemService.findListByHql(hql,notice.getId(),user.getId());
 			if (noticeReadList != null && !noticeReadList.isEmpty()) {
@@ -175,7 +175,7 @@ public class NoticeController extends BaseController{
 //			org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, notice, request.getParameterMap());
 //			this.noticeService.getDataGridReturn(cq, true);
 
-			TSUser user = ResourceUtil.getSessionUser();
+			TSUser user = ResourceUtils.getSessionUser();
 			String sql = "SELECT notice.*,noticeRead.is_read as is_read FROM t_s_notice notice "
 					+ " LEFT JOIN t_s_notice_read_user noticeRead ON  notice.id = noticeRead.notice_id "
 					+ " WHERE noticeRead.del_flag = 0 and noticeRead.user_id = ? "

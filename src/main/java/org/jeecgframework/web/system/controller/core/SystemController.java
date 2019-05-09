@@ -48,7 +48,7 @@ import org.jeecgframework.core.util.ListUtils;
 import org.jeecgframework.core.util.MutiLangSqlCriteriaUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.PropertiesUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.SetListSort;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.UrlCheckUtil;
@@ -137,7 +137,7 @@ public class SystemController extends BaseController {
 		try {
 			String dicTable = request.getParameter("dicTable");
 			if(oConvertUtils.isEmpty(dicTable)){
-				List<TSType> typeList = ResourceUtil.getCacheTypes(typeGroupName.toLowerCase());
+				List<TSType> typeList = ResourceUtils.getCacheTypes(typeGroupName.toLowerCase());
 				JSONObject headJson = new JSONObject();
 				headJson.put("typecode", "");
 				headJson.put("typename", "");
@@ -258,10 +258,10 @@ public class SystemController extends BaseController {
 	@ResponseBody
 	public List<ComboTree> formTree(HttpServletRequest request,final ComboTree rootCombotree) {
 		String typegroupCode = request.getParameter("typegroupCode");
-		TSTypegroup group = ResourceUtil.getCacheTypeGroup(typegroupCode.toLowerCase());
+		TSTypegroup group = ResourceUtils.getCacheTypeGroup(typegroupCode.toLowerCase());
 		List<ComboTree> comboTrees = new ArrayList<ComboTree>();
 
-		for(TSType tsType : ResourceUtil.getCacheTypes(typegroupCode.toLowerCase())){
+		for(TSType tsType : ResourceUtils.getCacheTypes(typegroupCode.toLowerCase())){
 			ComboTree combotree = new ComboTree();
 			combotree.setId(tsType.getTypecode());
 			combotree.setText(tsType.getTypename());
@@ -764,7 +764,7 @@ public class SystemController extends BaseController {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT org_code FROM t_s_depart");
 
-		if(ResourceUtil.getJdbcUrl().indexOf(JdbcDao.DATABSE_TYPE_SQLSERVER)!=-1){
+		if(ResourceUtils.getJdbcUrl().indexOf(JdbcDao.DATABSE_TYPE_SQLSERVER)!=-1){
 			sb.append(" where LEN(org_code) = ").append(localCodeLength);
 		}else{
 			sb.append(" where LENGTH(org_code) = ").append(localCodeLength);
@@ -1566,10 +1566,10 @@ public class SystemController extends BaseController {
         String delFlag=request.getParameter("isdel");
         String swfTransform=request.getParameter("swfTransform");//是否将文件转换成swf
         //String ctxPath = request.getSession().getServletContext().getRealPath("");
-        String ctxPath=ResourceUtil.getConfigByName("webUploadpath");//demo中设置为D://upFiles,实际项目应因事制宜
+        String ctxPath= ResourceUtils.getConfigByName("webUploadpath");//demo中设置为D://upFiles,实际项目应因事制宜
 
         //默认上传文件是否转换为swf，实现在线预览功能开关
-		String globalSwfTransformFlag = ResourceUtil.getConfigByName("swf.transform.flag");
+		String globalSwfTransformFlag = ResourceUtils.getConfigByName("swf.transform.flag");
 
 		
         logger.debug("----ctxPath-----"+ctxPath);

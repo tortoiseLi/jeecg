@@ -20,7 +20,7 @@ import org.jeecgframework.core.common.service.CommonService;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.core.util.FileUtils;
 import org.jeecgframework.core.util.JeecgDataAutorUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -120,7 +120,7 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 			List<CgUploadEntity> uploadBeans = cgFormFieldService.findListByProperty(CgUploadEntity.class, "cgformId", id);
 			if(uploadBeans!=null){
 				for(CgUploadEntity b:uploadBeans){
-					String path = ResourceUtil.getSysPath()+File.separator+b.getRealpath();//附件路径
+					String path = ResourceUtils.getSysPath()+File.separator+b.getRealpath();//附件路径
 					FileUtils.delete(path);					
 					cgFormFieldService.deleteById(CgUploadEntity.class, b.getId());
 				}

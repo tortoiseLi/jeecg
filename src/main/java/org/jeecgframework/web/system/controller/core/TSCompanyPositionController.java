@@ -25,7 +25,7 @@ import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -273,7 +273,7 @@ public class TSCompanyPositionController extends BaseController {
 		List<TSCompanyPositionEntity> tSCompanyPositions = this.tSCompanyPositionService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"职务管理");
 		modelMap.put(NormalExcelConstants.CLASS,TSCompanyPositionEntity.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("职务管理列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("职务管理列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 			"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,tSCompanyPositions);
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
@@ -289,7 +289,7 @@ public class TSCompanyPositionController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
     	modelMap.put(NormalExcelConstants.FILE_NAME,"职务管理");
     	modelMap.put(NormalExcelConstants.CLASS,TSCompanyPositionEntity.class);
-    	modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("职务管理列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+    	modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("职务管理列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
     	"导出信息"));
     	modelMap.put(NormalExcelConstants.DATA_LIST,new ArrayList());
     	return NormalExcelConstants.JEECG_EXCEL_VIEW;

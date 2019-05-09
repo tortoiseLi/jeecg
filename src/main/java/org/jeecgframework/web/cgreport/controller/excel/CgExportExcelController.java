@@ -15,7 +15,7 @@ import org.jeecgframework.core.online.exception.CgReportNotFoundException;
 import org.jeecgframework.core.online.util.CgReportQueryParamUtil;
 import org.jeecgframework.core.util.DynamicDBUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.SqlUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -120,7 +120,7 @@ public class CgExportExcelController extends BaseController {
 				Object dictCode=fieldList.get(i).get("dict_code");
 				if(oConvertUtils.isNotEmpty(dictCode)) {
 					dictFieldList.add(fieldList.get(i));
-					List<TSType> types = ResourceUtil.getCacheTypes(dictCode.toString().toLowerCase());
+					List<TSType> types = ResourceUtils.getCacheTypes(dictCode.toString().toLowerCase());
 					for (TSType tsType : types) {
 						dictMap.put(dictCode.toString()+"_"+tsType.getTypecode(), tsType.getTypename());
 					}

@@ -25,7 +25,7 @@ import org.jeecgframework.core.util.FormUtil;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
@@ -422,7 +422,7 @@ public class CgformFtlController extends BaseController {
 
 			String uploadbasepath = uploadFile.getBasePath();// 文件上传根目录
 			if (uploadbasepath == null) {
-				uploadbasepath = ResourceUtil.getConfigByName("uploadpath");
+				uploadbasepath = ResourceUtils.getConfigByName("uploadpath");
 			}
 			Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 			// 文件数据库保存路径

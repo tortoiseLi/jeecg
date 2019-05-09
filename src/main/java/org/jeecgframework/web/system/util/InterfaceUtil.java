@@ -9,7 +9,7 @@ import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.extend.hqlsearch.parse.ObjectParseUtil;
 import org.jeecgframework.core.extend.hqlsearch.parse.vo.HqlRuleEnum;
 import org.jeecgframework.core.util.ApplicationContextUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.jwt.def.JwtConstants;
 import org.jeecgframework.web.system.enums.InterfaceEnum;
 import org.jeecgframework.web.system.pojo.base.InterfaceRuleDto;
@@ -101,7 +101,7 @@ public class InterfaceUtil {
 			valueTemp = valueTemp.substring(2,valueTemp.indexOf("}"));
 		}
 		String tempValue = null;
-		tempValue = ResourceUtil.converRuleValue(valueTemp);
+		tempValue = ResourceUtils.converRuleValue(valueTemp);
 
 		if(tempValue!=null){
 			tempValue = tempValue + moshi;
@@ -176,7 +176,7 @@ public class InterfaceUtil {
 	
 	private static String converRuleValue(String ruleValue) {
 		//这个方法建议去掉，直接调用ResourceUtil.converRuleValue(ruleValue)
-		String value = ResourceUtil.converRuleValue(ruleValue);
+		String value = ResourceUtils.converRuleValue(ruleValue);
 		return value!= null ? value : ruleValue;
 	}
 

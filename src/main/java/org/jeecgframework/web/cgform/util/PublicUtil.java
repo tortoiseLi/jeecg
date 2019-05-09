@@ -3,7 +3,7 @@ package org.jeecgframework.web.cgform.util;
 import java.util.Date;
 
 import org.jeecgframework.core.util.ReflectHelper;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.web.cgform.common.CgAutoListConstant;
 
 /**
@@ -22,12 +22,12 @@ public class PublicUtil {
 		ReflectHelper reflectHelper=new ReflectHelper(obj);
 		if(isCreate){
 			reflectHelper.setMethodValue("createDate", new Date());
-			reflectHelper.setMethodValue("createBy", ResourceUtil.getSessionUser().getId());
-			reflectHelper.setMethodValue("createName", ResourceUtil.getSessionUser().getUserName());
+			reflectHelper.setMethodValue("createBy", ResourceUtils.getSessionUser().getId());
+			reflectHelper.setMethodValue("createName", ResourceUtils.getSessionUser().getUserName());
 		}
 		reflectHelper.setMethodValue("updateDate", new Date());
-		reflectHelper.setMethodValue("updateBy", ResourceUtil.getSessionUser().getId());
-		reflectHelper.setMethodValue("updateName", ResourceUtil.getSessionUser().getUserName());
+		reflectHelper.setMethodValue("updateBy", ResourceUtils.getSessionUser().getId());
+		reflectHelper.setMethodValue("updateName", ResourceUtils.getSessionUser().getUserName());
 	}
 	/**
 	 * 设置checkbox的值 -- Y/N

@@ -47,7 +47,7 @@ import org.jeecgframework.core.util.JSONHelper;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.MyClassLoader;
 import org.jeecgframework.core.util.NumberComparator;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
@@ -757,7 +757,7 @@ public class JeecgFormDemoController extends BaseController {
     public AjaxJson filedeal(HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         String msg="";
-        String ctxPath=ResourceUtil.getConfigByName("webUploadpath");//demo中设置为D://upFiles,实际项目应因事制宜
+        String ctxPath= ResourceUtils.getConfigByName("webUploadpath");//demo中设置为D://upFiles,实际项目应因事制宜
         try {
         	String fileName = null;
         	String bizType=request.getParameter("bizType");//上传业务名称
@@ -801,7 +801,7 @@ public class JeecgFormDemoController extends BaseController {
     public AjaxJson filedelete(HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         String msg="";
-        String ctxPath=ResourceUtil.getConfigByName("webUploadpath");//demo中设置为D://upFiles,实际项目应因事制宜
+        String ctxPath= ResourceUtils.getConfigByName("webUploadpath");//demo中设置为D://upFiles,实际项目应因事制宜
         String path=request.getParameter("filepath");
     	String delpath=ctxPath+"/"+path;
     	File fileDelete = new File(delpath);
@@ -843,7 +843,7 @@ public class JeecgFormDemoController extends BaseController {
 		InputStream inputStream = null;
 		OutputStream outputStream=null;
 		try {
-			String localPath=ResourceUtil.getConfigByName("webUploadpath");
+			String localPath= ResourceUtils.getConfigByName("webUploadpath");
 			String imgurl = localPath+"/"+dbpath;
 			inputStream = new BufferedInputStream(new FileInputStream(imgurl));
 			outputStream = response.getOutputStream();
@@ -917,7 +917,7 @@ public class JeecgFormDemoController extends BaseController {
 	 */
 	@RequestMapping("/doupload")
     public void doupload(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String ctxPath=ResourceUtil.getConfigByName("webUploadpath");//demo中设置为D://upFiles,实际项目应因事制宜
+        String ctxPath= ResourceUtils.getConfigByName("webUploadpath");//demo中设置为D://upFiles,实际项目应因事制宜
         String tempFileDir = ctxPath+File.separator+"temp";
         response.setCharacterEncoding("UTF-8");
 		Integer schunk = null;//分割块数

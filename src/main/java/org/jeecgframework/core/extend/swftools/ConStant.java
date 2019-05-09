@@ -3,7 +3,7 @@ package org.jeecgframework.core.extend.swftools;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jeecgframework.core.util.ContextHolderUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 
 
 /**
@@ -13,7 +13,7 @@ public class ConStant {
 	/**OpenOffice安装根目录*/
 	public static final String OFFICE_HOME;
 	static{
-		OFFICE_HOME = ResourceUtil.getSessionattachmenttitle("office_home");
+		OFFICE_HOME = ResourceUtils.getSessionAttachmentTitle("office_home");
 	}
 	/**文件上传保存根目录*/
 	public static final String UPLOAD_BASE_DIR = "upload";

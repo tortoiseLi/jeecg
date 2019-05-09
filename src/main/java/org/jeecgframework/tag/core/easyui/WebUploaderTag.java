@@ -4,7 +4,7 @@ import java.io.IOException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 
@@ -26,7 +26,7 @@ public class WebUploaderTag extends TagSupport {
 	private String fileVal="file";//fileVal设置文件上传域的name,默认file
 	private boolean duplicate=false;//去重， 根据文件名字、文件大小和最后修改时间来生成hash Key.
 	private String showImgDiv;//显示图片的div,如果不给会默认在按钮下方添加div其id为'tempdiv_'+name
-	private String showAndDownUrl=ResourceUtil.getConfigByName("showAndDownUrl");//预览图片请求的url&文件下载url
+	private String showAndDownUrl= ResourceUtils.getConfigByName("showAndDownUrl");//预览图片请求的url&文件下载url
 	private String pathValues;//默认值
 	private String type="file";
 	private String buttonText;//控件按钮显示文本

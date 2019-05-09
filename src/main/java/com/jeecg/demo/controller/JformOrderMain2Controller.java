@@ -22,7 +22,7 @@ import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.jwt.util.ResponseMessage;
@@ -402,7 +402,7 @@ public class JformOrderMain2Controller extends BaseController {
 	public String exportXlsByT(ModelMap map) {
 		map.put(NormalExcelConstants.FILE_NAME,"订单主信息");
 		map.put(NormalExcelConstants.CLASS,JformOrderMain2Page.class);
-		map.put(NormalExcelConstants.PARAMS,new ExportParams("订单主信息列表", "导出人:"+ ResourceUtil.getSessionUser().getRealName(),
+		map.put(NormalExcelConstants.PARAMS,new ExportParams("订单主信息列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 		"导出信息"));
 		map.put(NormalExcelConstants.DATA_LIST,new ArrayList());
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;

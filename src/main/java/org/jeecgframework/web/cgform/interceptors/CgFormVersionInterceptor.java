@@ -9,7 +9,7 @@ import org.jeecgframework.web.cgform.service.config.CgFormFieldServiceI;
 
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.interceptors.AuthInterceptor;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -30,7 +30,7 @@ public class CgFormVersionInterceptor  implements HandlerInterceptor {
 	public void afterCompletion(HttpServletRequest arg0,
 			HttpServletResponse arg1, Object arg2, Exception arg3)
 			throws Exception {
-		String requestPath = ResourceUtil.getJgAuthRequsetPath(arg0);// 用户访问的资源地址
+		String requestPath = ResourceUtils.getJgAuthRequestPath(arg0);// 用户访问的资源地址
 		if(!includeUrls.contains(requestPath)){
 			return;
 		}

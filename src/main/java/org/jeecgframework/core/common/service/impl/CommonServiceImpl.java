@@ -34,7 +34,7 @@ import java.util.Map;
  * @version V1.0
  */
 @Service("commonService")
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class CommonServiceImpl implements CommonService {
 
 	public CommonDao commonDao = null;
@@ -75,99 +75,93 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> T getById(Class<T> entityClass, Serializable id) {
 		return commonDao.getById(entityClass, id);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> T getByProperty(Class<T> entityClass, String propertyName, Object value) {
 		return commonDao.getByProperty(entityClass, propertyName, value);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public Map<String, Object> getMapBySql(String sql, Object...params) {
 		return commonDao.getMapBySql(sql, params);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> T getBySql(String sql, Class<T> entityClass, Object...params) {
 		return commonDao.getBySql(sql, entityClass, params);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> T getByHql(String hql, Object...params) {
 		return commonDao.getByHql(hql, params);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> List<T> findList(final Class<T> entityClass) {
 		return commonDao.findList(entityClass);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<Object> findListBySqlReObject(final String sql, Object...params) {
 		return commonDao.findListBySqlReObject(sql, params);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> List<T> findListBySql(String sql, Class<T> entityClass, Object... params) {
 		return commonDao.findListBySql(sql,entityClass, params);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> List<T> findListBySqlWithPage(String sql, int curPage, int pageSize, Class<T> entityClass, Object...params) {
 		return commonDao.findListBySqlWithPage(sql, curPage, pageSize, entityClass, params);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> List<T> findListByHql(String hql, Object...params) {
 		return this.commonDao.findListByHql(hql, params);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> List<T> findListByProperty(Class<T> entityClass, String propertyName, Object value) {
 		return commonDao.findListByProperty(entityClass, propertyName, value);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
-	public <T> List<T> findByPropertyIsOrder(Class<T> entityClass, String propertyName, Object value, boolean isAsc) {
-		return commonDao.findByPropertyIsOrder(entityClass, propertyName, value, isAsc);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public <T> List<T> getListByCriteriaQuery(final CriteriaQuery cq) {
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
+	public <T> List<T> findListByCriteriaQuery(final CriteriaQuery cq) {
 		return commonDao.findListByCriteriaQuery(cq, false);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> List<T> findListByCriteriaQuery(final CriteriaQuery cq, Boolean isPage) {
 		return commonDao.findListByCriteriaQuery(cq, isPage);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List findListByEntity(final String entityName, final Object exampleEntity) {
 		return commonDao.findListByEntity(entityName, exampleEntity);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> List<T> getAutoList(Autocomplete autocomplete) {
-		StringBuffer sb = new StringBuffer("");
+		StringBuffer sb = new StringBuffer();
 		for (String searchField : autocomplete.getSearchField().split(",")) {
 			sb.append("  or " + searchField + " like '%"+ autocomplete.getTrem() + "%' ");
 		}
@@ -176,55 +170,55 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> List<T> findListByDetached(DetachedCriteria dc) {
 		return this.commonDao.findListByDetached(dc);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public <T> List<T> findListByDetachedCriteria(DetachedCriteria dc, int firstResult, int maxResult) {
 		return this.commonDao.findListByDetachedCriteria(dc, firstResult, maxResult);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<Map<String, Object>> findListMapBySql(String sql, Object...params) {
 		return commonDao.findListMapBySql(sql, params);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<Map<String, Object>> findListMapBySqlWithPage(String sql, int curPage, int pageSize, Object...params) {
 		return commonDao.findListMapBySqlWithPage(sql, curPage, pageSize, params);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public PageList findPageByCriteriaQuery(final CriteriaQuery cq, final boolean isOffset) {
 		return commonDao.findPageByCriteriaQuery(cq, isOffset);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public PageList findPageByHqlQuery(final HqlQuery hqlQuery, final boolean needParameter) {
 		return commonDao.findPageByHqlQuery(hqlQuery, needParameter);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public PageList findPageByHqlQueryReToEntity(final HqlQuery hqlQuery, final boolean isToEntity) {
 		return commonDao.findPageByHqlQueryReToEntity(hqlQuery, isToEntity);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public DataTableReturn getDataTableReturn(final CriteriaQuery cq, final boolean isOffset) {
 		return commonDao.getDataTableReturn(cq, isOffset);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public void getDataGridReturn(final CriteriaQuery cq, final boolean isOffset) {
 		commonDao.getDataGridReturn(cq, isOffset);
 	}
@@ -250,19 +244,19 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public Long getCountBySql(String sql, Object...params) {
 		return commonDao.getCountBySql(sql, params);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<DBTable> findDbTableList() {
 		return commonDao.findDbTableList();
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public Integer getDbTableSize() {
 		return commonDao.getDbTableSize();
 	}
@@ -278,7 +272,7 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public HttpServletResponse viewOrDownloadFile(UploadFile uploadFile) {
 		return commonDao.viewOrDownloadFile(uploadFile);
 	}
@@ -294,19 +288,19 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<ComboTree> comTree(List<TSDepart> all, ComboTree comboTree) {
 		return commonDao.comTree(all, comboTree);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<ComboTree> comboTree(List all, ComboTreeModel comboTreeModel, List in, boolean recursive) {
 		return commonDao.comboTree(all, comboTreeModel, in, recursive);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<TreeGrid> treeGrid(List<?> all, TreeGridModel treeGridModel) {
 		return commonDao.treeGrid(all, treeGridModel);
 	}

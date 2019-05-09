@@ -24,7 +24,7 @@ import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.JeecgDataAutorUtils;
 import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.SqlInjectionUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.SysThemesUtil;
@@ -41,7 +41,6 @@ import org.jeecgframework.web.cgform.service.template.CgformTemplateServiceI;
 import org.jeecgframework.web.cgform.util.PublicUtil;
 import org.jeecgframework.web.cgform.util.QueryParamUtil;
 import org.jeecgframework.web.cgform.util.TemplateUtil;
-import org.jeecgframework.web.system.controller.core.LoginController;
 import org.jeecgframework.web.system.pojo.base.DictEntity;
 import org.jeecgframework.web.system.pojo.base.TSOperation;
 import org.jeecgframework.web.system.pojo.base.TSType;
@@ -592,7 +591,7 @@ public class CgAutoListController extends BaseController{
 	 */
 	private void loadAuth(Map<String, Object> paras, HttpServletRequest request) {
 		List<TSOperation>  nolist = (List<TSOperation>) request.getAttribute(Globals.NOAUTO_OPERATIONCODES);
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtils.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
 			nolist = null;
 		}
 		List<String> list = new ArrayList<String>();
@@ -724,7 +723,7 @@ public class CgAutoListController extends BaseController{
 	private List<DictEntity> queryDic(String dicTable, String dicCode,String dicText) {
 
 		if(dicTable==null || dicTable.length()<=0){
-			List<TSType> listt = ResourceUtil.getCacheTypes(dicCode.toLowerCase());
+			List<TSType> listt = ResourceUtils.getCacheTypes(dicCode.toLowerCase());
 			List<DictEntity> li = new ArrayList<DictEntity>();
 			if(listt!=null){
 				for (TSType tsType : listt) {
@@ -772,7 +771,7 @@ public class CgAutoListController extends BaseController{
 			sysVarName = sysVarName.replaceAll("\\}", "");
 			sysVarName =sysVarName.replace("sys.", "");
 
-			return ResourceUtil.converRuleValue(sysVarName); 		
+			return ResourceUtils.converRuleValue(sysVarName);
 		}else{
 			return sysVarName;
 		}

@@ -1,7 +1,6 @@
 package org.jeecgframework.core.util;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -92,18 +91,18 @@ public class SqlUtil {
         sqlParam[0] = sql;
         sqlParam[1] = beginNum+"";
         sqlParam[2] = rows+"";
-        if(ResourceUtil.getJdbcUrl().indexOf(DATABSE_TYPE_MYSQL)!=-1){
+        if(ResourceUtils.getJdbcUrl().indexOf(DATABSE_TYPE_MYSQL)!=-1){
             sql = MessageFormat.format(MYSQL_SQL, sqlParam);
-        }else if(ResourceUtil.getJdbcUrl().indexOf(DATABSE_TYPE_POSTGRE)!=-1){
+        }else if(ResourceUtils.getJdbcUrl().indexOf(DATABSE_TYPE_POSTGRE)!=-1){
             sql = MessageFormat.format(POSTGRE_SQL, sqlParam);
         }else {
             int beginIndex = (page-1)*rows;
             int endIndex = beginIndex+rows;
             sqlParam[2] = Integer.toString(beginIndex);
             sqlParam[1] = Integer.toString(endIndex);
-            if(ResourceUtil.getJdbcUrl().indexOf(DATABSE_TYPE_ORACLE)!=-1) {
+            if(ResourceUtils.getJdbcUrl().indexOf(DATABSE_TYPE_ORACLE)!=-1) {
                 sql = MessageFormat.format(ORACLE_SQL, sqlParam);
-            } else if(ResourceUtil.getJdbcUrl().indexOf(DATABSE_TYPE_SQLSERVER)!=-1) {
+            } else if(ResourceUtils.getJdbcUrl().indexOf(DATABSE_TYPE_SQLSERVER)!=-1) {
                 sqlParam[0] = sql.substring(getAfterSelectInsertPoint(sql));
                 sql = MessageFormat.format(SQLSERVER_SQL, sqlParam);
             }
@@ -128,7 +127,7 @@ public class SqlUtil {
         sqlParam[0] = sql;
         sqlParam[1] = beginNum+"";
         sqlParam[2] = rows+"";
-        DynamicDataSourceEntity dynamicSourceEntity = ResourceUtil.getCacheDynamicDataSourceEntity(dbKey);
+        DynamicDataSourceEntity dynamicSourceEntity = ResourceUtils.getCacheDynamicDataSourceEntity(dbKey);
         String databaseType = dynamicSourceEntity.getDbType();
         if(DATABSE_TYPE_MYSQL.equalsIgnoreCase(databaseType)){
             sql = MessageFormat.format(MYSQL_SQL, sqlParam);

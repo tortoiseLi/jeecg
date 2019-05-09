@@ -1,14 +1,12 @@
 package org.jeecgframework.core.extend.hqlsearch;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jeecgframework.core.extend.hqlsearch.parse.vo.HqlRuleEnum;
-import org.jeecgframework.core.util.DateUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.pojo.base.TSDataRule;
 
@@ -64,7 +62,7 @@ public class SysContextSqlConvert {
 		}
 		String tempValue = null;
 
-		tempValue = ResourceUtil.converRuleValue(ValueTemp);
+		tempValue = ResourceUtils.converRuleValue(ValueTemp);
 
 		if(tempValue!=null){
 			tempValue = tempValue + moshi;
@@ -107,7 +105,7 @@ public class SysContextSqlConvert {
 		try {
 			Set<String> varParams = getSqlRuleParams(sqlRule);
 			for(String var:varParams){
-				String tempValue = ResourceUtil.converRuleValue(var);
+				String tempValue = ResourceUtils.converRuleValue(var);
 				sqlRule = sqlRule.replace("#{"+var+"}",tempValue);
 			}
 		} catch (Exception e) {

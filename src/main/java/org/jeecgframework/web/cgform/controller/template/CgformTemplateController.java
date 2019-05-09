@@ -30,7 +30,7 @@ import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.FileUtils;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
@@ -336,7 +336,7 @@ public class CgformTemplateController extends BaseController {
 		List<CgformTemplateEntity> cgformTemplates = this.cgformTemplateService.findListByCriteriaQuery(cq, false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"自定义模板");
 		modelMap.put(NormalExcelConstants.CLASS,CgformTemplateEntity.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("自定义模板列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("自定义模板列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 			"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST, cgformTemplates);
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;

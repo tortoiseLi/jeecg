@@ -30,7 +30,7 @@ public class ListtoMenu {
 		for (TSFunction node : set) {
 			String iconClas = "default";// 权限图标样式
 			if (node.getTSIcon() != null) {
-				iconClas = ResourceUtil.allTSIcons.get(node.getTSIcon().getId()).getIconClas();
+				iconClas = ResourceUtils.allTSIcons.get(node.getTSIcon().getId()).getIconClas();
 			}
 			buffer.append("{\"menuid\":\"" + node.getId() + "\",\"icon\":\""
 					+ iconClas + "\"," + "\"menuname\":\""
@@ -66,7 +66,7 @@ public class ListtoMenu {
 
 			{
 				buffer.append("{\"menuid\":\"" + node.getId()
-						+ " \",\"icon\":\"" + ResourceUtil.allTSIcons.get(node.getTSIcon().getId()).getIconClas()
+						+ " \",\"icon\":\"" + ResourceUtils.allTSIcons.get(node.getTSIcon().getId()).getIconClas()
 						+ "\"," + "\"menuname\":\"" + getMutiLang(node.getFunctionName())
 						+ "\",\"url\":\"" + node.getFunctionUrl() + "\"");
 				if (count == set1.size()) {
@@ -149,7 +149,7 @@ public class ListtoMenu {
 		StringBuffer menuString = new StringBuffer();
 		for (TSFunction pFunction : pFunctions) {
 			menuString.append("<div  title=\"" + getMutiLang(pFunction.getFunctionName())
-					+ "\" iconCls=\"" + ResourceUtil.allTSIcons.get(pFunction.getTSIcon().getId()).getIconClas()
+					+ "\" iconCls=\"" + ResourceUtils.allTSIcons.get(pFunction.getTSIcon().getId()).getIconClas()
 					+ "\">");
 			/*int submenusize = pFunction.getSubFunctionSize();
 			if (submenusize == 0) {
@@ -193,7 +193,7 @@ public class ListtoMenu {
 				if (function.getTSFunction().getId().equals(pFunction.getId())) {
 					String icon = "folder";
 					if (function.getTSIcon() != null) {
-						icon = ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
+						icon = ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
 					}
 					String funUrl = function.getFunctionUrl();
 					if(funUrl.indexOf("?") > -1){
@@ -235,7 +235,7 @@ public class ListtoMenu {
 		List<TSFunction> list = map.get(0);
 		for (TSFunction function : list) {
 			menuString.append("<div   title=\"" + getMutiLang(function.getFunctionName())
-					+ "\" iconCls=\"" + ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas()
+					+ "\" iconCls=\"" + ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas()
 					+ "\">");
 			/*int submenusize = function.getSubFunctionSize();
 			if (submenusize == 0) {
@@ -293,7 +293,7 @@ public class ListtoMenu {
         } else if("shortcut".equals(style)) {
             for (TSFunction function : list) {
                 menuString.append("<div   title=\"" + getMutiLang(function.getFunctionName())
-                        + "\" iconCls=\"" + ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas()
+                        + "\" iconCls=\"" + ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas()
                         + "\">");
                 if(!function.hasSubFunction(map)){
                 	menuString.append("</div>");
@@ -328,7 +328,7 @@ public class ListtoMenu {
 					menuString.append("<div  class=\"easyui-accordion\"  fit=\"false\" border=\"false\">");
 					menuString.append("<div></div>");//easy ui 默认展开第一级,所以这里设置一个控制,就不展开了
 					menuString.append("<div title=\"" + getMutiLang(function.getFunctionName())
-							+ "\" iconCls=\"" + ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas()
+							+ "\" iconCls=\"" + ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas()
 							+ "\"><ul>");
 					menuString.append(getChild(function,level+1,map));
 					menuString.append("</ul></div>");
@@ -353,7 +353,7 @@ public class ListtoMenu {
 				if(!function.hasSubFunction(map)){
 					menuString.append(getLeafOfTree(function));
 				}else if(map.containsKey(level+1)){
-					menuString.append("<li state=\"closed\" iconCls=\"" + ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas()+"\" ><span>"+ getMutiLang(function.getFunctionName()) +"</span>");
+					menuString.append("<li state=\"closed\" iconCls=\"" + ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas()+"\" ><span>"+ getMutiLang(function.getFunctionName()) +"</span>");
 					menuString.append("<ul >");
 					menuString.append(getChildOfTree(function,level+1,map));
 					menuString.append("</ul></li>");
@@ -371,7 +371,7 @@ public class ListtoMenu {
 		StringBuffer menuString = new StringBuffer();
 		String icon = "folder";
 		if (function.getTSIcon() != null) {
-			icon = ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
+			icon = ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
 		}
 		menuString.append("<li><div onclick=\"addTab(\'");
 		menuString.append(getMutiLang(function.getFunctionName()));
@@ -409,7 +409,7 @@ public class ListtoMenu {
 		StringBuffer menuString = new StringBuffer();
 		String icon = "folder";
 		if (function.getTSIcon() != null) {
-			icon = ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
+			icon = ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
 		}
 		menuString.append("<li iconCls=\"");
 		menuString.append(icon);
@@ -461,7 +461,7 @@ public class ListtoMenu {
 			//绘制一级菜单
 			menuString.append("	<li class=\"dropdown\"> ");
 			menuString.append("		<a href=\"javascript:;\" class=\"dropdown-toggle\" data-toggle=\"dropdown\"> ");
-			menuString.append("			<span class=\"bootstrap-icon\" style=\"background-image: url('"+ResourceUtil.allTSIcons.get(pFunction.getTSIcon().getId()).getIconPath()+"')\"></span> "+pFunction.getFunctionName()+" ");
+			menuString.append("			<span class=\"bootstrap-icon\" style=\"background-image: url('"+ ResourceUtils.allTSIcons.get(pFunction.getTSIcon().getId()).getIconPath()+"')\"></span> "+pFunction.getFunctionName()+" ");
 			if(hasSub){
 				menuString.append("			<b class=\"caret\"></b> ");
 			}
@@ -556,7 +556,7 @@ public class ListtoMenu {
 //			menuString.append("{ ");
 			menuString.append("\""+ pFunction.getId() + "\":");
 			menuString.append("{\"id\":\""+pFunction.getId()+"\",\"name\":\""+pFunction.getFunctionName()
-					+"\",\"path\":\""+ResourceUtil.allTSIcons.get(pFunction.getTSIcon().getId()).getIconPath()+"\",\"level\":\""+pFunction.getFunctionLevel()+"\",");
+					+"\",\"path\":\""+ ResourceUtils.allTSIcons.get(pFunction.getTSIcon().getId()).getIconPath()+"\",\"level\":\""+pFunction.getFunctionLevel()+"\",");
 			menuString.append("\"child\":{");
 
 			//绘制Deskpanel数组
@@ -789,7 +789,7 @@ public class ListtoMenu {
 					String icon = "folder";
 					try{
 						if (function.getTSIcon() != null) {
-							icon = ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
+							icon = ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
 						}
 					}catch(Exception e){
 						//TODO handle icon load exception
@@ -882,7 +882,7 @@ public class ListtoMenu {
 		StringBuffer menuString = new StringBuffer();
 		String icon = "folder";
 		if (function.getTSIcon() != null) {
-			icon = ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
+			icon = ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
 		}
 		//addTabs({id:'home',title:'首页',close: false,url: 'loginController.do?home'});
 		String name = getMutiLang(function.getFunctionName()) ;
@@ -916,7 +916,7 @@ public class ListtoMenu {
 		StringBuffer menuString = new StringBuffer();
 		String icon = "folder";
 		if (function.getTSIcon() != null) {
-			icon = ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
+			icon = ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
 		}
 		String name = getMutiLang(function.getFunctionName()) ;
 		menuString.append("<li iconCls=\"");
@@ -997,7 +997,7 @@ public class ListtoMenu {
 		StringBuffer menuString = new StringBuffer();
 		String icon = "folder";
 		if (function.getTSIcon() != null) {
-			icon = ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
+			icon = ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
 		}
 		//addTabs({id:'home',title:'首页',close: false,url: 'loginController.do?home'});
 		String name = getMutiLang(function.getFunctionName()) ;
@@ -1088,7 +1088,7 @@ public class ListtoMenu {
 			StringBuffer menuString = new StringBuffer();
 			String icon = "folder";
 			if (function.getTSIcon() != null) {
-				icon = ResourceUtil.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
+				icon = ResourceUtils.allTSIcons.get(function.getTSIcon().getId()).getIconClas();
 			}
 			//addTabs({id:'home',title:'首页',close: false,url: 'loginController.do?home'});
 			String name = getMutiLang(function.getFunctionName()) ;

@@ -16,7 +16,7 @@ import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.core.online.def.CgReportConstant;
 import org.jeecgframework.core.util.DynamicDBUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.SqlUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
@@ -265,7 +265,7 @@ public class CgReportServiceImpl extends CommonServiceImpl implements CgReportSe
 	private List<Map<String, Object>> queryDic(String diccode) {
 
 		List<Map<String, Object>> dicDatas = new ArrayList<Map<String, Object>>();
-		List<TSType> tstypes = ResourceUtil.getCacheTypes(diccode.toLowerCase());
+		List<TSType> tstypes = ResourceUtils.getCacheTypes(diccode.toLowerCase());
 		for(TSType t:tstypes){
 			Map<String,Object> mp = new HashMap<String,Object>();
 			mp.put("typecode",t.getTypecode());

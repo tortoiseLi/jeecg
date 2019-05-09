@@ -11,7 +11,7 @@ import jodd.util.StringUtil;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.enums.SysThemesEnum;
 import org.jeecgframework.core.util.ContextHolderUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.SysThemesUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.JeecgTag;
@@ -83,7 +83,7 @@ public class BaseTag extends JeecgTag {
 		//插入多语言脚本
 		HttpServletRequest request =(HttpServletRequest) this.pageContext.getRequest();
 		String lang = (String)request.getSession().getAttribute("lang");
-		String basePath = ResourceUtil.getBasePath();
+		String basePath = ResourceUtils.getBasePath();
 		if(lang==null){lang="zh-cn";}
 		String langjs = StringUtil.replace("<script type=\"text/javascript\" src=\""+basePath+"/plug-in/mutiLang/{0}.js\"></script>", "{0}", lang);
 		sb.append(langjs);
@@ -256,7 +256,7 @@ public class BaseTag extends JeecgTag {
 
 
 	public String toString() {
-		String basePath = ResourceUtil.getBasePath();
+		String basePath = ResourceUtils.getBasePath();
 		return new StringBuffer().append("BaseTag [type=").append(type)
 				.append(",sysTheme=").append(SysThemesUtil.getSysTheme(ContextHolderUtils.getRequest()).getStyle())
 				.append(",brower_type=").append(ContextHolderUtils.getSession().getAttribute("brower_type"))

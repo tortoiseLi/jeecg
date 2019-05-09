@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.jeecgframework.core.common.dao.CommonDao;
 import org.jeecgframework.core.util.BrowserUtils;
 import org.jeecgframework.core.util.ContextHolderUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.pojo.base.MutiLangEntity;
@@ -39,7 +39,7 @@ public class MutiLangServiceImpl implements MutiLangServiceI {
 		for (MutiLangEntity mutiLangEntity : mutiLang) {
 			ls.put(mutiLangEntity.getLangKey() + "_" + mutiLangEntity.getLangCode(), mutiLangEntity.getLangContext());
 		}
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.MUTI_LANG_FOREVER_CACHE_KEY,ls);
+		cacheService.put(CacheServiceI.FOREVER_CACHE, ResourceUtils.MULTI_LANG_FOREVER_CACHE_KEY,ls);
 		logger.info("  ------ 初始化国际化语言【系统缓存】  ------ size: [{}] ",ls.size());
 	}
 	
@@ -48,7 +48,7 @@ public class MutiLangServiceImpl implements MutiLangServiceI {
 	 */
 	public void putMutiLang(String langKey,String langCode,String langContext) {
 		Map<String, String> ls ;
-		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE,ResourceUtil.MUTI_LANG_FOREVER_CACHE_KEY);
+		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE, ResourceUtils.MULTI_LANG_FOREVER_CACHE_KEY);
 		if(obj!=null){
 			ls = (Map<String, String>) obj;
 		}else{
@@ -56,7 +56,7 @@ public class MutiLangServiceImpl implements MutiLangServiceI {
 		}
 		ls.put(langKey + "_" + langCode, langContext);
 		
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.MUTI_LANG_FOREVER_CACHE_KEY,ls);
+		cacheService.put(CacheServiceI.FOREVER_CACHE, ResourceUtils.MULTI_LANG_FOREVER_CACHE_KEY,ls);
 	}
 	
 	/**
@@ -64,14 +64,14 @@ public class MutiLangServiceImpl implements MutiLangServiceI {
 	 */
 	public void putMutiLang(MutiLangEntity mutiLangEntity) {
 		Map<String, String> ls ;
-		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE,ResourceUtil.MUTI_LANG_FOREVER_CACHE_KEY);
+		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE, ResourceUtils.MULTI_LANG_FOREVER_CACHE_KEY);
 		if(obj!=null){
 			ls = (Map<String, String>) obj;
 		}else{
 			ls = new HashMap<String, String>();
 		}
 		ls.put(mutiLangEntity.getLangKey() + "_" + mutiLangEntity.getLangCode(), mutiLangEntity.getLangContext());
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.MUTI_LANG_FOREVER_CACHE_KEY,ls);
+		cacheService.put(CacheServiceI.FOREVER_CACHE, ResourceUtils.MULTI_LANG_FOREVER_CACHE_KEY,ls);
 	}
 	
 	
@@ -88,10 +88,10 @@ public class MutiLangServiceImpl implements MutiLangServiceI {
 			language = BrowserUtils.getBrowserLanguage(request);
 		}
 		
-		String langContext = ResourceUtil.getMutiLan(langKey + "_" + language); 
+		String langContext = ResourceUtils.getMultiLan(langKey + "_" + language);
 		if(StringUtil.isEmpty(langContext))
 		{
-			langContext = ResourceUtil.getMutiLan("common.notfind.langkey" + "_" + language);
+			langContext = ResourceUtils.getMultiLan("common.notfind.langkey" + "_" + language);
 			if("null".equals(langContext)||langContext==null ||langKey.startsWith("?")){
 				langContext = "";
 			}

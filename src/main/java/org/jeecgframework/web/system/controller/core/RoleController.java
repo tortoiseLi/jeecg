@@ -34,7 +34,7 @@ import org.jeecgframework.core.util.LogUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.NumberComparator;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.SetListSort;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
@@ -68,8 +68,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSON;
 
 /**
  * 角色处理类
@@ -1041,7 +1039,7 @@ public class RoleController extends BaseController {
 		List<TSRole> tsRoles = systemService.findListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"角色表");
 		modelMap.put(NormalExcelConstants.CLASS,TSRole.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("角色表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("角色表列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 				"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,tsRoles);
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
@@ -1058,7 +1056,7 @@ public class RoleController extends BaseController {
 			, DataGrid dataGrid,ModelMap modelMap) {
 		modelMap.put(NormalExcelConstants.FILE_NAME,"用户表");
 		modelMap.put(NormalExcelConstants.CLASS,TSRole.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("用户表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("用户表列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 				"导出信息"));
 		modelMap.put(NormalExcelConstants.DATA_LIST,new ArrayList());
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;

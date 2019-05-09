@@ -21,18 +21,14 @@ import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.tag.vo.datatable.SortDirection;
-import org.jeecgframework.web.system.pojo.base.TSNotice;
-import org.jeecgframework.web.system.pojo.base.TSNoticeReadUser;
-import org.jeecgframework.web.system.pojo.base.TSUser;
 import org.jeecgframework.web.system.sms.entity.TSSmsEntity;
 import org.jeecgframework.web.system.sms.service.TSSmsServiceI;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -376,8 +372,8 @@ public class TSSmsController extends BaseController {
 		
 		List<TSSmsEntity> list = new ArrayList<TSSmsEntity>();
 		try {
-			String curUser = ResourceUtil.getSessionUser().getUserName();
-			String isSend = ResourceUtil.getConfigByName("sms.tip.control");
+			String curUser = ResourceUtils.getSessionUser().getUserName();
+			String isSend = ResourceUtils.getConfigByName("sms.tip.control");
 			if("1".equals(isSend)){
 				DataGrid dataGrid = new DataGrid();
 				dataGrid.setRows(20);//查出最新20条记录
@@ -422,7 +418,7 @@ public class TSSmsController extends BaseController {
 	public ModelAndView getSysInfos(HttpServletRequest request) {
 		
 		//1. 取得系统当前登录人ID
-		String curUser = ResourceUtil.getSessionUser().getUserName();
+		String curUser = ResourceUtils.getSessionUser().getUserName();
 		//2.查询当前登录人的消息类型为"3",并且在查询的节点之后一个小时内的信息
 		//当前时间
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -499,7 +495,7 @@ public class TSSmsController extends BaseController {
 		CriteriaQuery cq = new CriteriaQuery(TSSmsEntity.class, dataGrid);
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, tSSms, request.getParameterMap());
-		String curUser = ResourceUtil.getSessionUser().getUserName();
+		String curUser = ResourceUtils.getSessionUser().getUserName();
 		try{
 		//自定义追加查询条件
 			cq.eq("esType", "3");
@@ -530,13 +526,13 @@ public class TSSmsController extends BaseController {
 			j.setObj(0);
 			List<TSSmsEntity> list = new ArrayList<TSSmsEntity>();
 			//1. 取得系统当前登录人ID
-			String curUser = ResourceUtil.getSessionUser().getUserName();
+			String curUser = ResourceUtils.getSessionUser().getUserName();
 			//2.查询当前登录人的消息类型为"3"
 //			//当前时间
 //			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //			String curDate = sdf.format(new Date());		
 		
-			String isSend = ResourceUtil.getConfigByName("sms.tip.control");
+			String isSend = ResourceUtils.getConfigByName("sms.tip.control");
 			if("1".equals(isSend)){
 				DataGrid dataGrid = new DataGrid();
 				dataGrid.setRows(20);//查出最新20条记录

@@ -1,6 +1,4 @@
 package com.jeecg.demo.controller;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 import java.io.IOException;
@@ -25,12 +23,11 @@ import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.jwt.util.ResponseMessage;
 import org.jeecgframework.jwt.util.Result;
-import org.jeecgframework.jwt.web.TokenController;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
@@ -385,7 +382,7 @@ public class JfromOrderController extends BaseController {
 	public String exportXlsByT(ModelMap map) {
 		map.put(NormalExcelConstants.FILE_NAME,"订单列表");
 		map.put(NormalExcelConstants.CLASS,JfromOrderPage.class);
-		map.put(NormalExcelConstants.PARAMS,new ExportParams("订单列表列表", "导出人:"+ ResourceUtil.getSessionUser().getRealName(),
+		map.put(NormalExcelConstants.PARAMS,new ExportParams("订单列表列表", "导出人:"+ ResourceUtils.getSessionUser().getRealName(),
 		"导出信息"));
 		map.put(NormalExcelConstants.DATA_LIST,new ArrayList());
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;

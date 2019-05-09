@@ -184,23 +184,12 @@ public interface CommonService {
 	<T> List<T> findListByProperty(Class<T> entityClass, String propertyName, Object value);
 
 	/**
-	 * 通过属性查询list
-	 * @param entityClass
-	 * @param propertyName
-	 * @param value
-	 * @param isAsc
-	 * @param <T>
-	 * @return
-	 */
-	<T> List<T> findByPropertyIsOrder(Class<T> entityClass, String propertyName, Object value, boolean isAsc);
-
-	/**
 	 * 通过CQ查询list
 	 * @param cq
 	 * @param <T>
 	 * @return
 	 */
-	<T> List<T> getListByCriteriaQuery(final CriteriaQuery cq);
+	<T> List<T> findListByCriteriaQuery(final CriteriaQuery cq);
 
 	/**
 	 * 通过CQ查询list

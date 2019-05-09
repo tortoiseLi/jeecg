@@ -18,7 +18,7 @@ import org.jeecgframework.core.util.BrowserUtils;
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.MutiLangUtil;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.dao.JeecgDictDao;
@@ -98,7 +98,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		/* end dangzhenghui 201703016TASK #1784 【online bug】Online 表单保存的时候，报错*/
 //		log.setTSUser(ResourceUtil.getSessionUser());
 		/*start chenqian 201708031TASK #2317 【改造】系统日志表，增加两个字段，避免关联查询 [操作人账号] [操作人名字]*/
-		TSUser u = ResourceUtil.getSessionUser();
+		TSUser u = ResourceUtils.getSessionUser();
 		if(u!=null){
 			log.setUserid(u.getId());
 			log.setUsername(u.getUserName());
@@ -178,8 +178,8 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 			typesList.put(tsTypegroup.getTypegroupcode().toLowerCase(), types);
 		}
 		
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.DICT_TYPE_GROUPS_KEY,typeGroupsList);
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY,typesList);
+		cacheService.put(CacheServiceI.FOREVER_CACHE, ResourceUtils.DICT_TYPE_GROUPS_KEY,typeGroupsList);
+		cacheService.put(CacheServiceI.FOREVER_CACHE, ResourceUtils.DICT_TYPES_KEY,typesList);
 		
 		logger.info("  ------ 初始化字典组 【系统缓存】-----------typeGroupsList-----size: [{}]",typeGroupsList.size());
 		logger.info("  ------ 初始化字典 【系统缓存】-----------typesList-----size: [{}]",typesList.size());
@@ -190,7 +190,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	public void refleshTypesCach(TSType type) {
 		Map<String, List<TSType>> typesList = null;
 		TSTypegroup result = null;
-		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY);
+		Object obj = cacheService.get(CacheServiceI.FOREVER_CACHE, ResourceUtils.DICT_TYPES_KEY);
 		if(obj!=null){
 			typesList = (Map<String, List<TSType>>) obj;
 		}else{
@@ -214,7 +214,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		}
 
 		typesList.put(typeGroupEntity.getTypegroupcode().toLowerCase(), types);
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.DICT_TYPES_KEY,typesList);
+		cacheService.put(CacheServiceI.FOREVER_CACHE, ResourceUtils.DICT_TYPES_KEY,typesList);
 		logger.info("  ------ 重置字典缓存【系统缓存】  ----------- typegroupcode: [{}] ",typeGroupEntity.getTypegroupcode().toLowerCase());
 	}
 
@@ -226,7 +226,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		for (TSTypegroup tsTypegroup : typeGroups) {
 			typeGroupsList.put(tsTypegroup.getTypegroupcode().toLowerCase(), tsTypegroup);
 		}
-		cacheService.put(CacheServiceI.FOREVER_CACHE,ResourceUtil.DICT_TYPE_GROUPS_KEY,typeGroupsList);
+		cacheService.put(CacheServiceI.FOREVER_CACHE, ResourceUtils.DICT_TYPE_GROUPS_KEY,typeGroupsList);
 		logger.info("  ------ 重置字典分组缓存&字典缓存【系统缓存】  ------ refleshTypeGroupCach --------  ");
 	}
 	
@@ -280,7 +280,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		StringBuilder out = new StringBuilder();
 		out.append("<script type=\"text/javascript\">");
 		out.append("$(document).ready(function(){");
-		if(ResourceUtil.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
+		if(ResourceUtils.getSessionUser().getUserName().equals("admin")|| !Globals.BUTTON_AUTHORITY_CHECK){
 			return "";
 		}else{
 			HttpServletRequest request = ContextHolderUtils.getRequest();
@@ -322,7 +322,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 		if (!oldIcon.getIconClas().equals(newFunction.getTSIcon().getIconClas())) {
 			// 刷新缓存
 			HttpSession session = ContextHolderUtils.getSession();
-			TSUser user = ResourceUtil.getSessionUser();
+			TSUser user = ResourceUtils.getSessionUser();
 			List<TSRoleUser> rUsers = this.findListByProperty(TSRoleUser.class, "TSUser.id", user.getId());
 			for (TSRoleUser ru : rUsers) {
 				TSRole role = ru.getTSRole();
@@ -336,7 +336,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
     public String generateOrgCode(String id, String pid) {
 
         int orgCodeLength = 2; // 默认编码长度
-        if ("3".equals(ResourceUtil.getOrgCodeLengthType())) { // 类型2-编码长度为3，如001
+        if ("3".equals(ResourceUtils.getOrgCodeLengthType())) { // 类型2-编码长度为3，如001
             orgCodeLength = 3;
         }
 
@@ -401,7 +401,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	public  void initAllTSIcons() {
 		List<TSIcon> list = this.findList(TSIcon.class);
 		for (TSIcon tsIcon : list) {
-			ResourceUtil.allTSIcons.put(tsIcon.getId(), tsIcon);
+			ResourceUtils.allTSIcons.put(tsIcon.getId(), tsIcon);
 		}
 	}
 	/**
@@ -410,7 +410,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	 */
 	@Override
 	public void upTSIcons(TSIcon icon) {
-		ResourceUtil.allTSIcons.put(icon.getId(), icon);
+		ResourceUtils.allTSIcons.put(icon.getId(), icon);
 	}
 	/**
 	 * 更新图标
@@ -418,7 +418,7 @@ public class SystemServiceImpl extends CommonServiceImpl implements SystemServic
 	 */
 	@Override
 	public void delTSIcons(TSIcon icon) {
-		ResourceUtil.allTSIcons.remove(icon.getId());
+		ResourceUtils.allTSIcons.remove(icon.getId());
 	}
 
 	@Override

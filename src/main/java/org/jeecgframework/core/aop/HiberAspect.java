@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
 import org.jeecgframework.core.constant.DataBaseConstant;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.pojo.base.TSUser;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public boolean onSave(Object entity, Serializable id, Object[] state,
 		String[] propertyNames, Type[] types) {
 	TSUser currentUser = null;
 	try {
-		currentUser = ResourceUtil.getSessionUser();
+		currentUser = ResourceUtils.getSessionUser();
 	} catch (RuntimeException e) {
 		//logger.warn("当前session为空,无法获取用户");
 	}
@@ -54,7 +54,7 @@ public boolean onSave(Object entity, Serializable id, Object[] state,
 		     {
 		         /*使用拦截器将对象的"创建人"属性赋上值*/
 		    	 if(oConvertUtils.isEmpty(state[index])){
-		    		  state[index] = ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_CODE);
+		    		  state[index] = ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_CODE);
 		    	 }
 		         continue;
 		     }
@@ -63,7 +63,7 @@ public boolean onSave(Object entity, Serializable id, Object[] state,
 		     {
 		         /*使用拦截器将对象的"创建人名称"属性赋上值*/
 		    	 if(oConvertUtils.isEmpty(state[index])){
-		    		 state[index] = ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_NAME);
+		    		 state[index] = ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_NAME);
 		    	 }
 		         continue;
 		     }
@@ -72,7 +72,7 @@ public boolean onSave(Object entity, Serializable id, Object[] state,
 		     {
 		    	 /*使用拦截器将对象的"创建人名称"属性赋上值*/
 		    	 if(oConvertUtils.isEmpty(state[index])){
-		    		 state[index] = ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_CODE);
+		    		 state[index] = ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_CODE);
 		    	 }
 		    	 continue;
 		     }
@@ -81,7 +81,7 @@ public boolean onSave(Object entity, Serializable id, Object[] state,
 		     {
 		         /*使用拦截器将对象的"创建人部门"属性赋上值*/
 		    	 if(oConvertUtils.isEmpty(state[index])){
-		    		 state[index] = ResourceUtil.getUserSystemData(DataBaseConstant.SYS_ORG_CODE);
+		    		 state[index] = ResourceUtils.getUserSystemData(DataBaseConstant.SYS_ORG_CODE);
 		    	 }
 		         continue;
 		     }
@@ -90,7 +90,7 @@ public boolean onSave(Object entity, Serializable id, Object[] state,
 		     {
 		         /*使用拦截器将对象的"创建人部门"属性赋上值*/
 		    	 if(oConvertUtils.isEmpty(state[index])){
-		    		 state[index] = ResourceUtil.getUserSystemData(DataBaseConstant.SYS_COMPANY_CODE);
+		    		 state[index] = ResourceUtils.getUserSystemData(DataBaseConstant.SYS_COMPANY_CODE);
 		    	 }
 		         continue;
 		     }
@@ -116,7 +116,7 @@ public boolean onFlushDirty(Object entity, Serializable id,
 		String[] propertyNames, Type[] types) {
 	TSUser currentUser = null;
 	try {
-		currentUser = ResourceUtil.getSessionUser();
+		currentUser = ResourceUtils.getSessionUser();
 	} catch (RuntimeException e1) {
 		//logger.warn("当前session为空,无法获取用户");
 	}
@@ -138,14 +138,14 @@ public boolean onFlushDirty(Object entity, Serializable id,
          else if (DataBaseConstant.UPDATE_BY.equals(propertyNames[index]))
          {
              /*使用拦截器将对象的"修改人"属性赋上值*/
-        	 currentState[index] = ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_CODE);
+        	 currentState[index] = ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_CODE);
         	 continue;
          }
          /*找到名为"修改人名称"的属性*/
          else if (DataBaseConstant.UPDATE_NAME.equals(propertyNames[index]))
          {
              /*使用拦截器将对象的"修改人名称"属性赋上值*/
-        	 currentState[index] = ResourceUtil.getUserSystemData(DataBaseConstant.SYS_USER_NAME);
+        	 currentState[index] = ResourceUtils.getUserSystemData(DataBaseConstant.SYS_USER_NAME);
         	 continue;
          }
      }

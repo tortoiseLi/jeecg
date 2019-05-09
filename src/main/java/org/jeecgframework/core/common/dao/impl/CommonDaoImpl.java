@@ -124,7 +124,7 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao, BaseDao {
 				// 文件上传根目录
 				String uploadbasepath = uploadFile.getBasePath();
 				if (uploadbasepath == null) {
-					uploadbasepath = ResourceUtil.getConfigByName("uploadpath");
+					uploadbasepath = ResourceUtils.getConfigByName("uploadpath");
 				}
 				Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 				// 文件保存在硬盘的相对路径
@@ -155,8 +155,8 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao, BaseDao {
 				String entityName = uploadFile.getObject().getClass().getSimpleName();
 				// 设置文件上传路径
 				if (entityName.equals("TSTemplate")) {
-					realPath = uploadFile.getMultipartRequest().getSession().getServletContext().getRealPath("/") + ResourceUtil.getConfigByName("templatepath") + "/";
-					path = ResourceUtil.getConfigByName("templatepath") + "/";
+					realPath = uploadFile.getMultipartRequest().getSession().getServletContext().getRealPath("/") + ResourceUtils.getConfigByName("templatepath") + "/";
+					path = ResourceUtils.getConfigByName("templatepath") + "/";
 				} else if (entityName.equals("TSIcon")) {
 					realPath = uploadFile.getMultipartRequest().getSession().getServletContext().getRealPath("/") + uploadFile.getCusPath() + "/";
 					path = uploadFile.getCusPath() + "/";
@@ -243,7 +243,7 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao, BaseDao {
 					}
 
 					//默认上传文件是否转换为swf，实现在线预览功能开关
-					String globalSwfTransformFlag = ResourceUtil.getConfigByName("swf.transform.flag");
+					String globalSwfTransformFlag = ResourceUtils.getConfigByName("swf.transform.flag");
 					if ( "true".equals(globalSwfTransformFlag) && uploadFile.getSwfpath() != null) {
 						// 转SWF
 						reflectHelper.setMethodValue(uploadFile.getSwfpath(), path + FileUtils.getFilePrefix(myfilename) + ".swf");

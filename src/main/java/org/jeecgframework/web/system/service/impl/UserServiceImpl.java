@@ -25,7 +25,7 @@ import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.DateUtils;
 import org.jeecgframework.core.util.IpUtil;
 import org.jeecgframework.core.util.NumberComparator;
-import org.jeecgframework.core.util.ResourceUtil;
+import org.jeecgframework.core.util.ResourceUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.web.system.manager.ClientManager;
@@ -131,7 +131,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 		log.setOperatetime(DateUtils.gettimestamp());
 //		log.setTSUser(ResourceUtil.getSessionUser());
 		/*start chenqian 201708031TASK #2317 【改造】系统日志表，增加两个字段，避免关联查询 [操作人账号] [操作人名字]*/
-		TSUser u = ResourceUtil.getSessionUser();
+		TSUser u = ResourceUtils.getSessionUser();
 		log.setUserid(u.getId());
 		log.setUsername(u.getUserName());
 		log.setRealname(u.getRealName());
@@ -289,7 +289,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 
         HttpSession session = ContextHolderUtils.getSession();
 		user.setDepartid(orgId);
-		session.setAttribute(ResourceUtil.LOCAL_CLINET_USER, user);
+		session.setAttribute(ResourceUtils.LOCAL_CLIENT_USER, user);
         message = mutiLangService.getLang("common.user") + ": " + user.getUserName() + "["+ currentDepart.getDepartname() + "]" + mutiLangService.getLang("common.login.success");
         
         //IE列表操作按钮的样式
@@ -317,7 +317,7 @@ public class UserServiceImpl extends CommonServiceImpl implements UserService {
 			clientManager.removeClinet(session.getId());
 			session.invalidate();
 			session = req.getSession(true);//session初始化
-			session.setAttribute(ResourceUtil.LOCAL_CLINET_USER, user);
+			session.setAttribute(ResourceUtils.LOCAL_CLIENT_USER, user);
 			session.setAttribute("randCode",req.getParameter("randCode"));//保存验证码
 			clientManager.addClinet(session.getId(), client);
 		}
