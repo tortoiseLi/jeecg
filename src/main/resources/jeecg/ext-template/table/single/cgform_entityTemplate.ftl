@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.SequenceGenerator;
 import org.jeecgframework.poi.excel.annotation.Excel;
+import java.io.Serializable;
 
 /**   
  * @Title: Entity
@@ -37,9 +38,12 @@ import org.jeecgframework.poi.excel.annotation.Excel;
 @SequenceGenerator(name="SEQ_GEN", sequenceName="${cgformConfig.cgFormHead.jformPkSequence}")  
 </#if>
 @SuppressWarnings("serial")
-public class ${entityName}Entity implements java.io.Serializable {
+public class ${entityName}Entity implements Serializable {
 	<#list columns as po>
-	/**${po.content}*/
+
+	/**
+	 * ${po.content}
+	 */
 	<#if po.isShow != 'N'>
 	<#--update-begin--Author:taoYan  Date:20170807 for：TASK #3021 【代码生成器 - 陶炎】popup配置影响了导出excel功能 -->
     <@excel po = po/>
@@ -51,10 +55,6 @@ public class ${entityName}Entity implements java.io.Serializable {
 	</#list>
 	
 	<#list columns as po>
-	/**
-	 *方法: 取得${po.type}
-	 *@return: ${po.type}  ${po.content}
-	 */
 	<#if po.fieldName == jeecg_table_id>
 	<#if cgformConfig.cgFormHead.jformPkType?if_exists?html == "UUID">
 	@Id
@@ -79,10 +79,6 @@ public class ${entityName}Entity implements java.io.Serializable {
 		return this.${po.fieldName};
 	}
 
-	/**
-	 *方法: 设置${po.type}
-	 *@param: ${po.type}  ${po.content}
-	 */
 	public void set${po.fieldName?cap_first}(<#if po.type=='java.sql.Blob'>byte[]<#else>${po.type}</#if> ${po.fieldName}){
 		this.${po.fieldName} = ${po.fieldName};
 	}
