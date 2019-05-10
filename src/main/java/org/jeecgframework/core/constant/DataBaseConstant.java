@@ -72,6 +72,14 @@ public interface DataBaseConstant {
 	 */
 	public static final String CREATE_BY = "createBy";
 	/**
+	 * 创建者登录名称
+	 */
+	public static final String CREATE_ACCOUNT_TABLE = "create_account";
+	/**
+	 * 创建者登录名称
+	 */
+	public static final String CREATE_ACCOUNT = "createAccount";
+	/**
 	 * 创建用户真是名称
 	 */
 	public static final String CREATE_NAME_TABLE = "create_name";
@@ -103,6 +111,14 @@ public interface DataBaseConstant {
 	 * 更新用户登录名称
 	 */
 	public static final String UPDATE_BY = "updateBy";
+	/**
+	 * 更新用户登录名称
+	 */
+	public static final String UPDATE_ACCOUNT_TABLE = "update_account";
+	/**
+	 * 更新用户登录名称
+	 */
+	public static final String UPDATE_ACCOUNT = "updateAccount";
 	/**
 	 * 更新用户真是名称
 	 */
@@ -136,6 +152,15 @@ public interface DataBaseConstant {
 	 * 业务流程状态
 	 */
 	public static final String BPM_STATUS_TABLE = "bpm_status";
+
+	/**
+	 * 更新日期
+	 */
+	public static final String STATE_FLAG = "stateFlag";
+	/**
+	 * 更新日期
+	 */
+	public static final String STATE_FLAG_TABLE = "state_flag";
 	//*********系统建表标准字段****************************************
 	//****************************************************************************************
 }
